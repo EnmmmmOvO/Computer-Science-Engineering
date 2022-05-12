@@ -1,0 +1,115 @@
+PingClient Output 1
+
+ping to 127.0.0.1, seq = 0, rtt = 92 ms
+ping to 127.0.0.1, seq = 1, rtt = 188 ms
+ping to 127.0.0.1, seq = 2, rtt = 108 ms
+ping to 127.0.0.1, seq = 3, rtt = 131 ms
+ping to 127.0.0.1, seq = 4, rtt = 13 ms
+ping to 127.0.0.1, seq = 5, rtt = 181 ms
+ping to 127.0.0.1, seq = 6, Time Out
+ping to 127.0.0.1, seq = 7, rtt = 60 ms
+ping to 127.0.0.1, seq = 8, Time Out
+ping to 127.0.0.1, seq = 9, Time Out
+ping to 127.0.0.1, seq = 10, rtt = 197 ms
+ping to 127.0.0.1, seq = 11, Time Out
+ping to 127.0.0.1, seq = 12, Time Out
+ping to 127.0.0.1, seq = 13, rtt = 48 ms
+ping to 127.0.0.1, seq = 14, rtt = 71 ms
+
+--- ping localhost statistics ---
+15 packets transmitted, 10 packets received, 33.0% packet loss
+round trip min/avg/max = 13.0/108.0/197.0 ms 
+
+PingServer Output 1
+
+Received from 127.0.0.1: PING 0 1646142983144 
+   Reply sent.
+Received from 127.0.0.1: PING 1 1646142983242 
+   Reply sent.
+Received from 127.0.0.1: PING 2 1646142983431 
+   Reply sent.
+Received from 127.0.0.1: PING 3 1646142983539 
+   Reply sent.
+Received from 127.0.0.1: PING 4 1646142983670 
+   Reply sent.
+Received from 127.0.0.1: PING 5 1646142983683 
+   Reply sent.
+Received from 127.0.0.1: PING 6 1646142983864 
+   Reply not sent.
+Received from 127.0.0.1: PING 7 1646142984475 
+   Reply sent.
+Received from 127.0.0.1: PING 8 1646142984535 
+   Reply not sent.
+Received from 127.0.0.1: PING 9 1646142985136 
+   Reply not sent.
+Received from 127.0.0.1: PING 10 1646142985738 
+   Reply sent.
+Received from 127.0.0.1: PING 11 1646142985936 
+   Reply not sent.
+Received from 127.0.0.1: PING 12 1646142986539 
+   Reply not sent.
+Received from 127.0.0.1: PING 13 1646142987140 
+   Reply sent.
+Received from 127.0.0.1: PING 14 1646142987188 
+   Reply sent.
+
+
+
+
+PingClient Output 2
+
+ping to 127.0.0.1, seq = 0, Time Out
+ping to 127.0.0.1, seq = 1, rtt = 124 ms
+ping to 127.0.0.1, seq = 2, rtt = 184 ms
+ping to 127.0.0.1, seq = 3, Time Out
+ping to 127.0.0.1, seq = 4, rtt = 51 ms
+ping to 127.0.0.1, seq = 5, Time Out
+ping to 127.0.0.1, seq = 6, Time Out
+ping to 127.0.0.1, seq = 7, rtt = 35 ms
+ping to 127.0.0.1, seq = 8, rtt = 124 ms
+ping to 127.0.0.1, seq = 9, rtt = 205 ms
+ping to 127.0.0.1, seq = 10, rtt = 119 ms
+ping to 127.0.0.1, seq = 11, Time Out
+ping to 127.0.0.1, seq = 12, rtt = 141 ms
+ping to 127.0.0.1, seq = 13, rtt = 73 ms
+ping to 127.0.0.1, seq = 14, rtt = 154 ms
+
+--- ping localhost statistics ---
+15 packets transmitted, 10 packets received, 33.0% packet loss
+round trip min/avg/max = 35.0/121.0/205.0 ms
+
+
+PingServer Output 2
+
+Received from 127.0.0.1: PING 0 1646143325532 
+   Reply not sent.
+Received from 127.0.0.1: PING 1 1646143326154 
+   Reply sent.
+Received from 127.0.0.1: PING 2 1646143326290 
+   Reply sent.
+Received from 127.0.0.1: PING 3 1646143326475 
+   Reply not sent.
+Received from 127.0.0.1: PING 4 1646143327076 
+   Reply sent.
+Received from 127.0.0.1: PING 5 1646143327127 
+   Reply not sent.
+Received from 127.0.0.1: PING 6 1646143327731 
+   Reply not sent.
+Received from 127.0.0.1: PING 7 1646143328333 
+   Reply sent.
+Received from 127.0.0.1: PING 8 1646143328368 
+   Reply sent.
+Received from 127.0.0.1: PING 9 1646143328493 
+   Reply sent.
+Received from 127.0.0.1: PING 10 1646143328699 
+   Reply sent.
+Received from 127.0.0.1: PING 11 1646143328818 
+   Reply not sent.
+Received from 127.0.0.1: PING 12 1646143329420 
+   Reply sent.
+Received from 127.0.0.1: PING 13 1646143329561 
+   Reply sent.
+Received from 127.0.0.1: PING 14 1646143329634 
+   Reply sent.
+
+
