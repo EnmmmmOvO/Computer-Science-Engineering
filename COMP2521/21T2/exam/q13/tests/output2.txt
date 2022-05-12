@@ -1,0 +1,9 @@
+Tree:
+
+5
+ \
+  6
+   \
+    7
+
+nodesNotBalanced returned: 1

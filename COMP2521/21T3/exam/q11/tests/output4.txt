@@ -1,0 +1,22 @@
+
+Displaying tree (sideways) 
+			R
+		Q
+			N
+	M
+		L
+K
+			H
+		F
+			E
+	D
+		B
+
+ -------  
+keys:
+ K  D  B  F  E  H  M  L  Q  N  R 
+parents:
+ 0  0  1  1  3  3  0  6  6  8  8 
+leftSiblings:
+ 0  1  2  2  4  4  1  7  7  9  9 
+ -------  

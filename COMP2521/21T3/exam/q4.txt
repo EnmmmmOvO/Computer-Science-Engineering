@@ -1,0 +1,8 @@
+Question 4
+
+Which of the data structures is most suitable? Justify your answer.
+You must use time complexities as a basis for your justification.
+    I think heap is suitable, because when we want to add new item at end of queue or delete from the queue, the time complexity id O(1),
+    and if we need move the new item into correct position, heap's time complexity is O(log2n). Compare with other method, they need to s
+    earch for correct position and when some node add or delte the position will spend more time or more memeory, the time complexity is 
+    also larger than O(log2n). Therefore, heap have more advantage than the others  for priority queue.

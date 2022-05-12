@@ -1,0 +1,6 @@
+Question 1
+
+What is the time complexity of the algorithm? Justify your answer.
+    O(nlogn)
+
+

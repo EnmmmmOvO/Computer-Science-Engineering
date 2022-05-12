@@ -1,0 +1,17 @@
+
+Displaying tree (sideways) 
+		T
+	P
+		M
+K
+	J
+		H
+
+ -------  
+keys:
+ K  J  H  P  M  T 
+parents:
+ 0  0  1  0  3  3 
+leftSiblings:
+ 0  1  2  1  4  4 
+ -------  

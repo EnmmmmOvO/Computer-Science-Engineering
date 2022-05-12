@@ -1,0 +1,71 @@
+<html>
+<head>
+  <title>Electrical Grid Plan</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Electrical Grid Plan</h1>
+  <p>Power plants are coloured yellow.</p>
+  <div id="cy"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.0/cytoscape.min.js" integrity="sha512-TOWs340KHbJjY/a2SCtsUcXYBg7/xPX72NKpJ3VITogkHJTy2yMyoJE0pxJjumMGHCg46ud89KO5q1Toe3Aeaw==" crossorigin="anonymous"></script>
+  <script>
+    var elems = [
+      {data: {id: "Seattle"}, position: {x: 120, y: -449}},
+      {data: {id: "Portland"}, position: {x: 104, y: -415}},
+      {data: {id: "San Francisco"}, position: {x: 69, y: -284}},
+      {data: {id: "Los Angeles"}, position: {x: 108, y: -206}},
+      {data: {id: "Phoenix"}, position: {x: 194, y: -178}},
+      {data: {id: "Salt Lake City"}, position: {x: 219, y: -300}},
+      {data: {id: "Denver"}, position: {x: 307, y: -271}},
+      {data: {id: "Santa Fe"}, position: {x: 288, y: -203}},
+      {data: {id: "Houston"}, position: {x: 443, y: -91}},
+      {data: {id: "Dallas"}, position: {x: 419, y: -144}},
+      {data: {id: "New Orleans"}, position: {x: 519, y: -98}},
+      {data: {id: "Minneapolis"}, position: {x: 462, y: -357}},
+      {data: {id: "Chicago"}, position: {x: 538, y: -308}},
+      {data: {id: "Miami"}, position: {x: 682, y: -43}},
+      {data: {id: "Jacksonville"}, position: {x: 646, y: -118}},
+      {data: {id: "Atlanta"}, position: {x: 599, y: -172}},
+      {data: {id: "Charlotte"}, position: {x: 645, y: -205}},
+      {data: {id: "Washington DC"}, position: {x: 685, y: -278}},
+      {data: {id: "Boston"}, position: {x: 747, y: -355}},
+      {data: {id: "New York City"}, position: {x: 718, y: -316}},
+      {data: {id: "Buffalo"}, position: {x: 648, y: -342}},
+      {data: {id: "Kansas City"}, position: {x: 448, y: -253}},
+      {data: {id: "Nashville"}, position: {x: 558, y: -210}},
+      {data: {id: "Memphis"}, position: {x: 515, y: -189}},
+      {data: {id: "Indianapolis"}, position: {x: 561, y: -273}},
+      {data: {id: "Austin"}, position: {x: 402, y: -105}, classes: ['power-plant']},
+      {data: {id: "Las Vegas"}, position: {x: 159, y: -234}, classes: ['power-plant']},
+      {data: {id: "Tampa"}, position: {x: 641, y: -76}, classes: ['power-plant']},
+      {data: {id: 'e1', source: "Jacksonville", target: "Tampa"}},
+      {data: {id: 'e2', source: "Dallas", target: "Austin"}},
+      {data: {id: 'e3', source: "Houston", target: "Austin"}},
+      {data: {id: 'e4', source: "Miami", target: "Tampa"}},
+      {data: {id: 'e5', source: "Los Angeles", target: "Las Vegas"}},
+      {data: {id: 'e6', source: "Phoenix", target: "Las Vegas"}},
+      {data: {id: 'e7', source: "Jacksonville", target: "Atlanta"}},
+      {data: {id: 'e8', source: "Atlanta", target: "Nashville"}},
+      {data: {id: 'e9', source: "Nashville", target: "Memphis"}},
+      {data: {id: 'e10', source: "Atlanta", target: "Charlotte"}},
+      {data: {id: 'e11', source: "Nashville", target: "Indianapolis"}},
+      {data: {id: 'e12', source: "Indianapolis", target: "Chicago"}},
+      {data: {id: 'e13', source: "Houston", target: "New Orleans"}},
+      {data: {id: 'e14', source: "Charlotte", target: "Washington DC"}},
+      {data: {id: 'e15', source: "Washington DC", target: "New York City"}},
+      {data: {id: 'e16', source: "New York City", target: "Boston"}},
+      {data: {id: 'e17', source: "Washington DC", target: "Buffalo"}},
+      {data: {id: 'e18', source: "Los Angeles", target: "San Francisco"}},
+      {data: {id: 'e19', source: "Salt Lake City", target: "Las Vegas"}},
+      {data: {id: 'e20', source: "Chicago", target: "Minneapolis"}},
+      {data: {id: 'e21', source: "Salt Lake City", target: "Denver"}},
+      {data: {id: 'e22', source: "Denver", target: "Santa Fe"}},
+      {data: {id: 'e23', source: "Memphis", target: "Kansas City"}},
+      {data: {id: 'e24', source: "San Francisco", target: "Portland"}},
+      {data: {id: 'e25', source: "Portland", target: "Seattle"}},
+    ];
+  </script>
+  <script src="./visualiser.js"></script>
+</body>
+</html>
+

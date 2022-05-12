@@ -1,0 +1,19 @@
+
+Displaying tree (sideways) 
+						Y
+					X
+				P
+			H
+				G
+		F
+	B
+A
+
+ -------  
+keys:
+ A  B  F  H  G  P  X  Y 
+parents:
+ 0  0  1  2  3  3  5  6 
+leftSiblings:
+ 0  1  2  3  4  4  6  7 
+ -------  

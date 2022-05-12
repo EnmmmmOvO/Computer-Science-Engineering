@@ -1,0 +1,7 @@
+Question 2
+
+What is the maximum input size? Justify your answer.
+    4000. I think when the input size is twice as much as before, the time will increase ten times as much as before, so, the speed increse 10^4 times, 
+    the input can increase four times as before. 
+
+

@@ -1,0 +1,7 @@
+What is a limitation of recursive solutions (as opposed to iterative solutions)? Describe an example.
+
+Recursive functions are generally slower than non-recursive function. Because of the recurve continually, 
+It may require a lot of memory space to hold intermediate results on the system stacks. Therefore, It is 
+not more efficient in terms of time complexity and need more memory space. When we do Fibonacci sequence, 
+using the recursive method needs to wait longer than other methods. Therefore, the memory space and the time is 
+the most limitation of recursive solution.

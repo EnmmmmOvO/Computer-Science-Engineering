@@ -1,0 +1,21 @@
+Describe the key differences between quicksort and mergesort, which includes at least:
+
+The main difference between quicksort and merge sort is that while quicksort sorts the elements 
+by comparing each element to an element with a principal name, merge sort divides the array into 
+two subarrays over and over until only one element remains.
+
+quicksort
+Best case of time complexity: O(nlogn)
+Average case of time complexity: O(nlogn)
+worst case of time complexity: O(n^2)
+
+mergesort
+Best case of time complexity: O(nlogn)
+Average case of time complexity: O(nlogn)
+worst case of time complexity: O(nlogn)
+
+I choose mergesort when I'm certain that a piece of data is purely random or I don't know what order it is in, 
+because this sort requires all the pieces to be broken up and reassembled for general purpose. 
+For arrays that might be in a certain order, I choose QuickSort because it takes less time.
+If I don't have enough memory, if I have enough time, I'll do quicksort, mergesort takes more space. 
+When I have a lot of data, I'll choose mergesort it because it's more efficient.

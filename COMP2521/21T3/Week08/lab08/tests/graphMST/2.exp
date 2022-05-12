@@ -1,0 +1,17 @@
+Graph:
+Number of vertices: 5
+Number of edges: 6
+Edge 0 - 3: 8.000000
+Edge 0 - 4: 2.000000
+Edge 1 - 2: 2.000000
+Edge 2 - 3: 1.000000
+Edge 2 - 4: 6.000000
+Edge 3 - 4: 4.000000
+
+Minimum Spanning Tree:
+Number of vertices: 5
+Number of edges: 4
+Edge 0 - 4: 2.000000
+Edge 1 - 2: 2.000000
+Edge 2 - 3: 1.000000
+Edge 3 - 4: 4.000000

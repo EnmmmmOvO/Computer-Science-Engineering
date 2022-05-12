@@ -1,0 +1,42 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of n, where n is the number of cells in the maze.
+
+============
+  solveBfs
+============
+
+- Worst case time complexity: O(n)
+
+
+       ___________________
+start |____|____|____|____|
+      |____|____|____|____|
+      |____|____|____|____|
+      |____|____|____|____| end
+          
+
+- Explanation: 
+  For BFS, when the start and end are in diagonal positions of the matrix, the program needs to 
+  traverse almost every cell to find the end position. Since My code is counterclockwise, up, 
+  right, down, and left, if there are no walls in the matrix, the program needs to traverse all 
+  the cells to find the end point, which is the worst case.
+
+============
+  solveDfs
+============
+
+- Worst case time complexity: O(n)
+           start end
+ ___________________
+|____|____|____|____|
+|____|____|____|____|
+|____|____|____|____|
+|____|____|____|____| 
+
+- Explanation: 
+  Since MY search is counterclockwise, the DFS search takes longer when the end point is to the 
+  right of the start point and the order is left, down, right and up. The worst case is when the 
+  end point is one space to the right of the start point, it takes the longest time.
+

@@ -1,0 +1,13 @@
+Graph:
+Number of vertices: 8
+Number of edges: 8
+Edge 0 - 1: 1.000000
+Edge 0 - 7: 4.000000
+Edge 1 - 2: 7.000000
+Edge 1 - 7: 3.000000
+Edge 3 - 4: 4.000000
+Edge 4 - 5: 5.000000
+Edge 4 - 6: 3.000000
+Edge 5 - 6: 5.000000
+
+The graph has no minimum spanning tree.

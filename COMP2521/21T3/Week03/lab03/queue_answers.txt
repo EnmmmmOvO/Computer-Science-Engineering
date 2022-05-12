@@ -1,0 +1,100 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of n, where n is the size (i.e., number of items) of the queue
+
+=========
+ListQueue
+=========
+
+-------------+----------------------------------------------------------
+             |                    time complexity
+  operation  +-----------------+------------------+---------------------
+             |    best case    |    worst case    |    average case
+-------------+-----------------+------------------+---------------------
+             |                 |                  |
+   enqueue   |      O(1)       |       O(1)       |       O(1)       
+             |                 |                  |
+-------------+-----------------+------------------+---------------------
+             |                 |                  |
+   dequeue   |      O(1)       |       O(1)       |       O(1)       
+             |                 |                  |
+-------------+-----------------+------------------+---------------------
+
+Analysis:
+ For enqueue, all data needs to be inserted after the last node in the 
+ linked list. Since the address of the last node in the linked list has 
+ been recorded, only one node needs to be created and the new node needs 
+ to be placed after the last node. It do not need any looping. There is no  
+ best or worst case, the time complexity of data inserting are O(1). 
+
+ For dequeue, as in enqueue, the linked list needs to return the data
+ contained in the first node of the list and delete the node, so there
+ are no loops, no best and worst cases, and the time complexity of 
+ data inserting are O(1).
+
+==========
+ArrayQueue
+==========
+
+-------------+----------------------------------------------------------
+             |                    time complexity
+  operation  +-----------------+------------------+---------------------
+             |    best case    |    worst case    |    average case
+-------------+-----------------+------------------+---------------------
+             |                 |                  |
+   enqueue   |       O(1)      |       O(n)       |         O(1)
+             |                 |                  |
+-------------+-----------------+------------------+---------------------
+             |                 |                  |
+   dequeue   |       O(n)      |       O(n)       |         O(n)
+             |                 |                  |
+-------------+-----------------+------------------+---------------------
+
+Analysis:
+ For enqueue, the best case is when q->size not equal to q->capacity, 
+ just put the new data after the end of the original sequence, do not
+ need to call increCapacity function, the time complexity is O(1).
+ In the worst case, when the original sequence is full, which also means 
+ that q-size is equal to q->capacity, need to expand the array. It 
+ need call the increaseCapacity function. In which realloc function 
+ creates a new array twice the size of the source array, copies the 
+ data in the original array to the new array, and free the original 
+ array. The time complexity of the worst case is O (n). 
+ The probability of full array is much less than the probability of 
+ not full array, so the average case is the case of not full array, 
+ so the time complexity is O (1).
+
+  For dequeue, it removes the first number and move all of other data 
+  one space forward. There's no best or worst case, all of the time 
+  complexity is O(n);
+
+==================
+CircularArrayQueue
+==================
+
+-------------+----------------------------------------------------------
+             |                    time complexity
+  operation  +-----------------+------------------+---------------------
+             |    best case    |    worst case    |    average case
+-------------+-----------------+------------------+---------------------
+             |                 |                  |
+   enqueue   |       O(1)      |       O(n)       |         O(1)
+             |                 |                  |
+-------------+-----------------+------------------+---------------------
+             |                 |                  |
+   dequeue   |       O(1)      |       O(1)       |         O(1)
+             |                 |                  |
+-------------+-----------------+------------------+---------------------
+
+Analysis:
+ For enqueue, it is similar ArrayQueue situation. To Compared to an ArrayQueue,
+ CircularArrayQueue puts the data before the frontIndex in the original array 
+ after the original sequence. It is the best case when frontIndex == 0, the 
+ time complexity is O(1). In the worst case, when frontIndex is the last in the array,
+ all the previous data has to move, the time complexity is O (n). The average time 
+ compexity is O (n). But for CircularArrayQueue, the average case is same as an ArrayQueue,
+ the time complexity is O(1). 
+
+ For dequeue, forntIndex goes back one position or is equal to 0, there's no worst case or 
+ best case, the time complexitythe time complexity is O (1).

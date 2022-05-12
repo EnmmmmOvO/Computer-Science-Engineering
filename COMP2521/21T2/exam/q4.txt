@@ -1,0 +1,8 @@
+Does an Euler path (NOT an Euler circuit) exist for this graph? Justify your answer.
+
+This is the Euler path. The euler path can be determined by the number of lines that go to each point. 
+Euler path with only two odd degree nodes or no odd degree nodes. In this case, 
+there are two lines to 0, 2, 4, and 6 node, and four lines to the rest of the nodes. 
+There is no odd degree node, so it is an Euler path.
+
+7-0-1-2-3-4-5-6-7-1-3-5-7

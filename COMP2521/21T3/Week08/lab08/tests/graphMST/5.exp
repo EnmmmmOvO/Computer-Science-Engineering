@@ -1,0 +1,37 @@
+Graph:
+Number of vertices: 10
+Number of edges: 21
+Edge 0 - 1: 9.000000
+Edge 0 - 2: 3.000000
+Edge 0 - 3: 6.000000
+Edge 1 - 2: 9.000000
+Edge 1 - 4: 8.000000
+Edge 1 - 8: 18.000000
+Edge 2 - 3: 4.000000
+Edge 2 - 4: 9.000000
+Edge 2 - 9: 2.000000
+Edge 3 - 5: 9.000000
+Edge 3 - 9: 2.000000
+Edge 4 - 5: 7.000000
+Edge 4 - 7: 9.000000
+Edge 4 - 8: 10.000000
+Edge 4 - 9: 8.000000
+Edge 5 - 6: 4.000000
+Edge 5 - 7: 5.000000
+Edge 5 - 9: 9.000000
+Edge 6 - 7: 1.000000
+Edge 6 - 8: 4.000000
+Edge 7 - 8: 3.000000
+
+Minimum Spanning Tree:
+Number of vertices: 10
+Number of edges: 9
+Edge 0 - 2: 3.000000
+Edge 1 - 4: 8.000000
+Edge 2 - 9: 2.000000
+Edge 3 - 9: 2.000000
+Edge 4 - 5: 7.000000
+Edge 4 - 9: 8.000000
+Edge 5 - 6: 4.000000
+Edge 6 - 7: 1.000000
+Edge 7 - 8: 3.000000

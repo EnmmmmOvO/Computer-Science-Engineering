@@ -1,0 +1,27 @@
+Node 0
+  Distances
+    0 : 0
+    1 : 1
+    2 : 3
+  Predecessors
+    0 : NULL
+    1 : [0]->NULL
+    2 : [1]->NULL
+Node 1
+  Distances
+    0 : 3
+    1 : 0
+    2 : 2
+  Predecessors
+    0 : [2]->NULL
+    1 : NULL
+    2 : [1]->NULL
+Node 2
+  Distances
+    0 : 1
+    1 : 2
+    2 : 0
+  Predecessors
+    0 : [2]->NULL
+    1 : [0]->NULL
+    2 : NULL

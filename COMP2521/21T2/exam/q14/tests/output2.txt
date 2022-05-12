@@ -1,0 +1,28 @@
+nV: 8
+src: 0
+
+Edge inserted: 1 -> 3
+Edge inserted: 0 -> 3
+Edge inserted: 2 -> 3
+Edge inserted: 4 -> 3
+Edge inserted: 3 -> 0
+Edge inserted: 0 -> 5
+Edge inserted: 1 -> 5
+Edge inserted: 4 -> 5
+Edge inserted: 5 -> 2
+Edge inserted: 5 -> 7
+Edge inserted: 1 -> 4
+Edge inserted: 2 -> 4
+Edge inserted: 0 -> 6
+Edge inserted: 3 -> 7
+
+Popularity ranks:
+ node: 0, rank:      0.333
+ node: 1, rank:     -1.000
+ node: 2, rank:      0.500
+ node: 3, rank:      2.000
+ node: 4, rank:      1.000
+ node: 5, rank:      1.500
+ node: 6, rank:      2.000
+ node: 7, rank:      4.000
+

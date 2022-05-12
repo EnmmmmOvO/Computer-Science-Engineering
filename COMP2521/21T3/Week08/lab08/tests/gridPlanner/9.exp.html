@@ -1,0 +1,81 @@
+<html>
+<head>
+  <title>Electrical Grid Plan</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Electrical Grid Plan</h1>
+  <p>Power plants are coloured yellow.</p>
+  <div id="cy"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.0/cytoscape.min.js" integrity="sha512-TOWs340KHbJjY/a2SCtsUcXYBg7/xPX72NKpJ3VITogkHJTy2yMyoJE0pxJjumMGHCg46ud89KO5q1Toe3Aeaw==" crossorigin="anonymous"></script>
+  <script>
+    var elems = [
+      {data: {id: "Winterfell"}, position: {x: 498, y: -1355}},
+      {data: {id: "Last Hearth"}, position: {x: 673, y: -1531}},
+      {data: {id: "Karhold"}, position: {x: 820, y: -1485}},
+      {data: {id: "White Harbor"}, position: {x: 599, y: -1182}},
+      {data: {id: "Moat Cailin"}, position: {x: 512, y: -1142}},
+      {data: {id: "Deepwood Motte"}, position: {x: 346, y: -1475}},
+      {data: {id: "Riverrun"}, position: {x: 433, y: -752}},
+      {data: {id: "Harrenhal"}, position: {x: 584, y: -710}},
+      {data: {id: "Maidenpool"}, position: {x: 699, y: -684}},
+      {data: {id: "Casterly Rock"}, position: {x: 203, y: -626}},
+      {data: {id: "Lannisport"}, position: {x: 198, y: -599}},
+      {data: {id: "King's Landing"}, position: {x: 682, y: -561}},
+      {data: {id: "Ashford"}, position: {x: 458, y: -337}},
+      {data: {id: "Summerhall"}, position: {x: 640, y: -357}},
+      {data: {id: "Highgarden"}, position: {x: 317, y: -314}},
+      {data: {id: "Oldtown"}, position: {x: 195, y: -182}},
+      {data: {id: "Sunspear"}, position: {x: 863, y: -62}},
+      {data: {id: "Hellholt"}, position: {x: 489, y: -67}},
+      {data: {id: "Mistwood"}, position: {x: 787, y: -264}},
+      {data: {id: "Salt Shore"}, position: {x: 702, y: -26}},
+      {data: {id: "The Tor"}, position: {x: 697, y: -128}},
+      {data: {id: "Blackmont"}, position: {x: 368, y: -170}},
+      {data: {id: "Horn Hill"}, position: {x: 344, y: -258}},
+      {data: {id: "Blackhaven"}, position: {x: 552, y: -282}},
+      {data: {id: "Stonehelm"}, position: {x: 694, y: -285}},
+      {data: {id: "Torrhens Square"}, position: {x: 368, y: -1303}},
+      {data: {id: "Vaith"}, position: {x: 630, y: -56}},
+      {data: {id: "Skyreach"}, position: {x: 470, y: -151}},
+      {data: {id: "Yronwood"}, position: {x: 571, y: -150}},
+      {data: {id: "Starfall"}, position: {x: 350, y: -127}, classes: ['power-plant']},
+      {data: {id: "Storm's End"}, position: {x: 777, y: -374}, classes: ['power-plant']},
+      {data: {id: "The Twins"}, position: {x: 452, y: -943}, classes: ['power-plant']},
+      {data: {id: "The Eyrie"}, position: {x: 707, y: -838}, classes: ['power-plant']},
+      {data: {id: "The Dreadfort"}, position: {x: 693, y: -1405}, classes: ['power-plant']},
+      {data: {id: 'e1', source: "Blackmont", target: "Starfall"}},
+      {data: {id: 'e2', source: "Blackmont", target: "Horn Hill"}},
+      {data: {id: 'e3', source: "Horn Hill", target: "Highgarden"}},
+      {data: {id: 'e4', source: "Blackmont", target: "Skyreach"}},
+      {data: {id: 'e5', source: "Skyreach", target: "Hellholt"}},
+      {data: {id: 'e6', source: "Skyreach", target: "Yronwood"}},
+      {data: {id: 'e7', source: "Mistwood", target: "Storm's End"}},
+      {data: {id: 'e8', source: "Mistwood", target: "Stonehelm"}},
+      {data: {id: 'e9', source: "Stonehelm", target: "Summerhall"}},
+      {data: {id: 'e10', source: "Yronwood", target: "Vaith"}},
+      {data: {id: 'e11', source: "Vaith", target: "Salt Shore"}},
+      {data: {id: 'e12', source: "Vaith", target: "The Tor"}},
+      {data: {id: 'e13', source: "Summerhall", target: "Blackhaven"}},
+      {data: {id: 'e14', source: "Blackhaven", target: "Ashford"}},
+      {data: {id: 'e15', source: "Last Hearth", target: "The Dreadfort"}},
+      {data: {id: 'e16', source: "Karhold", target: "The Dreadfort"}},
+      {data: {id: 'e17', source: "Maidenpool", target: "The Eyrie"}},
+      {data: {id: 'e18', source: "Maidenpool", target: "Harrenhal"}},
+      {data: {id: 'e19', source: "Maidenpool", target: "King's Landing"}},
+      {data: {id: 'e20', source: "Harrenhal", target: "Riverrun"}},
+      {data: {id: 'e21', source: "Oldtown", target: "Starfall"}},
+      {data: {id: 'e22', source: "Salt Shore", target: "Sunspear"}},
+      {data: {id: 'e23', source: "Winterfell", target: "The Dreadfort"}},
+      {data: {id: 'e24', source: "Winterfell", target: "Torrhens Square"}},
+      {data: {id: 'e25', source: "Torrhens Square", target: "Deepwood Motte"}},
+      {data: {id: 'e26', source: "Winterfell", target: "White Harbor"}},
+      {data: {id: 'e27', source: "White Harbor", target: "Moat Cailin"}},
+      {data: {id: 'e28', source: "Riverrun", target: "Casterly Rock"}},
+      {data: {id: 'e29', source: "Casterly Rock", target: "Lannisport"}},
+    ];
+  </script>
+  <script src="./visualiser.js"></script>
+</body>
+</html>
+

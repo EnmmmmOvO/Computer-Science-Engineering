@@ -1,0 +1,10 @@
+File system:
+/
+    a
+        a1.txt
+        a2
+    b
+        b1
+        b2.txt
+
+Total text size: 12

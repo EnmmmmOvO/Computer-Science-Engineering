@@ -1,0 +1,19 @@
+nV: 5
+src: 2
+
+Edge inserted: 3 -> 2
+Edge inserted: 3 -> 0
+Edge inserted: 2 -> 0
+Edge inserted: 1 -> 4
+Edge inserted: 1 -> 0
+Edge inserted: 1 -> 3
+Edge inserted: 1 -> 2
+Edge inserted: 0 -> 4
+Edge inserted: 2 -> 4
+Edge inserted: 4 -> 2
+
+Popular followers of node 2:
+ node 0
+ node 2
+ node 4
+

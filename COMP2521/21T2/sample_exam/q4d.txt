@@ -1,0 +1,8 @@
+if value < 5, left of 5
+if 5 < value < 15, right of 5
+if 15 < value < 20, left of 20
+if 15 < value < 20, right of 20
+if 25 < value < 30, left of 30
+if 30 < value < 40, right of 30
+if 40 < value < 50, left of 50
+if value > 50, right of 50

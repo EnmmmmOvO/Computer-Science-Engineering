@@ -1,0 +1,4 @@
+List A: 5, 5, 5, 5, 6, 6
+List B: 5, 5, 5
+Tolerance: 2
+numSubsequences returned: 4

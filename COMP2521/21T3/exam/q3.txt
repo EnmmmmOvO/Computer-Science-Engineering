@@ -1,0 +1,30 @@
+Question 3
+
+Note: if you need to promote a value, you must promote the smaller 
+value from the available alternatives (if any). Justify your answer.
+
+(a) 
+(a1) What value(s) would be stored in the root node of the above 2-3-4 
+     tree after the insertion of the value 8? 
+     Justify your answer.
+     12, 35, 60
+
+
+(a2) What value(s) would be stored in the node that now contains 8? 
+     Justify your answer.
+     1, 7, 8
+
+
+(b) 
+(b1) What value(s) would be stored in the root node of the above 2-3-4 
+     tree after the insertion of the value 50? 
+     Justify your answer.
+     12, 35, 60
+
+
+(b2) What value(s) would be stored in the node that now contains 50? 
+     Justify your answer.
+     50
+
+
+

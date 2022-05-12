@@ -1,0 +1,44 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of n, where n is the number of people who  have  been  added  to
+  Friendbook.
+
+===============
+  FbUnfriend
+===============
+
+- Worst case time complexity: O(log \n)
+
+- Explanation: 
+Besides the function of nameToId, only 'if' judgment and some data replacement are performed, no loop was called. 
+The Worst case time complexity of the doGet function which is in nameToId function is O(n) when the input value 
+is on the leftmost or rightmost side and the required value needs to be obtained by traversing the whole linked list.
+Therefore, the worst complexity of the function is O(n).
+
+
+===============
+FbMutualFriends
+===============
+
+- Worst case time complexity: O(n)
+
+- Explanation: 
+As explained above, the worst case time complexity of the nameToId function is O(n). 
+In this function, there are two calls of nameToId function and a loop that must traverse all contents are used. 
+The worst case time complexity of the function is O(n)
+
+
+===============
+ FbFriendRecs1
+===============
+
+- Worst case time complexity: O(n2)
+
+- Explanation: For this function, first, use the nameToId function to get the position of the name, 
+the worst complexity of the function is O(n). Then use a loop to put friends and unfriends into different arrays, 
+the complexity of the function is O (n). In addition,  use a loop containing another loop to add the number of unfriends 
+and name's mutual friends into the array. The complexity of the function is O (n2) After that, we find the maximum value, 
+complexity of the function is O (n). Finally, use a loop containing another loop to print them according to the number of 
+the mutral friends, the worst complexity of the function is O (n2). Theredore, the worst complexity of the function is O (n2).
+

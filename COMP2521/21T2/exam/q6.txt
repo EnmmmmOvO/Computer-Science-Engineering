@@ -1,0 +1,3 @@
+What is the best and worst case time complexity for the function above?
+
+O(n^2)

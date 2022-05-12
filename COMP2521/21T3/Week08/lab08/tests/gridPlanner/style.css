@@ -1,0 +1,13 @@
+#cy {
+	width: 80%;
+	min-width: 800px;
+	height: 800px;
+	display: block;
+	margin: auto;
+	border: 2px solid grey;
+}
+
+h1, p {
+	font-family: sans-serif;
+	text-align: center;
+}

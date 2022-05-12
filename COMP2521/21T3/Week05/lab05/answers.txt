@@ -1,0 +1,43 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of n, where n is the number of people who  have  been  added  to
+  Friendbook.
+
+===============
+  FbUnfriend
+===============
+
+- Worst case time complexity: O(logn)
+
+- Explanation: 
+    I used FbIsFriend function, this function call the FbNumFriends function, 
+    there is a loop during the FbNumFriends function, this function's time 
+    complexity is O(n); I also used nameToId function, and this function's 
+    time complexity is O(logn). The Worst case may the name1 is the first input 
+    person and the name2 is the last input person, FbNumFriends function need 
+    to traverse all link list to find. The worst case for nameToId function is
+    the purpose is on the bottom of the Map, the time complexity is O(logn). 
+    Therefore, the Worst case time complexity is O(n);
+
+===============
+FbMutualFriends
+===============
+
+- Worst case time complexity: O(n)
+
+- Explanation: 
+    I used nameToId function, the worst case may the value is on the
+    bottom of the Map, Therefore, the worst time complexity is O(logn).
+
+===============
+ FbFriendRecs1
+===============
+
+- Worst case time complexity: O(n^2)
+
+- Explanation: 
+    Dring this function, I used FbIsFriend(O(n)), nameToId(O(logn)), QueueEnqueue(O(1)),
+    QueueDequeue(O(1)), QueueIsEmpty(O(1)). I also used a double loop. Therefore, for this
+    function, there is no best or worst case. the time complexity is O(n^2).  
+

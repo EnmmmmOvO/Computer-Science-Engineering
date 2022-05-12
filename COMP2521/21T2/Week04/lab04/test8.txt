@@ -1,0 +1,8 @@
+Tree:
+7
+
+#nodes = 1,  #leaves = 1
+Infix  : 7 
+Prefix : 7 
+Postfix: 7 
+ByLevel: 7 

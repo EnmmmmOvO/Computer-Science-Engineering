@@ -1,0 +1,4 @@
+List A: 50, 25, 25, 12, 67, 50, 9, 25, 67, 98, 34, 9, 25, 67, 25, 9
+List B: 50, 9, 25, 67
+Tolerance: 1
+numSubsequences returned: 2

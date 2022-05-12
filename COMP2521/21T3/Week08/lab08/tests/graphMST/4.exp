@@ -1,0 +1,26 @@
+Graph:
+Number of vertices: 8
+Number of edges: 12
+Edge 0 - 1: 32.000000
+Edge 0 - 2: 29.000000
+Edge 0 - 5: 60.000000
+Edge 0 - 6: 51.000000
+Edge 0 - 7: 31.000000
+Edge 1 - 7: 21.000000
+Edge 3 - 4: 34.000000
+Edge 3 - 5: 18.000000
+Edge 4 - 5: 40.000000
+Edge 4 - 6: 51.000000
+Edge 4 - 7: 46.000000
+Edge 6 - 7: 25.000000
+
+Minimum Spanning Tree:
+Number of vertices: 8
+Number of edges: 7
+Edge 0 - 2: 29.000000
+Edge 0 - 7: 31.000000
+Edge 1 - 7: 21.000000
+Edge 3 - 4: 34.000000
+Edge 3 - 5: 18.000000
+Edge 4 - 7: 46.000000
+Edge 6 - 7: 25.000000

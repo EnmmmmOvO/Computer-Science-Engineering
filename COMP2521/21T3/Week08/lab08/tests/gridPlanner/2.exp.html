@@ -1,0 +1,34 @@
+<html>
+<head>
+  <title>Electrical Grid Plan</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Electrical Grid Plan</h1>
+  <p>Power plants are coloured yellow.</p>
+  <div id="cy"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.0/cytoscape.min.js" integrity="sha512-TOWs340KHbJjY/a2SCtsUcXYBg7/xPX72NKpJ3VITogkHJTy2yMyoJE0pxJjumMGHCg46ud89KO5q1Toe3Aeaw==" crossorigin="anonymous"></script>
+  <script>
+    var elems = [
+      {data: {id: "Solitude"}, position: {x: 273, y: -619}},
+      {data: {id: "Dawnstar"}, position: {x: 535, y: -602}},
+      {data: {id: "Winterhold"}, position: {x: 703, y: -599}},
+      {data: {id: "Riften"}, position: {x: 852, y: -121}},
+      {data: {id: "Whiterun"}, position: {x: 483, y: -325}},
+      {data: {id: "Falkreath"}, position: {x: 412, y: -147}},
+      {data: {id: "Markarth"}, position: {x: 100, y: -375}},
+      {data: {id: "Windhelm"}, position: {x: 792, y: -457}},
+      {data: {id: "Riverwood"}, position: {x: 534, y: -239}, classes: ['power-plant']},
+      {data: {id: 'e1', source: "Solitude", target: "Dawnstar"}},
+      {data: {id: 'e2', source: "Solitude", target: "Markarth"}},
+      {data: {id: 'e3', source: "Dawnstar", target: "Winterhold"}},
+      {data: {id: 'e4', source: "Dawnstar", target: "Whiterun"}},
+      {data: {id: 'e5', source: "Winterhold", target: "Windhelm"}},
+      {data: {id: 'e6', source: "Riften", target: "Riverwood"}},
+      {data: {id: 'e7', source: "Whiterun", target: "Riverwood"}},
+      {data: {id: 'e8', source: "Falkreath", target: "Riverwood"}},
+    ];
+  </script>
+  <script src="./visualiser.js"></script>
+</body>
+</html>

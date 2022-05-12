@@ -1,0 +1,8 @@
+What is the best and worst case time complexity for the function above?
+
+For m, the best and worst case time complexity are all O(m), the best and worst case depends on the number of m;
+
+For n, the best and worst case time complexity are all O(n) for loops that assign random values. For insertion function,
+the best case is the array in ascending order, the best time complexity is O(n); When array in reverse order, 
+the program needs to insert n (n-1) /2 times, then the time complexity is O (n^2). 
+Therefore, for the function, the besr case time complexity is O(n), and the worst case time complexity is O(n^2);

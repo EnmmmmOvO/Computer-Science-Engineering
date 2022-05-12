@@ -1,0 +1,51 @@
+1. Data
+ --------+---------+---------+------------------+------------
+   Input | Initial | Number  |  AvgTime		    |  AvgTime
+   Size  | Order   | of Runs |  for sortIntList |  for sort
+ --------+---------+---------+------------------+------------
+   10000 | random  | N 	     |   0.22sec		|   0.00sec
+   10000 | sorted  | N 	     |   0.00sec		|   0.00sec
+   10000 | reverse | N 	     |   0.00sec		|   0.00sec
+ --------+---------+---------+------------------+------------
+   20000 | random  | N 	     |   1.20sec		|   0.02sec
+   20000 | sorted  | N 	     |   0.00sec		|   0.00sec
+   20000 | reverse | N 	     |   0.00sec		|   0.00sec
+ ---------+---------+--------+------------------+-----------
+   40000 | random  | N	     |   6.32sec		|   0.04sec
+   40000 | sorted  | N	     |   0.01sec		|   0.01sec
+   40000 | reverse | N	     |   0.00sec		|   0.00sec
+ ---------+---------+--------+------------------+-----------
+   50000 | random  | N	     |  10.41sec		|   0.04sec
+   50000 | sorted  | N	     |   0.01sec		|   0.00sec
+   50000 | reverse | N	     |   0.00sec		|   0.01sec
+ -------+---------+----------+------------------+------------
+   80000 | random  | N	     |  29.10sec		|   0.07sec
+   80000 | sorted  | N	     |   0.03sec		|   0.02sec
+   80000 | reverse | N	     |   0.03sec		|   0.04sec
+ -------+---------+----------+------------------+------------
+  100000 | random  | N	     |  46.51sec		|   0.08sec
+  100000 | sorted  | N	     |   0.03sec		|   0.02sec
+  100000 | reverse | N	     |   0.04sec		|   0.05sec
+ -------+---------+----------+------------------+------------
+ ...
+
+2. analysis:
+ a. random:
+  Since the input data is random, most of the data has to be traversed through
+   the list to find the right place, so it takes much longer than ordering.  
+   The worst case is when the input data is smaller than the largest data in 
+   the linked list and larger than other data, which takes the most time.  
+
+ b . sorted
+  In this case, as it is arranged in sorted order, the input 
+  element is larger than all of the element in linked list, and the input 
+  element is inserted at the ending. Because we have the address of the last 
+  node in the list, we don't need to traverse the list, just insert it.
+  Sortind takes little time to complete;
+
+ c. reverse
+  In this case, as it is arranged in reverse order, the input element is 
+  smaller than all of the element in linked list, so the input element is 
+  inserted at the beginning, Sorting takes little time to complete;
+
+

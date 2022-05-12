@@ -1,0 +1,34 @@
+<html>
+<head>
+  <title>Minimum Spanning Tree</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Minimum Spanning Tree</h1>
+  <p>The minimum spanning tree is highlighted in green (if it exists).</p>
+  <div id="cy"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.0/cytoscape.min.js" integrity="sha512-TOWs340KHbJjY/a2SCtsUcXYBg7/xPX72NKpJ3VITogkHJTy2yMyoJE0pxJjumMGHCg46ud89KO5q1Toe3Aeaw==" crossorigin="anonymous"></script>
+  <script>
+    var elems = [
+      {data: {id: '0'}},
+      {data: {id: '1'}},
+      {data: {id: '2'}},
+      {data: {id: '3'}},
+      {data: {id: '4'}},
+      {data: {id: 'e1', source: '0', target: '1', weight: 3.000000}},
+      {data: {id: 'e2', source: '0', target: '2', weight: 2.000000}},
+      {data: {id: 'e3', source: '0', target: '3', weight: 8.000000}},
+      {data: {id: 'e4', source: '1', target: '2', weight: 4.000000}},
+      {data: {id: 'e5', source: '1', target: '4', weight: 6.000000}},
+      {data: {id: 'e6', source: '2', target: '3', weight: 1.000000}},
+      {data: {id: 'e7', source: '2', target: '4', weight: 5.000000}},
+      {data: {id: 'e8', source: '3', target: '4', weight: 7.000000}},
+      {data: {id: 'e9', source: '0', target: '1'}, classes: ['mst']},
+      {data: {id: 'e10', source: '0', target: '2'}, classes: ['mst']},
+      {data: {id: 'e11', source: '2', target: '3'}, classes: ['mst']},
+      {data: {id: 'e12', source: '2', target: '4'}, classes: ['mst']},
+    ];
+  </script>
+  <script src="./visualiser.js"></script>
+</body>
+</html>

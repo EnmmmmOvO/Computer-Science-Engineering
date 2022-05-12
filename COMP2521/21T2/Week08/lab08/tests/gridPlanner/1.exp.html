@@ -1,0 +1,32 @@
+<html>
+<head>
+  <title>Electrical Grid Plan</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <h1>Electrical Grid Plan</h1>
+  <p>Power plants are coloured yellow.</p>
+  <div id="cy"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.0/cytoscape.min.js" integrity="sha512-TOWs340KHbJjY/a2SCtsUcXYBg7/xPX72NKpJ3VITogkHJTy2yMyoJE0pxJjumMGHCg46ud89KO5q1Toe3Aeaw==" crossorigin="anonymous"></script>
+  <script>
+    var elems = [
+      {data: {id: "Sydney"}, position: {x: 870, y: -204}},
+      {data: {id: "Melbourne"}, position: {x: 727, y: -94}},
+      {data: {id: "Adelaide"}, position: {x: 581, y: -174}},
+      {data: {id: "Alice Springs"}, position: {x: 474, y: -469}},
+      {data: {id: "Darwin"}, position: {x: 406, y: -736}},
+      {data: {id: "Perth"}, position: {x: 65, y: -254}},
+      {data: {id: "Brisbane"}, position: {x: 910, y: -374}},
+      {data: {id: "Canberra"}, position: {x: 821, y: -165}, classes: ['power-plant']},
+      {data: {id: 'e1', source: "Sydney", target: "Canberra"}},
+      {data: {id: 'e2', source: "Sydney", target: "Brisbane"}},
+      {data: {id: 'e3', source: "Melbourne", target: "Canberra"}},
+      {data: {id: 'e4', source: "Melbourne", target: "Adelaide"}},
+      {data: {id: 'e5', source: "Adelaide", target: "Alice Springs"}},
+      {data: {id: 'e6', source: "Alice Springs", target: "Darwin"}},
+      {data: {id: 'e7', source: "Alice Springs", target: "Perth"}},
+    ];
+  </script>
+  <script src="./visualiser.js"></script>
+</body>
+</html>

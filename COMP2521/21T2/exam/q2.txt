@@ -1,0 +1,5 @@
+Which hash collision method would be most appropriate in this scenario? Summarise the way this particular method works, and use it to justify your answer.
+
+I think the best approach is to Separate Chaining because the number of keys 
+to be added is greater than the number of indexes, so it is better to insert 
+the contents of the same key into the list branch of the corresponding key.
