@@ -1,0 +1,157 @@
+
+<title>About Jasmin</title>
+
+<center>
+<img src="jasmin.gif"><p>
+<h1>About Jasmin</h1>
+<i>Jonathan Meyer, July '96</i>
+</center>
+
+<h2>1.1 Introduction</h2>
+
+This document tries to answer some questions you might have
+about Jasmin. In particular, several people have asked me what
+Jasmin is, why they might use Jasmin, and why I wrote it in the
+first place. I've tried to give some answers to these questions
+below.<p>
+
+<h2>1.2 What is Jasmin?</h2>
+
+Jasmin is a Java Assembler Interface. It takes ASCII descriptions for Java
+classes, written in a simple assembler-like syntax using the Java Virtual
+Machine instructions set. It converts them into binary Java class files 
+suitable for loading into a Java interpreter.<p>
+
+To give you a flavor, here is the Jasmin assembly code for HelloWorld:<p>
+
+<pre>
+    .class public HelloWorld
+    .super java/lang/Object
+
+    ;
+    ; standard initializer (calls java.lang.Object's initializer)
+    ;
+    .method public &lt;init&gt;()V
+       aload_0
+       invokenonvirtual java/lang/Object/&lt;init&gt;()V
+       return
+    .end method
+
+    ;
+    ; main() - prints out Hello World
+    ;
+    .method public static main([Ljava/lang/String;)V
+       .limit stack 2   ; up to two items can be pushed
+
+       ; push System.out onto the stack
+       getstatic java/lang/System/out Ljava/io/PrintStream;
+
+       ; push a string onto the stack
+       ldc "Hello World!"
+
+       ; call the PrintStream.println() method.
+       invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+
+       ; done
+       return
+    .end method
+
+</pre>
+
+Jasmin was written as the companion to the book "Java Virtual Machine",
+soon to be published by O'Reilly, written by Troy Downing and myself.<p>
+
+<h2>1.3 Motivation for Jasmin ("why did you write Jasmin?")</h2>
+
+We were at first reluctant to write Jasmin, in the main because we
+didn't want to introduce yet another syntax/file format if it could
+be avoided. However, for a number of reasons, we eventually decided 
+we had no choice. Two of the reasons were:<p>
+
+<h4>The Java .class file format is hairy</h4>
+
+Generating a Java class file manually is pretty fiddly. Its like
+creating an a.out (or .exe) file by hand.<p>
+
+Even using a package like JAS (a Java API for creating class 
+files, used internally by Jasmin and written by KB Sriram), you 
+need to know a lot about the philosophy of the Java Virtual
+Machine before you can write something at the Virtual
+Machine level and generate a Java class. <p>
+
+We wanted something that made it very easy for a student or programmer
+to explore the Java Virtual Machine, or write a new language 
+which targets the VM, without getting into the details of constant
+pool indices, attribute tables, and so on.<p>
+
+Creating a Java assembler seemed like a good solution.
+
+<h4>Sun has not defined an assembler format</h4>
+
+Unfortunately, Sun has not seen the need for a Java assembler,
+and has not created a standard assembler format.<p>
+
+Sun does provide a javap program which can print the assembly code
+in a class file. However, the javap output is inappropriate for 
+use as an assembler format. It is designed to be read by a person,
+not to be parsed by an assembler, so it has a number of
+omissions and drawbacks. <p>
+
+<h2>1.4 What can I do with Jasmin?</h2>
+
+To give you some ideas, below are some theoretical Jasmin users/uses.<p>
+
+<h4>Teachers</h4>
+
+If you are teaching a compilers course, you could have students
+write a compiler which generates Jasmin assembly files,
+and then assembles those files into Java class files. Then you
+can integrate the advantages of the Virtual Machine (portability, 
+the verifier, an object model...) into your courseware.<p>
+
+<h4>Hobbyists</h4>
+
+Jasmin lets you poke around in Java at the VM level, so that
+you can gain a real understanding of how Java works and
+what the Virtual Machine is like.<p>
+
+<h4>System Implementors</h4>
+
+If you are implementing a Java runtime system, Jasmin is 
+an essential tool for generating test classes.<p>
+
+<h4>Advanced Programmers</h4>
+
+You could use Jasmin to write a critical class or method by 
+hand (e.g. if you think that Java isn't doing things 
+as well as it could). <p>
+
+Alternatively, you could create a syntax extension to the
+Java language which uses Jasmin (or JAS). <p>
+
+<h4>Language Implementors</h4>
+
+If you want to create an implementation of your
+favorite programming language which targets the 
+Virtual Machine, Jasmin may be a simpler approach than
+writing a Java class file generator. This is especially
+true if your compiler is implemented in something other
+than Java, since you can create Java class files easily
+without having to get involved in the details of the
+binary file format.<p>
+
+<h4>Security Wizards</h4>
+
+Sun's claim that the Java class verifier protects you from
+hostile programs is a pretty strong one. Jasmin lets you create
+'hostile' class files and see if a Java implementation is really as 
+secure as it should be. Some people might argue that this is
+a good reason not to make the assembler public. I would
+disagree.<p>
+
+<hr><address>Copyright (c) Jonathan Meyer, July 1996</address>
+
+<hr>
+<a href="http://mrl.nyu.edu/meyer/jvm/jasmin.html">Jasmin Home</a> |
+<a href="http://mrl.nyu.edu/meyer/">Jon Meyer's Home</a>
+

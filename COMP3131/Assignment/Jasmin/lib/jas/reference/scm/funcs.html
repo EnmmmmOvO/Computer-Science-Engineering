@@ -1,0 +1,312 @@
+<html>
+<head>
+<title>Jas: scripting function and variable list</title>
+</head>
+
+<body>
+<hr>
+<h1>Jas: scripting function and variable list</h1>
+<H2>Variable list</H2>
+<UL>
+<LI> <CODE>acc-public</CODE>
+<LI> <CODE>acc-private</CODE>
+<LI> <CODE>acc-protected</CODE>
+<LI> <CODE>acc-static</CODE>
+<LI> <CODE>acc-final</CODE>
+<LI> <CODE>acc-synchronized</CODE>
+<LI> <CODE>acc-volatile</CODE>
+<LI> <CODE>acc-transient</CODE>
+<LI> <CODE>acc-native</CODE>
+<LI> <CODE>acc-interface</CODE>
+<LI> <CODE>acc-abstract</CODE>
+</UL>
+
+<h2>Basic functions</h2>
+<DL>
+<DT><CODE>define</CODE><DD>
+<code>(define symbol binding)</code>
+
+<DT><CODE> set!</CODE><DD> 
+<code>(set! symbol binding)</code>
+
+<DT><CODE> lambda</CODE><DD> 
+<code>(lambda (arg1 arg2 ...) body)</code>
+
+<DT><CODE> quote</CODE><DD> 
+<code>(quote body)</code>
+
+<DT><CODE> car</CODE><DD>
+<code>(car (a1 a2 ...))</code>
+
+<DT><CODE> cdr</CODE><DD> 
+<code>(cdr (a1 a2 ...))</code>
+
+<DT><CODE> cons</CODE><DD> 
+<code>(cons a1 (a2 a3...))</code>
+
+<DT><CODE> + </CODE><DD> 
+<code>(+ num1 num2)</code>
+
+<DT><CODE> - </CODE><DD> 
+<code>(- num1 num2)</code>
+
+<DT><CODE> * </CODE><DD> 
+<code>(* num1 num2)</code>
+
+<dt><code> / </code><dd>
+<code>(/ num1 num2)</code>
+
+<DT><CODE> |</CODE><DD> 
+Bitwise or<br>
+<code>(| num1 num2)</code>
+
+<dt><code>cond</code><dd>
+<code>(cond (expr1 body1) (expr2 body2) ...)</code>
+
+<dt><code>&gt;</code><dd>
+return non-nil if num1 is bigger than num2<br>
+<code>(&gt; num1 num2)</code>
+<dt><code>&lt;</code><dd>
+return non-nil if num1 is smaller than num2<br>
+<code>(&lt; num1 num2)</code>
+
+<dt><code>eq?</code><dd>
+<code>(eq? obj1 obj2)</code>
+<dt><code>num?</code><dd>
+returns non-nill if the argument is a number<br>
+<code>(num? something)</code>
+
+<dt><code>string?</code><dd>
+returns non-nil if the argument is a number<br>
+<code>(string? something)</code>
+
+<dt><code>progn</code><dd>
+evaluate a sequence of expressions in one body, returning the value of the
+last expression.<br>
+<code>(progn body1 body2 ...)</code>
+<dt><code>mapcar</code><dd>
+apply the function to each element on the list, returning a list
+of the return values.<br>
+<code>(mapcar fn (arg1 arg2 ...))</code>
+
+</dl>
+<h2>Creating various objects</h2>
+<dl>
+<dt><b>Constant pool items</b><dd>
+<dl>
+<dt><code>make-ascii-cpe</code><dd>
+Make an ascii cpe entry<br>
+<code>(make-ascii-cpe "stringval")</code>
+<dt><code>make-class-cpe</code><dd>
+Make a class cpe entry<br>
+<code>(make-class-cpe "classname")</code>
+<dt><code>make-name-type-cpe</code><dd>
+Make a name type entry<br>
+<code>(make-name-type-cpe "name" "signature")</code>
+<dt><code>make-field-cpe</code><dd>
+Make a field cpe<br>
+<code>(make-field-cpe "classname" "fieldname" "signature")</code>
+<dt><code>make-interface-cpe</code><dd>
+Make a interface cpe<br>
+<code>(make-interface-cpe "classname" "interfacename" "signature")</code>
+<dt><code>make-integer-cpe</code><dd>
+Make a constant integer in cp<br>
+<code>(make-integer-cpe num)</code>
+<dt><code>make-float-cpe</code><dd>
+Make a constant float in cp<br>
+<code>(make-float-cpe num)</code>
+<dt><code>make-long-cpe</code><dd>
+Make a constant long in cpe<br>
+<code>(make-long-cpe num)</code>
+<dt><code>make-double-cpe</code><dd>
+Make a constant double in cp<br>
+<code>(make-double-cpe num)</code>
+<dt><code>make-string-cpe</code><dd>
+Make a constant string in cpe<br>
+<code>(make-string-cpe "string val")</code>
+<dt><code>make-method-cpe</code><dd>
+Make a method cpe<br>
+<code>(make-method-cpe "classname" "methodname" "signature")</code>
+</dl>
+<dt><b>Instructions</b><dd>
+Instructions are objects that are created with the following set
+of functions. Any instruction not mentioned here is generated with
+a function of the same name and no arguments.
+
+<dl>
+<DT><CODE> bipush </CODE><DD> 
+<DT><CODE> sipush </CODE><DD>
+<DT><CODE> ret </CODE><DD>
+<DT><CODE> iload </CODE><DD>
+<DT><CODE> lload </CODE><DD>
+<DT><CODE> fload </CODE><DD>
+<DT><CODE> dload </CODE><DD>
+<DT><CODE> aload </CODE><DD>
+<DT><CODE> istore </CODE><DD>
+<DT><CODE> lstore </CODE><DD>
+<DT><CODE> fstore </CODE><DD>
+<DT><CODE> dstore </CODE><DD>
+<DT><CODE> astore </CODE><DD>
+<DT><CODE> newarray </CODE><DD>
+All the above take a single argument, a number. For instance,<br>
+<code>(bipush 3)</code>
+
+<DT><CODE> jsr </CODE><DD>
+<DT><CODE> goto </CODE><DD>
+<DT><CODE> if_acmpne </CODE><DD>
+<DT><CODE> if_acmpeq </CODE><DD>
+<DT><CODE> if_icmpge </CODE><DD>
+<DT><CODE> if_icmple </CODE><DD>
+<DT><CODE> if_icmpgt </CODE><DD>
+<DT><CODE> if_icmplt </CODE><DD>
+<DT><CODE> if_icmpne </CODE><DD>
+<DT><CODE> if_icmpeq </CODE><DD>
+<DT><CODE> ifge </CODE><DD>
+<DT><CODE> ifgt </CODE><DD>
+<DT><CODE> ifne </CODE><DD>
+<DT><CODE> ifle </CODE><DD>
+<DT><CODE> iflt </CODE><DD>
+<DT><CODE> ifeq </CODE><DD>
+<DT><CODE> ifnull </CODE><DD>
+<DT><CODE> ifnonnull </CODE><DD>
+<DT><CODE> goto_w </CODE><DD>
+<DT><CODE> jsr_w </CODE><DD>
+All of these take a label object as an argument. Label objects
+are generated with the label function. For instance,<br>
+<code>(jsr (make-label "targetname"))</code>
+
+<DT><CODE> anewarray </CODE><DD>
+<DT><CODE> ldc_w </CODE><DD>
+<DT><CODE> ldc2_w </CODE><DD>
+<DT><CODE> invokenonvirtual </CODE><DD>
+<DT><CODE> invokestatic </CODE><DD>
+<DT><CODE> invokevirtual </CODE><DD>
+<DT><CODE> new </CODE><DD>
+<DT><CODE> checkcast </CODE><DD>
+<DT><CODE> instanceof </CODE><DD>
+<DT><CODE> getstatic </CODE><DD>
+<DT><CODE> putstatic </CODE><DD>
+<DT><CODE> getfield </CODE><DD>
+<DT><CODE> putfield </CODE><DD>
+<DT><CODE> ldc </CODE><DD>
+All of these take a cpe item as an argument. You should be aware of
+the appropriate type of cpe item to pass to the instruction, though
+the assembler itself does not care about it. For instance,<br>
+<CODE>(ldc (make-string-cpe "someval"))</CODE>
+
+<DT><CODE> invokeinterface</CODE><DD>
+<code>(invokeinterface cpeitem numargs)</code>
+
+<DT><CODE> iinc</CODE><DD> 
+<code>(iinc varindex const)</code><br>
+Both these are numbers.
+
+<DT><CODE> multinewarray</CODE><DD> 
+<code>(multinewarray cpe dimensions)</code><br>
+cpe is the cpe for the class to be created, and dimension is a number.
+</DL>
+
+<dt><b>Miscellanous objects</b><dd>
+<dl>
+<dt><code>make-field</code><dd>
+Create a field definition for the class.<br>
+<code>(jas-define-class access cpeitem-name cpeitem-signature [optional constant attribute])</code><br>
+access is a number specifying the access restriction for the variable.
+The two cpeitems should be ascii-cpe's defining the name and signature.
+<dt><code>make-const</code><dd>
+Create a constant attribute<br>
+<code>(make-const const-cpe-item)</code>
+<dt><code>make-outputstream</code><dd>
+Open a file stream suitable for writing.<br>
+<code>(make-outputstream "filename")</code>
+<dt><code>make-label</code><dd>
+This is a special form that takes a string as its argument, and
+generates an object that behaves as a placemarker for instructions
+that need labels.<br>
+<pre>
+(make-label "sometarget")
+(pop)
+(pop)
+(goto (make-label "sometarget"))
+</pre>
+demonstrates the method, but be aware that this example will not
+pass the verifier, since the stack depths are not identical. You can
+reuse labels, or create new ones. Equivalence is solely by the
+name used to create the label.
+<dt><code>make-class-env</code><dd>
+Create a new container that will be the repository of information
+about a class.<br>
+<code>(make-class-env)</code>
+<dt><code>make-code</code><dd>
+Create an new method body<br>
+<code>(make-code)</code>
+<dt><code>make-exception</code><dd>
+Create a new exception attribute<br>
+<code>(make-exception)</code>
+<dt><code>make-catchtable</code><dd>
+<code>(make-catchtable)</code>
+<dt><code>make-catch-entry</code><dd>
+<code>(make-catch-entry)</code>
+</dl>
+</dl>
+<h2>Manipulating the various objects</h2>
+<dl>
+<DT><b>Class environment</b><dd>
+<dl>
+<dt><code>jas-class-addcpe</code><dd>
+Add a cpe directly to a class. You shouldn't need to do
+this unless you are trying to validate a VM implementation.<br>
+<code>(jas-class-addcpe class-env cpeitem)</code>
+<dt><code>jas-class-addfield</code><dd>
+Add a new field to this class<br>
+<code>(jas-class-addfield class-env field)</code>
+<dt><code>jas-class-addinterface</code><dd>
+Note that the cpe-item is expected to be a ClassCP by the VM<br>
+<code>(jas-class-addinterface class-env cpe-item)</code>
+<dt><code>jas-class-setclass</code><dd>
+Set the classname to this value<br>
+<code>(jas-class-setclass class-env cpeitem)</code>
+<dt><code>jas-class-setsuperclass</code><dd>
+Set the superclass to this value<br>
+<code>(jas-class-setsuperclass class-env cpeitem)</code>
+<dt><code>jas-class-addmethod</code><dd>
+Add a new code body to the class. access is a number describing
+the access permissions to the method.<br>
+<code>(jas-class-addmethod class-env access "methodname" "methodsignature"
+code-body exception-attribute)</code>
+<dt><code>jas-class-setaccess</code><dd>
+<code>(jas-class-setaccess class-env access)</code>
+<dt><code>jas-class-write</code><dd>
+Write out the representation of the class on the output stream.
+<code>(jas-class-write class-env outputstream)</code>
+</dl>
+
+<dt><b>Code object</b><dd>
+<dl>
+<dt><code>jas-code-addinsn</code><dd>
+<code>(jas-code-addinsn code-body insn)</code>
+<dt><code>jas-code-stack-size</code><dd>
+Set the stack size on the code body.<br>
+<code>(jas-code-stack-size code-body num)</code>
+<dt><code>jas-code-var-size</code><dd>
+Set the local vars size on the code body.<br>
+<code>(jas-code-var-size code-body num)</code>
+<dt><code>jas-set-catchtable</code><dd>
+<code>(jas-set-catchtable code-body catch-table)</code>
+</dl>
+
+<dt><b>Exception attribute</b><dd>
+<dl>
+<dt><code>jas-exception-add</code><dd>
+<code>(jas-exception-add exception cpe-item)</code>
+</dl>
+
+<dt><b>Catchtable</b><dd>
+<dl>
+<dt><code>jas-add-catch-entry</code><dd>
+<code>(jas-add-catch-entry catchtable catchentry)</code>
+</dl>
+<hr>
+<address>kbs@best.com</address>
+</body>
+</html>
