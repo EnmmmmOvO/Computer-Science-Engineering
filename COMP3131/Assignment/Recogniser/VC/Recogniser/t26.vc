@@ -1,0 +1,4 @@
+// 1.0 not allowed as the size of an array
+void A() {
+  int a[1.0];
+}

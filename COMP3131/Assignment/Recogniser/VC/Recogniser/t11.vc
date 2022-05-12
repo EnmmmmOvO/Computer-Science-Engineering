@@ -1,0 +1,9 @@
+int A() {
+
+  if (a) {
+    a = b = c = 10;
+  } else {
+    int i;
+    i = 10;
+  }
+}

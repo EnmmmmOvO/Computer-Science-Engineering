@@ -1,0 +1,5 @@
+int i;
+int j, k;
+void f() { }
+float f, g;
+void f() { int x, y; }

@@ -1,0 +1,4 @@
+// 3 functions
+void f() {  }
+int g() {  }
+float h() {  }

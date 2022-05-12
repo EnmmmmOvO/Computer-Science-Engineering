@@ -1,0 +1,14 @@
+int i;
+int j;
+// find the maximum of two integers
+int gcd(int a, int b) {
+  if (b == 0) 
+    return a;
+  else
+  return gcd(b, a - (a/b) *b);
+}
+void main() {  
+  i = getInt();
+  j = getInt();
+  putIntLn(gcd(i, j));
+}

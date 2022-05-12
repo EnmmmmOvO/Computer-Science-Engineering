@@ -1,0 +1,16 @@
+/* expression statements 
+ * 
+ * According to the C00 grammar, a single ";" is an expression statement
+ * with an empty expression appearing before the ";". 
+ * To make it easier to build the AST, we will create an ExprStmt node 
+ * with a single EmptyExpr child node for each empty statement ";".
+ * 
+ */
+
+int f() {
+  i = 1;
+  ;
+  ;
+  f(1,2);
+  ;
+}

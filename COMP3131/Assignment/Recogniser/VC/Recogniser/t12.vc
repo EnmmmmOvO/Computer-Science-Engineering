@@ -1,0 +1,11 @@
+int A() {
+  int i;
+
+  i = 1;
+  while (i <= 100) {
+    if (i == 50) continue;  
+    if (i == 77) break;  
+    i = i + 1;
+  }
+return i;
+}

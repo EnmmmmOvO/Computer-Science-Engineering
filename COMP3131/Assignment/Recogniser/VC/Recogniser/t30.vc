@@ -1,0 +1,5 @@
+// invalid initialiser but syntactically *legal* by the VC grammar
+// this will be detected as a semantic error in Assignment 4
+void A() {
+  int a = {1, 2};
+}

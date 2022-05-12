@@ -1,0 +1,10 @@
+int sub(int i) { }
+
+void A() {
+  int i;
+
+  true;
+  200;
+  i;
+  sub(2,3);
+}

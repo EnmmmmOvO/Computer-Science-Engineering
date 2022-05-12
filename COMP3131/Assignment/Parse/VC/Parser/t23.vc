@@ -1,0 +1,5 @@
+// expression
+// syntactically legal but semantically incorrect
+void main() {  
+ +-!!+1.2;
+}

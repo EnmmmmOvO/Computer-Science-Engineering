@@ -1,0 +1,15 @@
+int i;
+
+void A() {
+
+// "invalid lvalue" in the following three assignments
+// These semantic errors will be detected in Assignment 4.
+// But these assignments are all syntactically legal by the VC grammar.
+
+1 + 2 = a;
+
+1 <= 2 = 1 + 2; 
+
+1 = 2 = 3;
+
+}

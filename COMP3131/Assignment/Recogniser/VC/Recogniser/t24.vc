@@ -1,0 +1,5 @@
+// float is reserved and cannot be used as an id
+void A() 
+{
+  int float;
+}

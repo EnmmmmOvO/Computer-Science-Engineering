@@ -1,0 +1,11 @@
+int f(int a[]) {
+}
+
+int g(int a[10]) {
+}
+
+void main() {
+    int a[10] = { 1, 2};
+    f(a);
+    g(a);
+}

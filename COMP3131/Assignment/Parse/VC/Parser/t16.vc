@@ -1,0 +1,6 @@
+// expressions (break, contiune and return)
+void main() {  
+  break;
+  continue;
+  return 1; 
+}

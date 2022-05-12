@@ -1,0 +1,31 @@
+Question 5
+
+Write Emitter.visitDoWhileStmt in Java for generating Jasmin code for the do-while statement by using the visitor design pattern as you did in Assignment 5.
+    
+    public Object visitDoWhileStmt(DoWhileStmt ast, Object o) {
+        Frame frame = (Frame) o;
+        String label1 = frame.getNewLabel();
+        String label2 = frame.getNewLabel();
+
+        frame.conStack.push(label1);
+        frame.brkStack.push(label2);
+
+        emit(label1 + ":"); // start of the loop
+        ast.S.visit(this,o); // emit statements first
+
+        // check if conditon holds
+        ast.E.visit(this,o);
+        if (ast.E instanceof VarExpr) emitILOAD(temp);
+        // condition doesn't hold, jump to the end
+        emit(JVM.IFEQ, label2);
+        // condition holds, fall through to here.
+        // jump back to the start of loop for the next round
+        emit(JVM.GOTO, label1);
+
+        // end of the loop
+        emit(label2 + ":");
+
+        frame.conStack.pop();
+        frame.brkStack.pop();
+        return null;
+    }
