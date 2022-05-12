@@ -1,7 +1,0 @@
-// empty expressions
-void main() {
-a = 1;
-;
-; 
-b;
-}

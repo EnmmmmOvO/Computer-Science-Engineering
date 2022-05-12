@@ -1,3 +1,0 @@
-3331
-yoda
-test.exe yoda

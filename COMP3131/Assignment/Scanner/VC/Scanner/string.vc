@@ -1,7 +1,0 @@
-// all are legal strings
-
-"comp3131"
-"x\ty"
-"carriage return\r"
-"a\'\\b"
-"comp3131\ncomp9102"

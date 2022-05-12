@@ -1,7 +1,0 @@
-// if and compound statements
-void main() {  
-  if (i <= 10) {
-    int j;
-    j = 1;
-  }
-}

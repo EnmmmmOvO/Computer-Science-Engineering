@@ -1,4 +1,0 @@
-// 3 global variables 
-int i;
-float f = 1.0;
-boolean b;

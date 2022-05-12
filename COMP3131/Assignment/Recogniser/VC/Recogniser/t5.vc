@@ -1,3 +1,0 @@
-void A(int i, boolean b, float f) {
-  A(2,x);
-}
