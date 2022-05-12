@@ -1,0 +1,42 @@
+Question 2
+
+(a) Write a leftmost derivation for the sentence 5 + 4 ∗ 3 / 2.
+    1. expr
+    2. ==> term + expr
+    3. ==> factor + expr
+    4. ==> 5 + expr
+    5. ==> 5 + term
+    6. ==> 5 + factor * term
+    7. ==> 5 + 4 * term
+    8. ==> 5 + 4 * term / factor
+    9. ==> 5 + 4 * factor / factor
+    10. ==> 5 + 4 * 3 / factor
+    11. ==> 5 + 4 * 3 / 2
+
+
+(b) Draw a parse tree for this sentence.
+    See page 1 of q2.pdf file
+
+
+(c) If the operators +, * and / represent the operations of integer addition, integer multiplication and integer (truncated) division, respectively, what would be the value implied by your parse tree found in (b)?
+    1. 3/2 = 1
+    2. 4 * (3/2) = 4 * 1 = 4
+    3. 5 + 4 * (3/2) = 5 + 4 = 9
+    Answer: 9
+
+(d) Is this grammar ambiguous? Justify your answer.
+    It's ambiguous.
+    Consider the string "1*3/2". Following are 2 different valid parse trees for the string from the CFG:
+    Parse Treen 1:
+        See page 2 of q2.pdf file
+
+    Parse Treen 2:
+        See page 2 of q2.pdf file
+
+(e) Answer the following true or false questions about this grammar:
+    1. True
+    2. False
+    3. False
+    4. False
+    5. True
+    6. True

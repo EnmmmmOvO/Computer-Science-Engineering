@@ -1,0 +1,9 @@
+// Basically, each declaration in which multiple variables are declared
+// is treated as if the variables had been declared in distinct statements.
+//
+// Thus, t36.vc and t37.vc have the same AST.
+//
+// The positional information for phrases is not marked. For an example on 
+// how I have dealt the positional information in this case, click t37.gif. 
+
+int i, jj, kkk;

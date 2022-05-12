@@ -1,0 +1,4 @@
+// 2D arrays not supported
+void A() {
+  int a[10][10];
+}

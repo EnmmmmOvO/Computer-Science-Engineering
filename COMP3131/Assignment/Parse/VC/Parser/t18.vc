@@ -1,0 +1,5 @@
+// expression 
+// the tree must reflect correctly the associativity of +
+void main() {  
+  a = b = c = 1 + 2 + 3;
+}

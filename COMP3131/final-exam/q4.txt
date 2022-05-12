@@ -1,0 +1,33 @@
+Question 4
+
+(a) Write an attribute grammar that determines for each assignment how many times the assignment will be executed when running the program.
+    
+    Assumption:
+    1. The number of times that an assignment executes is stored in the attribute assignment.n. 
+    2. The subscripts for stmt-list_1 and stmt-list_2 are added just for discriminiation. They don’t change the original grammar. 
+
+        program -> func stmt-list {
+            stmt-list.n = 1
+        }
+
+        stmt-list_1 -> stmt stmt-list_2 {
+            stmt.n = stmt-list_1.n
+            stmt-list_2.n = stmt-list_1.n
+        }
+
+        stmt-list -> stmt {
+            stmt.n = stmt-list.n
+        }
+
+        stmt -> for ID = INTLITERAL_1 upto INTLITERAL_2 begin stmt-list end {
+            stmt-list.n = stmt.n * (INTLITERAL_2.val - INTLITERAL_1.val + 1)
+        }
+
+        stmt -> assignment {
+            assignment.n = stmt.n
+        }
+
+(b) Describe whether each attribute used is synthesised or inherited.
+
+    1. .val is intrinsic attribute provided by the scanner
+    2. .n is inherited attribute since it’s computed from the attributes from its parents and siblings.

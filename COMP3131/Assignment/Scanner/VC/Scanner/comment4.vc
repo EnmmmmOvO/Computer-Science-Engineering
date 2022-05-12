@@ -1,0 +1,4 @@
+// The following comment is unterminated
+// It suffices for your scanner to print just an error message
+// with ERROR: appearing somewhere in the message 
+/* *************

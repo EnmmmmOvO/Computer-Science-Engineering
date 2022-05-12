@@ -1,0 +1,11 @@
+// this program should compile if { is inserted after line 6
+// and } before line 10. That is int j; i = j + 1; should be
+// grouped in a block
+void A() {
+  int i;
+
+  i = 1;
+  while (i <= 200) 
+    int j;
+    i = j + 1;
+}

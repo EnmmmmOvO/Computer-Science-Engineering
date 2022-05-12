@@ -1,0 +1,6 @@
+// a declaration must appear before the statements
+void A()
+{
+  i = 10;
+  int i;
+}

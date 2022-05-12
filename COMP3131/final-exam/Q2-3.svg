@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 321 351" style="enable-background:new 0 0 321 351;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st2{stroke:#000000;stroke-miterlimit:10;}
+	.st3{fill:#FFFFFF;stroke:#000000;}
+	.st4{font-family:'Helvetica';}
+	.st5{font-size:12px;}
+</style>
+<path class="st0" d="z"/>
+<g>
+	<path pointer-events="stroke" class="st1" d="M120.5,40.5v23.6"/>
+	<path pointer-events="all" class="st2" d="M120.5,69.4l-3.5-7l3.5,1.8l3.5-1.8L120.5,69.4z"/>
+	<ellipse pointer-events="all" class="st3" cx="120.5" cy="20.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 108.8281 24.5)" class="st4 st5">expr</text>
+	</g>
+	<path pointer-events="stroke" class="st1" d="M92.2,104.6l-46,23"/>
+	<path pointer-events="all" class="st2" d="M41.5,130l4.7-6.3v3.9l3.1,2.3H41.5z"/>
+	<path pointer-events="stroke" class="st1" d="M120.5,110.5l0.1,19.6"/>
+	<path pointer-events="all" class="st2" d="M120.6,135.4l-3.5-7l3.5,1.7l3.5-1.8L120.6,135.4z"/>
+	<path pointer-events="stroke" class="st1" d="M148.8,104.6l46,23"/>
+	<path pointer-events="all" class="st2" d="M199.5,130h-7.8l3.1-2.3v-3.9L199.5,130z"/>
+	<ellipse pointer-events="all" class="st3" cx="120.5" cy="90.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 108.5 94.5)" class="st4 st5">term</text>
+	</g>
+	<ellipse pointer-events="all" class="st3" cx="40.5" cy="150.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 25.4941 154.5)" class="st4 st5">factor</text>
+	</g>
+	<path pointer-events="stroke" class="st1" d="M40.5,170.5l0.1,23.6"/>
+	<path pointer-events="all" class="st2" d="M40.6,199.4l-3.5-7l3.5,1.7l3.5-1.8L40.6,199.4z"/>
+	<rect x="30.5" y="210.5" pointer-events="all" class="st0" width="20" height="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 37.1631 224.5)" class="st4 st5">1</text>
+	</g>
+	<path pointer-events="stroke" class="st1" d="M172.2,164.6l-31.6,22.2"/>
+	<path pointer-events="all" class="st2" d="M136.3,189.9l3.7-6.9l0.6,3.9l3.4,1.9L136.3,189.9z"/>
+	<path pointer-events="stroke" class="st1" d="M200.5,170.5l0.8,20.6"/>
+	<path pointer-events="all" class="st2" d="M201.5,196.4l-3.8-6.9l3.6,1.6l3.4-1.9L201.5,196.4z"/>
+	<path pointer-events="stroke" class="st1" d="M228.8,164.6l46,23"/>
+	<path pointer-events="all" class="st2" d="M279.5,190h-7.8l3.1-2.4v-3.9L279.5,190z"/>
+	<ellipse pointer-events="all" class="st3" cx="200.5" cy="150.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 188.5 154.5)" class="st4 st5">term</text>
+	</g>
+	<rect x="110.5" y="140.5" pointer-events="all" class="st0" width="20" height="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 118.165 154.5)" class="st4 st5">*</text>
+	</g>
+	<path pointer-events="stroke" class="st1" d="M135.4,230.5v13.6"/>
+	<path pointer-events="all" class="st2" d="M135.4,249.4l-3.5-7l3.5,1.8l3.5-1.8L135.4,249.4z"/>
+	<ellipse pointer-events="all" class="st3" cx="135.4" cy="210.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 123.5 214.5)" class="st4 st5">term</text>
+	</g>
+	<path pointer-events="stroke" class="st1" d="M135.4,290.5l0.1,23.6"/>
+	<path pointer-events="all" class="st2" d="M135.5,319.4l-3.5-7l3.5,1.7l3.5-1.8L135.5,319.4z"/>
+	<ellipse pointer-events="all" class="st3" cx="135.4" cy="270.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 120.4941 274.5)" class="st4 st5">factor</text>
+	</g>
+	<rect x="125.4" y="330.5" pointer-events="all" class="st0" width="20" height="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 132.1631 344.5)" class="st4 st5">3</text>
+	</g>
+	<path pointer-events="stroke" class="st1" d="M280.5,230.5l0.1,23.6"/>
+	<path pointer-events="all" class="st2" d="M280.6,259.4l-3.5-7l3.5,1.7l3.5-1.8L280.6,259.4z"/>
+	<ellipse pointer-events="all" class="st3" cx="280.5" cy="210.5" rx="40" ry="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 265.4941 214.5)" class="st4 st5">factor</text>
+	</g>
+	<rect x="270.5" y="270.5" pointer-events="all" class="st0" width="20" height="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 277.1631 284.5)" class="st4 st5">2</text>
+	</g>
+	<rect x="190.5" y="200.5" pointer-events="all" class="st0" width="20" height="20"/>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 198.833 214.5)" class="st4 st5">/</text>
+	</g>
+</g>
+<path class="st0" d="z"/>
+</svg>

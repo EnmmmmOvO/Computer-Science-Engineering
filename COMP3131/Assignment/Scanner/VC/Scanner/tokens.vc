@@ -1,0 +1,34 @@
+/* 
+ * This file contains some legal tokens for VC
+ * The correct output can be found in the file tokens.sol
+ *
+ * To test if your scanner works correctly, do the following two steps:
+ * (1) run your scanner on tokens.all and pipe the output to a file, 
+ *    say, tokens.out.
+ * (2) Type (on a UNIX-based machine):
+ *     diff tokens.sol tokens.out
+ *
+ * Your scanner works correctly, at least on this particular input file,
+ * if diff has executed silently (without outputing anything).
+ */
+boolean break continue else float if int return void while 
++ - * / ! != = == < <= > >= & && || { } ( ) [ ] ; ,
+id    // this is another comment
+1
+.1
+1.
+1.1
+1e5  1E5
+.1e5 .1E5
+1.e5 1.E5
+1.1e5 1.1E5
+1e+5 1E+5
+.1e+5 .1E+5
+1.e+5 1.E+5
+1.1e+5 1.1E+5
+1e-5 1E-5
+.1e-5 .1E-5
+1.e-5 1.E-5
+1.1e-5 1.1E-5
+true false
+"comp3131/9102"
