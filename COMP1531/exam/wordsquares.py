@@ -1,0 +1,2 @@
+def wordsquare(words):
+    pass

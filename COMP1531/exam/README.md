@@ -1,0 +1,1 @@
+Please see [](https://gitlab.cse.unsw.edu.au/COMP1531/20T3/exam-spec)

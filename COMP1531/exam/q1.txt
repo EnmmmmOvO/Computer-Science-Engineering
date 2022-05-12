@@ -1,0 +1,3 @@
+Q. Is this requirement functional or non-functional? Justify your answer.
+
+A. non-functional. Because it is not a requirement functional counts as a non-functional.

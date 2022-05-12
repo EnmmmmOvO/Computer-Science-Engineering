@@ -1,0 +1,3 @@
+Q. Would you consider this an example of accidental complexity or essential complexity? Justify your answer.
+
+A. accidental complexity. There is a more simple and clear method to calculate the date of year and year, and there is a more simple and feasible solution, so it is an accurate complexity.

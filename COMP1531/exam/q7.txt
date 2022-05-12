@@ -1,0 +1,3 @@
+Q. Describe one benefit of this process.
+
+A. The more stable the branch is used by more customers, the more unstable the branch will iterate faster.

@@ -1,0 +1,40 @@
+# DO NOT CHANGE THIS FILE!
+#
+# This is run on a non-standard gitlab runner so any changes you make may break in unexpected ways.
+# If you feel for some reason this file MUST be changed, please post on the course forum so it can
+# be discussed between you and course staff.
+#
+image: comp1531/basic:20T3
+
+stages:
+  - checks
+
+pytest:
+  stage: checks
+  script:
+    # Generate coverage data at the same time we run the tests
+    - coverage run -m pytest tests/ --junitxml=pytest_report.xml
+    - coverage report
+    - coverage html
+  coverage: '/TOTAL.*\s+(\d+%)$/'
+  artifacts:
+    reports:
+      junit: pytest_report.xml
+    paths:
+      - htmlcov/
+    expose_as: Coverage Report
+    expire_in: 1 week
+
+pytest_http:
+  stage: checks
+  script:
+    - SERVER_LOG=$(mktemp)
+    - python3 -m src.server >& $SERVER_LOG &
+    - pytest http_tests/
+    - kill %1
+    - cat $SERVER_LOG
+
+pylint:
+  stage: checks
+  script:
+    - find . -type f -name "*.py" | xargs pylint

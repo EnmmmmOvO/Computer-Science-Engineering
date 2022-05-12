@@ -1,0 +1,5 @@
+Consider this statement:
+The user shall be able to change their password if they forget it.
+Q. If you saw this statement written down on an engineering document, what part of the SDLC would you assume this statement was created in? Justify your response.
+
+A. Detail design and development. This stage includes the development of detailed designs that brings initial design work into a completed form of specifications. forget then change the password belong to detailed design of logining part.

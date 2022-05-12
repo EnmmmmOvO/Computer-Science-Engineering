@@ -1,0 +1,8 @@
+Q. Which of the following would constitute an Agile approach to the construction of moon cars? There may be multipleanswers. Write any relevant answers as a , b , c , d , or e in the text file.
+a. Ensure the design is near-perfect before beginning development.
+b. Focusing on ensuring the best testing pipelines are setup as a priority over how your team members feel about thetesting processes.
+c. Focusing on getting something workable that isn't perfect, rather than waiting months until it is perfect.
+d. Dedicating one engineer’s entire role to writing a manual documenting how the car works.
+e. Meetings week every fortnight to collaborate and respond to change.
+
+A. a c d e

@@ -1,0 +1,6 @@
+In your personal exam repository, answer this question in q5.txt .
+Consider this requirement:
+I really hate how slow the Gitlab pipelines can be when we're close to deadlines. I understand that lots of people arecramming just like me, and I understand that I could have planned my time better, but that won't stop me being annoyed, you know? The biggest issue I have is that when the pipelines are slow, even though I could run things locally, I don't have the confidence that my local code will work on CSE systems."
+Q. Write a user story to capture the above requirement.
+
+A. Ensure the smooth flow of GITLAB communications as the deadline approaches and ensure that the CSE system works smoothly and does not affect the work on the CSE.

@@ -1,0 +1,3 @@
+Q. Would this be considered memory safe? In your answer, state the convention used for this type of approach to software safety.
+
+A. The memory safe runtime makes the program unable to access the memory range of the non self program by restriction.

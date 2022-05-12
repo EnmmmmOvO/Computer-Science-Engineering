@@ -1,0 +1,5 @@
+Consider this statement:
+We need to ensure that the message entities and user entities are sufficiently decoupled.
+Q. If you were told this statement, what part of the SDLC would you think this fits into? Justify your response.
+
+A. Conceptual design. The conceptual design stage is the stage where an identified need is examined, requirements for potential solutions are defined, potential solutions are evaluated and a system specification is developed.
