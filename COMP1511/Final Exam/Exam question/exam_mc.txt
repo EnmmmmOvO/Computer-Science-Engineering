@@ -1,0 +1,115 @@
+[COMP1511 Final Exam]
+You should edit the empty space between the curly braces.
+You should not edit anything else in this file.
+
+You can test this file conforms to the correct syntax with "1511 autotest-exam exam_mc"
+
+You should submit this file with the command "give cs1511 exam_mc exam_mc.txt"
+
+If you need a new copy of the file, move this file to a safe place,
+then run "1511 fetch-exam".
+
+q1: What would `part1_q1.c` print (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q1] {{{  }}}
+
+
+q2: What would `part1_q2.c` print (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q2] {{{  }}}
+
+
+q3: Which of the diagrams best represents the if statements (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q3] {{{  }}}
+
+
+q4: What is an string that causes the output "d 0" (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored).
+You do not need to provide the function call, just the string.
+[q4] {{{ "" }}}
+
+
+q5: What would `part1_q5.c` print (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q5] {{{  }}}
+
+
+q6: What should go inside [SECRET] on line 4 of `part1_q6.c` print (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q6] {{{  }}}
+
+
+q7: On what line of `part1_q7.c` is there an error (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q7] {{{  }}}
+
+
+q8: What are the 4 values of `y` when `part1_q8.c` is run (see the paper for details)?
+Enter your answer as four numbers, seperated by spaces, inside the curly braces
+(extra spaces will be ignored)
+[q8] {{{  }}}
+
+
+q9: What should go inside [SECRET] on the first line of `part1_q9.c` (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+Note that you do not need to put curly braces in your answer -- your answer will be a numbers
+seperated by commas.
+[q9] {{{  }}}
+
+
+q10: What style issues are present in `part1_q10.c` (see the paper for details)?
+Enter the correct letters inside the curly braces (extra spaces will be ignored)
+[q10] {{{  }}}
+
+
+q11: Which of the diagrams best represents the new state of the linked list (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q11] {{{  }}}
+
+
+q12: What value will `my_number` have just before line 13 of `part1_q12.c` is run (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q12] {{{  }}}
+
+q13: What is an input that causes the output shown in the paper (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+The start of the command is given in the brackets, you will need to add to the end of the answer.
+[q13] {{{ ./part1_q13  }}}
+
+
+q14: Which is the correct answer to question 14 (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q14] {{{  }}}
+
+
+q15: Which is the correct struct in question 15 (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q15] {{{  }}}
+
+
+q16: Which of the cases will not produce a correct result (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q16] {{{  }}}
+
+
+q17: Which of the functions will always return a valid value (see the paper for details)?
+[The above reminder text was updated during the exam. The actual question did not change].
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q17] {{{  }}}
+
+
+q18: Which of the statements are correct (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q18] {{{  }}}
+
+
+q19: What are the values of a and b at the end of `part1_q19.c`?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q19] {{{  }}}
+
+
+q20: What should go inside [SECRET] on line 6 of `part1_q20.c` print (see the paper for details)?
+Enter your answer inside the curly braces (extra spaces will be ignored)
+[q20] {{{  }}}
+
