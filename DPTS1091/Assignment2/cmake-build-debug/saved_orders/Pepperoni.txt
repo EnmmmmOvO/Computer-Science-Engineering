@@ -1,0 +1,4 @@
+Mozzarella-Cheese: 4 @ $0.30
+Pepperoni: 10 @ $0.15
+Regular-Base: 1 @ $2.00
+Tomato-Paste: 1 @ $1.00

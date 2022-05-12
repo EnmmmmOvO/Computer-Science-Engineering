@@ -1,0 +1,4 @@
+Basil-Leaf: 2 @ $0.15
+Mozzarella-Cheese: 4 @ $0.30
+Regular-Base: 1 @ $2.00
+Tomato-Paste: 1 @ $1.00
