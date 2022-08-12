@@ -1,0 +1,43 @@
+[
+    {
+        "name": "COMP6771",
+        "preferredGenerator": {
+            "name": "Ninja"
+        },
+        "cmakeSettings": {
+            "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${workspaceFolder}/config/cmake/toolchains/clang-libcxx.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-linux-libcxx",
+            "CMAKE_C_COMPILER": "/usr/bin/clang-11",
+            "CMAKE_CXX_COMPILER": "/usr/bin/clang++-11",
+            "CMAKE_PREFIX_PATH": "/usr/lib/llvm-11"
+        }
+    },
+    {
+        "name": "COMP6771 (VLAB/Remote SSH)",
+        "toolchainFile": "/import/kamen/1/cs6771/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "preferredGenerator": {
+            "name": "Ninja"
+        },
+        "cmakeSettings": {
+            "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${workspaceFolder}/config/cmake/toolchains/clang-libcxx.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-linux-libcxx",
+            "CMAKE_C_COMPILER": "/usr/bin/clang-11",
+            "CMAKE_CXX_COMPILER": "/usr/bin/clang++-11",
+            "CMAKE_PREFIX_PATH": "/usr/lib/llvm-11"
+        }
+    },
+    {
+        "name": "COMP6771 (Home setup)",
+        "toolchainFile": "${workspaceFolder}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "preferredGenerator": {
+            "name": "Ninja"
+        },
+        "cmakeSettings": {
+            "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${workspaceFolder}/config/cmake/toolchains/clang-libcxx.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-linux-libcxx",
+            "CMAKE_C_COMPILER": "/usr/bin/clang-11",
+            "CMAKE_CXX_COMPILER": "/usr/bin/clang++-11",
+            "CMAKE_PREFIX_PATH": "/usr/lib/llvm-11"
+        }
+    }
+]

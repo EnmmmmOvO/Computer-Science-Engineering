@@ -1,0 +1,16 @@
+[
+    {
+        "name": "COMP6771",
+        "toolchainFile": "${workspaceFolder}/config/cmake/toolchains/clang-libcxx.cmake",
+        "preferredGenerator": {
+            "name":    "Ninja"
+        },
+        "cmakeSettings": {
+            "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "${workspaceFolder}/config/cmake/toolchains/clang-libcxx.cmake",
+            "VCPKG_TARGET_TRIPLET": "x64-linux-libcxx",
+            "CMAKE_C_COMPILER": "/usr/bin/clang-11",
+            "CMAKE_CXX_COMPILER": "/usr/bin/clang++-11",
+            "CMAKE_PREFIX_PATH": "/usr/lib/llvm-11"
+        }
+    }
+]

@@ -1,0 +1,7 @@
+clang-format-11 -style=file -i source/euclidean_vector.cpp
+clang-format-11 -style=file -i include/comp6771/euclidean_vector.hpp
+clang-format-11 -style=file -i test/euclidean_vector/euclidean_vector_member_functions_test.cpp
+clang-format-11 -style=file -i test/euclidean_vector/euclidean_vector_utility_functions_test.cpp
+clang-format-11 -style=file -i test/euclidean_vector/euclidean_vector_constructor_test.cpp
+clang-format-11 -style=file -i test/euclidean_vector/euclidean_vector_operations_test.cpp
+clang-format-11 -style=file -i test/euclidean_vector/euclidean_vector_friends_test.cpp

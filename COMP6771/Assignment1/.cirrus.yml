@@ -1,0 +1,38 @@
+# Copyright (c) Christopher Di Bella.
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+#
+task:
+  container:
+    dockerfile: config/ci/Dockerfile
+    cpu: 4
+    memory: 4G
+  env:
+    matrix:
+      - TRIPLET: x64-linux-libcxx-static
+        TOOLCHAIN: clang-libcxx
+      - TRIPLET: x64-linux
+        matrix:
+          - TOOLCHAIN: clang-libstdcxx
+          - TOOLCHAIN: gcc-libstdcxx
+    matrix:
+      - BUILD_TYPE: Debug
+      - BUILD_TYPE: Release
+  vcpkg_script:
+    - git clone https://github.com/Microsoft/vcpkg.git
+    - cd vcpkg
+    - ./bootstrap-vcpkg.sh -disableMetrics
+    - ./vcpkg --triplet ${TRIPLET}
+    - ./vcpkg install abseil benchmark Catch2 fmt range-v3
+  configure_script:
+    - mkdir build
+    - cd build
+    - cmake .. -GNinja
+               -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+               -DCMAKE_TOOLCHAIN_FILE="${PWD}vcpkg/scripts/buildsystems/vcpkg.cmake"
+               -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="${PATH}/config/cmake/toolchains/${TOOLCHAIN}.cmake"
+  build_script:
+    - cd build
+    - ninja
+  test_script:
+    - cd build
+    - ctest -j 6 --output-on-failure

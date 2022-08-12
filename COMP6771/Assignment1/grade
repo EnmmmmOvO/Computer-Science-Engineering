@@ -1,0 +1,1880 @@
+Session: 22T2
+Assignment: ass1  Submission ID: 5286124
+
+
+Your submission has been marked. + /usr/bin/less -m /import/adams/3/z5286124/cs6771.ass1.mrk
+
+!!section banner
+#######  #####   #####   #####     #     #####  #
+#       #     # #     # #     #   ##    #     # #    #
+#             # #     # #        # #          # #    #
+ #####   #####   #####  ######     #     #####  #######
+      # #       #     # #     #    #    #            #
+#     # #       #     # #     #    #    #            #
+ #####  #######  #####   #####   #####  #######      #
+
+5286124 Wang, William                           3778/2 COMPA1
+
+Submissions:-
+
+S 0     Fri Jun 17 19:42:13 2022        5286124 orphans ass1 0:-11
+
+Fri Jun 24 20:46:38 2022                ## marimba.orchestra.cse.unsw.EDU.AU ##
+!!section listing
+CMakeLists.txt
+LICENSE.md
+README.md
+benchmark
+debug.png
+include/
+include/comp6771/
+include/comp6771/ladder.hpp
+include/comp6771/word_ladder.hpp
+log
+source/
+source/lexicon.cpp
+source/debugging_main.cpp
+source/word_ladder.cpp
+source/ladder.cpp
+source/CMakeLists.txt
+test/
+test/catch2/
+test/catch2/catch.hpp
+test/test_main.cpp
+test/CMakeLists.txt
+test/word_ladder/
+test/word_ladder/english.txt
+test/word_ladder/word_ladder_test3.cpp
+test/word_ladder/word_ladder_test4.cpp
+test/word_ladder/word_ladder_test_benchmark.cpp
+test/word_ladder/word_ladder_test1.cpp
+test/word_ladder/word_ladder_test2.cpp
+test/word_ladder/CMakeLists.txt
+.clang-format
+dos2unix: converting file include/comp6771/word_ladder.hpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 963 Jun 24 20:46 include/comp6771/word_ladder.hpp
+===============================================================================
+
+     1  // Copyright (c) Christopher Di Bella.
+     2  // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+     3  //
+     4  #ifndef COMP6771_WORD_LADDER_HPP
+     5  #define COMP6771_WORD_LADDER_HPP
+     6
+     7  #include <unordered_set>
+     8  #include <string>
+     9  #include <vector>
+    10
+    11  namespace word_ladder {
+    12          [[nodiscard]] auto read_lexicon(std::string const& path) -> std::unordered_set<std::string>;
+    13
+    14          // Given a start word and destination word, returns all the shortest possible paths from the
+    15          // start word to the destination, where each word in an individual path is a valid word per the
+    16          // provided lexicon. Pre: ranges::size(from) == ranges::size(to) Pre: valid_words.contains(from)
+    17          // and valid_words.contains(to)
+    18          [[nodiscard]] auto generate(std::string const& from,
+    19                                      std::string const& to,
+    20                                      std::unordered_set<std::string> const& lexicon)
+    21             -> std::vector<std::vector<std::string>>;
+    22  } // namespace word_ladder
+    23
+    24  #endif // COMP6771_WORD_LADDER_HPP
+
+dos2unix: converting file include/comp6771/ladder.hpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 3153 Jun 24 20:46 include/comp6771/ladder.hpp
+===============================================================================
+
+     1  //
+     2  // Created by Jinghan Wang on 8/6/2022.
+     3  //
+     4
+     5  #ifndef COMP6771_ASS1_LADDER_HPP
+     6  #define COMP6771_ASS1_LADDER_HPP
+     7
+     8  #include <unordered_set>
+     9  #include <algorithm>
+    10  #include <map>
+    11  #include <string>
+    12  #include <vector>
+    13
+    14  // When create the class, it needs the origin english_lexicon , from and to word.
+    15  // function (create_newLexicon)
+    16  // First, create a vector and record all lexicon words with the same length of
+    17  // start word, and compare the number of characters that differ from the end word.
+    18  // Then compare the words in each newLexicon with each other. If the difference is
+    19  // one character, it is recorded in adjacent. Put the same number of difference with
+    20  // end word into a vector, and map the number of characters that differ from end word
+    21  // into the target vector.
+    22  // function (find)
+    23  // first, start with start word, first sort the keys of adjacent and find the vector
+    24  // that is less different with end word.
+    25  // Check the status of adjacent vertices in the vector:
+    26  //      if the depth of the next depth is greater than the existing minimum number, or the vertices
+    27  //      have been known, skip;
+    28  //              If it is the same as end word, record the experienced vertex;
+    29  //      If else, mark the next vertex known, then record the current index in the last of the next
+    30  //    vertex, and then go to the next layer.
+    31  //    After the next vertex is completed, mark it with unknown to find other suitable ones
+    32  class ladder {
+        ^
++ ============================================================================================== +
++ you were asked to write the main program logic in functions, not as a class with class methods +
++ ============================================================================================== +
+    33  private:
+    34          struct Vertex {
+    35                  // The Node in the newLexicon's position
+    36                  int index;
+    37
+    38                  // Record all word with the one character diff
+    39                  // map <int(Record the number of different With End Word), std::vector<int>(Record all word
+    40                  // with the one character diff and has same different with end word)>
+    41                  std::map<int, std::vector<int>> adjacent;
+    42                  std::string word;
+    43
+    44                  // Record the number of difference with the end word;
+    45                  // i.e. this : work,  end : play, diffWithEndWord : 4;
+    46                  //      this : plan,  end : play, diffWithEndWord : 1;
+    47                  int diffWithEndWord;
+    48
+    49                  // Record the word point to this vertex
+    50                  int last;
+    51
+    52                  // Record the word is used or not
+    53                  bool known;
+    54          };
+    55
+    56          int startPosition = 0;
+    57          int endPosition = 0;
+    58          std::vector<std::vector<std::string>> result;
+    59          int shortest;
+    60          bool check = false;
+    61          std::vector<Vertex> newLexicon;
+    62          std::vector<std::string> tempstring;
+    63
+    64          auto create_newVertex(std::string word, int diffWithEndWord, int index) -> Vertex;
+    65          auto get_char_diff(std::string word1, std::string word2) -> int;
+    66          auto create_newLexicon(std::unordered_set<std::string> const& lexicon,
+    67                                 int length,
+    68                                 std::string const& from,
+    69                                 std::string const& to) -> std::vector<Vertex>;
+    70          auto find(int pos, int n, std::vector<Vertex>& newLexicon) -> void;
+    71          auto record_result(int n, std::vector<Vertex> const& newLexicon) -> void;
+    72
+    73  public:
+    74          ladder(std::string const& from,
+    75                 std::string const& to,
+    76                 std::unordered_set<std::string> const& lexicon) {
+    77                  if (from.length() == to.length()) {
+    78                          check = true;
+    79                          newLexicon = create_newLexicon(lexicon, from.length(), from, to);
+    80                  }
+    81          }
+    82
+    83          auto start() -> std::vector<std::vector<std::string>>;
+    84  };
+    85
+    86  #endif // COMP6771_ASS1_LADDER_HPP
+
+dos2unix: converting file source/lexicon.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 852 Jun 24 20:46 source/lexicon.cpp
+===============================================================================
+
+     1  // Copyright (c) Christopher Di Bella.
+     2  // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+     3  //
+     4  #include <comp6771/word_ladder.hpp>
+     5
+     6  #include <unordered_set>
+     7  #include <fstream>
+     8  #include <iterator>
+     9  #include <stdexcept>
+    10  #include <string>
+    11
+    12  namespace word_ladder {
+    13          auto read_lexicon(std::string const& path) -> std::unordered_set<std::string> {
+    14                  auto in = std::ifstream(path.data());
+    15                  if (not in) {
+    16                          throw std::runtime_error("Unable to open file.");
+    17                  }
+    18
+    19                  std::unordered_set<std::string> lexicon;
+    20                  std::copy(std::istream_iterator<std::string>(in),
+    21                            std::istream_iterator<std::string>(),
+    22                            std::inserter(lexicon, lexicon.end()));
+    23                  if (in.bad()) {
+    24                          std::runtime_error("I/O error while reading");
+    25                  }
+    26                  if (!in.eof()) {
+    27                          std::runtime_error("Didn't reach end of file");
+    28                  }
+    29                  return lexicon;
+    30          }
+    31  } // namespace word_ladder
+
+dos2unix: converting file source/debugging_main.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 535 Jun 24 20:46 source/debugging_main.cpp
+===============================================================================
+
+     1  #include "comp6771/word_ladder.hpp"
+     2
+     3  // Please note: it's not good practice to test your code via a main function that does
+     4  //  printing. Instead, you should be using your test folder. This file should only really
+     5  //  be used for more "primitive" debugging as we know that working solely with test
+     6  //  frameworks might be overwhelming for some.
+     7  auto main() -> int {
+     8          auto const english_lexicon = word_ladder::read_lexicon("../test/word_ladder/english.txt");
+     9          auto const ladders = word_ladder::generate("fly", "sky", english_lexicon);
+    10  }
+dos2unix: converting file source/word_ladder.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 547 Jun 24 20:46 source/word_ladder.cpp
+===============================================================================
+
+     1
+     2  #include <comp6771/ladder.hpp>
+     3  #include <comp6771/word_ladder.hpp>
+     4
+     5  namespace word_ladder {
+     6          [[nodiscard]] auto generate(std::string const& from,
+     7                                      std::string const& to,
+     8                                      std::unordered_set<std::string> const& lexicon)
+     9             -> std::vector<std::vector<std::string>> {
+    10                  // Check start and end word is equal
+    11                  if (from.length() != to.length() || from == to)
+    12                          return {};
+    13                  // create the ladder class
+    14                  ladder ladder(from, to, lexicon);
+    15                  return ladder.start();
+    16          }
+    17
+    18  } // namespace word_ladder
+
+dos2unix: converting file source/ladder.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 4135 Jun 24 20:46 source/ladder.cpp
+===============================================================================
+
+     1  //
+     2  // Created by Jinghan Wang z5286124 on 8/6/2022.
+     3  //
+     4  #include <comp6771/ladder.hpp>
+     5
+     6  auto ladder::create_newVertex(std::string word, int diffWithEndWord, int index) -> Vertex {
+     7          Vertex v;
+     8          v.index = index;
+     9          v.diffWithEndWord = diffWithEndWord;
+    10          v.word = word;
+    11          v.last = -1;
+    12          v.known = false;
+    13          return v;
+    14  }
+    15
+    16  auto ladder::get_char_diff(std::string word1, std::string word2) -> int {
+                                              ^
+                                              + ====== +
+                                              + const& +
+                                              + ====== +
+    17          int totalDiff = 0;
+    18          for (int loop = 0; loop < word1.length(); loop++)
+                ^
+                + ======================== +
+                + use of index-based loops +
+                + ======================== +
+    19                  if (word1[loop] != word2[loop])
+    20                          totalDiff++;
+    21          return totalDiff;
+    22  }
+    23
+    24  auto ladder::create_newLexicon(std::unordered_set<std::string> const& lexicon,
+    25                                 int length,
+    26                                 std::string const& from,
+    27                                 std::string const& to) -> std::vector<Vertex> {
+    28          // Create a new Vector which the word is equal start and end's word length and
+    29          // record the difference between the word and the end
+    30          std::vector<Vertex> newLexicon;
+                ^
+                + ========= +
+                + use auto! +
+                + ========= +
+    31          for (auto word : lexicon) {
+                         ^
+                         + ====== +
+                         + const& +
+                         + ====== +
+    32                  if (word.length() == length)
+    33                          newLexicon.push_back(create_newVertex(word, get_char_diff(word, to), newLexicon.size()));
+    34          }
+    35
+    36          bool checkStart = true;
+    37          bool checkEnd = true;
+    38          // Record all word which has one character different into adjacent
+    39          for (int i = 0; i < newLexicon.size(); i++) {
+    40                  // Find the position of from and to word in the new Vector
+    41                  if (checkStart && newLexicon[i].word == from) {
+                                       ^
+                                       + ========= +
+                                       + use 'and' +
+                                       + ========= +
+    42                          startPosition = i;
+    43                          checkStart = false;
+    44                  }
+    45                  if (checkEnd && newLexicon[i].word == to) {
+    46                          endPosition = i;
+    47                          checkEnd = false;
+    48                  }
+    49
+    50                  for (int j = i + 1; j < newLexicon.size(); j++) {
+    51                          if (get_char_diff(newLexicon[i].word, newLexicon[j].word) == 1) {
+    52                                  // In order of the same number of differences
+    53                                  if (newLexicon[i].adjacent.find(newLexicon[j].diffWithEndWord)
+    54                                      == newLexicon[i].adjacent.cend()) {
+    55                                          newLexicon[i].adjacent.insert({newLexicon[j].diffWithEndWord, std::vector{j}});
+    56                                  }
+    57                                  else {
+    58                                          newLexicon[i].adjacent.at(newLexicon[j].diffWithEndWord).push_back(j);
+    59                                  }
+    60
+    61                                  if (newLexicon[j].adjacent.find(newLexicon[i].diffWithEndWord)
+    62                                      == newLexicon[j].adjacent.cend()) {
+    63                                          newLexicon[j].adjacent.insert({newLexicon[i].diffWithEndWord, std::vector{i}});
+    64                                  }
+    65                                  else {
+    66                                          newLexicon[j].adjacent.at(newLexicon[i].diffWithEndWord).push_back(i);
+    67                                  }
+    68                          }
+    69                  }
+    70          }
+    71
+    72          // If checkStart and checkEnd is true, it means the lexicon is not included the word
+    73          if (checkEnd || checkStart)
+    74                  check = false;
+    75          return newLexicon;
+    76  }
+    77
+    78  auto ladder::find(int pos, int n, std::vector<Vertex>& newLexicon) -> void {
+    79          // Go to every adjacent element
+    80          // If (the position == the end position) goto record the passing
+    81          // If (the Vertex not passed && the depth is not larger than the shortest depth)
+    82          //     record this word in next word last place and sign is known
+    83          //     after visited the word, sign the word is unknown
+    84          for (auto pair : newLexicon[pos].adjacent) {
+    85                  for (auto key : pair.second) {
+    86                          if (key == endPosition) {
+    87                                  newLexicon[key].last = pos;
+    88                                  record_result(n, newLexicon);
+    89                                  break;
+    90                          }
+    91                          else if (n + 1 <= shortest && !newLexicon[key].known) {
+    92                                  newLexicon[key].known = true;
+    93                                  newLexicon[key].last = pos;
+    94                                  find(key, n + 1, newLexicon);
+    95                                  newLexicon[key].known = false;
+    96                          }
+    97                  }
+    98          }
+    99  }
+   100
+   101  auto ladder::record_result(int n, std::vector<Vertex> const& newLexicon) -> void {
+   102          // From the end word, record the word and visit last word, until reach the front word
+   103          std::vector<std::string> process;
+   104          for (int temp = endPosition; temp != startPosition; temp = newLexicon[temp].last)
+   105                  process.push_back(newLexicon[temp].word);
+   106          process.push_back(newLexicon[startPosition].word);
+   107          std::reverse(process.begin(), process.end());
+   108
+   109          // if the depth is equal than the shortest depth, record it
+   110          // if is less than, clear the last record and change the shortest depth
+   111          if (n == shortest) {
+   112                  result.push_back(process);
+   113          }
+   114          else if (n < shortest) {
+   115                  shortest = n;
+   116                  result.clear();
+   117                  result.push_back(process);
+   118          }
+   119  }
+   120
+   121  auto ladder::start() -> std::vector<std::vector<std::string>> {
+   122          if (!check)
+   123                  return {};
+   124          find(startPosition, 0, newLexicon);
+   125          std::sort(result.begin(), result.end());
+   126          return result;
+   127  }
+
+dos2unix: converting file test/test_main.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 282 Jun 24 20:46 test/test_main.cpp
+===============================================================================
+
+     1  #define CATCH_CONFIG_MAIN
+     2  #include "catch2/catch.hpp"
+     3
+     4  // This file is designed to act as the program entry point. Everything is defined in catch.hpp, so
+     5  // we don't need to worry about doing anything other than indicating our interest to use it via the
+     6  // CATCH_CONFIG_MAIN macro.
+
+dos2unix: converting file test/word_ladder/word_ladder_test4.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 14814 Jun 24 20:46 test/word_ladder/word_ladder_test4.cpp
+===============================================================================
+
+     1  //
+     2  //  Copyright UNSW Sydney School of Computer Science and Engineering
+     3  //
+     4  // Licensed under the Apache License, Version 2.0 (the "License");
+     5  // you may not use this file except in compliance with the License.
+     6  // You may obtain a copy of the License at
+     7  //
+     8  //   http://www.apache.org/licenses/LICENSE-2.0
+     9  //
+    10  // Unless required by applicable law or agreed to in writing, software
+    11  // distributed under the License is distributed on an "AS IS" BASIS,
+    12  // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    13  // See the License for the specific language governing permissions and
+    14  // limitations under the License.
+    15  //
+    16  #include <comp6771/word_ladder.hpp>
+    17
+    18  #include <algorithm>
+    19  #include <numeric>
+    20  #include <string>
+    21  #include <vector>
+    22
+    23  #include <catch2/catch.hpp>
+    24
+    25  // This test focuses on multi-letter words, measuring 5, 9, 12, 15 letters word,
+    26  // and also include no solution situation.
+    27  //
+    28  // Each test will focus on four partM-oM-<M-^Z
+    29  //     first, check all words in each ladder are unique.
+    30  //     Second, check that the start and end words are in the correct locations in the ladder.
+    31  //     Third, check the size of ladders and each ladder's length.
+    32  //     Finally, check the ladders is sorted and select several of ladders for comparison
+    33  // If no solution, check the ladders is empty;
+    34  TEST_CASE("Test: more letters word situation") {
+    35          auto const english_lexicon = word_ladder::read_lexicon("./english.txt");
+    36
+    37          SECTION("Ensure that five letter word ladders can be found : short ladder") {
+    38                  std::string const& from = "pelon";
+    39                  std::string const& to = "macon";
+    40                  auto size = 1;
+    41                  auto each_length = 5;
+    42                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+    43
+    44                  // first part
+    45                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    46                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+    47                  }));
+    48                  // second part
+    49                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    50                          return ladder.front() == from;
+    51                  }));
+    52                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    53                          return ladder.back() == to;
+    54                  }));
+    55                  // third part
+    56                  CHECK(std::size(ladders) == size);
+    57                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    58                          return ladder.size() == each_length;
+    59                  }));
+    60                  // final part
+    61                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+    62                  CHECK(std::count(ladders.begin(),
+    63                                   ladders.end(),
+    64                                   std::vector<std::string>{"pelon", "melon", "meson", "mason", "macon"})
+    65                        == 1);
+    66          }
+    67
+    68          SECTION("Ensure that five letter word ladders can be found : long ladder") {
+    69                  std::string const& from = "print";
+    70                  std::string const& to = "watch";
+    71                  auto size = 1;
+    72                  auto each_length = 9;
+    73                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+    74
+    75                  // first part
+    76                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    77                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+    78                  }));
+    79                  // second part
+    80                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    81                          return ladder.front() == from;
+    82                  }));
+    83                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    84                          return ladder.back() == to;
+    85                  }));
+    86                  // third part
+    87                  CHECK(std::size(ladders) == size);
+    88                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    89                          return ladder.size() == each_length;
+    90                  }));
+    91                  // final part
+    92                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+    93                  CHECK(std::count(ladders.begin(),
+    94                                   ladders.end(),
+    95                                   std::vector<std::string>{"print",
+    96                                                            "paint",
+    97                                                            "pains",
+    98                                                            "pairs",
+    99                                                            "lairs",
+   100                                                            "laics",
+   101                                                            "laich",
+   102                                                            "latch",
+   103                                                            "watch"})
+   104                        == 1);
+   105          }
+   106
+   107          SECTION("five letter word ladders: no solution") {
+   108                  std::string const& from = "zombi";
+   109                  std::string const& to = "large";
+   110                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   111
+   112                  CHECK(ladders.empty());
+   113          }
+   114
+   115          SECTION("Ensure that five letter word ladders can be found : 2") {
+   116                  std::string const& from = "decanting";
+                                                   ^
++ ======================================================================= +
++ how to you know this is correct? where did you get this test case from? +
++ ======================================================================= +
+   117                  std::string const& to = "derailing";
+   118                  auto size = 6;
+   119                  auto each_length = 18;
+   120                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   121
+   122                  // first part
+   123                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   124                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   125                  }));
+   126                  // second part
+   127                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   128                          return ladder.front() == from;
+   129                  }));
+   130                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   131                          return ladder.back() == to;
+   132                  }));
+   133                  // third part
+   134                  CHECK(std::size(ladders) == size);
+   135                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   136                          return ladder.size() == each_length;
+   137                  }));
+   138                  // final part
+   139                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   140                  CHECK(std::count(ladders.begin(),
+   141                                   ladders.end(),
+   142                                   std::vector<std::string>{"decanting",
+   143                                                            "recanting",
+   144                                                            "recasting",
+   145                                                            "retasting",
+   146                                                            "retesting",
+   147                                                            "revesting",
+   148                                                            "revetting",
+   149                                                            "reletting",
+   150                                                            "relenting",
+   151                                                            "relending",
+   152                                                            "remending",
+   153                                                            "remanding",
+   154                                                            "remanning",
+   155                                                            "remaining",
+   156                                                            "remailing",
+   157                                                            "retailing",
+   158                                                            "detailing",
+   159                                                            "derailing"})
+   160                        == 1);
+   161                  CHECK(std::count(ladders.begin(),
+   162                                   ladders.end(),
+   163                                   std::vector<std::string>{"decanting",
+   164                                                            "recanting",
+   165                                                            "recasting",
+   166                                                            "retasting",
+   167                                                            "retesting",
+   168                                                            "revesting",
+   169                                                            "revetting",
+   170                                                            "reletting",
+   171                                                            "relenting",
+   172                                                            "relending",
+   173                                                            "remending",
+   174                                                            "remanding",
+   175                                                            "remanning",
+   176                                                            "remaining",
+   177                                                            "retaining",
+   178                                                            "detaining",
+   179                                                            "detailing",
+   180                                                            "derailing"})
+   181                        == 1);
+   182                  CHECK(std::count(ladders.begin(),
+   183                                   ladders.end(),
+   184                                   std::vector<std::string>{"decanting",
+   185                                                            "recanting",
+   186                                                            "recasting",
+   187                                                            "retasting",
+   188                                                            "retesting",
+   189                                                            "revesting",
+   190                                                            "revetting",
+   191                                                            "reletting",
+   192                                                            "relenting",
+   193                                                            "relending",
+   194                                                            "remending",
+   195                                                            "remanding",
+   196                                                            "remanning",
+   197                                                            "remaining",
+   198                                                            "retaining",
+   199                                                            "retailing",
+   200                                                            "detailing",
+   201                                                            "derailing"})
+   202                        == 1);
+   203                  CHECK(std::count(ladders.begin(),
+   204                                   ladders.end(),
+   205                                   std::vector<std::string>{"decanting",
+   206                                                            "recanting",
+   207                                                            "recasting",
+   208                                                            "retasting",
+   209                                                            "retesting",
+   210                                                            "revesting",
+   211                                                            "revetting",
+   212                                                            "resetting",
+   213                                                            "resenting",
+   214                                                            "resending",
+   215                                                            "remending",
+   216                                                            "remanding",
+   217                                                            "remanning",
+   218                                                            "remaining",
+   219                                                            "remailing",
+   220                                                            "retailing",
+   221                                                            "detailing",
+   222                                                            "derailing"})
+   223                        == 1);
+   224                  CHECK(std::count(ladders.begin(),
+   225                                   ladders.end(),
+   226                                   std::vector<std::string>{"decanting",
+   227                                                            "recanting",
+   228                                                            "recasting",
+   229                                                            "retasting",
+   230                                                            "retesting",
+   231                                                            "revesting",
+   232                                                            "revetting",
+   233                                                            "resetting",
+   234                                                            "resenting",
+   235                                                            "resending",
+   236                                                            "remending",
+   237                                                            "remanding",
+   238                                                            "remanning",
+   239                                                            "remaining",
+   240                                                            "retaining",
+   241                                                            "detaining",
+   242                                                            "detailing",
+   243                                                            "derailing"})
+   244                        == 1);
+   245                  CHECK(std::count(ladders.begin(),
+   246                                   ladders.end(),
+   247                                   std::vector<std::string>{"decanting",
+   248                                                            "recanting",
+   249                                                            "recasting",
+   250                                                            "retasting",
+   251                                                            "retesting",
+   252                                                            "revesting",
+   253                                                            "revetting",
+   254                                                            "resetting",
+   255                                                            "resenting",
+   256                                                            "resending",
+   257                                                            "remending",
+   258                                                            "remanding",
+   259                                                            "remanning",
+   260                                                            "remaining",
+   261                                                            "retaining",
+   262                                                            "retailing",
+   263                                                            "detailing",
+   264                                                            "derailing"})
+   265                        == 1);
+   266          }
+   267
+   268          SECTION("nine letter word ladders: no solution") {
+   269                  std::string const& from = "zygotenes";
+   270                  std::string const& to = "zirconias";
+   271                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   272
+   273                  CHECK(ladders.empty());
+   274          }
+   275
+   276          SECTION("Ensure that twelve letter word ladders can be found") {
+   277                  std::string const& from = "romanticized";
+   278                  std::string const& to = "romanticizes";
+   279                  auto size = 1;
+   280                  auto each_length = 2;
+   281                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   282
+   283                  // first part
+   284                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   285                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   286                  }));
+   287                  // second part
+   288                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   289                          return ladder.front() == from;
+   290                  }));
+   291                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   292                          return ladder.back() == to;
+   293                  }));
+   294                  // third part
+   295                  CHECK(std::size(ladders) == size);
+   296                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   297                          return ladder.size() == each_length;
+   298                  }));
+   299                  // final part
+   300                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   301                  CHECK(std::count(ladders.begin(),
+   302                                   ladders.end(),
+   303                                   std::vector<std::string>{"romanticized", "romanticizes"})
+   304                        == 1);
+   305          }
+   306
+   307          SECTION("twelve letter word ladders: no solution") {
+   308                  std::string const& from = "romanticized";
+   309                  std::string const& to = "zoologically";
+   310                  auto size = 0;
+   311                  auto each_length = 0;
+   312                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   313
+   314                  CHECK(ladders.empty());
+   315          }
+   316
+   317          SECTION("Ensure that fifteen letter word ladders can be found") {
+   318                  std::string const& from = "unexceptionably";
+   319                  std::string const& to = "unexceptionable";
+   320                  auto size = 1;
+   321                  auto each_length = 2;
+   322                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   323
+   324                  // first part
+   325                  // CHECK(std::unique(ladders.begin(), ladders.end()) == ladders.end());
+   326                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   327                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   328                  }));
+   329                  // second part
+   330                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   331                          return ladder.front() == from;
+   332                  }));
+   333                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   334                          return ladder.back() == to;
+   335                  }));
+   336                  // third part
+   337                  CHECK(std::size(ladders) == size);
+   338                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   339                          return ladder.size() == each_length;
+   340                  }));
+   341                  // final part
+   342                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   343                  CHECK(std::count(ladders.begin(),
+   344                                   ladders.end(),
+   345                                   std::vector<std::string>{"unexceptionably", "unexceptionable"})
+   346                        == 1);
+   347          }
+   348
+   349          SECTION("fifteen letter word ladders: no solution") {
+   350                  std::string const& from = "sensationalized";
+   351                  std::string const& to = "traditionalisms";
+   352                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   353
+   354                  CHECK(ladders.empty());
+   355          }
+   356  }
+
+dos2unix: converting file test/word_ladder/word_ladder_test_benchmark.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 966 Jun 24 20:46 test/word_ladder/word_ladder_test_benchmark.cpp
+===============================================================================
+
+     1  //
+     2  //  Copyright UNSW Sydney School of Computer Science and Engineering
+     3  //
+     4  // Licensed under the Apache License, Version 2.0 (the "License");
+     5  // you may not use this file except in compliance with the License.
+     6  // You may obtain a copy of the License at
+     7  //
+     8  //   http://www.apache.org/licenses/LICENSE-2.0
+     9  //
+    10  // Unless required by applicable law or agreed to in writing, software
+    11  // distributed under the License is distributed on an "AS IS" BASIS,
+    12  // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    13  // See the License for the specific language governing permissions and
+    14  // limitations under the License.
+    15  //
+    16  #include <comp6771/word_ladder.hpp>
+    17
+    18  #include <string>
+    19  #include <vector>
+    20
+    21  #include "catch2/catch.hpp"
+    22
+    23  TEST_CASE("atlases -> cabaret") {
+    24          auto const english_lexicon = ::word_ladder::read_lexicon("./english.txt");
+    25          auto const ladders = ::word_ladder::generate("atlases", "cabaret", english_lexicon);
+    26
+    27          CHECK(std::size(ladders) != 0);
+    28  }
+
+dos2unix: converting file test/word_ladder/word_ladder_test1.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 2092 Jun 24 20:46 test/word_ladder/word_ladder_test1.cpp
+===============================================================================
+
+     1  //
+     2  //  Copyright UNSW Sydney School of Computer Science and Engineering
+     3  //
+     4  // Licensed under the Apache License, Version 2.0 (the "License");
+     5  // you may not use this file except in compliance with the License.
+     6  // You may obtain a copy of the License at
+     7  //
+     8  //   http://www.apache.org/licenses/LICENSE-2.0
+     9  //
+    10  // Unless required by applicable law or agreed to in writing, software
+    11  // distributed under the License is distributed on an "AS IS" BASIS,
+    12  // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    13  // See the License for the specific language governing permissions and
+    14  // limitations under the License.
+    15  //
+    16  #include <comp6771/word_ladder.hpp>
+    17
+    18  #include <string>
+    19  #include <vector>
+    20
+    21  #include <catch2/catch.hpp>
+    22
+    23  // This part of the test mainly tests some unexpected situations of input, including that the
+    24  // length of the start and end is different, the words of the start, the upper situation
+    25  // and end are no longer in lexicon, and the words of the start and end are the same as the words
+    26  // of the end. All of them return an empty vector, so the size == 0
+    27  TEST_CASE("Ensure that application returns empty ladders if assignment "
+    28            "assumptions are not complied with") {
+    29          auto const english_lexicon = word_ladder::read_lexicon("./english.txt");
+    30
+    31          SECTION("The length of Start word and End word is not equal") {
+    32                  auto ladders = word_ladder::generate("works", "play", english_lexicon);
+    33                  CHECK(std::size(ladders) == 0);
+    34          }
+    35
+    36          SECTION("Start word and End word is the same") {
+    37                  auto ladders = word_ladder::generate("work", "work", english_lexicon);
+    38                  CHECK(std::size(ladders) == 0);
+    39          }
+    40
+    41          SECTION("Start word and End word is include upper letter") {
+    42                  auto ladders = word_ladder::generate("Work", "Play", english_lexicon);
+    43                  CHECK(std::size(ladders) == 0);
+    44          }
+    45
+    46          SECTION("Start word not in lexicon") {
+    47                  auto ladders = word_ladder::generate("abcd", "play", english_lexicon);
+    48                  CHECK(std::size(ladders) == 0);
+    49          }
+    50
+    51          SECTION("End word not in lexicon") {
+    52                  auto ladders = word_ladder::generate("work", "abcd", english_lexicon);
+    53                  CHECK(std::size(ladders) == 0);
+    54          }
+    55  }
+
+dos2unix: converting file test/word_ladder/word_ladder_test3.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 9407 Jun 24 20:46 test/word_ladder/word_ladder_test3.cpp
+===============================================================================
+
+     1  //
+     2  //  Copyright UNSW Sydney School of Computer Science and Engineering
+     3  //
+     4  // Licensed under the Apache License, Version 2.0 (the "License");
+     5  // you may not use this file except in compliance with the License.
+     6  // You may obtain a copy of the License at
+     7  //
+     8  //   http://www.apache.org/licenses/LICENSE-2.0
+     9  //
+    10  // Unless required by applicable law or agreed to in writing, software
+    11  // distributed under the License is distributed on an "AS IS" BASIS,
+    12  // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    13  // See the License for the specific language governing permissions and
+    14  // limitations under the License.
+    15  //
+    16  #include <comp6771/word_ladder.hpp>
+    17
+    18  #include <algorithm>
+    19  #include <numeric>
+    20  #include <string>
+    21  #include <vector>
+    22
+    23  #include <catch2/catch.hpp>
+    24
+    25  // Sorry professor, I am not sure why this test is successful in CSE sometimes and sometimes not.
+    26  // If it is not successful, could you please try it more times
+    27
+    28  // The tests focused on three and four-letter word tests.
+    29  //
+    30  // For the three-letter test, the difference between the beginning word and the end word was tested
+    31  // by one or two letters respectively, and then two tests without the same letter were carried out.
+    32  // For the three letters different test, two similar words were selected in the first test, and
+    33  // second was selected the first and last three-letter word in english.txt file;
+    34  //
+    35  // For the four-letter word, work and play mentioned in the question were selected as the start
+    36  // and end words for the test, and random two words were selected as the other word for the test;
+    37  //
+    38  // Each test will focus on four partM-oM-<M-^Z
+    39  //     first, check all words in each ladder are unique.
+    40  //     Second, check that the start and end words are in the correct locations in the ladder.
+    41  //     Third, check the size of ladders and each ladder's length.
+    42  //     Finally, check the ladders is sorted and select several of ladders for comparison
+    43
+    44  TEST_CASE("Test: three letter word situation") {
+    45          auto const english_lexicon = word_ladder::read_lexicon("./english.txt");
+    46
+    47          SECTION("start and end word has one letter diff") {
+    48                  std::string const& from = "dog";
+    49                  std::string const& to = "dig";
+    50                  auto size = 1;
+    51                  auto each_length = 2;
+    52                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+    53
+    54                  // first part
+    55                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    56                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+    57                  }));
+    58                  // second part
+    59                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    60                          return ladder.front() == from;
+    61                  }));
+    62                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    63                          return ladder.back() == to;
+    64                  }));
+    65                  // third part
+    66                  CHECK(std::size(ladders) == size);
+    67                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    68                          return ladder.size() == each_length;
+    69                  }));
+    70                  // final part
+    71                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+    72                  CHECK(std::count(ladders.begin(), ladders.end(), std::vector<std::string>{"dog", "dig"}) == 1);
+    73          }
+    74
+    75          SECTION("start and end word has two letter diff") {
+    76                  std::string const& from = "bug";
+    77                  std::string const& to = "dig";
+    78                  auto size = 2;
+    79                  auto each_length = 3;
+    80                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+    81
+    82                  // first part
+    83                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    84                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+    85                  }));
+    86                  // second part
+    87                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    88                          return ladder.front() == from;
+    89                  }));
+    90                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    91                          return ladder.back() == to;
+    92                  }));
+    93                  // third part
+    94                  CHECK(std::size(ladders) == size);
+    95                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    96                          return ladder.size() == each_length;
+    97                  }));
+    98                  // final part
+    99                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   100                  CHECK(std::count(ladders.begin(), ladders.end(), std::vector<std::string>{"bug", "big", "dig"})
+   101                        == 1);
+   102                  CHECK(std::count(ladders.begin(), ladders.end(), std::vector<std::string>{"bug", "dug", "dig"})
+   103                        == 1);
+   104          }
+   105
+   106          SECTION("start and end word has three letter diff : 1") {
+   107                  std::string const& from = "buy";
+   108                  std::string const& to = "dig";
+   109                  auto size = 2;
+   110                  auto each_length = 4;
+   111                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   112
+   113                  // first part
+   114                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   115                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   116                  }));
+   117                  // second part
+   118                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   119                          return ladder.front() == from;
+   120                  }));
+   121                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   122                          return ladder.back() == to;
+   123                  }));
+   124                  // third part
+   125                  CHECK(std::size(ladders) == size);
+   126                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   127                          return ladder.size() == each_length;
+   128                  }));
+   129                  // final part
+   130                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   131                  CHECK(std::count(ladders.begin(),
+   132                                   ladders.end(),
+   133                                   std::vector<std::string>{"buy", "bug", "big", "dig"})
+   134                        == 1);
+   135                  CHECK(std::count(ladders.begin(),
+   136                                   ladders.end(),
+   137                                   std::vector<std::string>{"buy", "bug", "dug", "dig"})
+   138                        == 1);
+   139          }
+   140
+   141          SECTION("start and end word has three letter diff : 2") {
+   142                  std::string const& from = "aah";
+   143                  std::string const& to = "zoo";
+   144                  auto size = 1;
+   145                  auto each_length = 5;
+   146                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   147
+   148                  // first part
+   149                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   150                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   151                  }));
+   152                  // second part
+   153                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   154                          return ladder.front() == from;
+   155                  }));
+   156                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   157                          return ladder.back() == to;
+   158                  }));
+   159                  // third part
+   160                  CHECK(std::size(ladders) == size);
+   161                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   162                          return ladder.size() == each_length;
+   163                  }));
+   164                  // final part
+   165                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   166                  CHECK(std::count(ladders.begin(),
+   167                                   ladders.end(),
+   168                                   std::vector<std::string>{"aah", "nah", "noh", "noo", "zoo"})
+   169                        == 1);
+   170          }
+   171  }
+   172
+   173  TEST_CASE("Test: four letter word situation") {
+   174          auto const english_lexicon = word_ladder::read_lexicon("./english.txt");
+   175
+   176          SECTION("Ensure that four letter word ladders can be found: 1") {
+   177                  std::string const& from = "work";
+   178                  std::string const& to = "play";
+   179                  auto size = 12;
+   180                  auto each_length = 7;
+   181                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   182
+   183                  // first part
+   184                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   185                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   186                  }));
+   187                  // second part
+   188                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   189                          return ladder.front() == from;
+   190                  }));
+   191                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   192                          return ladder.back() == to;
+   193                  }));
+   194                  // third part
+   195                  CHECK(std::size(ladders) == size);
+   196                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   197                          return ladder.size() == each_length;
+   198                  }));
+   199                  // final part
+   200                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   201                  CHECK(
+   202                     std::count(ladders.begin(),
+   203                                ladders.end(),
+   204                                std::vector<std::string>{"work", "worm", "form", "foam", "flam", "flay", "play"})
+   205                     == 1);
+   206                  CHECK(
+   207                     std::count(ladders.begin(),
+   208                                ladders.end(),
+   209                                std::vector<std::string>{"work", "worn", "porn", "pirn", "pian", "plan", "play"})
+   210                     == 1);
+   211                  CHECK(
+   212                     std::count(ladders.begin(),
+   213                                ladders.end(),
+   214                                std::vector<std::string>{"work", "wort", "bort", "boat", "blat", "plat", "play"})
+   215                     == 1);
+   216                  CHECK(
+   217                     std::count(ladders.begin(),
+   218                                ladders.end(),
+   219                                std::vector<std::string>{"work", "wort", "port", "pert", "peat", "plat", "play"})
+   220                     == 1);
+   221                  CHECK(
+   222                     std::count(ladders.begin(),
+   223                                ladders.end(),
+   224                                std::vector<std::string>{"work", "wort", "wert", "pert", "peat", "plat", "play"})
+   225                     == 1);
+   226          }
+   227
+   228          SECTION("Ensure that four letter word ladders can be found: 2") {
+   229                  std::string const& from = "rain";
+   230                  std::string const& to = "quit";
+   231                  auto size = 1;
+   232                  auto each_length = 4;
+   233                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   234
+   235                  // first part
+   236                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   237                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   238                  }));
+   239                  // second part
+   240                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   241                          return ladder.front() == from;
+   242                  }));
+   243                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   244                          return ladder.back() == to;
+   245                  }));
+   246                  // third part
+   247                  CHECK(std::size(ladders) == size);
+   248                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   249                          return ladder.size() == each_length;
+   250                  }));
+   251                  // final part
+   252                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   253                  CHECK(std::count(ladders.begin(),
+   254                                   ladders.end(),
+   255                                   std::vector<std::string>{"rain", "ruin", "quin", "quit"})
+   256                        == 1);
+   257          }
+   258  }
+dos2unix: converting file test/word_ladder/word_ladder_test2.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 7137 Jun 24 20:46 test/word_ladder/word_ladder_test2.cpp
+===============================================================================
+
+     1  //
+     2  //  Copyright UNSW Sydney School of Computer Science and Engineering
+     3  //
+     4  // Licensed under the Apache License, Version 2.0 (the "License");
+     5  // you may not use this file except in compliance with the License.
+     6  // You may obtain a copy of the License at
+     7  //
+     8  //   http://www.apache.org/licenses/LICENSE-2.0
+     9  //
+    10  // Unless required by applicable law or agreed to in writing, software
+    11  // distributed under the License is distributed on an "AS IS" BASIS,
+    12  // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    13  // See the License for the specific language governing permissions and
+    14  // limitations under the License.
+    15  //
+    16  #include <comp6771/word_ladder.hpp>
+    17
+    18  #include <algorithm>
+    19  #include <numeric>
+    20  #include <string>
+    21  #include <vector>
+    22
+    23  #include <catch2/catch.hpp>
+    24
+    25  // Sorry professor, I am not sure why this test is successful in CSE sometimes and sometimes not.
+    26  // If it is not successful, could you please try it more times
+    27
+    28  // The test main focus on the two-letter word test. There is two situation , the one is the start
+    29  // and end word have one letter same, and one letter different, the other is all letter is
+    30  // different.
+    31  //
+    32  // Each test will focus on four partM-oM-<M-^Z
+    33  //     first, check all words in each ladder are unique.
+    34  //     Second, check that the start and end words are in the correct locations in the ladder.
+    35  //     Third, check the size of ladders and each ladder's length.
+    36  //     Finally, check the ladders is sorted and select several of ladders for comparison
+    37  TEST_CASE("Test: two letter word situation") {
+    38          auto const english_lexicon = word_ladder::read_lexicon("./english.txt");
+    39
+    40          SECTION("start and end word has one letter diff : 1") {
+    41                  std::string const& from = "at";
+    42                  std::string const& to = "it";
+    43                  auto size = 1;
+    44                  auto each_length = 2;
+    45                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+    46
+    47                  // first part
+    48                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    49                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+    50                  }));
+    51                  // second part
+    52                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    53                          return ladder.front() == from;
+    54                  }));
+    55                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    56                          return ladder.back() == to;
+    57                  }));
+    58                  // third part
+    59                  CHECK(std::size(ladders) == size);
+    60                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    61                          return ladder.size() == each_length;
+    62                  }));
+    63                  // final part
+    64                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+    65                  CHECK(std::count(ladders.begin(), ladders.end(), std::vector<std::string>{"at", "it"}) == 1);
+    66          }
+    67
+    68          SECTION("start and end word has one letter diff : 2") {
+    69                  std::string const& from = "so";
+    70                  std::string const& to = "go";
+    71                  auto size = 1;
+    72                  auto each_length = 2;
+    73                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+    74
+    75                  // first part
+    76                  // CHECK(std::unique(ladders.begin(), ladders.end()) == ladders.end());
+    77                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    78                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+    79                  }));
+    80                  // second part
+    81                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    82                          return ladder.front() == from;
+    83                  }));
+    84                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    85                          return ladder.back() == to;
+    86                  }));
+    87                  // third part
+    88                  CHECK(std::size(ladders) == size);
+    89                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+    90                          return ladder.size() == each_length;
+    91                  }));
+    92                  // final part
+    93                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+    94                  CHECK(std::count(ladders.begin(), ladders.end(), std::vector<std::string>{"so", "go"}) == 1);
+    95          }
+    96
+    97          SECTION("start and end word has two letter diff : 1") {
+    98                  std::string const& from = "if";
+    99                  std::string const& to = "so";
+   100                  auto size = 2;
+   101                  auto each_length = 5;
+   102                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   103
+   104                  // first part
+   105                  // CHECK(std::unique(ladders.begin(), ladders.end()) == ladders.end());
+   106                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   107                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   108                  }));
+   109                  // second part
+   110                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   111                          return ladder.front() == from;
+   112                  }));
+   113                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   114                          return ladder.back() == to;
+   115                  }));
+   116                  // third part
+   117                  CHECK(std::size(ladders) == size);
+   118                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   119                          return ladder.size() == each_length;
+   120                  }));
+   121                  // final part
+   122                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   123                  CHECK(std::count(ladders.begin(),
+   124                                   ladders.end(),
+   125                                   std::vector<std::string>{"if", "ef", "eh", "sh", "so"})
+   126                        == 1);
+   127                  CHECK(std::count(ladders.begin(),
+   128                                   ladders.end(),
+   129                                   std::vector<std::string>{"if", "of", "oh", "sh", "so"})
+   130                        == 1);
+   131          }
+   132
+   133          SECTION("start and end word has two letter diff : 2") {
+   134                  std::string const& from = "if";
+   135                  std::string const& to = "go";
+   136                  auto size = 14;
+   137                  auto each_length = 6;
+   138                  auto const ladders = word_ladder::generate(from, to, english_lexicon);
+   139
+   140                  // first part
+   141                  // CHECK(std::unique(ladders.begin(), ladders.end()) == ladders.end());
+   142                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   143                          return std::unique(ladder.begin(), ladder.end()) == ladder.end();
+   144                  }));
+   145                  // second part
+   146                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   147                          return ladder.front() == from;
+   148                  }));
+   149                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   150                          return ladder.back() == to;
+   151                  }));
+   152                  // third part
+   153                  CHECK(std::size(ladders) == size);
+   154                  CHECK(std::all_of(ladders.begin(), ladders.end(), [&](auto ladder) {
+   155                          return ladder.size() == each_length;
+   156                  }));
+   157                  // final part
+   158                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   159                  CHECK(std::count(ladders.begin(),
+   160                                   ladders.end(),
+   161                                   std::vector<std::string>{"if", "ef", "eh", "sh", "so", "go"})
+   162                        == 1);
+   163                  CHECK(std::count(ladders.begin(),
+   164                                   ladders.end(),
+   165                                   std::vector<std::string>{"if", "ef", "em", "mm", "mo", "go"})
+   166                        == 1);
+                                 ^
+                                 + =============================================== +
+                                 + can use vector operator== instead of std::count +
+                                 + =============================================== +
+   167                  CHECK(std::count(ladders.begin(),
+   168                                   ladders.end(),
+   169                                   std::vector<std::string>{"if", "ef", "em", "hm", "ho", "go"})
+   170                        == 1);
+   171                  CHECK(std::count(ladders.begin(),
+   172                                   ladders.end(),
+   173                                   std::vector<std::string>{"if", "of", "oy", "my", "mo", "go"})
+   174                        == 1);
+   175                  CHECK(std::count(ladders.begin(),
+   176                                   ladders.end(),
+   177                                   std::vector<std::string>{"if", "of", "oy", "by", "bo", "go"})
+   178                        == 1);
+   179          }
+   180
+   181          // Because test1 records the test of expect, the content provided in test1 is placed here
+   182          SECTION("Part test provided in the original test1") {
+   183                  auto const ladders = word_ladder::generate("at", "it", english_lexicon);
+   184
+   185                  CHECK(std::size(ladders) == 1);
+   186                  CHECK(std::is_sorted(ladders.begin(), ladders.end()));
+   187
+   188                  CHECK(std::count(ladders.begin(), ladders.end(), std::vector<std::string>{"at", "it"}) == 1);
+   189          }
+   190  }
+!!section tests
+!!section assess
+========================================
+======= Running Linter =================
+========================================
+==== /tmp/COMP6771.1626824.run/include/comp6771/word_ladder.hpp ====
+==== /tmp/COMP6771.1626824.run/include/comp6771/ladder.hpp ====
+==== /tmp/COMP6771.1626824.run/source/lexicon.cpp ====
+==== /tmp/COMP6771.1626824.run/source/debugging_main.cpp ====
+==== /tmp/COMP6771.1626824.run/source/word_ladder.cpp ====
+==== /tmp/COMP6771.1626824.run/source/ladder.cpp ====
+==== /tmp/COMP6771.1626824.run/test/test_main.cpp ====
+==== /tmp/COMP6771.1626824.run/test/word_ladder/word_ladder_test4.cpp ====
+==== /tmp/COMP6771.1626824.run/test/word_ladder/word_ladder_test_benchmark.cpp ====
+==== /tmp/COMP6771.1626824.run/test/word_ladder/word_ladder_test1.cpp ====
+==== /tmp/COMP6771.1626824.run/test/word_ladder/word_ladder_test3.cpp ====
+==== /tmp/COMP6771.1626824.run/test/word_ladder/word_ladder_test2.cpp ====
+!!specialmark  (Linter)                                 0.75/0.75
+========================================
+======= Running Correctness ============
+========================================
+Copying automarker
+Copied
+=============================
+comp6771
+=============================
+Copying students work
+-- The CXX compiler identification is Clang 11.0.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/clang++-11 - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for C++ include pthread.h
+-- Looking for C++ include pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+CMake Warning (dev) at /usr/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake:273 (message):
+  The package name passed to `find_package_handle_standard_args` (Threads)
+  does not match the name of the calling package (absl).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/share/cmake-3.18/Modules/FindThreads.cmake:234 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
+  /import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/share/absl/abslConfig.cmake:3 (include)
+  /import/kamen/1/cs6771/vcpkg/scripts/buildsystems/vcpkg.cmake:329 (_find_package)
+  CMakeLists.txt:29 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Found Threads: TRUE
+-- Configuring done
+-- Generating done
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    COMP6771_EXAM_ENABLE_CLANG_TIDY
+
+
+-- Build files have been written to: /tmp/tmp.hJEoDckFs2/build
+[1/154] Building CXX object source/CMakeFiles/debugging_main.dir/debugging_main.cpp.o
+[2/154] Building CXX object source/CMakeFiles/word_ladder.dir/word_ladder.cpp.o
+In file included from /tmp/tmp.hJEoDckFs2/ass1/source/word_ladder.cpp:2:
+/tmp/tmp.hJEoDckFs2/ass1/include/comp6771/ladder.hpp:79:49: warning: implicit conversion loses integer precision: 'std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::size_type' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32]
+                        newLexicon = create_newLexicon(lexicon, from.length(), from, to);
+                                     ~~~~~~~~~~~~~~~~~          ~~~~~^~~~~~~~
+1 warning generated.
+[3/154] Building CXX object source/CMakeFiles/lexicon.dir/lexicon.cpp.o
+[4/154] Linking CXX static library source/liblexicon.a
+[5/154] Building CXX object source/CMakeFiles/ladder.dir/ladder.cpp.o
+In file included from /tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:4:
+/tmp/tmp.hJEoDckFs2/ass1/include/comp6771/ladder.hpp:79:49: warning: implicit conversion loses integer precision: 'std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::size_type' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32]
+                        newLexicon = create_newLexicon(lexicon, from.length(), from, to);
+                                     ~~~~~~~~~~~~~~~~~          ~~~~~^~~~~~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:19:13: warning: implicit conversion changes signedness: 'int' to 'std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                if (word1[loop] != word2[loop])
+                    ~~~~~ ^~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:19:28: warning: implicit conversion changes signedness: 'int' to 'std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                if (word1[loop] != word2[loop])
+                                   ~~~~~ ^~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:18:26: warning: comparison of integers of different signs: 'int' and 'std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::size_type' (aka 'unsigned long') [-Wsign-compare]
+        for (int loop = 0; loop < word1.length(); loop++)
+                           ~~~~ ^ ~~~~~~~~~~~~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:30:22: warning: declaration shadows a field of 'ladder' [-Wshadow]
+        std::vector<Vertex> newLexicon;
+                            ^
+/tmp/tmp.hJEoDckFs2/ass1/include/comp6771/ladder.hpp:61:22: note: previous declaration is here
+        std::vector<Vertex> newLexicon;
+                            ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:41:32: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                if (checkStart && newLexicon[i].word == from) {
+                                  ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:45:30: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                if (checkEnd && newLexicon[i].word == to) {
+                                ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:51:53: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                        if (get_char_diff(newLexicon[i].word, newLexicon[j].word) == 1) {
+                                                              ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:51:33: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                        if (get_char_diff(newLexicon[i].word, newLexicon[j].word) == 1) {
+                                          ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:54:23: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                    == newLexicon[i].adjacent.cend()) {
+                                       ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:53:48: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                if (newLexicon[i].adjacent.find(newLexicon[j].diffWithEndWord)
+                                                                ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:53:20: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                if (newLexicon[i].adjacent.find(newLexicon[j].diffWithEndWord)
+                                    ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:55:48: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[i].adjacent.insert({newLexicon[j].diffWithEndWord, std::vector{j}});
+                                                                       ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:55:17: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[i].adjacent.insert({newLexicon[j].diffWithEndWord, std::vector{j}});
+                                        ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:58:43: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[i].adjacent.at(newLexicon[j].diffWithEndWord).push_back(j);
+                                                                  ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:58:17: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[i].adjacent.at(newLexicon[j].diffWithEndWord).push_back(j);
+                                        ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:62:23: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                    == newLexicon[j].adjacent.cend()) {
+                                       ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:61:48: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                if (newLexicon[j].adjacent.find(newLexicon[i].diffWithEndWord)
+                                                                ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:61:20: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                if (newLexicon[j].adjacent.find(newLexicon[i].diffWithEndWord)
+                                    ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:63:48: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[j].adjacent.insert({newLexicon[i].diffWithEndWord, std::vector{i}});
+                                                                       ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:63:17: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[j].adjacent.insert({newLexicon[i].diffWithEndWord, std::vector{i}});
+                                        ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:66:43: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[j].adjacent.at(newLexicon[i].diffWithEndWord).push_back(i);
+                                                                  ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:66:17: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                        newLexicon[j].adjacent.at(newLexicon[i].diffWithEndWord).push_back(i);
+                                        ~~~~~~~~~~ ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:32:21: warning: comparison of integers of different signs: 'std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::size_type' (aka 'unsigned long') and 'int' [-Wsign-compare]
+                if (word.length() == length)
+                    ~~~~~~~~~~~~~ ^  ~~~~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:33:84: warning: implicit conversion loses integer precision: 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32]
+                        newLexicon.push_back(create_newVertex(word, get_char_diff(word, to), newLexicon.size()));
+                                             ~~~~~~~~~~~~~~~~                                ~~~~~~~~~~~^~~~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:39:20: warning: comparison of integers of different signs: 'int' and 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-compare]
+        for (int i = 0; i < newLexicon.size(); i++) {
+                        ~ ^ ~~~~~~~~~~~~~~~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:50:25: warning: comparison of integers of different signs: 'int' and 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-compare]
+                for (int j = i + 1; j < newLexicon.size(); j++) {
+                                    ~ ^ ~~~~~~~~~~~~~~~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:78:56: warning: declaration shadows a field of 'ladder' [-Wshadow]
+auto ladder::find(int pos, int n, std::vector<Vertex>& newLexicon) -> void {
+                                                       ^
+/tmp/tmp.hJEoDckFs2/ass1/include/comp6771/ladder.hpp:61:22: note: previous declaration is here
+        std::vector<Vertex> newLexicon;
+                            ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:84:30: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+        for (auto pair : newLexicon[pos].adjacent) {
+                         ~~~~~~~~~~ ^~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:87:16: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                newLexicon[key].last = pos;
+                                ~~~~~~~~~~ ^~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:91:46: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                        else if (n + 1 <= shortest && !newLexicon[key].known) {
+                                                       ~~~~~~~~~~ ^~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:92:16: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                newLexicon[key].known = true;
+                                ~~~~~~~~~~ ^~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:93:16: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                newLexicon[key].last = pos;
+                                ~~~~~~~~~~ ^~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:95:16: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                                newLexicon[key].known = false;
+                                ~~~~~~~~~~ ^~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:101:62: warning: declaration shadows a field of 'ladder' [-Wshadow]
+auto ladder::record_result(int n, std::vector<Vertex> const& newLexicon) -> void {
+                                                             ^
+/tmp/tmp.hJEoDckFs2/ass1/include/comp6771/ladder.hpp:61:22: note: previous declaration is here
+        std::vector<Vertex> newLexicon;
+                            ^
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:104:72: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+        for (int temp = endPosition; temp != startPosition; temp = newLexicon[temp].last)
+                                                                   ~~~~~~~~~~ ^~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:105:32: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+                process.push_back(newLexicon[temp].word);
+                                  ~~~~~~~~~~ ^~~~
+/tmp/tmp.hJEoDckFs2/ass1/source/ladder.cpp:106:31: warning: implicit conversion changes signedness: 'int' to 'std::__1::vector<ladder::Vertex, std::__1::allocator<ladder::Vertex>>::size_type' (aka 'unsigned long') [-Wsign-conversion]
+        process.push_back(newLexicon[startPosition].word);
+                          ~~~~~~~~~~ ^~~~~~~~~~~~~
+38 warnings generated.
+[6/154] Linking CXX static library source/libladder.a
+[7/154] Linking CXX static library source/libword_ladder.a
+[8/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment16.dir/word_ladder_test55_fragment16.cpp.o
+[9/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment16.a
+[10/154] Linking CXX executable source/debugging_main
+[11/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment13.dir/word_ladder_test55_fragment13.cpp.o
+[12/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment13.a
+[13/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment12.dir/word_ladder_test55_fragment12.cpp.o
+[14/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment12.a
+[15/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment10.dir/word_ladder_test55_fragment10.cpp.o
+[16/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment10.a
+[17/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment9.dir/word_ladder_test55_fragment9.cpp.o
+[18/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment9.a
+[19/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment8.dir/word_ladder_test55_fragment8.cpp.o
+[20/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment8.a
+[21/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment5.dir/word_ladder_test55_fragment5.cpp.o
+[22/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment7.dir/word_ladder_test55_fragment7.cpp.o
+[23/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment5.a
+[24/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment7.a
+[25/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment11.dir/word_ladder_test55_fragment11.cpp.o
+[26/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment11.a
+[27/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test30.dir/word_ladder_test30.cpp.o
+[28/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test20.dir/word_ladder_test20.cpp.o
+[29/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test24.dir/word_ladder_test24.cpp.o
+[30/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test45.dir/word_ladder_test45.cpp.o
+[31/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test2.dir/word_ladder_test2.cpp.o
+[32/154] Building CXX object test/CMakeFiles/test_main.dir/test_main.cpp.o
+[33/154] Linking CXX static library test/libtest_main.a
+[34/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test15.dir/word_ladder_test15.cpp.o
+[35/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test25.dir/word_ladder_test25.cpp.o
+[36/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test18.dir/word_ladder_test18.cpp.o
+[37/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test28.dir/word_ladder_test28.cpp.o
+[38/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test26.dir/word_ladder_test26.cpp.o
+[39/154] Linking CXX executable test/word_ladder/word_ladder_test20
+[40/154] Linking CXX executable test/word_ladder/word_ladder_test45
+[41/154] Linking CXX executable test/word_ladder/word_ladder_test30
+[42/154] Linking CXX executable test/word_ladder/word_ladder_test15
+[43/154] Linking CXX executable test/word_ladder/word_ladder_test2
+[44/154] Linking CXX executable test/word_ladder/word_ladder_test24
+[45/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test16.dir/word_ladder_test16.cpp.o
+[46/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test48.dir/word_ladder_test48.cpp.o
+[47/154] Linking CXX executable test/word_ladder/word_ladder_test28
+[48/154] Linking CXX executable test/word_ladder/word_ladder_test25
+[49/154] Linking CXX executable test/word_ladder/word_ladder_test18
+[50/154] Linking CXX executable test/word_ladder/word_ladder_test26
+[51/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test29.dir/word_ladder_test29.cpp.o
+[52/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test21.dir/word_ladder_test21.cpp.o
+[53/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test51.dir/word_ladder_test51.cpp.o
+[54/154] Linking CXX executable test/word_ladder/word_ladder_test16
+[55/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test4.dir/word_ladder_test4.cpp.o
+[56/154] Linking CXX executable test/word_ladder/word_ladder_test48
+[57/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment2.dir/word_ladder_test55_fragment2.cpp.o
+[58/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment2.a
+[59/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test6.dir/word_ladder_test6.cpp.o
+[60/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment15.dir/word_ladder_test55_fragment15.cpp.o
+[61/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment15.a
+[62/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test12.dir/word_ladder_test12.cpp.o
+[63/154] Linking CXX executable test/word_ladder/word_ladder_test29
+[64/154] Linking CXX executable test/word_ladder/word_ladder_test21
+[65/154] Linking CXX executable test/word_ladder/word_ladder_test51
+[66/154] Linking CXX executable test/word_ladder/word_ladder_test4
+[67/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test5.dir/word_ladder_test5.cpp.o
+[68/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment4.dir/word_ladder_test55_fragment4.cpp.o
+[69/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test3.dir/word_ladder_test3.cpp.o
+[70/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment4.a
+[71/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test19.dir/word_ladder_test19.cpp.o
+[72/154] Linking CXX executable test/word_ladder/word_ladder_test6
+[73/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test54.dir/word_ladder_test54.cpp.o
+[74/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test22.dir/word_ladder_test22.cpp.o
+[75/154] Linking CXX executable test/word_ladder/word_ladder_test12
+[76/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test1.dir/word_ladder_test1.cpp.o
+[77/154] Linking CXX executable test/word_ladder/word_ladder_test5
+[78/154] Linking CXX executable test/word_ladder/word_ladder_test3
+[79/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test42.dir/word_ladder_test42.cpp.o
+[80/154] Linking CXX executable test/word_ladder/word_ladder_test19
+[81/154] Linking CXX executable test/word_ladder/word_ladder_test54
+[82/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test7.dir/word_ladder_test7.cpp.o
+[83/154] Linking CXX executable test/word_ladder/word_ladder_test22
+[84/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55.dir/word_ladder_test55.cpp.o
+[85/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test9.dir/word_ladder_test9.cpp.o
+[86/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test36.dir/word_ladder_test36.cpp.o
+[87/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment0.dir/word_ladder_test55_fragment0.cpp.o
+[88/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment0.a
+[89/154] Linking CXX executable test/word_ladder/word_ladder_test1
+[90/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test27.dir/word_ladder_test27.cpp.o
+[91/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test11.dir/word_ladder_test11.cpp.o
+[92/154] Linking CXX executable test/word_ladder/word_ladder_test42
+[93/154] Linking CXX executable test/word_ladder/word_ladder_test7
+[94/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test10.dir/word_ladder_test10.cpp.o
+[95/154] Linking CXX executable test/word_ladder/word_ladder_test9
+[96/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test23.dir/word_ladder_test23.cpp.o
+[97/154] Linking CXX executable test/word_ladder/word_ladder_test36
+[98/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test13.dir/word_ladder_test13.cpp.o
+[99/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test41.dir/word_ladder_test41.cpp.o
+[100/154] Linking CXX executable test/word_ladder/word_ladder_test27
+[101/154] Linking CXX executable test/word_ladder/word_ladder_test11
+[102/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test31.dir/word_ladder_test31.cpp.o
+[103/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test49.dir/word_ladder_test49.cpp.o
+[104/154] Linking CXX executable test/word_ladder/word_ladder_test10
+[105/154] Linking CXX executable test/word_ladder/word_ladder_test23
+[106/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test32.dir/word_ladder_test32.cpp.o
+[107/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test34.dir/word_ladder_test34.cpp.o
+[108/154] Linking CXX executable test/word_ladder/word_ladder_test13
+[109/154] Linking CXX executable test/word_ladder/word_ladder_test41
+[110/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test17.dir/word_ladder_test17.cpp.o
+[111/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test33.dir/word_ladder_test33.cpp.o
+[112/154] Linking CXX executable test/word_ladder/word_ladder_test31
+[113/154] Linking CXX executable test/word_ladder/word_ladder_test49
+[114/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test46.dir/word_ladder_test46.cpp.o
+[115/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment6.dir/word_ladder_test55_fragment6.cpp.o
+[116/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment6.a
+[117/154] Linking CXX executable test/word_ladder/word_ladder_test34
+[118/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test35.dir/word_ladder_test35.cpp.o
+[119/154] Linking CXX executable test/word_ladder/word_ladder_test32
+[120/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment14.dir/word_ladder_test55_fragment14.cpp.o
+[121/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment14.a
+[122/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test37.dir/word_ladder_test37.cpp.o
+[123/154] Linking CXX executable test/word_ladder/word_ladder_test17
+[124/154] Linking CXX executable test/word_ladder/word_ladder_test33
+[125/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test14.dir/word_ladder_test14.cpp.o
+[126/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test39.dir/word_ladder_test39.cpp.o
+[127/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test38.dir/word_ladder_test38.cpp.o
+[128/154] Linking CXX executable test/word_ladder/word_ladder_test46
+[129/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test8.dir/word_ladder_test8.cpp.o
+[130/154] Linking CXX executable test/word_ladder/word_ladder_test35
+[131/154] Linking CXX executable test/word_ladder/word_ladder_test37
+[132/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test40.dir/word_ladder_test40.cpp.o
+[133/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test43.dir/word_ladder_test43.cpp.o
+[134/154] Linking CXX executable test/word_ladder/word_ladder_test39
+[135/154] Linking CXX executable test/word_ladder/word_ladder_test14
+[136/154] Linking CXX executable test/word_ladder/word_ladder_test38
+[137/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test47.dir/word_ladder_test47.cpp.o
+[138/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment3.dir/word_ladder_test55_fragment3.cpp.o
+[139/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment3.a
+[140/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test44.dir/word_ladder_test44.cpp.o
+[141/154] Linking CXX executable test/word_ladder/word_ladder_test8
+[142/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test53.dir/word_ladder_test53.cpp.o
+[143/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test50.dir/word_ladder_test50.cpp.o
+[144/154] Linking CXX executable test/word_ladder/word_ladder_test40
+[145/154] Linking CXX executable test/word_ladder/word_ladder_test43
+[146/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test52.dir/word_ladder_test52.cpp.o
+[147/154] Linking CXX executable test/word_ladder/word_ladder_test47
+[148/154] Building CXX object test/word_ladder/CMakeFiles/word_ladder_test55_fragment1.dir/word_ladder_test55_fragment1.cpp.o
+[149/154] Linking CXX static library test/word_ladder/libword_ladder_test55_fragment1.a
+[150/154] Linking CXX executable test/word_ladder/word_ladder_test44
+[151/154] Linking CXX executable test/word_ladder/word_ladder_test53
+[152/154] Linking CXX executable test/word_ladder/word_ladder_test50
+[153/154] Linking CXX executable test/word_ladder/word_ladder_test52
+[154/154] Linking CXX executable test/word_ladder/word_ladder_test55
+Running tests... (output won't appear till completion)
+Errors while running CTest
+Running tests... (output won't appear till completion)
+Test project /tmp/tmp.hJEoDckFs2/build
+      Start  1: test.word_ladder_test1
+      Start  2: test.word_ladder_test2
+      Start  3: test.word_ladder_test3
+      Start  4: test.word_ladder_test4
+ 1/55 Test  #3: test.word_ladder_test3 ...........   Passed    0.17 sec
+      Start  5: test.word_ladder_test5
+ 2/55 Test  #2: test.word_ladder_test2 ...........   Passed    0.19 sec
+      Start  6: test.word_ladder_test6
+ 3/55 Test  #4: test.word_ladder_test4 ...........   Passed    0.25 sec
+      Start  7: test.word_ladder_test7
+ 4/55 Test  #5: test.word_ladder_test5 ...........   Passed    0.28 sec
+      Start  8: test.word_ladder_test8
+ 5/55 Test  #6: test.word_ladder_test6 ...........   Passed    0.25 sec
+      Start  9: test.word_ladder_test9
+ 6/55 Test  #7: test.word_ladder_test7 ...........   Passed    0.24 sec
+      Start 10: test.word_ladder_test10
+ 7/55 Test  #8: test.word_ladder_test8 ...........   Passed    0.25 sec
+      Start 11: test.word_ladder_test11
+ 8/55 Test  #9: test.word_ladder_test9 ...........   Passed    0.25 sec
+      Start 12: test.word_ladder_test12
+ 9/55 Test #10: test.word_ladder_test10 ..........   Passed    0.29 sec
+      Start 13: test.word_ladder_test13
+10/55 Test #12: test.word_ladder_test12 ..........   Passed    0.25 sec
+      Start 14: test.word_ladder_test14
+11/55 Test #11: test.word_ladder_test11 ..........   Passed    0.25 sec
+      Start 15: test.word_ladder_test15
+12/55 Test #13: test.word_ladder_test13 ..........   Passed    0.24 sec
+      Start 16: test.word_ladder_test16
+13/55 Test #15: test.word_ladder_test15 ..........   Passed    0.24 sec
+      Start 17: test.word_ladder_test17
+14/55 Test #14: test.word_ladder_test14 ..........   Passed    0.26 sec
+      Start 18: test.word_ladder_test18
+15/55 Test #16: test.word_ladder_test16 ..........   Passed    0.25 sec
+      Start 19: test.word_ladder_test19
+16/55 Test #18: test.word_ladder_test18 ..........   Passed    0.27 sec
+      Start 20: test.word_ladder_test20
+17/55 Test #17: test.word_ladder_test17 ..........   Passed    0.37 sec
+      Start 21: test.word_ladder_test21
+18/55 Test #20: test.word_ladder_test20 ..........   Passed    1.79 sec
+      Start 22: test.word_ladder_test22
+19/55 Test #21: test.word_ladder_test21 ..........   Passed    1.78 sec
+      Start 23: test.word_ladder_test23
+20/55 Test #19: test.word_ladder_test19 ..........   Passed    2.57 sec
+      Start 24: test.word_ladder_test24
+21/55 Test #22: test.word_ladder_test22 ..........   Passed    1.85 sec
+      Start 25: test.word_ladder_test25
+22/55 Test #23: test.word_ladder_test23 ..........   Passed    1.78 sec
+      Start 26: test.word_ladder_test26
+23/55 Test #24: test.word_ladder_test24 ..........   Passed    2.76 sec
+      Start 27: test.word_ladder_test27
+24/55 Test #25: test.word_ladder_test25 ..........   Passed    1.77 sec
+      Start 28: test.word_ladder_test28
+25/55 Test #26: test.word_ladder_test26 ..........   Passed    1.78 sec
+      Start 29: test.word_ladder_test29
+26/55 Test #27: test.word_ladder_test27 ..........   Passed    1.90 sec
+      Start 30: test.word_ladder_test30
+27/55 Test #28: test.word_ladder_test28 ..........   Passed    3.34 sec
+      Start 31: test.word_ladder_test31
+28/55 Test #30: test.word_ladder_test30 ..........   Passed    1.77 sec
+      Start 32: test.word_ladder_test32
+29/55 Test  #1: test.word_ladder_test1 ...........   Passed   13.92 sec
+      Start 33: test.word_ladder_test33
+30/55 Test #33: test.word_ladder_test33 ..........   Passed    1.76 sec
+      Start 34: test.word_ladder_test34
+31/55 Test #34: test.word_ladder_test34 ..........   Passed    1.77 sec
+      Start 35: test.word_ladder_test35
+32/55 Test #32: test.word_ladder_test32 ..........   Passed    8.18 sec
+      Start 36: test.word_ladder_test36
+33/55 Test #35: test.word_ladder_test35 ..........   Passed    2.00 sec
+      Start 37: test.word_ladder_test37
+34/55 Test #36: test.word_ladder_test36 ..........   Passed    9.84 sec
+      Start 38: test.word_ladder_test38
+35/55 Test #37: test.word_ladder_test37 ..........   Passed    9.88 sec
+      Start 39: test.word_ladder_test39
+36/55 Test #29: test.word_ladder_test29 ..........***Timeout  60.04 sec
+
+      Start 40: test.word_ladder_test40
+37/55 Test #31: test.word_ladder_test31 ..........***Timeout  60.00 sec
+
+      Start 41: test.word_ladder_test41
+38/55 Test #40: test.word_ladder_test40 ..........   Passed   10.02 sec
+      Start 42: test.word_ladder_test42
+39/55 Test #41: test.word_ladder_test41 ..........   Passed    9.86 sec
+      Start 43: test.word_ladder_test43
+40/55 Test #38: test.word_ladder_test38 ..........***Timeout  60.01 sec
+
+      Start 44: test.word_ladder_test44
+41/55 Test #39: test.word_ladder_test39 ..........***Timeout  60.00 sec
+
+      Start 45: test.word_ladder_test45
+42/55 Test #44: test.word_ladder_test44 ..........   Passed    9.55 sec
+      Start 46: test.word_ladder_test46
+43/55 Test #43: test.word_ladder_test43 ..........   Passed   23.60 sec
+      Start 47: test.word_ladder_test47
+44/55 Test #42: test.word_ladder_test42 ..........   Passed   34.69 sec
+      Start 48: test.word_ladder_test48
+45/55 Test #47: test.word_ladder_test47 ..........   Passed   30.49 sec
+      Start 49: test.word_ladder_test49
+46/55 Test #45: test.word_ladder_test45 ..........***Timeout  60.05 sec
+
+      Start 50: test.word_ladder_test50
+47/55 Test #46: test.word_ladder_test46 ..........***Timeout  60.04 sec
+
+      Start 51: test.word_ladder_test51
+48/55 Test #48: test.word_ladder_test48 ..........***Timeout  60.04 sec
+
+      Start 52: test.word_ladder_test52
+49/55 Test #49: test.word_ladder_test49 ..........***Timeout  60.04 sec
+
+      Start 53: test.word_ladder_test53
+50/55 Test #50: test.word_ladder_test50 ..........***Timeout  60.03 sec
+
+      Start 54: test.word_ladder_test54
+51/55 Test #51: test.word_ladder_test51 ..........***Timeout  60.05 sec
+
+      Start 55: test.word_ladder_test55
+52/55 Test #52: test.word_ladder_test52 ..........***Timeout  60.01 sec
+
+53/55 Test #54: test.word_ladder_test54 ..........   Passed   31.81 sec
+54/55 Test #53: test.word_ladder_test53 ..........***Timeout  60.04 sec
+
+55/55 Test #55: test.word_ladder_test55 ..........***Timeout  60.05 sec
+
+
+76% tests passed, 13 tests failed out of 55
+
+Total Test time (real) = 277.99 sec
+
+The following tests FAILED:
+         29 - test.word_ladder_test29 (Timeout)
+         31 - test.word_ladder_test31 (Timeout)
+         38 - test.word_ladder_test38 (Timeout)
+         39 - test.word_ladder_test39 (Timeout)
+         45 - test.word_ladder_test45 (Timeout)
+         46 - test.word_ladder_test46 (Timeout)
+         48 - test.word_ladder_test48 (Timeout)
+         49 - test.word_ladder_test49 (Timeout)
+         50 - test.word_ladder_test50 (Timeout)
+         51 - test.word_ladder_test51 (Timeout)
+         52 - test.word_ladder_test52 (Timeout)
+         53 - test.word_ladder_test53 (Timeout)
+         55 - test.word_ladder_test55 (Timeout)
+
+Writing marks to file...
+Marking feedback here
+!!specialmark  (Correctness)                            4.4/7.5
+
+!!marktab       **  MARKER'S  ASSESSMENT  **
+
+                            testing   ..  (3.75)        3
+ ^
++ ================================================================================================= +
++ try to test more cases that weren't given in the spec. how do you know the case you've picked is  +
++ correct? build a minimalistic lexicon to test further.                                            +
++ ================================================================================================= +
+
+                            bestpractice  (3)   1.75
+ ^
++ ================================================================================================ +
++ we didn't want you to write this as a class! generally okay style overall, but see comments for  +
++ more specifics.                                                                                  +
++ ================================================================================================ +
+
+!!finalmark     **  FINAL  ASSIGNMENT  MARK:    9.9/15
+
+5286124 Wang, William                           3778/2 COMPA1
+
+
+Marked by root on Wed Jul  6 03:14:31 2022
+
+
+
+
+Marked by z5061640 on Wed Jul  6 18:58:13 2022
