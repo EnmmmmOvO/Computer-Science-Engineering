@@ -1,0 +1,115 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printdraftpaper=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 1, Question 1}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{0}
+
+\begin{Question}
+Your friend attempted to send you an array of $n$ bits, starting with a 0, and alternating between 0s and 1s. However, due to the network being unreliable, one of the bits was not sent. You received the array $A$ of length $n-1$, and you would like to determine which bit was not sent.
+
+\begin{Subquestion}
+\textbf{[2 marks]} Suppose $n=8$, and you received the array $A = [0,1,0,1,1,0,1]$. Identify the bit that was not sent by its 1-based index in the array your friend tried to send you.
+
+\begin{answer}
+Answer: 5\\
+Proof:
+\begin{quote}
+    According to the topic, the original array of 8 bits which starts with 0 is
+\begin{center}
+    $A = [0,1,0,1,0,1,0,1]$\\
+\end{center}
+Compare with the array which received, the received array loss $1$ in $5^{th}$ term.\\\\
+Therefore, the bit that was not sent by its 1-based index in the array is 5.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}\label{bitstring-midpoint}
+\textbf{[5 marks]} Suppose $n = 20$, and you received an array in which $A[10] = 0$. Which of the twenty bits could have been omitted from the original array? Provide reasoning to justify your answer.
+
+\begin{answer}
+Answer: the omitted data position $n{\ \leqslant\ }$10.\\
+Proof:
+\begin{quote}
+According to the topic, the original array of 20 bits which starts with 0 is \\$A = [0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1]$, it can be summarized that
+\begin{center} 
+    When $n \ \% \ 2 = 0,\ A[n] = 1$\\
+    When $n \ \% \ 2 = 1,\ A[n] = 0$\\
+\end{center}
+Suppose the omitted position is $a$, the original array is $A$, the received array is $A'$
+\begin{quote} 
+    When $0 < n < a, A[n] = A'[n]$\\
+    When $n = a$, $A[n]$ is not send. so $A'[n]$ records the $A[n+1]$ data.\\
+    When $n > a, A'[n] = A[n+1]$
+\end{quote}
+Now, When $n = 10, n \ \% \ 2 = 0 \ {\rightarrow} \ A[10] = 1$, but $A'[10] = A[1] = A[3] = ... = A[19] = 0$.\\
+As the topic describes that only losing one data, it can get that $A'[10]$ record the data of $A[11]$. ($A'[10] = A[11] = 0$) \\
+According to the above result, when $n{\ \geqslant\ }a, A'[n] = A[n+1]$. Only if the omitted data position less than or equal with 10, the $A'[n] = A[n+1] = 0.$\\\\
+Therefore, the omitted data position $n{\ \leqslant\ }$10.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\clearpage
+\begin{Subquestion}
+\textbf{[13 marks]} Design an algorithm which runs in $O(\log n)$ time and finds the index of the missing bit.
+
+\begin{answer}
+Answer:
+\begin{quote}
+Suppose that the original array is $A$, the received array is $A'$, the range of the array search is $A'$ is $[x, y]$.\\\\
+Now, set $a =$ size of $A' \Rightarrow x = 1, y = a$, the range of the array search is $A'$ is $[1, a]$.
+\begin{quote}
+    - $n = \displaystyle{\lfloor \frac{x + y}{2}  \rfloor} $\\
+    - if $A[n] = A'[n]$, the range of the array search become $[n+1, y]$ and\\- then go back and start the next comparison.\\
+    - if $A[n] \neq A'[n]$, Compare $A'[n-1]$ and $A'[n]$.\\
+    - $\quad$ if $A'[n-1]$ = $A'[n]$, the omitted data position is n. break.\\
+    - $\quad$ if $A'[n-1] \neq A'[n]$, the range of the array search become $[x, n-1]$\\- $\quad$ and then go back and start the next comparison. 
+\end{quote}
+Reason:\\
+The method is according to the 1.2.\\
+When the data is equal, it means that all of left data is right on the left part, so, go to right part.\\
+When the data is not equal, it means that it existed error on the left part or this data is wrong, so, compare the data with the adjacent numbers on the left. if equal, the mistake is this position, if not, go to left part.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

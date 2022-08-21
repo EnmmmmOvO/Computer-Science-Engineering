@@ -1,0 +1,116 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 4, Question 1}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{0}
+
+\begin{Question}
+You are playing a video game, where you control a character in a grid with $m$ rows and $n$ columns. The character starts at the square in the top left corner $(1,1)$, and must walk to the square in the bottom right corner $(m,n)$. The character can only move one square at a time \emph{downwards or rightwards}. Every square $(i,j)$, other than the starting square and the ending square, contains a known number of coins $a_{i,j}$.
+
+\begin{Subquestion}
+\textbf{[10 marks]} Design an algorithm which runs in $O(mn)$ time and determines the maximum number of coins that your character can accumulate by walking from $(1,1)$ to $(m,n)$ using a combination of downwards and rightwards moves.\\
+
+\begin{answer}
+Answer:
+\begin{quote}
+    According to the topic, the character only move one square to downwards or rightwards at one time, therefore, for each square view, the character will only enter from the up side or left side, so the maximum amount of coins when the square is reached by character is the maximum amount of coins between left side and top right plus the amount of coins which contains in this square.\\\\
+    Suppose that any square $(i, j)$, the max amount which character for each square is $opt(i, j)$, the coins which contains in the square is $C(i, j)$.
+    \begin{center}
+    $opt(i, j) = \left\{
+        \begin{array}{rcl}
+            max\{opt(i-1, j), opt(i, j-1)\} + C(i, j) & 1 < i \leq m\ , 1 < j \leq n \vspace{1em}\\
+            opt(i-1, j) + C(i, j) & j = 1\vspace{1em}\\
+            opt(i, j-1) + C(i, j) & i = 1\\
+        \end{array}
+    \right.$
+    \end{center}
+    \\Therefore, to get the maximum number of coins from $(1,1)$ to $(m, n)$. Set a  $m \times n$ two-dimensional array $\textbf{opt}$ record the maximum amount coins in each square$(i, j)$, set the $opt(1, 1) = 0$, the coins which contains in the square is $C(i, j)$.\\\\
+    Set the output loop i from $1$ to $m$ and set the input loop j from $1$ to $n$.
+    \begin{itemize}
+        \item [$\bullet$] if $i = 1$, $opt(i, j) = opt(i, j-1) + C(i, j)$.
+        \item [$\bullet$] if $j = 1$, $opt(i, j) = opt(i-1, j) + C(i, j)$.
+        \item [$\bullet$] if else, $opt(i, j) = max\{opt(i-1, j), opt(i, j-1)\} + C(i, j)$.\vspace{1em}
+    \end{itemize}
+    When finish the Nested loop, the max number of coins from $(1, 1)$ to $(m, n)$ is $opt(m, n)$.\vspace{1em}\\
+    The time complexity of output loop is $O(m)$ and input loop is $O(n)$, the total complexity is $O(mn)$.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\clearpage
+\begin{Subquestion}
+\textbf{[10 marks]} After playing this game many times, you have broken the controller, and you can no longer control your character. They now walk randomly as follows:
+\begin{itemize}
+    \item if there is only one possible square to move to, they move to it;
+    \item otherwise, they move right with probability $p$ and down with probability $1-p$.
+\end{itemize}
+Note that this guarantees that the character arrives at $(m,n)$.
+
+Design an algorithm which runs in $O(mn)$ time and determines the \emph{expected} number of coins that your character will accumulate by walking from $(1,1)$ to $(m,n)$ according to the random process above.
+
+Recall that for a discrete random variable $X$ which attains values $x_1, \ldots, x_n$ with probabilities $p_1, \ldots, p_n$, the \emph{expected value} of $X$ is defined as \[ \mathbb{E}(X) = \sum_{i=1}^n p_i x_i. \]
+
+\begin{answer}
+Answer:
+\begin{quote}
+    According to the topic, now the move is random, the character move to rightwards with probability $p$ and move to downwards with probability $1-p$. It is also means that any square which come from up side with probability $1-p$ and from left side with probability $p$.\\\\
+    Suppose that any square $(i, j)$, the expected coins amount which character for each square is $\mathbb{E} (i, j)$, the coins which contains in the square is $C(i, j)$.\vspace{1em}\\
+    $\mathbb{E}(i, j) = \left\{
+        \begin{array}{rcl}
+            \mathbb{E}(i-1, j) * (1-p) + \mathbb{E}(i, j-1) * p + C(i, j) & 1 < i \leq m\ , 1 < j \leq n \vspace{1em}\\
+            \mathbb{E}(i-1, j) + C(i, j) & j = 1\vspace{1em}\\
+            \mathbb{E}(i, j-1) + C(i, j) & i = 1\\
+        \end{array}
+    \right.$
+    \\\\Therefore, to get the expected number of coins from $(1,1)$ to $(m, n)$. Set a  $m \times n$ two-dimensional array $\mathbb{E}$ record the expected amount coins in each square$(i, j)$, set the $\mathbb{E}(1, 1) = 0$, the coins which contains in the square is $C(i, j)$.\\\\
+    Set the output loop i from $1$ to $m$ and set the input loop j from $1$ to $n$.
+    \begin{itemize}
+        \item [$\bullet$] if $i = 1$, $\mathbb{E}(i, j) = \mathbb{E}(i, j-1) + C(i, j)$.
+        \item [$\bullet$] if $j = 1$, $\mathbb{E}(i, j) = \mathbb{E}(i-1, j) + C(i, j)$.
+        \item [$\bullet$] if else, $\mathbb{E}(i, j) = \mathbb{E}(i-1, j) * (1-p) + \mathbb{E}(i, j-1) * p + C(i, j)$.\vspace{1em}
+    \end{itemize}
+    When finish the Nested loop, the expected number of coins from $(1, 1)$ to $(m, n)$ is $\mathbb{E}(m, n)$.\vspace{1em}\\
+    The time complexity of output loop is $O(m)$ and input loop is $O(n)$, the total complexity is $O(mn)$.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

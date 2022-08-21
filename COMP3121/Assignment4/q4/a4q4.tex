@@ -1,0 +1,95 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 4, Question 4}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{3}
+
+\begin{Question}
+There are $2n$ players who have signed up to a chess tournament. For all $1 \le i \le 2n$, the $i$th player has a known skill level of $s_i$, which is a non-negative integer. Let $S = \sum_{i=1}^{2n} s_i$, the total skill level of all players.
+
+In the tournament, there will be $n$ matches. Each match is between two players, and each player will play in exactly one match. The \textit{imbalance} of a match is the absolute difference between the skill levels of the two players. That is, if a match is played between the $i$th player and the $j$th player, its imbalance is $|s_i - s_j|$. The \textit{total imbalance} of the tournament is the sum of imbalances of each match.
+
+The organisers have provided you with a value $m$ which they consider to be the ideal total imbalance of the tournament.
+
+Design an algorithm which runs in $O(n^2S)$ time and determines whether or not it is possible to arrange the matches in order to achieve a total imbalance of $m$, assuming:
+
+\begin{Subquestion}
+\textbf{[4 marks]} all $s_i$ are either $0$ or $1$;
+
+\begin{answer}
+Answer:
+\begin{quote}
+    According to the topic, when $s_i$ only have the possibility $0$ and $1$, it means that There are $S$ players with level $1$ and $2n-S$ players with level $0$ players.\\
+    The least possibility of total tournament imbalance:
+\begin{quote}
+    The least probability of total tournament means battle between as many of the same levels as possible.\\
+    As $2n$ is even, If $S$ is even, it means level $0$ players can divide to 2 parts and battle with each other, $2n-S$ will also be even, and it also can divide to 2 parts. Therefore, the least total imbalance of tournament is $T_{min} = 0$.\\
+    If $S$ is odd, the $2n-S$ will also be odd, both of them cannot divide to two parts. There must be $1$ pair players with different level. the least total imbalance of tournament is $T_{min} = 1$.
+    
+\end{quote}
+    The largest possibility of total tournament imbalance:
+    \begin{quote}
+        The largest probability of total tournament means battle between as many of the different levels as possible and the best situation will be all of smaller number of players between $S$ and $2n-S$ battle with different level players, the other $| 2n-2S |$ players battle with each other. As $2n$ and $2S$ are even, therefore, the other players can divide to two part.\\
+        If $S\geq2S-n$, it means level $0$ have less people. The total imbalance of the tournament is $T_{max} = (2S-n) \times 1 + | 2S-2n | \times 0 = 2S-n$.\\
+        If $S\leq2S-n$, it means level $0$ have less people. The total imbalance of the tournament is $T_{max} = S \times 1 + | 2S-2n | \times 0 = S$.\\ 
+        According to the topic, the maximum of total tournament imbalance is the less number players between level $1$ and $0$.
+    \end{quote}
+    According to the topic, when finish the calculating of $S$, we can get the result.\\
+    if $m=0$, check if $S$ is odd, the ideal total imbalance of tournament cannot reach.
+    if $m > min \{ S, 2S-n \}$, according to the above, it means $m$ is larger than the maximum total imbalance of tournament in this situation,  the ideal total imbalance of tournament cannot reach.\\
+    If else, the ideal total imbalance of tournament can reach.\\
+    
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[16 marks]} the $s_i$ are distinct non-negative integers.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    
+\end{quote}
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

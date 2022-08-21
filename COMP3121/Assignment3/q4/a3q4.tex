@@ -1,0 +1,91 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 3, Question 4}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{3}
+
+\begin{Question}
+You are given a flow network $G$ with $n$ vertices, including a source $s$ and sink $t$, and $m$ directed edges with integer capacities.
+
+Your friend will ask you several queries of the form: ``If an edge were to be added to $G$, going from vertex $a$ to vertex $b$ with capacity $c$, what would the maximum flow of the modified network be?" Note that each query considers adding an edge to the original flow network, so the modified network has $m+1$ edges.
+
+Before asking any queries, your friend gives you some time to prepare, which you can spend on precomputation.
+
+Design an algorithm which performs any required precomputation and then answers each query in constant time, subject to the following restrictions:
+
+\begin{Subquestion}
+\textbf{[5 marks]} $O(n m^2)$ precomputation; $b = t$ and $c = 1$ in all queries.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    According to the meaning of the question, this situation means that a link with capacity $1$ is added between a node $a$ and the sink node. Use the Edmonds-Karp algorithm, we only need to find whether there is an augmented path through $a$. If there is, and it is valid, and if there is not, we can conduct the next search.\\
+    The time complexity of Edmonds-Karp is $O(v*E^2)$, in this question $v = n$ and $E = m$, the time complexity is $O(nm^2)$.\\
+
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[6 marks]} $O(n m^2)$ precomputation; $c = 1$ in all queries.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[7 marks]} $O(n^2 m^2)$ precomputation; $b = t$ in all queries.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[2 marks]} $O(n^2 m^2)$ precomputation; queries unrestricted.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

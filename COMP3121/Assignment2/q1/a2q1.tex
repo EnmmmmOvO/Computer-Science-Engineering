@@ -1,0 +1,131 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+\usepackage{indentfirst} 
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 2, Question 1}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{0}
+
+\begin{Question}
+You have $n$ identical flowers, which you would like to place into $k$ vases, according to the following rules:
+
+\begin{itemize}
+    \item Each flower must be placed in a vase.
+    \item The $i$th vase (where $1 \le i \le k$) must hold at least $1$ and at most $f_i$ flowers.
+    \item No two vases contain the same number of flowers.
+\end{itemize}
+
+Your goal is to assign a number of flowers to each vase following the above rules, or to determine that no such assignment exists.
+
+\begin{Subquestion}
+\textbf{[10 marks]} Suppose that $f_1 = \ldots = f_k = n$. Design an algorithm which runs in $O(k)$ time and achieves the goal.
+
+\begin{answer}
+Analysis:
+\begin{quote}
+    Suppose $k$ is the number of vases\\
+    According to the topic, in order to achieve the condition that all the vases must have at least one flowers and the number of flowers in each vase varies, the minimum sum number of flower is $1 + 2 + ... + k$.\\\\
+    If $1 + 2 + ... + k > n$, it means that at least two vase will have same number flowers or some vases is empty.\\
+    If $1 + 2 + ... + k \leq n$, suppose $p$ is the number of extra flowers at the end of the allocation when the allocation is done as described above, if there is nothing left, then $p = 0$. now it need to prove that both $1 + 2 + ... + k + p = n (p \geq 0)$ and $f_k = n \geq (k + p)$ is true.
+    \begin{center}
+        \setlength{\baselineskip}{20pt}
+        $ 1 + 2 + 3 + ... + k + p = \displaystyle{\frac{(1+k)k}{2}} + p = n \geq (k + p)$\\
+        $ \displaystyle{\frac{(1 + k) k}{2}} + p \geq k + p$\\
+        $ {(1 + k ) k \geq 2k}$\\\\
+        $ k^2 - k \geq 0$\\\\
+        $ k \geq 1 \OR k \leq 0 $
+    \end{center}
+    According to the above, it works as long as it's bigger than one vase. Therefore, when $1 + 2 + ... + k \leq n$ is true.
+\end{quote}
+Answer:
+\begin{quote}
+    From the first vase, assign $i$ flowers to the $ith$ vase.\\\\
+    During the assignment, if the flowers are used up or the last vase assign less than $k$ flowers, it means that the total flower cannot assign by the topic. \\\\
+    When the assignment finished, if none flower left, the method is true. 
+    \\If there are any flowers left over, put the rest directly into the last bottle, according to the above proof, $n$ must larger than the number of flowers in the last vase. \\\\
+    The method only traverses each vase once, so the time complexity is $O(k)$\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\clearpage
+\begin{Subquestion}
+\textbf{[10 marks]} Now we return to the original problem, in which the $f_i$ can take any positive integer values. Design an algorithm which runs in $O(k \log k)$ time and achieves the goal.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    First, put all of the $f_i$ in an array, Suppose the array is $A$.
+    \begin{center}
+        $A = [f_1, f_2, ..., f_k]$
+    \end{center}
+    Second, use Merge Sort to sort the array $A$, suppose the new array is $A'$, The merge sort's time complexity is $O(klogk)$.\\
+    Third, Create an new array $N$ which record the number of flower in each vase which focus on the sorted array $A'$. Suppose $S_{min}$ is the least sum number of flower which had been assigned, $k$ is the number of vases\\\\
+    Now, suppose the index $i$ is the position of vase in sorted array $A'$, $N[i]$ record the number of flower which will assign in $ith$ vase.\\
+    According to the topic, each vase must have at least one flower$(A'[1] \geq 1)$, assign the number of flower in first vase is $1 (N[1] = 1), S_{min} = 1$.\\
+    Perform the following step while $ i > 1 \AND i \leq k $:
+    \begin{itemize}
+        \item[$\bullet$] If $N[i-1] + 1 \leq A'[i-1]$, set $N[i] = N[i-1] + 1, S_{min} = N[i] + S_{min}$, continue
+        \item[$\bullet$] If $N[i-1] + 1 > A'[i-1]$, it means that existed at least two vases with same number of flower. this situation cannot assign by the topic.
+        \item[$\bullet$] If $Sum_min > n$, it means that there is at least one vase cannot assign flower, this situation cannot assign by the topic.
+    \end{itemize}
+    This part's count the least number of flower in this $f_i$'s situation. The time complexity is $O(k)$\\\\
+    Suppose $S_{max}$ is the most sum number of flower which had been assigned.
+    According to $A'$, when $i = k$, the $A'[i]$ is the largest number of the maximum flower in the vase. The last vase is $N[i] = A'[i], S_{max} = N[i]$ \\
+    Perform the following step while $ i < k \AND i \geq 1 $:
+    \begin{itemize}
+        \item[$\bullet$] If $N[i+1] - 1 \leq A'[i]$, set $N[i]= N[i+1] - 1, S_{max} = S_{max} + N[i]$, continue
+        \item[$\bullet$] If $N[i+1] - 1 > A'[i]$, set $N[i]= A'[i], S_{max} = S_{max} + N[i]$, continue
+        \item[$\bullet$] If $N[i] < 1$, the situation is not follow the topic, this situation cannot assign.
+    \end{itemize}
+    This part's count the most number of flower in this $f_i$'s situation. The time complexity is $O(k)$\\\\
+    Compare the $n$ with $S_{min}$ and $S_{max}$
+    \begin{itemize}
+        \item[$\bullet$] If $S_{min} \leq n \leq S_{max}$, this $f_i$'s situation of vases can assign $n$ flower.
+        \item[$\bullet$] If $n < S_{min}$, the situation must exist at least one vases have same number with other flower or at least one vase cannot assign any flower.
+        \item[$\bullet$] If $n < S_{max}$, this situation must exist at least one flower cannot assign in each vases or at least one vases assign the number of flower is larger than the setting $f_1$
+    \end{itemize}
+    The total time complexity is $O(klogk)$\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

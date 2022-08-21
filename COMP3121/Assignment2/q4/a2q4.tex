@@ -1,0 +1,93 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 2, Question 4}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{3}
+
+\begin{Question}
+You are given an array $A$, which contains each integer from $1$ to $n$ exactly once.
+
+On each move, you can swap the value at index $i$ with the value at index $j$, for a cost of $\abs{i-j}$ dollars. Your goal is to sort the array, spending as few dollars as possible.
+
+Let $S = \displaystyle \sum_{i=1}^n \frac{\abs*{A[i]-i}}{2}$.
+
+\begin{Subquestion}
+\textbf{[2 marks]} Show that $S$ is an integer.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    In this expression, if the effect is not absolute
+    \begin{center}
+        $(A[1]- 1) + (A[2]-2) + ... + (A[n] - n)$\\
+        $ = (A[1] + A[2] + ... + A[n]) - (1 + 2 + ... + n)$\\  
+    \end{center}
+    According to the topic, the $A[1] + A[2] + ... + A[n] = 1 + 2 + ... + n$. Therefore, the result equal 0 which is not follow the topic.\\\\
+    During the change of the element, when move two element, the cost of the movement is double of the sum of the movement, it must be even, add lots of even number will also be even. Therefore, the S is $an even number / 2 $, it will be an integer.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[2 marks]} Show that any sequence of swaps which sorts the array will cost at least $S$ dollars.
+
+\begin{answer}
+Your answer here.    
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[8 marks]} Show that the array can be sorted for a total cost of $S$ dollars.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[8 marks]} Design an algorithm which runs in $O(n+S)$ time and finds a list of swaps (each described as a pair of indices) which sorts the array for the minimum possible total cost.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

@@ -1,0 +1,100 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printdraftpaper=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 1, Question 3}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{2}
+
+\begin{Question}
+You are given an array $A$ containing each integer from $1$ to $n$ exactly once. Your task is to compute $f(A)$, the sum of $\max(A[\ell..r])$ over all pairs of indices $(\ell,r)$ such that $\ell \le r$.
+
+\begin{Subquestion}
+\textbf{[2 marks]} Suppose $n = 3$ and the array is $A = [2,1,3]$. Determine the value of $f(A)$.
+
+\begin{answer}
+Answer: $f(A) = 14$\\
+Proof:
+\begin{quote}
+    According to the topic, the subarray of A is 
+    \begin{center}
+        $[2]$, $[1]$, $[3]$, $[2, 1]$, $[2, 3]$, $[1, 3]$, $[2, 1, 3]$
+    \end{center}
+    But $A[\ell..r]$ means that the element must be continued. Therefore, $f(A)$ will find between
+    \begin{center}
+        $[2]$, $[1]$, $[3]$, $[2, 1]$, $[2, 3]$, $[2, 1, 3]$
+    \end{center}
+    $f(A) = 2 + 1 + 3 + 2 + 3 + 3 = 14$.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+For 3.2 and 3.3, suppose $i$ and $j$ are indices such that $1 \le i \le j \le n$, and let $g(i,j)$ be the number of subarrays $A[\ell..r]$ where $r > j$ and the maximum value is $A[i]$.
+
+\begin{Subquestion}\label{identify-max}
+\textbf{[4 marks]} For a given pair of indices $(i,j)$, under what conditions is $g(i,j)$ nonzero? In other words, what is the criterion for $A[i]$ to be the maximum of some subarray with its right endpoint at an index greater than $j$?
+
+\begin{answer}
+Answer:
+\begin{quote}
+    According to th topic, as long as it is not sorted from small to large, there is a value larger than the adjacent to the right of the value. It \\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}\label{count-max}
+\textbf{[6 marks]} Given an index $j$, design an algorithm which runs in $O(n)$ time and determines the values of $g(i,j)$ for all $i < j$.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[8 marks]} Design an algorithm which runs in $O(n \log n)$ time and determines the value of $f(A)$.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

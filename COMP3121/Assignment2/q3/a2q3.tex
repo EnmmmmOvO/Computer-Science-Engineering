@@ -1,0 +1,86 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 2, Question 3}
+\Institution{Jinghan Wang, z5286124}  % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{2}
+
+\begin{Question}
+You are given a simple directed graph with $n$ vertices and $m$ edges. Each vertex $v$ has an associated `starting cost' $s_v$ and `finishing cost' $f_v$, and each edge $e$ has a corresponding weight $w_e$. All values $w_e$, $s_v$ and $f_v$ are positive integers.
+
+For this problem, we define the \emph{score} of a path from vertex $a$ to vertex $b$ as the sum of its starting cost $s_a$, all edge weights on the path, and its finishing cost $f_b$. Your goal is to determine the smallest score of any path in the graph.
+
+A path may consist of zero or more edges. The endpoints of a path do not need to be distinct.
+
+\begin{Subquestion}
+\textbf{[8 marks]} Design an algorithm which runs in $O((n+m) \log (n+m))$ time and achieves the goal.
+
+An algorithm running in $\Theta((n+m)^2 \log (n+m))$ time will be eligible for up to 6 marks.
+
+\begin{answer}
+Answer:\\
+\begin{quote}
+    First , choose any one vertex as the start, and use the dijkstra's algorithm to find the length to other vertex. record the least length with other vertexes. \\
+    Repeat to do the action for each vertex and we can ignore the vertex which had record.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[6 marks]} Now consider only paths consisting of \emph{at least one edge}.
+
+Design an algorithm which runs in $O((n+m) \log (n+m))$ time and achieves the goal.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[6 marks]} Now consider only paths consisting of \emph{at least three edges}.
+
+Design an algorithm which runs in $O((n+m) \log (n+m))$ time and achieves the goal.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

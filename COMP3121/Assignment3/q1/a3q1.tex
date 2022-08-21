@@ -1,0 +1,76 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 3, Question 1}
+\Institution{Algo Rhythm, z1234567} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{0}
+
+\begin{Question}
+There is an $n \times n$ grid of squares. Each square is either \textit{special}, or has a positive integer \textit{cost} assigned to it. No square on the border of the grid is special.
+
+A set of squares $S$ is said to be \emph{good} if it does not contain any special squares and, starting from any special square, you cannot reach a square on the border of the grid by performing up, down, left and right moves without entering a cell belonging to $S$.
+
+\begin{Subquestion}
+\textbf{[5 marks]} In the following diagram, squares are labelled `X' if they are special, otherwise they are labelled by their cost. Identify a good set of squares with minimum total cost for this particular grid.
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+         \hline 5 & 3 & 4 & 9 \\
+         \hline 4 & X & 3 & 6 \\
+         \hline 1 & 9 & X & 4 \\
+         \hline 1 & 2 & 3 & 5 \\
+         \hline
+    \end{tabular}
+\end{center}
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[15 marks]} Design an algorithm which receives an arbitrary $n \times n$ grid, runs in time polynomial in $n$ and determines a good set of squares with minimum total cost.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

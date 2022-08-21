@@ -1,0 +1,86 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 3, Question 3}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{2}
+
+\begin{Question}
+
+There $n$ boys and $n$ girls at a party. Whenever a song starts, they will form exactly $n$ pairs to dance. No boy will dance with the same girl twice.
+
+Some pairs of boys and girls like each other, and all other pairs of boys and girls dislike each other. Every boy will dance with at most $k$ girls that he dislikes, and each girl will dance with at most $k$ boys that she dislikes, where $k < n$.
+
+As the DJ, your job is to determine the maximum number of songs you can play, such that it is possible for pairs to be formed for all songs according to the above requirements.
+
+Design an algorithm which achieves this and runs in time polynomial in $n$:
+
+\begin{Subquestion} \label{k-equals-zero}
+\textbf{[10 marks]} for $k=0$.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    Please refer to my solution to 3.2.
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion} \label{k-equals-anything}
+\textbf{[10 marks]} for arbitrary $k$.
+
+You may choose to skip \ref{k-equals-zero}, in which case we will mark your submission for \ref{k-equals-anything} as if it was submitted for \ref{k-equals-zero} also.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    First, suppose for each boys and girls created a node, and it will have  $n$ boys node and $n$ girls node. There is a source node which link to all of the boys node and a sink node which link to all of the girls node. When a pair of boy and girl like each other, there is an edge and capacity is $1$, because one pair of boy and girl only can dance one time. For each node which link to source and sink, set these edges' capacity is $n$, when boys and girls like each other, they will be willing to dance with each other. \\
+    After that use Edmonds-Karp algorithm to get the maximum flow, suppose the maximum flow is $f_{like}$ and the maximum flow will be the largest number of songs which DJ can play when a pair of boy and girl like each other.\\
+    
+    Suppose for each boys and girls created a node, and it will have  $n$ boys node and $n$ girls node. There is a source node which link to all of the boys node and a sink node which link to all of the girls node. When a pair of boy and girl dislike each other, there is an edge and capacity is $1$, because one pair of boy and girl only can dance one time. For each node which link to source and sink, set these edges' capacity is $k$, it means the boys and girls can accept dancing with $k$ people which they dislike. \\
+    After that use Edmonds-Karp algorithm to get the maximum flow, suppose the maximum flow is $f_{dislike}$ and the maximum flow will be when boys and girls accept dance with k people which they dislike situation, the largest number of songs which DJ can play when a pair of boy and girl dislike each other.\\
+
+    The largest number of songs which DJ can play will be $f_{like} + f_{dislike}$.\\
+    The time complexity of Edmonds-Karp is $O(kn^2 + n^3)$\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

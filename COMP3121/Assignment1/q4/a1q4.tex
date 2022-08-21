@@ -1,0 +1,110 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printdraftpaper=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 1, Question 4}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{3}
+
+\begin{Question}
+Your friend has constructed an array $A$ of $n$ distinct integers, where $n \ge 2$. However, you cannot access the elements of the array directly; instead, they instead only allow you to ask questions of the form ``What is the maximum value amongst $A[l], A[l+1], \ldots, A[r-1], A[r]$?", where you may choose any valid indices $l$ and $r$ such that $l \le r$. You may assume any questions you ask are answered in constant time.
+
+Your goal is to determine the value of the \textbf{second largest} element in the array.
+
+\begin{Subquestion}
+\textbf{[2 marks]} How can you find the value of the largest element in the array using only one question?
+
+\begin{answer}
+Answer:
+\begin{quote}
+    What is the maximum value amongst $A[\ell..r]$?\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[2 marks]} If you know that the largest element occurs at index $i$, how could you then find the value of the second largest element using only two questions?
+
+\begin{answer}
+Answer:
+\begin{quote}
+1. What is the maximum value amongst $A[\ell..(i-1)]$?\\
+2. What is the maximum value amongst $A[(i+1)..r]$?\\\\
+The second largest of array is $max(A[\ell..(i-1)], A[(i+1)..r])$\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\clearpage
+\begin{Subquestion}\label{second-largest}
+\textbf{[11 marks]} Design an algorithm which runs in $O(\log n)$ time and determines the value of the second largest element in the array.
+
+\begin{answer}
+Answer:
+\begin{quote}
+Get the maximum value amongst $A[\ell..r]$, set $max = A[\ell..r]$, the range of array is $[\ell..n]$, the index of maximum value is p.
+\begin{quote}
+- If $\ell + 1 = r$, \\
+- $\quad \max(A[r..r]) == max$, the largest index is $p = r$.\\
+- $\quad \max(A[\ell..\ell]) == max$, the largest index is $p = \ell$.\\
+- If $\ell = r$, the largest index is $p = \ell$.\\
+- Else\\
+- $\quad$ Suppose $n = \displaystyle{\lfloor \frac{\ell + r}{2}  \rfloor} $\\
+- $\quad$ Get the maximum value of left part $\max(A[\ell..n])$ and right part $\max(A[n..r])$. As the array constructed by distinct integers, $\max(A[\ell..n]) \neq \max(A[n..r])$\\
+- $\quad$ If $\max(A[n..r]) == max$, the range change to $[n..r]$, and and then go back and start the next comparison.\\
+- $\quad$ If $\max(A[\ell..n]) == max$, the range change to $[\ell..n]$, and and then go back and start the next comparison.\\\\
+After getting the largest index, use 4.2 method, the second largest value is \\$max(A[\ell..(p-1)], A[(p+1)..r])$.
+\end{quote}
+Reason:\\
+Use dichotomy to find the index corresponding to the largest number, and then compare the data on both sides of the largest number to obtain the second largest number.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}\label{second-largest-ii}
+\textbf{[5 marks]} Now your friend imposes an extra restriction: for each question you ask except the first, the value of $r-l$ should be no larger than the value of $r-l$ in the previous question. Subject to this restriction, design an algorithm which runs in $O(\log n)$ time and determines the value of the second largest element in the array.
+
+You may choose to skip 4.3, in which case we will mark your submission for 4.4 as if it was submitted for 4.3 also.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

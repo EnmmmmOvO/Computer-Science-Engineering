@@ -1,0 +1,107 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 4, Question 2}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{1}
+
+\begin{Question}
+You are managing a garage with two mechanics, named Alice and Bob. Each mechanic can serve at most one customer at a time.
+
+There will be $n$ customers who come in during the day. The $i$th customer wants to be served for the entire period of time starting at time $s_i$ and ending at time $e_i$. You may assume that the customers are indexed by their order of arrival, i.e. $s_1 < s_2 < \ldots < s_n$.
+
+For each customer $i$, the business will:
+\begin{itemize}
+    \item make $a_i$ dollars if customer $i$ is served by Alice;
+    \item make $b_i$ dollars if customer $i$ is served by Bob;
+    \item lose $c_i$ dollars if customer $i$ is not served.
+\end{itemize}
+
+Your task is to maximise the net earnings of the garage, which is calculated as the total amount made minus the total amount lost.
+
+\begin{Subquestion}
+\textbf{[8 marks]} Consider the following greedy algorithm.
+
+\begin{quote}
+    Process each customer $i$ in order of arrival as follows.
+    \begin{itemize}
+        \item If both Alice and Bob are available at time $s_i$:
+        \begin{itemize}
+            \item if $a_i \ge b_i$, assign customer $i$ to Alice;
+            \item otherwise, assign the customer to Bob.
+        \end{itemize}
+        \item If only one mechanic is available at time $s_i$, assign customer $i$ to that mechanic.
+        \item If neither mechanic is available at time $s_i$, do not serve customer $i$.
+    \end{itemize}
+\end{quote}
+
+Design an instance of the problem which is not correctly solved by this algorithm. You must:
+\begin{itemize}
+    \item specify a number of customers $n$,
+    \item for each customer, provide values for $s_i$, $e_i$, $a_i$, $b_i$ and $c_i$,
+    \item apply the greedy algorithm to this instance and calculate the net earnings achieved, and
+    \item show that a higher net earnings figure can be achieved.
+\end{itemize}
+
+\begin{answer}
+Answer:
+\begin{quote}
+    Suppose $i$ is the index of any consumer in $n$ who comes to the service, according to the topic, $a_i$ dollars if customer $i$ is served by Alice, $b_i$ dollars if customer $i$ is served by Bob, lose $c_i$ dollars if customer $i$ is not served, $s_i$ is start time of the consumer $i$ want to be served and $e_i$ is the end time of the consumer $i$ finish the work. Suppose $A, B$ is the index of  Alice and Bob is working or had worked for customer $i$, $s_A$ the start time of Alice need to work. Suppose an array $opt$ which contains the maximum money, $opt[i]$ means that the maximum money can earn when finish the customer $i$ work.\\\\
+    set $A = -1, B = -1$\\
+    Now, perform the following step while $ i \geq 1 \AND i \leq n $:
+    \begin{itemize}
+        \item [$\bullet$] if $A = -1 \OR B = -1$: \\
+            \begin{itemize}
+                \item [$\bullet$] if $A = -1 \AND B = -1$, $opt(i) = max{a_i, b_i}$
+            \end{itemize}
+    \end{itemize}
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[12 marks]} Design an algorithm which runs in $O(n^2)$ time and determines the maximum net earnings of the garage.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

@@ -1,0 +1,81 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printclars=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 3, Question 2}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{1}
+
+\begin{Question}
+There are $k$ people living in a city, whose $n$ suburbs and $m$ roads can be represented by an unweighted directed graph.
+
+Every person is either slow or fast. Every night,
+\begin{itemize}
+    \item Each slow person can stay in the same suburb, or move along a road to an adjacent suburb.
+    \item Each fast person can stay in the same suburb, or move to any other suburb in the entire city.
+\end{itemize}
+
+Over the last $d$ days, you know how many people were located in each city. That is, for each day $i$ and city $j$ (where $1 \le i \le n$ and $1 \le j \le m$), you know $p_{i,j}$, the number of people located in city $j$ on day $i$. You are guaranteed that $\sum_{j=1}^m p_{i,j} = k$ for all $i$.
+
+\begin{Subquestion}
+\textbf{[10 marks]} Design an algorithm which runs in $O(d(n+m))$ time and determines whether there could possibly be at least one slow person.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    According to the settings in the topic, assume that each of the $n$ suburbs acts as a node to form a network. Set a source node is linked to all nodes with the capacity of $p_{i,j}$. Set the capacity of all nodes to be $1$ connected to the sink node.\\
+
+    According to the topic, the fast people can move quickly which also means that if the road had people, the people must be slow people.
+    We can use Ford-Fulkerson algorithm to find the maximum flow. If the maximum flow is equal k, it means there are at least one slow people. If not, there is no slow people.\\
+    
+    The time complexity of Ford-Fulkerson is $O(E * k)$, in this answer, $k = d$, the edge is equal $n + m$, the time complexity is $O(d(m+n))$.\\
+    
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[10 marks]} Design an algorithm which runs in time polynomial in $n$, $m$, and $d$, and determines the minimum possible number of fast people.
+
+\begin{answer}
+Your answer here.
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}

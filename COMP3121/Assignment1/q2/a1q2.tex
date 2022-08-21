@@ -1,0 +1,104 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printdraftpaper=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3121/9101}
+\newcommand{\taskname}{Assignment 1, Question 2}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+
+\setcounter{question}{1}
+
+\begin{Question}
+You are given an array $A$ of $n$ integers. You are required to find indices $i, j, k$ (not necessarily distinct) such that $A[i] + A[j] = A[k]$, or return that no such indices exist.
+
+Design algorithms which solve this problem and run in:
+
+\begin{Subquestion}
+\textbf{[6 marks]} worst case $\Theta(n^2 \log n)$ time.
+
+\begin{answer}
+Answer:
+\begin{quote}
+    - First, sort the array $A$\\
+    - Second, set the output loop $i$ from 1 to $n$, $A[i]$ represents the value of position $i$\\- in array $A$.\\
+    - $\quad$ Set the input loop $j$ from $i + 1$ to n, $A[j]$ represents the value of position $j$ in \\- $\quad$ array $A$.\\
+    - $\quad \quad$ $p = A[i] + A[j]$\\
+    - $\quad \quad$\\
+    - $\quad \quad$ Use dichotomy, set the range of the search array is $[x, y]$, now, $x = 1, y = n$.\\         
+    - $\quad \quad$ $m = \displaystyle{\lfloor \frac{x + y}{2}  \rfloor} $\\
+    - $\quad \quad$ If $p = A[m]$ the result found, A[i] + A[j] = A[m], end.\\
+    - $\quad \quad$ If $p > A[m]$, the range become $[m + 1, y]$ and then go back and start\\- $\quad \quad$ the next comparison.\\
+    - $\quad \quad$ If $p < A[m]$, the range become $[x, m - 1]$ and then go back and start\\- $\quad \quad$ the next comparison.\\
+    - $\quad \quad$\\
+    - $\quad \quad$ If have result, both loop finish, If else, continue.\\\\
+    Reason:\\
+    First, the sort part time complexity is $\theta(nlogn)$.\\
+    Then, run a nested loop to count the sum of the two data, and use dichotomy to find whether the sum is in this array or not. The worst case of nested loop is $\theta(n^2)$ and the dichotomy method $\theta(logn)$. Therefore, the worst case is $\theta(n^2logn)$.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\begin{Subquestion}
+\textbf{[6 marks]} \emph{expected} $\Theta(n^2)$ time.
+\begin{answer}
+Answer:
+\begin{quote}
+    Please refer to my solution to 2.3.\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+
+\clearpage
+\begin{Subquestion}
+\textbf{[8 marks]} worst case $\Theta(n^2)$ time.
+\begin{answer}
+Answer:
+\begin{quote}
+    - Set the output loop $i$ from 1 to $n$, $A[i]$ represents the value of position $i$\\- in array $A$.\\
+    - $\quad$ During every loop, create a new hash map $M$ which record two integers.\\
+    - $\quad$ Set the input loop $j$ from $i + 1$ to $n$, $A[j]$ represents the value of position $j$ in \\- $\quad$ array $A$.\\
+    - $\quad \quad$ If $A[i] - A[j]$ can find the result in $M$, the result found, $A[j] + A[$the value of key $A[i] - A[j]] = a[i]$, end.\\
+    - $\quad \quad$ Else, set A[j] as key, position $j$ as value, put the pair$\{A[j], j\}$ in $M$.\\
+    - $\quad \quad$\\
+    - $\quad$ If have result, both loop finish, If else, continue.\\\\
+    Reason:\\
+    This method uses nested loops, the first loop $A[i]$ become the sum target and create a new Hash map within each loop. The second loop searches for the results. In each loop, the difference between $A[i]$ and $A[j]$ is first searched in the Hash map as the key, the time complexity is $\theta(1)$. If there are records before, it means that these three values exist in the array. If not, set $A[j]$ as key, $j$ as value, and put it in the hash map. The nested loop time complexity is $\theta(n^2)$\\
+\end{quote}
+\end{answer}
+\end{Subquestion}
+\end{Question}
+
+\end{document}
