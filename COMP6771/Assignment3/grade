@@ -1,0 +1,2761 @@
+Session: 22T2
+Assignment: ass3  Submission ID: 5286124
+
+
+Your submission has been marked. + /usr/bin/less -m /import/adams/3/z5286124/cs6771.ass3.mrk
+
+!!section banner
+#######  #####   #####   #####     #     #####  #
+#       #     # #     # #     #   ##    #     # #    #
+#             # #     # #        # #          # #    #
+ #####   #####   #####  ######     #     #####  #######
+      # #       #     # #     #    #    #            #
+#     # #       #     # #     #    #    #            #
+ #####  #######  #####   #####   #####  #######      #
+
+5286124 Wang, William                           3778/2 COMPA1
+
+Submissions:-
+
+S 0     Mon Aug 01 19:54:48 2022        5286124 orphans ass3 0:-12
+
+Mon Aug 08 13:23:04 2022                ## marimba.orchestra.cse.unsw.EDU.AU ##
+!!section listing
+ACKNOWLEDGEMENTS.md
+CMakeLists.txt
+LICENSE.md
+README.md
+include/
+include/gdwg/
+include/gdwg/graph.hpp
+log
+source/
+source/client.cpp
+source/CMakeLists.txt
+test/
+test/graph/
+test/graph/iterator_test.cpp
+test/graph/other_test.cpp
+test/graph/constructors_test.cpp
+test/graph/modifiers_test.cpp
+test/graph/graph_test1.cpp
+test/graph/CMakeLists.txt
+test/graph/accessors_test.cpp
+test/catch2/
+test/catch2/catch.hpp
+test/test_main.cpp
+test/CMakeLists.txt
+.clang-format
+dos2unix: converting file include/gdwg/graph.hpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 21353 Aug  8 13:23 include/gdwg/graph.hpp
+===============================================================================
+
+     1  #ifndef GDWG_GRAPH_HPP
+     2  #define GDWG_GRAPH_HPP
+     3
+     4  #include <initializer_list>
+     5  #include <iterator>
+     6  #include <map>
+     7  #include <set>
+     8  #include <sstream>
+     9
+    10  namespace gdwg {
+    11
+    12          template<typename N, typename E>
+    13          class graph {
+    14          public:
+    15                  struct value_type {
+    16                          N from;
+    17                          N to;
+    18                          E weight;
+    19                  };
+    20
+    21                  struct node_set_cmp {
+                                  ^
+                                  + ================================== +
+                                  + this modified the public interface +
+                                  + ================================== +
+    22                          auto operator()(std::unique_ptr<N> const& left, std::unique_ptr<N> const& right) -> bool {
+    23                                  return *left.get() < *right.get();
+    24                          }
+    25                          auto operator()(std::unique_ptr<N> const& left, std::unique_ptr<N> const& right) const
+    26                             -> bool {
+    27                                  return *left.get() < *right.get();
+    28                          }
+    29                  };
+    30
+    31                  struct edge_set_rule {
+    32                          auto operator()(std::unique_ptr<E> const& left, std::unique_ptr<E> const& right) -> bool {
+    33                                  return *left.get() < *right.get();
+    34                          }
+    35                          auto operator()(std::unique_ptr<E> const& left, std::unique_ptr<E> const& right) const
+    36                             -> bool {
+    37                                  return *left.get() < *right.get();
+    38                          }
+    39                  };
+    40
+    41                  struct edge_map_rule {
+    42                          auto operator()(std::pair<N*, N*> left, std::pair<N*, N*> right) -> bool {
+    43                                  return *left.first == *right.first ? *left.second < *right.second
+    44                                                                     : *left.first < *right.second;
+    45                          }
+    46                          auto operator()(std::pair<N*, N*> left, std::pair<N*, N*> right) const -> bool {
+    47                                  return *left.first == *right.first ? *left.second < *right.second
+    48                                                                     : *left.first < *right.first;
+    49                          }
+    50                  };
+    51
+    52                  /* 2.8 - Iterator */
+    53                  class iterator {
+    54                  public:
+    55                          using value_type = graph<N, E>::value_type;
+    56                          using reference = value_type;
+    57                          using pointer = void;
+    58                          using difference_type = std::ptrdiff_t;
+    59                          using iterator_category = std::bidirectional_iterator_tag;
+    60                          using map_typename = typename std::map<std::pair<N*, N*>,
+    61                                                                 std::set<std::unique_ptr<E>, graph::edge_set_rule>,
+    62                                                                 graph::edge_map_rule>::const_iterator;
+    63                          using set_typename =
+    64                             typename std::set<std::unique_ptr<E>, graph::edge_set_rule>::const_iterator;
+    65
+    66                          // Iterator constructor
+                                         ^
+                                         + ========= +
+                                         + redundant +
+                                         + ========= +
+    67                          iterator() = default;
+    68
+    69                          // Iterator source
+    70                          auto operator*() -> reference {
+    71                                  return {*map_->first.first, *map_->first.second, **set_};
+    72                          }
+    73
+    74                          // Iterator traversal
+    75                          auto operator++() -> iterator& {
+    76                                  if (set_ != map_->second.end()) {
+    77                                          ++set_;
+    78                                          if (set_ != map_->second.end())
+    79                                                  return *this;
+    80                                  }
+    81                                  set_ = ++map_ == point_->end() ? set_typename() : map_->second.begin();
+    82                                  return *this;
+    83                          }
+    84
+    85                          auto operator++(int) -> iterator {
+    86                                  auto temp = *this;
+    87                                  ++*this;
+    88                                  return temp;
+    89                          }
+    90
+    91                          auto operator--() -> iterator& {
+    92                                  if (set_ == set_typename()) {
+    93                                          map_ = std::prev(point_->end());
+    94                                          set_ = std::prev(map_->second.end());
+    95                                          return *this;
+    96                                  }
+    97                                  else if (set_ != map_->second.begin()) {
+    98                                          --set_;
+    99                                          return *this;
+   100                                  }
+   101                                  else {
+   102                                          --map_;
+   103                                          set_ = std::prev(map_->second.end());
+   104                                          return *this;
+   105                                  }
+   106                          }
+   107
+   108                          auto operator--(int) -> iterator {
+   109                                  auto temp = *this;
+   110                                  --*this;
+   111                                  return temp;
+   112                          }
+   113
+   114                          // Iterator comparison
+   115                          auto operator==(iterator const& other) const -> bool {
+   116                                  return set_ == other.set_ && map_ == other.map_;
+   117                          };
+   118
+   119                  private:
+   120                          friend class graph;
+   121                          set_typename set_;
+   122                          map_typename map_;
+   123                          std::map<std::pair<N*, N*>, std::set<std::unique_ptr<E>, edge_set_rule>, edge_map_rule> const*
+   124                             point_ = nullptr;
+   125                          explicit iterator(
+   126                             std::map<std::pair<N*, N*>, std::set<std::unique_ptr<E>, edge_set_rule>, edge_map_rule> const& map,
+   127                             map_typename map_input,
+   128                             set_typename set_input) noexcept
+   129                          : set_(set_input)
+   130                          , map_(map_input)
+   131                          , point_(&map){};
+   132                  };
+   133
+   134                  /* 2.2 - Constructors */
+   135                  graph() noexcept {
+                                        ^
+                                        + ================ +
+                                        + member init list +
+                                        + ================ +
+   136                          node_ = std::set<std::unique_ptr<N>, node_set_cmp>();
+   137                          edge_ =
+   138                             std::map<std::pair<N*, N*>, std::set<std::unique_ptr<E>, edge_set_rule>, edge_map_rule>();
+   139                  }
+   140
+   141                  graph(std::initializer_list<N> il) noexcept {
+                                                                    ^
+            + ===================================================== +
+            + delegate to the below ctor and avoid duplicating code +
+            + ===================================================== +
+                                                             ^
+                                                             + ================== +
+                                                             + cannot be noexcept +
+                                                             + ================== +
+   142                          graph();
+   143                          std::for_each(il.begin(), il.end(), [&](N const& value) { insert_node(value); });
+   144                  }
+   145
+   146                  template<typename InputIt>
+   147                  graph(InputIt first, InputIt last) noexcept {
+   148                          graph();
+   149                          std::for_each(first, last, [&](N const& value) { insert_node(value); });
+   150                  }
+   151
+   152                  graph(graph&& other) noexcept {
+   153                          node_ = std::move(other.node_);
+   154                          edge_ = std::move(other.edge_);
+   155                          other.clear();
+   156                  }
+   157
+   158                  auto operator=(graph&& other) noexcept -> graph& {
+   159                          node_ = std::move(other.node_);
+   160                          edge_ = std::move(other.edge_);
+   161                          other.clear();
+   162                          return *this;
+   163                  }
+   164
+   165                  graph(graph const& other) noexcept {
+   166                          std::for_each(other.node_.cbegin(), other.node_.cend(), [&](auto const& it) {
+   167                                  insert_node(*it);
+   168                          });
+   169
+   170                          std::for_each(other.edge_.cbegin(), other.edge_.cend(), [&](auto const& it) {
+   171                                  std::for_each(it.second.cbegin(), it.second.cend(), [&](auto const& weight) {
+   172                                          insert_edge(*it.first.first, *it.first.second, *weight.get());
+   173                                  });
+   174                          });
+   175                  }
+   176
+   177                  auto operator=(graph const& other) noexcept -> graph& {
+   178                          std::for_each(other.node_.cbegin(), other.node_.cend(), [&](auto const& it) {
+   179                                  insert_node(*it);
+   180                          });
+   181
+   182                          std::for_each(other.edge_.cbegin(), other.edge_.cend(), [&](auto const& it) {
+   183                                  std::for_each(it.second.cbegin(), it.second.cend(), [&](auto const& weight) {
+   184                                          insert_edge(*it.first.first, *it.first.second, *weight.get());
+   185                                  });
+   186                          });
+   187                          return *this;
+   188                  }
+   189
+   190                  /* 2.3 - Modifiers */
+   191                  auto insert_node(N const& value) noexcept -> bool {
+   192                          if (is_node(value))
+   193                                  return false;
+   194                          auto temp_unique_ptr = std::make_unique<N>(value);
+   195                          node_.insert(std::move(temp_unique_ptr));
+   196                          return true;
+   197                  }
+   198
+   199                  auto insert_edge(N const& src, N const& dst, E const& weight) -> bool {
+   200                          auto src_node = find_node(src);
+   201                          auto dst_node = find_node(dst);
+   202
+   203                          if (src_node == nullptr || dst_node == nullptr) {
+   204                                  throw std::runtime_error("Cannot call gdwg::graph<N, E>::insert_edge when either src "
+   205                                                           "or dst node does not exist");
+   206                          }
+   207
+   208                          auto exist_edge = edge_.find(std::make_pair(src_node, dst_node));
+   209                          if (exist_edge != edge_.end()
+   210                              && std::find_if(exist_edge->second.begin(), exist_edge->second.end(), [&](auto const& it) {
+   211                                         return *it.get() == weight;
+   212                                 }) != exist_edge->second.end())
+   213                          {
+   214                                  return false;
+   215                          }
+   216
+   217                          edge_[std::make_pair(src_node, dst_node)].insert(std::move(std::make_unique<E>(weight)));
+   218                          return true;
+   219                  }
+   220
+   221                  auto replace_node(N const& old_data, N const& new_data) -> bool {
+   222                          auto old_node = find_node_iterator(old_data);
+   223
+   224                          if (old_node == node_.end()) {
+   225                                  throw new std::runtime_error("Cannot call gdwg::graph<N, E>::replace_node on a node "
+   226                                                               "that doesn't exist");
+   227                          }
+   228                          else if (is_node(new_data)) {
+   229                                  return false;
+   230                          }
+   231
+   232                          auto node_it = node_.extract(old_node);
+   233                          **old_node = new_data;
+   234                          node_.insert(std::move(node_it));
+   235
+   236                          auto record_edge = std::vector<std::pair<N, N>>();
+   237                          auto edge_it = edge_.begin();
+                                       ^
+                                       + ============================================== +
+                                       + loop variable unnecessarily escapes loop scope +
+                                       + ============================================== +
+   238                          while (edge_it != edge_.end()) {
+   239                                  auto check = std::find_if(record_edge.begin(), record_edge.end(), [&](auto const it) {
+   240                                          return *edge_it->first.first == it.first && *edge_it->first.second == it.second;
+   241                                  });
+   242                                  if ((*edge_it->first.first == new_data || *edge_it->first.second == new_data)
+   243                                      && check == record_edge.end())
+   244                                  {
+   245                                          record_edge.push_back(std::make_pair(*edge_it->first.first, *edge_it->first.second));
+   246                                          edge_.insert(std::move(edge_.extract(edge_it)));
+   247                                          edge_it = edge_.begin();
+   248                                  }
+   249                                  else {
+   250                                          ++edge_it;
+   251                                  }
+   252                          }
+   253                          return true;
+   254                  }
+   255
+   256                  auto merge_replace_node(N const& old_data, N const& new_data) -> void {
+   257                          auto old_node_iterator = find_node_iterator(old_data);
+   258                          auto new_node = find_node(new_data);
+   259
+   260                          if (old_node_iterator == node_.end() || new_node == nullptr) {
+   261                                  throw new std::runtime_error("annot call gdwg::graph<N, E>::merge_replace_node on old "
+   262                                                               "or new data if they don't exist in the graph");
+   263                          }
+   264
+   265                          auto it = edge_.begin();
+   266                          while (it != edge_.end()) {
+   267                                  if (*it->first.first == old_data && *it->first.second == old_data) {
+   268                                          std::for_each(it->second.begin(), it->second.end(), [&](auto const& weight) {
+   269                                                  insert_edge(new_data, new_data, *weight);
+   270                                          });
+   271                                          it = edge_.erase(it);
+   272                                  }
+   273                                  else if (*it->first.first == old_data) {
+   274                                          std::for_each(it->second.begin(), it->second.end(), [&](auto const& weight) {
+   275                                                  insert_edge(new_data, *it->first.second, *weight);
+   276                                          });
+   277                                          it = edge_.erase(it);
+   278                                  }
+   279                                  else if (*it->first.second == old_data) {
+   280                                          std::for_each(it->second.begin(), it->second.end(), [&](auto const& weight) {
+   281                                                  insert_edge(*it->first.first, new_data, *weight);
+   282                                          });
+   283                                          it = edge_.erase(it);
+   284                                  }
+   285                                  else {
+   286                                          ++it;
+   287                                  }
+   288                          }
+   289                          node_.erase(old_node_iterator);
+   290                  }
+   291
+   292                  auto erase_node(N const& value) -> bool {
+   293                          auto erase_node_it = find_node_iterator(value);
+   294
+   295                          if (erase_node_it == node_.end())
+   296                                  return false;
+   297
+   298                          auto it = edge_.begin();
+   299                          while (it != edge_.end()) {
+   300                                  if (*it->first.first == value || *it->first.second == value) {
+   301                                          it = edge_.erase(it);
+   302                                          continue;
+   303                                  }
+   304                                  ++it;
+   305                          }
+   306
+   307                          node_.erase(erase_node_it);
+   308                          return true;
+   309                  }
+   310
+   311                  auto erase_edge(N const& src, N const& dst, E const& weight) -> bool {
+   312                          auto erase_src_it = find_node(src);
+   313                          auto erase_dst_it = find_node(dst);
+   314
+   315                          if (erase_dst_it == nullptr || erase_src_it == nullptr) {
+   316                                  throw new std::runtime_error("Cannot call gdwg::graph<N, E>::erase_edge on src or dst "
+   317                                                               "if they don't exist in the graph");
+   318                          }
+   319                          else if (!is_connected(src, dst)) {
+   320                                  return false;
+   321                          }
+   322
+   323                          auto edge_pair = edge_.find(std::make_pair(erase_src_it, erase_dst_it));
+   324
+   325                          for (auto weight_set = edge_pair->second.begin(); weight_set != edge_pair->second.end();
+   326                               ++weight_set)
+   327                          {
+   328                                  if (**weight_set == weight && edge_pair->second.size() == 1) {
+   329                                          edge_.erase(std::make_pair(erase_src_it, erase_dst_it));
+   330                                          return true;
+   331                                  }
+   332                                  else if (**weight_set == weight) {
+   333                                          edge_pair->second.erase(weight_set);
+   334                                          return true;
+   335                                  }
+   336                          }
+   337
+   338                          return false;
+   339                  }
+   340
+   341                  auto erase_edge(iterator i) -> iterator {
+   342                          if (i == end())
+   343                                  return i;
+   344
+   345                          auto next = i;
+   346                          ++next;
+   347
+   348                          if (i.map_->second.size() == 1) {
+   349                                  edge_.erase(i.map_->first);
+   350                          }
+   351                          else {
+   352                                  edge_.find(i.map_->first)->second.erase(i.set_);
+   353                          }
+   354                          return next;
+   355                  }
+   356
+   357                  auto erase_edge(iterator i, iterator s) -> iterator {
+   358                          while (i != s) {
+   359                                  if (i == end())
+   360                                          break;
+   361                                  if (i.map_->second.size() == 1) {
+   362                                          auto temp_i = i;
+   363                                          i++;
+   364                                          edge_.erase(temp_i.map_->first);
+   365                                  }
+   366                                  else {
+   367                                          auto temp_i = i;
+   368                                          i++;
+   369                                          edge_.find(temp_i.map_->first)->second.erase(temp_i.set_);
+   370                                  }
+   371                          }
+   372                          return i;
+   373                  }
+   374
+   375                  auto clear() noexcept -> void {
+   376                          node_.clear();
+   377                          edge_.clear();
+   378                  }
+   379
+   380                  /* 2.4 - Accessors */
+   381                  [[nodiscard]] auto is_node(N const& value) -> bool {
+   382                          return find_node(value) != nullptr;
+   383                  }
+   384
+   385                  [[nodiscard]] auto is_node(N const& value) const -> bool {
+   386                          return find_node(value) != nullptr;
+   387                  }
+   388
+   389                  [[nodiscard]] auto empty() -> bool {
+   390                          return node_.size() == 0;
+   391                  }
+   392
+   393                  [[nodiscard]] auto empty() const -> bool {
+   394                          return node_.size() == 0;
+   395                  }
+   396
+   397                  [[nodiscard]] auto is_connected(N const& src, N const& dst) -> bool {
+   398                          auto src_node = find_node(src);
+   399                          auto dst_node = find_node(dst);
+   400
+   401                          if (src_node == nullptr || dst_node == nullptr) {
+   402                                  throw new std::runtime_error("Cannot call gdwg::graph<N, E>::is_connected if src or "
+   403                                                               "dst node don't exist in the graph");
+   404                          }
+   405
+   406                          return edge_.find(std::make_pair(src_node, dst_node)) != edge_.end();
+   407                  }
+   408
+   409                  [[nodiscard]] auto is_connected(N const& src, N const& dst) const -> bool {
+   410                          auto src_node = find_node(src);
+   411                          auto dst_node = find_node(dst);
+   412
+   413                          if (src_node == nullptr || dst_node == nullptr) {
+   414                                  throw new std::runtime_error("Cannot call gdwg::graph<N, E>::is_connected if src or "
+   415                                                               "dst node don't exist in the graph");
+   416                          }
+   417
+   418                          return edge_.find(std::make_pair(src_node, dst_node)) != edge_.end();
+   419                  }
+   420
+   421                  [[nodiscard]] auto nodes() -> std::vector<N> {
+                                             ^
+                                             + ========================== +
+                                             + only const overload needed +
+                                             + ========================== +
+   422                          auto node_vector = std::vector<N>();
+   423                          std::for_each(node_.cbegin(), node_.end(), [&](auto const& it) {
+   424                                  node_vector.push_back(*it);
+   425                          });
+   426                          return node_vector;
+   427                  }
+   428
+   429                  [[nodiscard]] auto nodes() const -> std::vector<N> {
+   430                          auto node_vector = std::vector<N>();
+   431                          std::for_each(node_.cbegin(), node_.end(), [&](auto const& it) {
+   432                                  node_vector.push_back(*it);
+   433                          });
+   434                          return node_vector;
+   435                  }
+   436
+   437                  [[nodiscard]] auto weights(N const& src, N const& dst) -> std::vector<E> {
+   438                          auto src_node = find_node(src);
+   439                          auto dst_node = find_node(dst);
+   440
+   441                          if (src_node == nullptr || dst_node == nullptr) {
+   442                                  throw new std::runtime_error("Cannot call gdwg::graph<N, E>::weights if src or dst "
+   443                                                               "node "
+   444                                                               "don't exist in the graph");
+   445                          }
+   446
+   447                          auto weight_vector = std::vector<E>();
+   448                          auto weight_set = edge_.find(std::make_pair(src_node, dst_node));
+   449                          if (weight_set != edge_.end()) {
+   450                                  std::for_each(weight_set->second.cbegin(),
+   451                                                weight_set->second.cend(),
+   452                                                [&](auto const& it) { weight_vector.push_back(*it.get()); });
+   453                          }
+   454                          return weight_vector;
+   455                  }
+   456
+   457                  [[nodiscard]] auto weights(N const& src, N const& dst) const -> std::vector<E> {
+   458                          auto src_node = find_node(src);
+   459                          auto dst_node = find_node(dst);
+   460
+   461                          if (src_node == nullptr || dst_node == nullptr) {
+   462                                  throw new std::runtime_error("Cannot call gdwg::graph<N, E>::weights if src or dst "
+   463                                                               "node "
+   464                                                               "don't exist in the graph");
+   465                          }
+   466
+   467                          auto weight_vector = std::vector<E>();
+   468                          auto const& weight_set = edge_.find(std::make_pair(src_node, dst_node));
+   469                          if (weight_set != edge_.end()) {
+   470                                  std::for_each(weight_set->second.cbegin(),
+   471                                                weight_set->second.cend(),
+   472                                                [&](auto const& it) { weight_vector.push_back(*it.get()); });
+   473                          }
+   474                          return weight_vector;
+   475                  }
+   476
+   477                  [[nodiscard]] auto find(N const& src, N const& dst, E const& weight) -> iterator {
+   478                          auto src_node = find_node(src);
+   479                          auto dst_node = find_node(dst);
+   480
+   481                          if (src_node == nullptr || dst_node == nullptr) {
+   482                                  return iterator(edge_, edge_.end(), {});
+   483                          }
+   484
+   485                          auto const& weight_set = edge_.find(std::make_pair(src_node, dst_node));
+   486
+   487                          if (weight_set == edge_.end()) {
+   488                                  return iterator(edge_, edge_.end(), {});
+   489                          }
+   490
+   491                          auto const& edge_iterator = find_edge_iterator(weight, weight_set->second);
+   492                          return edge_iterator == weight_set->second.end()
+   493                                    ? iterator(edge_, edge_.end(), {})
+   494                                    : iterator(edge_, weight_set, edge_iterator);
+   495                  }
+   496
+   497                  [[nodiscard]] auto find(N const& src, N const& dst, E const& weight) const -> iterator {
+   498                          auto src_node = find_node(src);
+   499                          auto dst_node = find_node(dst);
+   500
+   501                          if (src_node == nullptr || dst_node == nullptr) {
+   502                                  return iterator(edge_, edge_.end(), {});
+   503                          }
+   504
+   505                          auto const& weight_set = edge_.find(std::make_pair(src_node, dst_node));
+   506
+   507                          if (weight_set == edge_.end()) {
+   508                                  return iterator(edge_, edge_.end(), {});
+   509                          }
+   510
+   511                          auto const& edge_iterator = find_edge_iterator(weight, weight_set->second);
+   512                          return edge_iterator == weight_set->second.end()
+   513                                    ? iterator(edge_, edge_.end(), {})
+   514                                    : iterator(edge_, weight_set, edge_iterator);
+   515                  }
+   516
+   517                  [[nodiscard]] auto connections(N const& src) -> std::vector<N> {
+   518                          auto src_node = find_node(src);
+   519                          if (src_node == nullptr) {
+   520                                  throw std::runtime_error("Cannot call gdwg::graph<N, E>::connections if src doesn't "
+   521                                                           "exist in the graph");
+   522                          }
+   523
+   524                          auto connection_node = std::vector<N>();
+   525                          std::for_each(edge_.cbegin(), edge_.cend(), [&](auto const& pair) {
+   526                                  if (pair.first.first == src_node) {
+   527                                          connection_node.push_back(*pair.first.second);
+   528                                  }
+   529                          });
+   530
+   531                          return connection_node;
+   532                  }
+   533
+   534                  [[nodiscard]] auto connections(N const& src) const -> std::vector<N> {
+   535                          auto src_node = find_node(src);
+   536                          if (src_node == nullptr) {
+   537                                  throw std::runtime_error("Cannot call gdwg::graph<N, E>::connections if src doesn't "
+   538                                                           "exist in the graph");
+   539                          }
+   540
+   541                          auto connection_node = std::vector<N>();
+   542                          std::for_each(edge_.cbegin(), edge_.cend(), [&](auto const& pair) {
+   543                                  if (pair.first.first == src_node) {
+   544                                          connection_node.push_back(*pair.first.second);
+   545                                  }
+   546                          });
+   547
+   548                          return connection_node;
+   549                  }
+   550
+   551                  /* 2.5 - Iterator access */
+   552                  [[nodiscard]] auto begin() const -> iterator {
+   553                          return edge_.empty()
+   554                                    ? iterator(edge_, edge_.begin(), decltype(edge_.begin()->second.begin()){})
+   555                                    : iterator(edge_, edge_.begin(), edge_.begin()->second.begin());
+   556                  }
+   557
+   558                  [[nodiscard]] auto end() const -> iterator {
+   559                          return iterator(edge_, edge_.end(), {});
+   560                  }
+   561
+   562                  /* 2.6 - Comparisons */
+   563                  [[nodiscard]] auto operator==(graph const& other) -> bool {
+   564                          if (node_.size() != other.node_.size() || edge_.size() != other.edge_.size()) {
+   565                                  return false;
+   566                          }
+   567
+   568                          auto it = node_.begin();
+   569                          auto other_it = other.node_.begin();
+   570                          for (; it != node_.end(); ++it, ++other_it) {
+   571                                  if (*it->get() != *other_it->get())
+   572                                          return false;
+   573                          }
+   574
+   575                          auto edge_it = edge_.begin();
+   576                          auto other_edge_it = other.edge_.begin();
+   577                          for (; edge_it != edge_.end(); ++edge_it, ++other_edge_it) {
+   578                                  if (*edge_it->first.first != *other_edge_it->first.first
+   579                                      || *edge_it->first.second != *other_edge_it->first.second
+   580                                      || edge_it->second.size() != other_edge_it->second.size()
+   581                                      || all_edge(edge_it->second) != other.all_edge(other_edge_it->second))
+   582                                  {
+   583                                          return false;
+   584                                  }
+   585                          }
+   586                          return true;
+   587                  }
+   588
+   589                  [[nodiscard]] auto operator==(graph const& other) const -> bool {
+   590                          if (node_.size() != other.node_.size() || edge_.size() != other.edge_.size()) {
+   591                                  return false;
+   592                          }
+   593
+   594                          auto it = node_.begin();
+   595                          auto other_it = other.node_.begin();
+   596                          for (; it != node_.end(); ++it, ++other_it) {
+   597                                  if (*it->get() != *other_it->get())
+   598                                          return false;
+   599                          }
+   600
+   601                          auto edge_it = edge_.begin();
+   602                          auto other_edge_it = other.edge_.begin();
+   603                          for (; edge_it != edge_.end(); ++edge_it, ++other_edge_it) {
+   604                                  if (*edge_it->first.first != *other_edge_it->first.first
+   605                                      || *edge_it->first.second != *other_edge_it->first.second
+   606                                      || edge_it->second.size() != other_edge_it->second.size()
+   607                                      || all_edge(edge_it->second) != other.all_edge(other_edge_it->second))
+   608                                  {
+   609                                          return false;
+   610                                  }
+   611                          }
+   612                          return true;
+   613                  }
+   614
+   615                  /* 2.7 - Extractor */
+   616                  friend auto operator<<(std::ostream& os, graph const& g) -> std::ostream& {
+   617                          std::for_each(g.node_.cbegin(), g.node_.cend(), [&](auto const& node_it) {
+   618                                  os << *node_it << " (" << std::endl;
+   619                                  std::for_each(g.edge_.cbegin(), g.edge_.cend(), [&](auto const& pair) {
+   620                                          if (*pair.first.first == *node_it) {
+   621                                                  auto const& set = pair.second;
+   622                                                  std::for_each(set.cbegin(), set.cend(), [&](auto const& it) {
+   623                                                          os << "  " << *pair.first.second << " | " << *it << std::endl;
+   624                                                  });
+   625                                          }
+   626                                  });
+   627                                  os << ")" << std::endl;
+   628                          });
+   629
+   630                          return os;
+   631                  }
+   632
+   633          private:
+   634                  std::set<std::unique_ptr<N>, node_set_cmp> node_;
+   635                  std::map<std::pair<N*, N*>, std::set<std::unique_ptr<E>, edge_set_rule>, edge_map_rule> edge_;
+   636
+   637                  auto find_node(N const& value) noexcept -> N* {
+   638                          auto it = find_node_iterator(value);
+   639                          return it == node_.end() ? nullptr : it->get();
+   640                  }
+   641
+   642                  auto find_node(N const& value) const noexcept -> N* {
+   643                          auto it = find_node_iterator(value);
+   644                          return it == node_.end() ? nullptr : it->get();
+   645                  }
+   646
+   647                  auto find_node_iterator(N const& value) noexcept ->
+   648                     typename std::set<std::unique_ptr<N>>::iterator {
+   649                          auto low = int{0};
+   650                          auto high = static_cast<int>(node_.size()) - 1;
+   651                          while (low <= high) {
+                                  ^
+                                  + ================================================== +
+                                  + do not rewrite std::binary_search/std::lower_bound +
+                                  + ================================================== +
+   652                                  auto it = std::next(node_.begin(), (low + high) / 2);
+   653                                  if (*it->get() == value) {
+   654                                          return it;
+   655                                  }
+   656                                  else if (*it->get() > value) {
+   657                                          high = (low + high) / 2 - 1;
+   658                                  }
+   659                                  else {
+   660                                          low = (low + high) / 2 + 1;
+   661                                  }
+   662                          }
+   663                          return node_.end();
+   664                  }
+   665
+   666                  auto find_node_iterator(N const& value) const noexcept ->
+   667                     typename std::set<std::unique_ptr<N>>::iterator {
+   668                          auto low = int{0};
+   669                          auto high = static_cast<int>(node_.size()) - 1;
+   670                          while (low <= high) {
+   671                                  auto it = std::next(node_.begin(), (low + high) / 2);
+   672                                  if (*it->get() == value) {
+   673                                          return it;
+   674                                  }
+   675                                  else if (*it->get() > value) {
+   676                                          high = (low + high) / 2 - 1;
+   677                                  }
+   678                                  else {
+   679                                          low = (low + high) / 2 + 1;
+   680                                  }
+   681                          }
+   682                          return node_.end();
+   683                  }
+   684
+   685                  auto
+   686                  find_edge_iterator(E const& value,
+   687                                     std::set<std::unique_ptr<E>, edge_set_rule> const& edge_set) const noexcept
+   688                     -> typename std::set<std::unique_ptr<E>>::iterator {
+   689                          auto low = int{0};
+   690                          auto high = static_cast<int>(edge_set.size()) - 1;
+   691                          while (low <= high) {
+   692                                  auto it = std::next(edge_set.begin(), (low + high) / 2);
+   693                                  if (*it->get() == value) {
+   694                                          return it;
+   695                                  }
+   696                                  else if (*it->get() > value) {
+   697                                          high = (low + high) / 2 - 1;
+   698                                  }
+   699                                  else {
+   700                                          low = (low + high) / 2 + 1;
+   701                                  }
+   702                          }
+   703                          return edge_set.end();
+   704                  }
+   705
+   706                  auto all_edge(std::set<std::unique_ptr<E>, edge_set_rule> const& edge_set) const noexcept
+   707                     -> std::vector<E> {
+   708                          auto vector_edge = std::vector<E>();
+   709                          std::for_each(edge_set.begin(), edge_set.end(), [&](auto const& it) {
+   710                                  vector_edge.push_back(*it);
+   711                          });
+   712                          return vector_edge;
+   713                  }
+   714          };
+   715  } // namespace gdwg
+   716
+   717  #endif // GDWG_GRAPH_HPP
+
+dos2unix: converting file source/client.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 1271 Aug  8 13:23 source/client.cpp
+===============================================================================
+
+     1  #include <gdwg/graph.hpp>
+     2
+     3  #include <iostream>
+     4  #include <string>
+     5  #include <initializer_list>
+     6
+     7  auto main() -> int {
+     8          auto g = gdwg::graph<int, int>{4, 3, 2, 1, 5, 6, 64};
+     9          g.insert_edge(4, 1, -4);
+    10          g.insert_edge(4, 1, 5);
+    11          g.insert_edge(3, 2, 2);
+    12          g.insert_edge(2, 4, 2);
+    13          g.insert_edge(2, 1, 1);
+    14          g.insert_edge(6, 2, 5);
+    15          g.insert_edge(6, 3, 10);
+    16          g.insert_edge(1, 5, -1);
+    17          g.insert_edge(3, 6, -8);
+    18          g.insert_edge(4, 5, 3);
+    19          g.insert_edge(5, 2, 7);
+    20          auto temp = g.end();
+    21          temp--;
+    22          g.erase_edge(temp);
+    23          std::cout << g;
+    24          /*// This will not compile straight away
+    25          auto g = gdwg::graph<std::string, int>{};
+    26          g.insert_node("hello");
+    27          g.insert_node("how");
+    28          g.insert_node("are");
+    29          g.insert_node("you?");
+    30
+    31          g.insert_edge("hello", "how", 5);
+    32          g.insert_edge("hello", "are", 8);
+    33          g.insert_edge("hello", "are", 2);
+    34
+    35          g.insert_edge("how", "you?", 1);
+    36          g.insert_edge("how", "hello", 4);
+    37
+    38          g.insert_edge("are", "you?", 3);
+    39
+    40          std::cout << g << "\n";
+    41
+    42          auto g2 = gdwg::graph<std::string, int>(g);
+    43
+    44          std::cout << g2 << "\n";
+    45
+    46          // This is a structured binding.
+    47          // https://en.cppreference.com/w/cpp/language/structured_binding
+    48          // It allows you to unpack your tuple.
+    49          for (auto const& [from, to, weight] : g) {
+    50                  std::cout << from << " -> " << to << " (weight " << weight << ")\n";
+    51          }*/
+    52  }
+
+dos2unix: converting file test/test_main.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 385 Aug  8 13:23 test/test_main.cpp
+===============================================================================
+
+     1  // We don't own this macro; don't prefix it with `COMP6771_`.
+     2  #define CATCH_CONFIG_MAIN // NOLINT(readability-identifier-naming)
+     3  #include "catch2/catch.hpp"
+     4
+     5  // This file is designed to act as the program entry point. Everything is defined in catch.hpp, so
+     6  // we don't need to worry about doing anything other than indicating our interest to use it via the
+     7  // CATCH_CONFIG_MAIN macro.
+
+dos2unix: converting file test/graph/accessors_test.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 7110 Aug  8 13:23 test/graph/accessors_test.cpp
+===============================================================================
+
+     1  #include "gdwg/graph.hpp"
+     2
+     3  #include <catch2/catch.hpp>
+     4
+     5  // In this section, I primarily test the modifiers section.
+     6  //
+     7  // For all the function, I test const and non const graph and confirm both of them can use.
+     8  //
+     9  // For is_node and empty function, I test empty graph, normal graph.
+    10  //
+    11  // For is_connected function, I try check connected with itself, other node, and the node which is
+    12  // not existed.
+    13  //
+    14  // For nodes, weight and connection function, I try return empty vector, normal vector. When src or
+    15  // dst is not existed, the weights and connections will throw runtime_error.
+    16  //
+    17  // For find function, I test find in empty graph, find the src or dst or weight is not existed
+    18  // situation, all return g.end().
+                                                ^
++ ==================================================================== +
++ thanks for saying what you did, but why did you decide to test this  +
++ way?                                                                 +
++ ==================================================================== +
+    19
+    20  TEST_CASE("Test is_node function") {
+    21          SECTION("Test empty graph") {
+    22                  auto g = gdwg::graph<std::string, int>();
+    23                  REQUIRE_FALSE(g.is_node("a"));
+    24          }
+    25
+    26          SECTION("Test non const graph") {
+                                 ^
++ ================================================================= +
++ const vs non-const has no effect since there is only one overload +
++ therefore, this test is redundant                                 +
++ ================================================================= +
+    27                  auto g = gdwg::graph<std::string, int>{"a", "b", "c"};
+    28                  REQUIRE(g.is_node("a"));
+    29                  REQUIRE(g.is_node("b"));
+    30                  REQUIRE(g.is_node("c"));
+    31                  REQUIRE_FALSE(g.is_node("e"));
+    32          }
+    33
+    34          SECTION("Test const graph") {
+    35                  auto const g = gdwg::graph<std::string, int>{"a", "b", "c"};
+    36                  REQUIRE(g.is_node("a"));
+    37                  REQUIRE(g.is_node("b"));
+    38                  REQUIRE(g.is_node("c"));
+    39                  REQUIRE_FALSE(g.is_node("e"));
+    40          }
+    41  }
+    42
+    43  TEST_CASE("Test empty function") {
+    44          SECTION("Test non const graph") {
+    45                  auto g = gdwg::graph<std::string, int>();
+    46                  REQUIRE(g.empty());
+    47                  auto d = gdwg::graph<std::string, int>{"1"};
+    48                  REQUIRE_FALSE(d.empty());
+    49          }
+    50
+    51          SECTION("Test const graph") {
+    52                  auto const g = gdwg::graph<std::string, int>();
+    53                  REQUIRE(g.empty());
+    54                  auto const d = gdwg::graph<std::string, int>{"1"};
+    55                  REQUIRE_FALSE(d.empty());
+    56          }
+    57  }
+    58
+    59  TEST_CASE("Test is_connected function") {
+    60          SECTION("Test non const graph, src and dst existed") {
+    61                  auto d = gdwg::graph<std::string, int>{"1"};
+    62                  REQUIRE_FALSE(d.is_connected("1", "1"));
+    63                  d.insert_edge("1", "1", 1);
+    64                  REQUIRE(d.is_connected("1", "1"));
+    65          }
+    66
+    67          SECTION("Test const graph, src and dst existed") {
+    68                  auto d = gdwg::graph<std::string, int>{"1"};
+    69                  auto const p = d;
+    70                  REQUIRE_FALSE(p.is_connected("1", "1"));
+    71                  d.insert_edge("1", "1", 1);
+    72                  auto const a = d;
+    73                  REQUIRE(a.is_connected("1", "1"));
+    74          }
+    75
+    76          SECTION("Test src and dst is not existed") {
+    77                  auto d = gdwg::graph<std::string, int>{"1"};
+    78                  auto temp = bool{true};
+    79                  REQUIRE_THROWS(temp = d.is_connected("2", "1"),
+    80                                 "Cannot call gdwg::graph<N, E>::"
+    81                                 "is_connected if src or dst node don't "
+    82                                 "exist in the graph");
+    83                  REQUIRE_THROWS(temp = d.is_connected("1", "2"),
+    84                                 "Cannot call gdwg::graph<N, E>::"
+    85                                 "is_connected if src or dst node don't "
+    86                                 "exist in the graph");
+    87          }
+    88  }
+    89
+    90  TEST_CASE("Test nodes function") {
+    91          SECTION("Test empty graph") {
+    92                  auto g = gdwg::graph<std::string, int>();
+    93                  REQUIRE(g.nodes() == std::vector<std::string>());
+    94                  auto const b = gdwg::graph<std::string, int>();
+    95                  REQUIRE(b.nodes() == std::vector<std::string>());
+    96          }
+    97
+    98          SECTION("Test normal graph and check the vector had been sorted") {
+    99                  auto g = gdwg::graph<std::string, int>{"b", "a", "c"};
+   100                  REQUIRE(g.nodes() == std::vector<std::string>{"a", "b", "c"});
+   101                  auto const b = gdwg::graph<std::string, int>{"b", "a", "c"};
+   102                  REQUIRE(b.nodes() == std::vector<std::string>{"a", "b", "c"});
+   103          }
+   104  }
+   105
+   106  TEST_CASE("Test weights function") {
+   107          SECTION("test empty edge graph") {
+   108                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   109                  REQUIRE(g.weights("a", "a") == std::vector<int>());
+   110                  REQUIRE(g.weights("a", "b") == std::vector<int>());
+   111                  auto const d = gdwg::graph<std::string, int>{"a", "b"};
+   112                  REQUIRE(d.weights("a", "a") == std::vector<int>());
+   113                  REQUIRE(d.weights("a", "b") == std::vector<int>());
+   114          }
+   115
+   116          SECTION("test normal edge graph, src and dst existed") {
+   117                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   118                  g.insert_edge("b", "a", 1);
+   119                  g.insert_edge("a", "b", 1);
+   120                  g.insert_edge("a", "b", 2);
+   121                  g.insert_edge("a", "a", 3);
+   122                  g.insert_edge("a", "a", 4);
+   123                  REQUIRE(g.weights("a", "a") == std::vector<int>{3, 4});
+   124                  REQUIRE(g.weights("a", "b") == std::vector<int>{1, 2});
+   125                  auto const d = g;
+   126                  REQUIRE(d.weights("a", "a") == std::vector<int>{3, 4});
+   127                  REQUIRE(d.weights("a", "b") == std::vector<int>{1, 2});
+   128          }
+   129
+   130          SECTION("src and dst is not existed") {
+   131                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   132                  auto temp = std::vector<int>();
+   133                  REQUIRE_THROWS(temp = g.weights("a", "c"),
+   134                                 "Cannot call gdwg::"
+   135                                 "graph<N, E>::weights if src or dst"
+   136                                 " node don't exist in the graph");
+   137                  auto const d = g;
+   138                  REQUIRE_THROWS(temp = d.weights("c", "a"),
+   139                                 "Cannot call gdwg::"
+   140                                 "graph<N, E>::weights if src or dst"
+   141                                 " node don't exist in the graph");
+   142          }
+   143  }
+   144
+   145  TEST_CASE("Test find function") {
+   146          SECTION("find in empty graph") {
+   147                  auto g = gdwg::graph<std::string, int>();
+   148                  REQUIRE(g.find("a", "b", 1) == g.end());
+   149                  auto const d = gdwg::graph<std::string, int>();
+   150                  REQUIRE(d.find("a", "b", 1) == d.end());
+   151          }
+   152
+   153          SECTION("find in normal graph") {
+                                  ^
+                                  + ========================= +
+                                  + what is a "normal" graph? +
+                                  + very unclear              +
+                                  + ========================= +
+   154                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   155                  g.insert_edge("b", "a", 1);
+   156                  g.insert_edge("a", "b", 1);
+   157                  g.insert_edge("a", "b", 2);
+   158                  g.insert_edge("a", "a", 3);
+   159                  g.insert_edge("a", "a", 4);
+   160                  auto temp = *g.find("b", "a", 1);
+   161                  REQUIRE(temp.from == "b");
+   162                  REQUIRE(temp.to == "a");
+   163                  REQUIRE(temp.weight == 1);
+   164                  REQUIRE(g.find("b", "a", 5) == g.end());
+   165                  auto const d = g;
+   166                  temp = *d.find("a", "a", 3);
+   167                  REQUIRE(temp.from == "a");
+   168                  REQUIRE(temp.to == "a");
+   169                  REQUIRE(temp.weight == 3);
+   170                  REQUIRE(d.find("a", "a", 5) == d.end());
+   171          }
+                          ^
+                          + ================================================================ +
+                          + use further subsections to break up the different cases you are  +
+                          + testing                                                          +
+                          + ================================================================ +
+   172  }
+   173
+   174  TEST_CASE("Test connections function") {
+   175          SECTION("check in no edge graph") {
+   176                  auto g = gdwg::graph<std::string, int>{"a"};
+   177                  REQUIRE(g.connections("a") == std::vector<std::string>());
+   178                  auto const d = gdwg::graph<std::string, int>{"a"};
+   179                  REQUIRE(d.connections("a") == std::vector<std::string>());
+   180          }
+   181
+   182          SECTION("check in normal graph, src is existed") {
+   183                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "e"};
+   184                  g.insert_edge("b", "a", 1);
+   185                  g.insert_edge("a", "b", 1);
+   186                  g.insert_edge("a", "b", 2);
+   187                  g.insert_edge("a", "a", 3);
+   188                  g.insert_edge("a", "a", 4);
+   189                  g.insert_edge("a", "e", 4);
+   190                  g.insert_edge("c", "a", 4);
+   191                  REQUIRE(g.connections("a") == std::vector<std::string>{"a", "b", "e"});
+   192                  auto const d = g;
+   193                  REQUIRE(d.connections("a") == std::vector<std::string>{"a", "b", "e"});
+   194          }
+   195
+   196          SECTION("check src is not existed") {
+   197                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "e"};
+   198                  g.insert_edge("b", "a", 1);
+   199                  g.insert_edge("a", "b", 1);
+   200                  g.insert_edge("a", "b", 2);
+   201                  g.insert_edge("a", "a", 3);
+   202                  g.insert_edge("a", "a", 4);
+   203                  g.insert_edge("a", "e", 4);
+   204                  g.insert_edge("c", "a", 4);
+   205                  auto temp = std::vector<std::string>();
+   206                  REQUIRE_THROWS(temp = g.connections("p"),
+   207                                 "Cannot call gdwg::graph<N, E>::connections "
+   208                                 "if src doesn't exist in the graph");
+   209                  auto const d = g;
+   210                  REQUIRE_THROWS(temp = d.connections("p"),
+   211                                 "Cannot call gdwg::graph<N, E>::connections "
+   212                                 "if src doesn't exist in the graph");
+   213          }
+   214  }
+
+dos2unix: converting file test/graph/other_test.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 2656 Aug  8 13:23 test/graph/other_test.cpp
+===============================================================================
+
+     1  #include "gdwg/graph.hpp"
+     2
+     3  #include <catch2/catch.hpp>
+     4
+     5  // In this section, I primarily test the operator== and operator<< access section.
+     6  //
+     7  // For operator==, I test two empty graph, one empty, one normal graph and two normal graph which
+     8  // construct with different method.
+     9  //
+    10  // For operator<<, I test empty graph, it will not show anything. I also test no edge graph and
+    11  // normal graph.
+    12
+    13  TEST_CASE("Test comparisons operator==") {
+    14          SECTION("Test two empty graph") {
+    15                  auto g = gdwg::graph<int, int>();
+    16                  auto const d = gdwg::graph<int, int>();
+    17                  REQUIRE(g == d);
+    18          }
+    19
+    20          SECTION("Test normal graph") {
+    21                  auto g = gdwg::graph<int, int>{5, 2, 3, 1, 4};
+    22                  g.insert_edge(1, 2, 1);
+    23                  g.insert_edge(2, 3, 4);
+    24                  g.insert_edge(3, 4, 5);
+    25                  g.insert_edge(4, 5, 6);
+    26
+    27                  auto d = gdwg::graph<int, int>();
+    28                  d.insert_node(1);
+    29                  d.insert_node(2);
+    30                  d.insert_node(3);
+    31                  d.insert_node(4);
+    32                  d.insert_node(5);
+    33                  REQUIRE(g != d);
+    34                  d.insert_edge(1, 2, 1);
+    35                  d.insert_edge(2, 3, 4);
+    36                  d.insert_edge(3, 4, 5);
+    37                  d.insert_edge(4, 5, 6);
+    38                  REQUIRE(g == d);
+    39
+    40                  auto const e = gdwg::graph<int, int>();
+    41                  REQUIRE_FALSE(g == e);
+    42                  REQUIRE(g != e);
+    43          }
+    44  }
+    45
+    46  TEST_CASE("Test operator <<") {
+    47          SECTION("Test empty edge and node graph") {
+    48                  auto g = gdwg::graph<int, int>();
+    49                  std::stringstream string_stream_move;
+    50                  string_stream_move << g;
+    51                  REQUIRE(string_stream_move.str() == "");
+    52          }
+    53
+    54          SECTION("Test no edge graph") {
+    55                  auto g = gdwg::graph<int, int>{1, 2, 3};
+    56                  std::stringstream string_stream_move;
+    57                  string_stream_move << g;
+    58                  REQUIRE(string_stream_move.str()
+    59                          == "1 (\n"
+    60                             ")\n"
+    61                             "2 (\n"
+    62                             ")\n"
+    63                             "3 (\n"
+    64                             ")\n");
+    65          }
+    66
+    67          SECTION("Test normal graph") {
+    68                  auto g = gdwg::graph<int, int>{4, 3, 2, 1, 5, 6, 64};
+    69                  g.insert_edge(4, 1, -4);
+    70                  g.insert_edge(3, 2, 2);
+    71                  g.insert_edge(2, 4, 2);
+    72                  g.insert_edge(2, 1, 1);
+    73                  g.insert_edge(6, 2, 5);
+    74                  g.insert_edge(6, 3, 10);
+    75                  g.insert_edge(1, 5, -1);
+    76                  g.insert_edge(3, 6, -8);
+    77                  g.insert_edge(4, 5, 3);
+    78                  g.insert_edge(5, 2, 7);
+    79                  std::stringstream string_stream_move;
+    80                  string_stream_move << g;
+    81                  REQUIRE(string_stream_move.str()
+    82                          == "1 (\n"
+    83                             "  5 | -1\n"
+    84                             ")\n"
+    85                             "2 (\n"
+    86                             "  1 | 1\n"
+    87                             "  4 | 2\n"
+    88                             ")\n"
+    89                             "3 (\n"
+    90                             "  2 | 2\n"
+    91                             "  6 | -8\n"
+    92                             ")\n"
+    93                             "4 (\n"
+    94                             "  1 | -4\n"
+    95                             "  5 | 3\n"
+    96                             ")\n"
+    97                             "5 (\n"
+    98                             "  2 | 7\n"
+    99                             ")\n"
+   100                             "6 (\n"
+   101                             "  2 | 5\n"
+   102                             "  3 | 10\n"
+   103                             ")\n"
+   104                             "64 (\n"
+   105                             ")\n");
+   106          }
+   107  }
+
+dos2unix: converting file test/graph/graph_test1.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 221 Aug  8 13:23 test/graph/graph_test1.cpp
+===============================================================================
+
+     1  #include "gdwg/graph.hpp"
+     2
+     3  #include <catch2/catch.hpp>
+     4
+     5  TEST_CASE("basic test") {
+     6          // This will not compile straight away
+     7          auto g = gdwg::graph<int, std::string>{};
+     8          auto n = 5;
+     9          g.insert_node(n);
+    10          CHECK(g.is_node(n));
+    11  }
+
+dos2unix: converting file test/graph/modifiers_test.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 14049 Aug  8 13:23 test/graph/modifiers_test.cpp
+===============================================================================
+
+     1  #include "gdwg/graph.hpp"
+     2
+     3  #include <catch2/catch.hpp>
+     4
+     5  // In this section, I primarily test the modifiers section.
+     6  //
+     7  // For insert_node, replace_edge, erase_node, clear function, I try all situation which follow the
+     8  // topic, if the return type is bool, check the status; if existed throw, require_throw and check
+     9  // the sentence is matching
+    10  //
+    11  // For replace_edge and merge_replace_edge function, except the normal test to satisfy the topic,
+    12  // I also check when replace the node, the edge and node set will also change with the new node
+    13  // information.
+    14  //
+    15  // For erase_node, the first situation test follow by the topic like above, the second and third
+    16  // situation about iterator, I test the iterator is any one, the last one and is g.end()' situations
+    17  // To cover all the possibility, I also check the return it and confirm them return true iterator.
+    18
+    19  TEST_CASE("Test insert_node function") {
+    20          SECTION("Add node into an empty graph") {
+    21                  auto g = gdwg::graph<std::string, int>();
+    22                  REQUIRE(g.empty());
+    23                  REQUIRE(g.insert_node("b"));
+    24                  REQUIRE_FALSE(g.empty());
+    25                  REQUIRE(g.insert_node("a"));
+    26                  REQUIRE(g.nodes() == std::vector<std::string>{"a", "b"});
+    27          }
+    28
+    29          SECTION("Add node into no empty graph") {
+    30                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+    31                  REQUIRE(g.nodes() == std::vector<std::string>{"a", "b"});
+    32                  REQUIRE(g.insert_node("c"));
+    33                  REQUIRE(g.nodes() == std::vector<std::string>{"a", "b", "c"});
+    34          }
+    35
+    36          SECTION("Add a node which the node information had existed in graph") {
+    37                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+    38                  REQUIRE(g.nodes() == std::vector<std::string>{"a", "b"});
+    39                  REQUIRE_FALSE(g.insert_node("a"));
+    40                  REQUIRE(g.nodes() == std::vector<std::string>{"a", "b"});
+    41          }
+    42  }
+    43
+    44  TEST_CASE("Test insert_edge function") {
+    45          SECTION("Add edge into graph") {
+    46                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+    47                  g.insert_edge("a", "b", 1);
+    48                  std::stringstream string_stream;
+    49                  string_stream << g;
+    50                  REQUIRE(string_stream.str()
+    51                          == "a (\n"
+    52                             "  b | 1\n"
+    53                             ")\n"
+    54                             "b (\n"
+    55                             ")\n");
+    56          }
+    57
+    58          SECTION("Add edge with same src and dst which have different weight into graph") {
+    59                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+    60                  REQUIRE(g.insert_edge("a", "b", 1));
+    61                  REQUIRE(g.insert_edge("a", "b", 2));
+    62                  std::stringstream string_stream;
+    63                  string_stream << g;
+    64                  REQUIRE(string_stream.str()
+    65                          == "a (\n"
+    66                             "  b | 1\n"
+    67                             "  b | 2\n"
+    68                             ")\n"
+    69                             "b (\n"
+    70                             ")\n");
+    71          }
+    72
+    73          SECTION("Add edge with same src and dst which have same weight into graph") {
+    74                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+    75                  REQUIRE(g.insert_edge("a", "b", 1));
+    76                  REQUIRE_FALSE(g.insert_edge("a", "b", 1));
+    77                  std::stringstream string_stream;
+    78                  string_stream << g;
+    79                  REQUIRE(string_stream.str()
+    80                          == "a (\n"
+    81                             "  b | 1\n"
+    82                             ")\n"
+    83                             "b (\n"
+    84                             ")\n");
+    85          }
+    86
+    87          SECTION("Add an edge which src or dst is not exist") {
+    88                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+    89                  REQUIRE_THROWS(g.insert_edge("z", "b", 1),
+    90                                 "Cannot call gdwg::graph<N, E>::"
+    91                                 "insert_edge when either src or dst node does not "
+    92                                 "exist");
+    93                  REQUIRE_THROWS(g.insert_edge("a", "c", 1),
+    94                                 "Cannot call gdwg::graph<N, E>::"
+    95                                 "insert_edge when either src or dst node does not "
+    96                                 "exist");
+    97                  REQUIRE_THROWS(g.insert_edge("1", "c", 1),
+    98                                 "Cannot call gdwg::graph<N, E>::"
+    99                                 "insert_edge when either src or dst node does not "
+   100                                 "exist");
+   101          }
+   102  }
+   103
+   104  TEST_CASE("Test replace_node function") {
+   105          SECTION("replace the graph only have node") {
+   106                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   107                  REQUIRE(g.replace_node("a", "c"));
+   108                  std::stringstream string_stream;
+   109                  string_stream << g;
+   110                  REQUIRE(g.nodes() == std::vector<std::string>{"b", "c"});
+   111                  REQUIRE(string_stream.str()
+   112                          == "b (\n"
+   113                             ")\n"
+   114                             "c (\n"
+   115                             ")\n");
+   116          }
+   117
+   118          SECTION("replace the graph which have node and edge") {
+   119                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   120                  g.insert_edge("b", "a", 1);
+   121                  g.insert_edge("a", "b", 1);
+   122                  g.insert_edge("a", "b", 2);
+   123                  g.insert_edge("a", "a", 3);
+   124                  g.insert_edge("a", "a", 4);
+   125                  REQUIRE(g.replace_node("a", "c"));
+   126                  std::stringstream string_stream;
+   127                  string_stream << g;
+   128                  REQUIRE(string_stream.str()
+   129                          == "b (\n"
+   130                             "  c | 1\n"
+   131                             ")\n"
+   132                             "c (\n"
+   133                             "  b | 1\n"
+   134                             "  b | 2\n"
+   135                             "  c | 3\n"
+   136                             "  c | 4\n"
+   137                             ")\n");
+   138          }
+   139
+   140          SECTION("replace the node which is existed") {
+   141                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   142                  g.insert_edge("b", "a", 1);
+   143                  g.insert_edge("a", "b", 1);
+   144                  g.insert_edge("a", "b", 2);
+   145                  g.insert_edge("a", "a", 3);
+   146                  g.insert_edge("a", "a", 4);
+   147                  REQUIRE_FALSE(g.replace_node("a", "b"));
+   148                  std::stringstream string_stream;
+   149                  string_stream << g;
+   150                  REQUIRE(string_stream.str()
+   151                          == "a (\n"
+   152                             "  a | 3\n"
+   153                             "  a | 4\n"
+   154                             "  b | 1\n"
+   155                             "  b | 2\n"
+   156                             ")\n"
+   157                             "b (\n"
+   158                             "  a | 1\n"
+   159                             ")\n");
+   160          }
+   161
+   162          SECTION("replace the old node or new node which is not existed") {
+   163                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   164                  REQUIRE_THROWS(g.replace_node("c", "b"),
+   165                                 "Cannot call gdwg::graph<N, E>::"
+   166                                 "replace_node on a node that doesn't exist");
+   167                  REQUIRE_THROWS(g.replace_node("c", "d"),
+   168                                 "Cannot call gdwg::graph<N, E>::"
+   169                                 "replace_node on a node that doesn't exist");
+   170          }
+   171  }
+   172
+   173  TEST_CASE("Test merge_replace_node function") {
+   174          SECTION("merge the graph only have node") {
+   175                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   176                  REQUIRE_NOTHROW(g.merge_replace_node("a", "b"));
+   177                  std::stringstream string_stream;
+   178                  string_stream << g;
+   179                  REQUIRE(g.nodes() == std::vector<std::string>{"b"});
+   180                  REQUIRE(string_stream.str()
+   181                          == "b (\n"
+   182                             ")\n");
+   183          }
+   184
+   185          SECTION("merge the graph which have node and edge") {
+   186                  auto g = gdwg::graph<std::string, int>{"a", "b", "c"};
+   187                  g.insert_edge("b", "a", 1);
+   188                  g.insert_edge("a", "b", 1);
+   189                  g.insert_edge("a", "b", 2);
+   190                  g.insert_edge("a", "a", 3);
+   191                  g.insert_edge("a", "a", 4);
+   192                  g.merge_replace_node("a", "c");
+   193                  std::stringstream string_stream;
+   194                  string_stream << g;
+   195                  REQUIRE(string_stream.str()
+   196                          == "b (\n"
+   197                             "  c | 1\n"
+   198                             ")\n"
+   199                             "c (\n"
+   200                             "  b | 1\n"
+   201                             "  b | 2\n"
+   202                             "  c | 3\n"
+   203                             "  c | 4\n"
+   204                             ")\n");
+   205          }
+   206
+   207          SECTION("merge the graph which have node and edge") {
+   208                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   209                  g.insert_edge("a", "b", 1);
+   210                  g.insert_edge("a", "c", 2);
+   211                  g.insert_edge("a", "d", 3);
+   212                  g.insert_edge("b", "b", 1);
+   213                  g.merge_replace_node("a", "b");
+   214                  std::stringstream string_stream;
+   215                  string_stream << g;
+   216                  REQUIRE(string_stream.str()
+   217                          == "b (\n"
+   218                             "  b | 1\n"
+   219                             "  c | 2\n"
+   220                             "  d | 3\n"
+   221                             ")\n"
+   222                             "c (\n"
+   223                             ")\n"
+   224                             "d (\n"
+   225                             ")\n");
+   226          }
+   227
+   228          SECTION("merge the old node or new node which is not existed") {
+   229                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   230                  REQUIRE_THROWS(g.merge_replace_node("a", "f"),
+   231                                 "Cannot call gdwg::"
+   232                                 "graph<N, E>::merge_replace_node on old or "
+   233                                 "new data if they don't exist in the graph");
+   234                  REQUIRE_THROWS(g.merge_replace_node("d", "a"),
+   235                                 "Cannot call gdwg::"
+   236                                 "graph<N, E>::merge_replace_node on old or "
+   237                                 "new data if they don't exist in the graph");
+   238          }
+   239  }
+   240
+   241  TEST_CASE("Test erase node function") {
+   242          SECTION("erase the graph only have node") {
+   243                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   244                  REQUIRE(g.erase_node("a"));
+   245                  std::stringstream string_stream;
+   246                  string_stream << g;
+   247                  REQUIRE(g.nodes() == std::vector<std::string>{"b"});
+   248                  REQUIRE(string_stream.str()
+   249                          == "b (\n"
+   250                             ")\n");
+   251          }
+   252
+   253          SECTION("erase the graph which have node and edge") {
+   254                  auto g = gdwg::graph<std::string, int>{"a", "b", "c"};
+   255                  g.insert_edge("b", "a", 1);
+   256                  g.insert_edge("a", "b", 1);
+   257                  g.insert_edge("a", "b", 2);
+   258                  g.insert_edge("a", "a", 3);
+   259                  g.insert_edge("a", "a", 4);
+   260                  REQUIRE(g.erase_node("a"));
+   261                  std::stringstream string_stream;
+   262                  string_stream << g;
+   263                  REQUIRE(string_stream.str()
+   264                          == "b (\n"
+   265                             ")\n"
+   266                             "c (\n"
+   267                             ")\n");
+   268          }
+   269
+   270          SECTION("erase the not existed node") {
+   271                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   272                  REQUIRE_FALSE(g.erase_node("f"));
+   273                  REQUIRE_FALSE(g.erase_node("g"));
+   274          }
+   275  }
+   276
+   277  TEST_CASE("Test erase edge function") {
+   278          SECTION("erase the edge with src, dst, weight") {
+   279                  auto g = gdwg::graph<std::string, int>{"a", "b", "c"};
+   280                  g.insert_edge("b", "a", 1);
+   281                  g.insert_edge("a", "b", 1);
+   282                  g.insert_edge("a", "b", 2);
+   283                  g.insert_edge("a", "a", 3);
+   284                  g.insert_edge("a", "a", 4);
+   285                  REQUIRE(g.erase_edge("b", "a", 1));
+   286                  REQUIRE(g.erase_edge("a", "a", 3));
+   287                  std::stringstream string_stream;
+   288                  string_stream << g;
+   289                  REQUIRE(string_stream.str()
+   290                          == "a (\n"
+   291                             "  a | 4\n"
+   292                             "  b | 1\n"
+   293                             "  b | 2\n"
+   294                             ")\n"
+   295                             "b (\n"
+   296                             ")\n"
+   297                             "c (\n"
+   298                             ")\n");
+   299          }
+   300
+   301          SECTION("erase the weight is not existed") {
+   302                  auto g = gdwg::graph<std::string, int>{"a", "b", "c"};
+   303                  g.insert_edge("b", "a", 1);
+   304                  g.insert_edge("a", "b", 1);
+   305                  g.insert_edge("a", "b", 2);
+   306                  g.insert_edge("a", "a", 3);
+   307                  g.insert_edge("a", "a", 4);
+   308                  REQUIRE_FALSE(g.erase_edge("b", "a", 10));
+   309                  REQUIRE_FALSE(g.erase_edge("a", "a", 10));
+   310                  std::stringstream string_stream;
+   311                  string_stream << g;
+   312                  REQUIRE(string_stream.str()
+   313                          == "a (\n"
+   314                             "  a | 3\n"
+   315                             "  a | 4\n"
+   316                             "  b | 1\n"
+   317                             "  b | 2\n"
+   318                             ")\n"
+   319                             "b (\n"
+   320                             "  a | 1\n"
+   321                             ")\n"
+   322                             "c (\n"
+   323                             ")\n");
+   324          }
+   325
+   326          SECTION("erase the src and dst is not connected.") {
+   327                  auto g = gdwg::graph<std::string, int>{"a", "b", "c"};
+   328                  REQUIRE_FALSE(g.erase_edge("b", "a", 10));
+   329                  REQUIRE_FALSE(g.erase_edge("a", "a", 10));
+   330          }
+   331
+   332          SECTION("erase the src and dst is not existed.") {
+   333                  auto g = gdwg::graph<std::string, int>{"a"};
+   334                  REQUIRE_THROWS(g.erase_edge("b", "a", 10),
+   335                                 "Cannot call gdwg::graph<N, E>::"
+   336                                 "erase_edge on src or dst if they don't exist "
+   337                                 "in the graph");
+   338                  REQUIRE_THROWS(g.erase_edge("c", "a", 10),
+   339                                 "Cannot call gdwg::graph<N, E>::"
+   340                                 "erase_edge on src or dst if they don't exist "
+   341                                 "in the graph");
+   342          }
+   343
+   344          SECTION("erase the single iterator and the iterator is not the last one") {
+   345                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   346                  g.insert_edge("b", "a", 1);
+   347                  g.insert_edge("a", "b", 1);
+   348                  g.insert_edge("a", "b", 2);
+   349                  g.insert_edge("a", "a", 3);
+   350                  g.insert_edge("a", "a", 4);
+   351                  auto it = g.begin();
+   352                  ++it;
+   353                  it = g.erase_edge(it);
+   354                  std::stringstream string_stream;
+   355                  string_stream << g;
+   356                  REQUIRE(string_stream.str()
+   357                          == "a (\n"
+   358                             "  a | 3\n"
+   359                             "  b | 1\n"
+   360                             "  b | 2\n"
+   361                             ")\n"
+   362                             "b (\n"
+   363                             "  a | 1\n"
+   364                             ")\n");
+   365                  auto iterator_position = *it;
+   366                  REQUIRE(iterator_position.from == "a");
+   367                  REQUIRE(iterator_position.to == "b");
+   368                  REQUIRE(iterator_position.weight == 1);
+   369          }
+   370
+   371          SECTION("erase the single iterator and the iterator is the last one") {
+   372                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   373                  g.insert_edge("b", "a", 1);
+   374                  g.insert_edge("a", "b", 1);
+   375                  auto it = g.begin();
+   376                  ++it;
+   377                  it = g.erase_edge(it);
+   378                  std::stringstream string_stream;
+   379                  string_stream << g;
+   380                  REQUIRE(string_stream.str()
+   381                          == "a (\n"
+   382                             "  b | 1\n"
+   383                             ")\n"
+   384                             "b (\n"
+   385                             ")\n");
+   386                  REQUIRE(it == g.end());
+   387          }
+   388
+   389          SECTION("erase the single iterator and the iterator is end()") {
+   390                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   391                  g.insert_edge("b", "a", 1);
+   392                  auto it = g.begin();
+   393                  ++it;
+   394                  it = g.erase_edge(it);
+   395                  std::stringstream string_stream;
+   396                  string_stream << g;
+   397                  REQUIRE(string_stream.str()
+   398                          == "a (\n"
+   399                             ")\n"
+   400                             "b (\n"
+   401                             "  a | 1\n"
+   402                             ")\n");
+   403                  REQUIRE(it == g.end());
+   404          }
+   405
+   406          SECTION("erase the range iterator, end iterator is not g.end()") {
+   407                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   408                  g.insert_edge("b", "a", 1);
+   409                  g.insert_edge("a", "b", 1);
+   410                  g.insert_edge("a", "b", 2);
+   411                  g.insert_edge("a", "a", 3);
+   412                  g.insert_edge("a", "a", 4);
+   413                  auto it = g.begin();
+   414                  ++it;
+   415                  auto it_end = g.begin();
+   416                  ++it_end;
+   417                  ++it_end;
+   418                  ++it_end;
+   419                  ++it_end;
+   420                  it = g.erase_edge(it, it_end);
+   421                  std::stringstream string_stream;
+   422                  string_stream << g;
+   423                  REQUIRE(string_stream.str()
+   424                          == "a (\n"
+   425                             "  a | 3\n"
+   426                             ")\n"
+   427                             "b (\n"
+   428                             "  a | 1\n"
+   429                             ")\n");
+   430                  REQUIRE(it == it_end);
+   431          }
+   432
+   433          SECTION("erase the range iterator, end iterator is g.end()") {
+   434                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   435                  g.insert_edge("b", "a", 1);
+   436                  g.insert_edge("a", "b", 1);
+   437                  g.insert_edge("a", "b", 2);
+   438                  g.insert_edge("a", "a", 3);
+   439                  g.insert_edge("a", "a", 4);
+   440                  auto it = g.begin();
+   441                  auto it_end = g.end();
+   442                  it = g.erase_edge(it, it_end);
+   443                  std::stringstream string_stream;
+   444                  string_stream << g;
+   445                  REQUIRE(string_stream.str()
+   446                          == "a (\n"
+   447                             ")\n"
+   448                             "b (\n"
+   449                             ")\n");
+   450                  REQUIRE(it == it_end);
+   451          }
+   452  }
+   453
+   454  TEST_CASE("Test clear function") {
+   455          SECTION("clear empty graph") {
+   456                  auto g = gdwg::graph<std::string, int>();
+   457                  g.clear();
+   458                  REQUIRE(g.empty());
+   459          }
+   460
+   461          SECTION("clear normal graph") {
+   462                  auto g = gdwg::graph<std::string, int>{"a", "b"};
+   463                  g.insert_edge("b", "a", 1);
+   464                  g.insert_edge("a", "b", 1);
+   465                  g.insert_edge("a", "b", 2);
+   466                  g.insert_edge("a", "a", 3);
+   467                  g.insert_edge("a", "a", 4);
+   468                  g.clear();
+   469                  REQUIRE(g.empty());
+   470          }
+   471  }
+
+dos2unix: converting file test/graph/constructors_test.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 8472 Aug  8 13:23 test/graph/constructors_test.cpp
+===============================================================================
+
+     1  #include "gdwg/graph.hpp"
+     2
+     3  #include <catch2/catch.hpp>
+     4
+     5  // In this section, I primarily test the constructor section.
+     6  //
+     7  // For empty constructor, two different tests of N and E are done.
+     8  //
+     9  // For the Initializer List constructor, I used two different types of list inputs, one creating a
+    10  // list and passing it into constructor, and the other using {} to prove that it would work in both
+    11  // cases. In addition, the situation that the same element exists list is also carried out. Finally,
+    12  // there is only one node.
+    13  //
+    14  // For input iterator constructor, I tested the use of start and end of set vector initializer list.
+    15  //
+    16  // For graph(graph&& other) and operator=(graph&& other) constructor, because it may include edge
+    17  // and node information, I test empty graph, only have node graph and graph with nodes and edges
+    18  // situation. The information of after moving graph need to equal with the graph before moving, and
+    19  // after moving, the original graph need become empty.
+    20  //
+    21  // For graph(graph const& other) and operator=(graph const& other) constructor, I also test empty
+    22  // graph, only have node graph and graph with nodes and edges situation. To the copy graph have
+    23  // same information and store in different memory, I change the original graph information, and
+    24  // check they are different.
+    25
+    26  TEST_CASE("Test empty constructor") {
+    27          SECTION("Test <std::string, int> empty constructor") {
+    28                  auto g = gdwg::graph<std::string, int>();
+    29                  REQUIRE(g.empty());
+    30          }
+    31
+    32          SECTION("Test <int, double> empty constructor") {
+                                ^
++ ====================================================================== +
++ templates work                                                         +
++ no need to use different type coombinations without an explicit reason +
++ ====================================================================== +
+    33                  auto g = gdwg::graph<int, double>();
+    34                  REQUIRE(g.empty());
+    35          }
+    36  }
+    37
+    38  TEST_CASE("Test initializer_list constructor") {
+    39          SECTION("Test int list and confirm it had sorted") {
+    40                  auto g = gdwg::graph<int, int>{5, -2, -3, 1, 4};
+    41                  REQUIRE(g.nodes() == std::vector<int>{-3, -2, 1, 4, 5});
+    42          }
+    43
+    44          SECTION("Test string list and confirm it had sorted") {
+    45                  auto string_list = std::initializer_list<std::string>{"how", "are", "you", "today"};
+    46                  auto g = gdwg::graph<std::string, int>(string_list);
+    47                  REQUIRE(g.nodes() == std::vector<std::string>{"are", "how", "today", "you"});
+    48          }
+    49
+    50          SECTION("Test int list with same element, the same element only appear once") {
+    51                  auto g = gdwg::graph<int, int>{5, 2, 3, 1, 4, 3};
+    52                  REQUIRE(g.nodes() == std::vector<int>{1, 2, 3, 4, 5});
+    53          }
+    54  }
+    55
+    56  TEST_CASE("Test Input iterator constructor") {
+    57          SECTION("Test int vector iterator and confirm it had sorted") {
+    58                  auto input_vector = std::vector<int>{3, 5, 1, 9, 4, 7};
+    59                  auto g = gdwg::graph<int, int>(input_vector.cbegin(), input_vector.cend());
+    60                  REQUIRE(g.nodes() == std::vector<int>{1, 3, 4, 5, 7, 9});
+    61          }
+    62
+    63          SECTION("Test double set iterator and confirm it had sorted") {
+    64                  auto input_set = std::set<double>{3.3, -4.4, 5.5, -6.6, 7.7, -8.8};
+    65                  auto g = gdwg::graph<double, int>(input_set.cbegin(), input_set.cend());
+    66                  REQUIRE(g.nodes() == std::vector<double>{-8.8, -6.6, -4.4, 3.3, 5.5, 7.7});
+    67          }
+    68
+    69          SECTION("Test std::string initializer_list iterator and confirm it had sorted") {
+    70                  auto input_list = std::initializer_list<std::string>{"how", "are", "you", "today", "helen"};
+    71                  auto g = gdwg::graph<std::string, int>(input_list.begin(), input_list.end());
+    72                  REQUIRE(g.nodes() == std::vector<std::string>{"are", "helen", "how", "today", "you"});
+    73          }
+    74  }
+    75
+    76  TEST_CASE("Test graph(graph&& other) constructor") {
+    77          SECTION("Test move empty graph") {
+    78                  auto g = gdwg::graph<std::string, int>();
+    79                  auto g_move = gdwg::graph<std::string, int>(std::move(g));
+    80                  REQUIRE(g.empty());
+    81                  REQUIRE(g_move.empty());
+    82          }
+    83
+    84          SECTION("Test move a graph only include node information") {
+    85                  auto g = gdwg::graph<int, int>{5, 2, 3, 1, 4};
+    86                  std::stringstream string_stream;
+    87                  string_stream << g;
+    88                  auto g_move = gdwg::graph<int, int>{std::move(g)};
+    89                  REQUIRE(g.empty());
+    90                  REQUIRE_FALSE(g_move.empty());
+    91                  std::stringstream string_stream_move;
+    92                  string_stream_move << g_move;
+    93                  REQUIRE(string_stream_move.str() == string_stream.str());
+    94                  REQUIRE(string_stream_move.str()
+    95                          == "1 (\n"
+    96                             ")\n"
+    97                             "2 (\n"
+    98                             ")\n"
+    99                             "3 (\n"
+   100                             ")\n"
+   101                             "4 (\n"
+   102                             ")\n"
+   103                             "5 (\n"
+   104                             ")\n");
+   105          }
+   106
+   107          SECTION("Test move a graph with edge information") {
+   108                  auto g = gdwg::graph<int, int>{5, 2, 3, 1, 4};
+   109                  g.insert_edge(1, 2, 1);
+   110                  g.insert_edge(2, 3, 4);
+   111                  g.insert_edge(3, 4, 5);
+   112                  g.insert_edge(4, 5, 6);
+   113                  std::stringstream string_stream;
+   114                  string_stream << g;
+   115                  auto g_move = gdwg::graph<int, int>{std::move(g)};
+   116                  REQUIRE(g.empty());
+   117                  REQUIRE_FALSE(g_move.empty());
+   118                  std::stringstream string_stream_move;
+   119                  string_stream_move << g_move;
+   120                  REQUIRE(string_stream_move.str() == string_stream.str());
+   121                  REQUIRE(string_stream_move.str()
+   122                          == "1 (\n"
+   123                             "  2 | 1\n"
+   124                             ")\n"
+   125                             "2 (\n"
+   126                             "  3 | 4\n"
+   127                             ")\n"
+   128                             "3 (\n"
+   129                             "  4 | 5\n"
+   130                             ")\n"
+   131                             "4 (\n"
+   132                             "  5 | 6\n"
+   133                             ")\n"
+   134                             "5 (\n"
+   135                             ")\n");
+   136          }
+   137  }
+   138
+   139  TEST_CASE("Test operator=(graph&& other) constructor") {
+                                                    ^
+                                                    + ================= +
+                                                    + not a constructor +
+                                                    + ================= +
+   140          SECTION("Test move empty graph") {
+   141                  auto g = gdwg::graph<std::string, int>();
+   142                  auto g_move = std::move(g);
+                                    ^
+                                    + ============= +
+                                    + not operator= +
+                                    + ============= +
+   143                  REQUIRE(g.empty());
+   144                  REQUIRE(g_move.empty());
+   145          }
+   146
+   147          SECTION("Test move a graph only include node information") {
+   148                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   149                  std::stringstream string_stream;
+   150                  string_stream << g;
+   151                  auto g_move = std::move(g);
+   152                  REQUIRE(g.empty());
+   153                  REQUIRE_FALSE(g_move.empty());
+   154                  std::stringstream string_stream_move;
+   155                  string_stream_move << g_move;
+   156                  REQUIRE(string_stream_move.str() == string_stream.str());
+   157                  REQUIRE(string_stream_move.str()
+   158                          == "a (\n"
+   159                             ")\n"
+   160                             "b (\n"
+   161                             ")\n"
+   162                             "c (\n"
+   163                             ")\n"
+   164                             "d (\n"
+   165                             ")\n");
+   166          }
+   167
+   168          SECTION("Test move a graph with edge information") {
+   169                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   170                  g.insert_edge("a", "b", 1);
+   171                  g.insert_edge("a", "a", 2);
+   172                  g.insert_edge("a", "c", 3);
+   173                  g.insert_edge("a", "d", 4);
+   174                  std::stringstream string_stream;
+   175                  string_stream << g;
+   176                  auto g_move = std::move(g);
+   177                  REQUIRE(g.empty());
+   178                  REQUIRE_FALSE(g_move.empty());
+   179                  std::stringstream string_stream_move;
+   180                  string_stream_move << g_move;
+   181                  REQUIRE(string_stream_move.str() == string_stream.str());
+   182                  REQUIRE(string_stream_move.str()
+   183                          == "a (\n"
+   184                             "  a | 2\n"
+   185                             "  b | 1\n"
+   186                             "  c | 3\n"
+   187                             "  d | 4\n"
+   188                             ")\n"
+   189                             "b (\n"
+   190                             ")\n"
+   191                             "c (\n"
+   192                             ")\n"
+   193                             "d (\n"
+   194                             ")\n");
+   195          }
+   196  }
+   197
+   198  TEST_CASE("Test graph(graph const& other) constructor") {
+   199          SECTION("Test copy empty graph") {
+   200                  auto g = gdwg::graph<std::string, int>();
+   201                  auto g_copy = gdwg::graph<std::string, int>(g);
+   202                  REQUIRE(g.empty());
+   203                  REQUIRE(g_copy.empty());
+   204          }
+   205
+   206          SECTION("Test move a graph only include node information") {
+   207                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   208                  auto g_copy = gdwg::graph<std::string, int>(g);
+   209                  REQUIRE(g == g_copy);
+   210                  g.erase_node("a");
+   211                  REQUIRE_FALSE(g == g_copy);
+   212                  g_copy.erase_node("a");
+   213                  REQUIRE(g == g_copy);
+   214          }
+   215
+   216          SECTION("Test move a graph with edge information") {
+   217                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   218                  g.insert_edge("a", "b", 1);
+   219                  g.insert_edge("a", "a", 2);
+   220                  g.insert_edge("a", "c", 3);
+   221                  g.insert_edge("a", "d", 4);
+   222                  auto g_copy = gdwg::graph<std::string, int>(g);
+   223                  REQUIRE(g == g_copy);
+   224                  g.erase_edge("a", "b", 1);
+   225                  REQUIRE_FALSE(g == g_copy);
+   226                  g_copy.erase_edge("a", "b", 1);
+   227                  REQUIRE(g == g_copy);
+   228          }
+   229  }
+   230
+   231  TEST_CASE("Test operator=(graph const& other) constructor") {
+                                                     ^
+                                                     + ================= +
+                                                     + not a constructor +
+                                                     + ================= +
+   232          SECTION("Test copy empty graph") {
+   233                  auto g = gdwg::graph<std::string, int>();
+   234                  auto g_move = g;
+   235                  REQUIRE(g.empty());
+   236                  REQUIRE(g_move.empty());
+   237          }
+   238
+   239          SECTION("Test move a graph only include node information") {
+   240                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   241                  auto g_copy = g;
+   242                  REQUIRE(g == g_copy);
+   243                  g.erase_node("a");
+   244                  REQUIRE_FALSE(g == g_copy);
+   245                  g_copy.erase_node("a");
+   246                  REQUIRE(g == g_copy);
+   247          }
+   248
+   249          SECTION("Test move a graph with edge information") {
+   250                  auto g = gdwg::graph<std::string, int>{"a", "b", "c", "d"};
+   251                  g.insert_edge("a", "b", 1);
+   252                  g.insert_edge("a", "a", 2);
+   253                  g.insert_edge("a", "c", 3);
+   254                  g.insert_edge("a", "d", 4);
+   255                  auto g_copy = g;
+   256                  REQUIRE(g == g_copy);
+   257                  g.erase_edge("a", "b", 1);
+   258                  REQUIRE_FALSE(g == g_copy);
+   259                  g_copy.erase_edge("a", "b", 1);
+   260                  REQUIRE(g == g_copy);
+   261          }
+   262  }
+
+dos2unix: converting file test/graph/iterator_test.cpp to Unix format...
+
+===============================================================================
+-rw-r----- 1 cs6771 cs6771 2026 Aug  8 13:23 test/graph/iterator_test.cpp
+===============================================================================
+
+     1  #include "gdwg/graph.hpp"
+     2
+     3  #include <catch2/catch.hpp>
+     4
+     5  // In this section, I primarily test the iterator and iterator access section.
+     6  //
+     7  // For this part, we mainly test the iterator in operator++, operator--, getting the reference of
+     8  // operator*. and for g.begin() and g.end().
+     9  //
+    10  // For operator-, if it = g.end(), the --it will become the last weight between last src and dst.
+    11
+    12  TEST_CASE("Test *operator") {
+    13          auto g = gdwg::graph<int, int>{1, 2, 3};
+    14          g.insert_edge(1, 2, 1);
+    15          g.insert_edge(2, 3, 4);
+    16          auto it = g.begin();
+    17          auto temp = *it;
+    18          REQUIRE(temp.from == 1);
+    19          REQUIRE(temp.to == 2);
+    20          REQUIRE(temp.weight == 1);
+    21          ++it;
+    22          temp = *it;
+    23          REQUIRE(temp.from == 2);
+    24          REQUIRE(temp.to == 3);
+    25          REQUIRE(temp.weight == 4);
+    26  }
+    27
+    28  TEST_CASE("Test operator++") {
+    29          auto g = gdwg::graph<int, int>{1, 2, 3};
+    30          g.insert_edge(1, 2, 1);
+    31          g.insert_edge(2, 3, 4);
+    32          auto it = g.begin();
+    33          auto temp = *it;
+    34          REQUIRE(temp.from == 1);
+    35          REQUIRE(temp.to == 2);
+    36          REQUIRE(temp.weight == 1);
+    37          ++it;
+    38          temp = *it;
+    39          REQUIRE(temp.from == 2);
+    40          REQUIRE(temp.to == 3);
+    41          REQUIRE(temp.weight == 4);
+    42          ++it;
+    43          REQUIRE(it == g.end());
+    44  }
+    45
+    46  TEST_CASE("Test operator--") {
+    47          auto g = gdwg::graph<int, int>{1, 2, 3};
+    48          g.insert_edge(1, 2, 1);
+    49          g.insert_edge(2, 3, 4);
+    50          auto it = g.end();
+    51          REQUIRE(it == g.end());
+    52          --it;
+    53          auto temp = *it;
+    54          REQUIRE(temp.from == 2);
+    55          REQUIRE(temp.to == 3);
+    56          REQUIRE(temp.weight == 4);
+    57          --it;
+    58          temp = *it;
+    59          REQUIRE(temp.from == 1);
+    60          REQUIRE(temp.to == 2);
+    61          REQUIRE(it == g.begin());
+    62  }
+    63
+    64  TEST_CASE("Test operator==") {
+    65          auto g = gdwg::graph<int, int>{1, 2, 3};
+    66          g.insert_edge(1, 2, 1);
+    67          auto it = g.end();
+    68          REQUIRE(it == g.end());
+    69          --it;
+    70          REQUIRE(it == g.begin());
+    71  }
+    72
+    73  TEST_CASE("Test begin() const") {
+    74          auto g = gdwg::graph<int, int>{1, 2, 3};
+    75          g.insert_edge(1, 2, 1);
+    76          auto it = g.begin();
+    77          auto temp = *it;
+    78          REQUIRE(temp.from == 1);
+    79          REQUIRE(temp.to == 2);
+    80          REQUIRE(temp.weight == 1);
+    81  }
+    82
+    83  TEST_CASE("Test end() const") {
+    84          auto g = gdwg::graph<int, int>{1, 2, 3};
+    85          g.insert_edge(1, 2, 1);
+    86          auto it = g.begin();
+    87          ++it;
+    88          REQUIRE(it == g.end());
+    89  }
+
+                           ^
+                           + ======================================================= +
+                           + missed cases (what about the iterator member typedefs?) +
+                           + ======================================================= +
+!!section tests
+!!section assess
+========================================
+======= Running Linter =================
+========================================
+==== /tmp/COMP6771.2229815.run/include/gdwg/graph.hpp ====
+==== /tmp/COMP6771.2229815.run/source/client.cpp ====
+2a3
+> #include <initializer_list>
+5d5
+< #include <initializer_list>
+50c50
+<               std::cout << from << " -> " << to << " (weight " << weight << ")\n";
+---
+>          std::cout << from << " -> " << to << " (weight " << weight << ")\n";
+!!specialmark  (Linter)                                 0.75/1.5    <== mark altered (original mark was 0)
+========================================
+======= Running Correctness ============
+========================================
+Copying automarker
+=============================
+gdwg
+=============================
+Copying students work
+-- The CXX compiler identification is Clang 11.0.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/clang++-11 - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Looking for C++ include pthread.h
+-- Looking for C++ include pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+CMake Warning (dev) at /usr/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake:273 (message):
+  The package name passed to `find_package_handle_standard_args` (Threads)
+  does not match the name of the calling package (absl).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/share/cmake-3.18/Modules/FindThreads.cmake:234 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
+  /import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/share/absl/abslConfig.cmake:3 (include)
+  /import/kamen/1/cs6771/vcpkg/scripts/buildsystems/vcpkg.cmake:329 (_find_package)
+  CMakeLists.txt:29 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Found Threads: TRUE
+-- Configuring done
+-- Generating done
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    COMP6771_EXAM_ENABLE_CLANG_TIDY
+
+
+-- Build files have been written to: /tmp/tmp.0R3Vh8E8A9/build
+[1/64] Building CXX object test/graph/constructors/CMakeFiles/default_constructor.dir/default_constructor.cpp.o
+[2/64] Building CXX object test/graph/constructors/CMakeFiles/initializer_list_constructor.dir/initializer_list_constructor.cpp.o
+[3/64] Building CXX object test/graph/CMakeFiles/comparison.dir/comparison.cpp.o
+[4/64] Building CXX object test/graph/constructors/CMakeFiles/iterator_constructor.dir/iterator_constructor.cpp.o
+[5/64] Building CXX object test/graph/CMakeFiles/extractor.dir/extractor.cpp.o
+[6/64] Building CXX object test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.forward.dir/forward_iterator.cpp.o
+FAILED: test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.forward.dir/forward_iterator.cpp.o
+/usr/bin/clang++-11 -DFMT_HEADER_ONLY=1 -D__CLANG_SUPPORT_DYN_ANNOTATION__ -Dgsl_CONFIG_DEFAULTS_VERSION=1 -I/tmp/tmp.0R3Vh8E8A9/ass3/include -I/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models -isystem /import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include -fvisibility=hidden -fstack-protector -fdiagnostics-color=always -pedantic -Werror -Wall -Wextra -Wcast-align -Wconversion -Wdouble-promotion -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wunused -Wformat=2 -Wodr -Wno-attributes -Wnull-dereference -Wno-unused-command-line-argument -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/lib/llvm-11/include/c++/v1 -fvisibility=hidden -fstack-protector -fdiagnostics-color=always -pedantic -Werror -Wall -Wextra -Wcast-align -Wconversion -Wdouble-promotion -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wunused -Wformat=2 -Wodr -Wno-attributes -Wnull-dereference -Wno-unused-command-line-argument -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/lib/llvm-11/include/c++/v1  -fsanitize=cfi -fsanitize=cfi -flto=thin -std=c++20 -MD -MT test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.forward.dir/forward_iterator.cpp.o -MF test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.forward.dir/forward_iterator.cpp.o.d -o test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.forward.dir/forward_iterator.cpp.o -c /tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/forward_iterator.cpp
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/forward_iterator.cpp:52:2: error: no matching function for call to 'check_models_forward_iterator'
+        check_models_forward_iterator(g.begin(), g.begin());
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/forward_iterator.cpp:11:6: note: candidate template ignored: constraints not satisfied [with I = gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator]
+void check_models_forward_iterator(I a, I b) {
+     ^
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/forward_iterator.cpp:10:18: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'forward_iterator'
+template<ranges::forward_iterator I>
+                 ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:300:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'input_iterator'
+        input_iterator<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:295:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'readable'
+        readable<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:145:30: note: because 'uncvref_t<gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator>' (aka 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator') does not satisfy 'readable_'
+        CPP_fragment(ranges::readable_, uncvref_t<I>);
+                             ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/access.hpp:52:40: note: because substituted constraint expression is ill-formed: indirection requires pointer operand ('const gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' invalid)
+                 typename R = decltype(*std::declval<I &>()),
+                                       ^
+1 error generated.
+[7/64] Building CXX object test/graph/constructors/CMakeFiles/node_sequence_constructor.dir/node_sequence_constructor.cpp.o
+[8/64] Building CXX object test/graph/accessors/CMakeFiles/find.dir/find.cpp.o
+[9/64] Building CXX object test/graph/accessors/CMakeFiles/connections.dir/connections.cpp.o
+[10/64] Building CXX object test/graph/accessors/CMakeFiles/nodes.dir/nodes.cpp.o
+[11/64] Building CXX object test/graph/accessors/CMakeFiles/weights.dir/weights.cpp.o
+[12/64] Building CXX object test/graph/accessors/CMakeFiles/is_connected.dir/is_connected.cpp.o
+[13/64] Building CXX object test/CMakeFiles/test_main.dir/test_main.cpp.o
+[14/64] Linking CXX static library test/libtest_main.a
+[15/64] Building CXX object test/graph/modifiers/CMakeFiles/replace_node.dir/replace_node.cpp.o
+[16/64] Building CXX object test/graph/modifiers/CMakeFiles/insert_edge.dir/insert_edge.cpp.o
+[17/64] Building CXX object test/graph/modifiers/CMakeFiles/erase_edge_range.dir/erase_edge_range.cpp.o
+FAILED: test/graph/modifiers/CMakeFiles/erase_edge_range.dir/erase_edge_range.cpp.o
+/usr/bin/clang++-11 -DFMT_HEADER_ONLY=1 -D__CLANG_SUPPORT_DYN_ANNOTATION__ -Dgsl_CONFIG_DEFAULTS_VERSION=1 -I/tmp/tmp.0R3Vh8E8A9/ass3/include -I/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers -isystem /import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include -fvisibility=hidden -fstack-protector -fdiagnostics-color=always -pedantic -Werror -Wall -Wextra -Wcast-align -Wconversion -Wdouble-promotion -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wunused -Wformat=2 -Wodr -Wno-attributes -Wnull-dereference -Wno-unused-command-line-argument -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/lib/llvm-11/include/c++/v1 -fvisibility=hidden -fstack-protector -fdiagnostics-color=always -pedantic -Werror -Wall -Wextra -Wcast-align -Wconversion -Wdouble-promotion -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wunused -Wformat=2 -Wodr -Wno-attributes -Wnull-dereference -Wno-unused-command-line-argument -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/lib/llvm-11/include/c++/v1  -fsanitize=cfi -fsanitize=cfi -flto=thin -std=c++20 -MD -MT test/graph/modifiers/CMakeFiles/erase_edge_range.dir/erase_edge_range.cpp.o -MF test/graph/modifiers/CMakeFiles/erase_edge_range.dir/erase_edge_range.cpp.o.d -o test/graph/modifiers/CMakeFiles/erase_edge_range.dir/erase_edge_range.cpp.o -c /tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/erase_edge_range.cpp
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/erase_edge_range.cpp:63:3: error: no matching function for call to object of type 'const ranges::copy_fn'
+                ranges::copy(first, last, ranges::back_inserter(erased));
+                ^~~~~~~~~~~~
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/algorithm/copy.hpp:45:24: note: candidate template ignored: constraints not satisfied [with I = gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator, S = gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator, O = ranges::back_insert_iterator<std::__1::vector<gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::value_type, std::__1::allocator<gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::value_type>>>]
+        constexpr auto RANGES_FUNC(copy)(I first, S last, O out) //
+                       ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/detail/config.hpp:623:27: note: expanded from macro 'RANGES_FUNC'
+#define RANGES_FUNC(NAME) operator() RANGES_FUNC_CONST_ /**/
+                          ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/algorithm/copy.hpp:47:26: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'input_iterator'
+                requires input_iterator<I> && sentinel_for<S, I> &&
+                         ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/concepts/concepts.hpp:455:17: note: expanded from macro 'CPP_ret'
+    __VA_ARGS__ CPP_PP_EXPAND                                                   \
+                ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:295:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'readable'
+        readable<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:145:30: note: because 'uncvref_t<gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator>' (aka 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator') does not satisfy 'readable_'
+        CPP_fragment(ranges::readable_, uncvref_t<I>);
+                             ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/access.hpp:52:40: note: because substituted constraint expression is ill-formed: indirection requires pointer operand ('const gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' invalid)
+                 typename R = decltype(*std::declval<I &>()),
+                                       ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/algorithm/copy.hpp:57:24: note: candidate function not viable: requires 2 arguments, but 3 were provided
+        constexpr auto RANGES_FUNC(copy)(Rng && rng, O out)  //
+                       ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/detail/config.hpp:623:27: note: expanded from macro 'RANGES_FUNC'
+#define RANGES_FUNC(NAME) operator() RANGES_FUNC_CONST_ /**/
+                          ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/utility/copy.hpp:34:28: note: candidate function not viable: requires single argument 't', but 3 arguments were provided
+            constexpr auto operator()(T && t) const -> CPP_ret(detail::decay_t<T>)( //
+                           ^
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/erase_edge_range.cpp:95:40: error: no matching function for call to object of type 'const ranges::prev_fn'
+                auto first = ranges::next(g.begin(), ranges::prev(g.end(), 2));
+                                                     ^~~~~~~~~~~~
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/operations.hpp:346:24: note: candidate template ignored: constraints not satisfied [with I = gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator]
+        constexpr auto operator()(I it, iter_difference_t<I> n) const
+                       ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/operations.hpp:347:36: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'bidirectional_iterator'
+            -> CPP_ret(I)(requires bidirectional_iterator<I>)
+                                   ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/concepts/concepts.hpp:455:17: note: expanded from macro 'CPP_ret'
+    __VA_ARGS__ CPP_PP_EXPAND                                                   \
+                ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:316:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'forward_iterator'
+        forward_iterator<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:300:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'input_iterator'
+        input_iterator<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:295:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'readable'
+        readable<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:145:30: note: because 'uncvref_t<gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator>' (aka 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator') does not satisfy 'readable_'
+        CPP_fragment(ranges::readable_, uncvref_t<I>);
+                             ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/access.hpp:52:40: note: because substituted constraint expression is ill-formed: indirection requires pointer operand ('const gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' invalid)
+                 typename R = decltype(*std::declval<I &>()),
+                                       ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/operations.hpp:340:24: note: candidate function template not viable: requires single argument 'it', but 2 arguments were provided
+        constexpr auto operator()(I it) const
+                       ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/operations.hpp:353:24: note: candidate function template not viable: requires 3 arguments, but 2 were provided
+        constexpr auto operator()(I it, iter_difference_t<I> n, I bound) const
+                       ^
+2 errors generated.
+[18/64] Building CXX object test/graph/modifiers/CMakeFiles/erase_edge_iterator.dir/erase_edge_iterator.cpp.o
+[19/64] Building CXX object test/graph/modifiers/CMakeFiles/erase_edge.dir/erase_edge.cpp.o
+[20/64] Linking CXX executable test/graph/comparison
+[21/64] Linking CXX executable test/graph/constructors/iterator_constructor
+[22/64] Linking CXX executable test/graph/extractor
+[23/64] Linking CXX executable test/graph/constructors/initializer_list_constructor
+[24/64] Linking CXX executable test/graph/constructors/node_sequence_constructor
+[25/64] Linking CXX executable test/graph/constructors/default_constructor
+[26/64] Linking CXX executable test/graph/accessors/nodes
+[27/64] Linking CXX executable test/graph/accessors/weights
+[28/64] Linking CXX executable test/graph/accessors/connections
+[29/64] Linking CXX executable test/graph/accessors/find
+[30/64] Linking CXX executable test/graph/modifiers/replace_node
+[31/64] Linking CXX executable test/graph/accessors/is_connected
+[32/64] Building CXX object test/graph/modifiers/CMakeFiles/merge_replace_node.dir/merge_replace_node.cpp.o
+[33/64] Building CXX object test/graph/modifiers/CMakeFiles/erase_node.dir/erase_node.cpp.o
+[34/64] Building CXX object test/graph/special/CMakeFiles/copy_ctor.dir/copy_ctor.cpp.o
+[35/64] Building CXX object test/graph/special/CMakeFiles/copy_assign.dir/copy_assign.cpp.o
+[36/64] Linking CXX executable test/graph/modifiers/insert_edge
+[37/64] Linking CXX executable test/graph/modifiers/erase_edge_iterator
+[38/64] Linking CXX executable test/graph/modifiers/erase_edge
+[39/64] Building CXX object test/graph/special/CMakeFiles/move_assign.dir/move_assign.cpp.o
+[40/64] Linking CXX executable test/graph/modifiers/merge_replace_node
+[41/64] Linking CXX executable test/graph/modifiers/erase_node
+[42/64] Building CXX object test/graph/special/CMakeFiles/move_ctor.dir/move_ctor.cpp.o
+[43/64] Linking CXX executable test/graph/special/copy_assign
+[44/64] Building CXX object test/graph/iterator/CMakeFiles/bidirectional_range.dir/bidirectional_range.cpp.o
+[45/64] Building CXX object test/graph/iterator/CMakeFiles/forward_range.dir/forward_range.cpp.o
+[46/64] Linking CXX executable test/graph/special/copy_ctor
+[47/64] Building CXX object test/graph/iterator/CMakeFiles/input_range.dir/input_range.cpp.o
+[48/64] Building CXX object test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.bidirectional.dir/bidirectional_iterator.cpp.o
+FAILED: test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.bidirectional.dir/bidirectional_iterator.cpp.o
+/usr/bin/clang++-11 -DFMT_HEADER_ONLY=1 -D__CLANG_SUPPORT_DYN_ANNOTATION__ -Dgsl_CONFIG_DEFAULTS_VERSION=1 -I/tmp/tmp.0R3Vh8E8A9/ass3/include -I/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models -isystem /import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include -fvisibility=hidden -fstack-protector -fdiagnostics-color=always -pedantic -Werror -Wall -Wextra -Wcast-align -Wconversion -Wdouble-promotion -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wunused -Wformat=2 -Wodr -Wno-attributes -Wnull-dereference -Wno-unused-command-line-argument -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/lib/llvm-11/include/c++/v1 -fvisibility=hidden -fstack-protector -fdiagnostics-color=always -pedantic -Werror -Wall -Wextra -Wcast-align -Wconversion -Wdouble-promotion -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wunused -Wformat=2 -Wodr -Wno-attributes -Wnull-dereference -Wno-unused-command-line-argument -stdlib=libc++ -nostdinc++ -cxx-isystem /usr/lib/llvm-11/include/c++/v1  -fsanitize=cfi -fsanitize=cfi -flto=thin -std=c++20 -MD -MT test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.bidirectional.dir/bidirectional_iterator.cpp.o -MF test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.bidirectional.dir/bidirectional_iterator.cpp.o.d -o test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.bidirectional.dir/bidirectional_iterator.cpp.o -c /tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/bidirectional_iterator.cpp
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/bidirectional_iterator.cpp:51:2: error: no matching function for call to 'check_models_bidirectional_iterator'
+        check_models_bidirectional_iterator(a, a);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/bidirectional_iterator.cpp:13:6: note: candidate template ignored: constraints not satisfied [with I = gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator]
+void check_models_bidirectional_iterator(I a, I b) {
+     ^
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/graph.iterator.models/bidirectional_iterator.cpp:12:18: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'bidirectional_iterator'
+template<ranges::bidirectional_iterator I>
+                 ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:316:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'forward_iterator'
+        forward_iterator<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:300:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'input_iterator'
+        input_iterator<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:295:9: note: because 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' does not satisfy 'readable'
+        readable<I> &&
+        ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/concepts.hpp:145:30: note: because 'uncvref_t<gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator>' (aka 'gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator') does not satisfy 'readable_'
+        CPP_fragment(ranges::readable_, uncvref_t<I>);
+                             ^
+/import/kamen/1/cs6771/vcpkg/installed/x64-linux-libcxx/include/range/v3/iterator/access.hpp:52:40: note: because substituted constraint expression is ill-formed: indirection requires pointer operand ('const gdwg::graph<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, int>::iterator' invalid)
+                 typename R = decltype(*std::declval<I &>()),
+                                       ^
+1 error generated.
+[49/64] Linking CXX executable test/graph/special/move_assign
+[50/64] Linking CXX executable test/graph/special/move_ctor
+[51/64] Building CXX object test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.inc.dir/incrementable.cpp.o
+[52/64] Building CXX object test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.sentinel.dir/sentinel_for.cpp.o
+[53/64] Building CXX object test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.readable.dir/readable.cpp.o
+[54/64] Linking CXX executable test/graph/iterator/forward_range
+[55/64] Linking CXX executable test/graph/iterator/bidirectional_range
+[56/64] Linking CXX executable test/graph/iterator/input_range
+[57/64] Building CXX object test/graph/iterator/graph.iterator.models/CMakeFiles/graph.iterator.models.winc.dir/weakly_incrementable.cpp.o
+[58/64] Linking CXX executable test/graph/iterator/graph.iterator.models/graph.iterator.models.inc
+[59/64] Linking CXX executable test/graph/iterator/graph.iterator.models/graph.iterator.models.sentinel
+[60/64] Linking CXX executable test/graph/iterator/graph.iterator.models/graph.iterator.models.readable
+[61/64] Linking CXX executable test/graph/iterator/graph.iterator.models/graph.iterator.models.winc
+ninja: build stopped: cannot make progress due to previous errors.
+Running tests... (output won't appear till completion)
+Unable to find executable: erase_edge_range
+Unable to find executable: graph.iterator.models.forward
+Unable to find executable: graph.iterator.models.bidirectional
+Errors while running CTest
+Running tests... (output won't appear till completion)
+Test project /tmp/tmp.0R3Vh8E8A9/build
+      Start  1: test.comparison
+      Start  2: test.extractor
+      Start  3: test.default_constructor
+      Start  4: test.iterator_constructor
+ 1/31 Test  #1: test.comparison ............................   Passed    0.00 sec
+      Start  5: test.initializer_list_constructor
+ 2/31 Test  #2: test.extractor .............................   Passed    0.00 sec
+      Start  6: test.node_sequence_constructor
+ 3/31 Test  #3: test.default_constructor ...................   Passed    0.00 sec
+      Start  7: test.is_connected
+ 4/31 Test  #4: test.iterator_constructor ..................   Passed    0.00 sec
+      Start  8: test.nodes
+ 5/31 Test  #5: test.initializer_list_constructor ..........   Passed    0.00 sec
+      Start  9: test.connections
+ 6/31 Test  #6: test.node_sequence_constructor .............   Passed    0.00 sec
+      Start 10: test.weights
+ 7/31 Test  #7: test.is_connected ..........................***Failed    0.00 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+is_connected is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+checks gdwg::graph<N, E>::is_connected
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/accessors/is_connected.cpp:9
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/accessors/is_connected.cpp:33: FAILED:
+  CHECK_THROWS_MATCHES( std::as_const(g).is_connected("D", "B"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::is_connected if src or dst node " "don't exist in the graph") )
+due to unexpected exception with message:
+  Unknown exception
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/accessors/is_connected.cpp:39: FAILED:
+  CHECK_THROWS_MATCHES( std::as_const(g).is_connected("A", "D"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::is_connected if src or dst node " "don't exist in the graph") )
+due to unexpected exception with message:
+  Unknown exception
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 8 | 6 passed | 2 failed
+
+
+      Start 11: test.find
+ 8/31 Test  #8: test.nodes .................................   Passed    0.00 sec
+      Start 12: test.erase_node
+ 9/31 Test  #9: test.connections ...........................   Passed    0.00 sec
+      Start 13: test.erase_edge
+10/31 Test #10: test.weights ...............................***Failed    0.00 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+weights is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+graph<N, E>::weights works as specified
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/accessors/weights.cpp:13
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/accessors/weights.cpp:55: FAILED:
+  CHECK_THROWS_MATCHES( g.weights("E", "D"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::weights if src or dst node don't " "exist in the graph") )
+due to unexpected exception with message:
+  Unknown exception
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/accessors/weights.cpp:59: FAILED:
+  CHECK_THROWS_MATCHES( g.weights("A", "E"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::weights if src or dst node don't " "exist in the graph") )
+due to unexpected exception with message:
+  Unknown exception
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 19 | 17 passed | 2 failed
+
+
+      Start 14: test.erase_edge_iterator
+11/31 Test #11: test.find ..................................   Passed    0.00 sec
+      Start 15: test.erase_edge_range
+Could not find executable erase_edge_range
+Looked in the following places:
+erase_edge_range
+erase_edge_range
+Release/erase_edge_range
+Release/erase_edge_range
+Debug/erase_edge_range
+Debug/erase_edge_range
+MinSizeRel/erase_edge_range
+MinSizeRel/erase_edge_range
+RelWithDebInfo/erase_edge_range
+RelWithDebInfo/erase_edge_range
+Deployment/erase_edge_range
+Deployment/erase_edge_range
+Development/erase_edge_range
+Development/erase_edge_range
+12/31 Test #15: test.erase_edge_range ......................***Not Run   0.00 sec
+      Start 16: test.insert_edge
+13/31 Test #12: test.erase_node ............................   Passed    0.00 sec
+      Start 17: test.replace_node
+14/31 Test #13: test.erase_edge ............................   Passed    0.00 sec
+      Start 18: test.merge_replace_node
+15/31 Test #14: test.erase_edge_iterator ...................   Passed    0.00 sec
+      Start 19: test.move_ctor
+16/31 Test #16: test.insert_edge ...........................   Passed    0.00 sec
+      Start 20: test.move_assign
+17/31 Test #17: test.replace_node ..........................***Failed    0.00 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+replace_node is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+replace_node works as specified
+  attempts to replace a node that doesn't exist with one that exists
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/replace_node.cpp:94
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/replace_node.cpp:99: FAILED:
+  CHECK_THROWS_MATCHES( g.replace_node("E", "B"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::replace_node on a node that " "doesn't exist") )
+due to unexpected exception with message:
+  Unknown exception
+
+===============================================================================
+test cases:   1 |   0 passed | 1 failed
+assertions: 105 | 104 passed | 1 failed
+
+
+      Start 21: test.copy_ctor
+18/31 Test #18: test.merge_replace_node ....................***Failed    0.00 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+merge_replace_node is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+merge_replace_node works as specified
+  attempts to merge-replace a non-existing node with an existing node
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/merge_replace_node.cpp:63
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/merge_replace_node.cpp:67: FAILED:
+  CHECK_THROWS_MATCHES( g.merge_replace_node("E", "D"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::merge_replace_node on old or " "new data if they don't exist in the graph") )
+due to unexpected exception with message:
+  Unknown exception
+
+-------------------------------------------------------------------------------
+merge_replace_node works as specified
+  attempts to merge-replace an existing node with a non-existing node
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/merge_replace_node.cpp:92
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/modifiers/merge_replace_node.cpp:96: FAILED:
+  CHECK_THROWS_MATCHES( g.merge_replace_node("A", "E"), std::runtime_error, Message("Cannot call gdwg::graph<N, E>::merge_replace_node on old or " "new data if they don't exist in the graph") )
+due to unexpected exception with message:
+  Unknown exception
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 97 | 95 passed | 2 failed
+
+
+      Start 22: test.copy_assign
+19/31 Test #19: test.move_ctor .............................   Passed    0.00 sec
+      Start 23: test.input_range
+20/31 Test #20: test.move_assign ...........................   Passed    0.00 sec
+      Start 24: test.forward_range
+21/31 Test #21: test.copy_ctor .............................   Passed    0.00 sec
+      Start 25: test.bidirectional_range
+22/31 Test #22: test.copy_assign ...........................   Passed    0.00 sec
+      Start 26: test.graph.iterator.models.winc
+23/31 Test #23: test.input_range ...........................***Failed    0.01 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+input_range is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+graph<N, E> satisfies ranges::input_range
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:6
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:7: FAILED:
+  CHECK( ranges::input_range<gdwg::graph<std::string, int>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:8: FAILED:
+  CHECK( ranges::input_range<gdwg::graph<std::string, int> const> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:10: FAILED:
+  CHECK( ranges::input_range<gdwg::graph<int, int>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:11: FAILED:
+  CHECK( ranges::input_range<gdwg::graph<int, int> const> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:13: FAILED:
+  CHECK( ranges::input_range<gdwg::graph<bool, short>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/input_range.cpp:14: FAILED:
+  CHECK( ranges::input_range<gdwg::graph<bool, short> const> )
+with expansion:
+  false
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 6 | 6 failed
+
+
+      Start 27: test.graph.iterator.models.readable
+24/31 Test #24: test.forward_range .........................***Failed    0.00 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+forward_range is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+graph<N, E> satisfies ranges::forward_range
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:17
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:18: FAILED:
+  CHECK( ranges::forward_range<gdwg::graph<std::string, int>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:19: FAILED:
+  CHECK( ranges::forward_range<gdwg::graph<std::string, int> const> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:21: FAILED:
+  CHECK( ranges::forward_range<gdwg::graph<int, int>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:22: FAILED:
+  CHECK( ranges::forward_range<gdwg::graph<int, int> const> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:24: FAILED:
+  CHECK( ranges::forward_range<gdwg::graph<bool, short>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/forward_range.cpp:25: FAILED:
+  CHECK( ranges::forward_range<gdwg::graph<bool, short> const> )
+with expansion:
+  false
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 40 | 34 passed | 6 failed
+
+
+      Start 28: test.graph.iterator.models.inc
+25/31 Test #25: test.bidirectional_range ...................***Failed    0.01 sec
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bidirectional_range is a Catch v2.12.1 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+graph<N, E> satisfies ranges::bidirectional_range
+-------------------------------------------------------------------------------
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:19
+...............................................................................
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:20: FAILED:
+  CHECK( ranges::bidirectional_range<gdwg::graph<std::string, int>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:21: FAILED:
+  CHECK( ranges::bidirectional_range<gdwg::graph<std::string, int> const> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:23: FAILED:
+  CHECK( ranges::bidirectional_range<gdwg::graph<int, int>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:24: FAILED:
+  CHECK( ranges::bidirectional_range<gdwg::graph<int, int> const> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:26: FAILED:
+  CHECK( ranges::bidirectional_range<gdwg::graph<bool, short>> )
+with expansion:
+  false
+
+/tmp/tmp.0R3Vh8E8A9/ass3/test/graph/iterator/bidirectional_range.cpp:27: FAILED:
+  CHECK( ranges::bidirectional_range<gdwg::graph<bool, short> const> )
+with expansion:
+  false
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 40 | 34 passed | 6 failed
+
+
+      Start 29: test.graph.iterator.models.sentinel
+26/31 Test #26: test.graph.iterator.models.winc ............   Passed    0.00 sec
+      Start 30: test.graph.iterator.models.forward
+Could not find executable graph.iterator.models.forward
+Looked in the following places:
+graph.iterator.models.forward
+graph.iterator.models.forward
+Release/graph.iterator.models.forward
+Release/graph.iterator.models.forward
+Debug/graph.iterator.models.forward
+Debug/graph.iterator.models.forward
+MinSizeRel/graph.iterator.models.forward
+MinSizeRel/graph.iterator.models.forward
+RelWithDebInfo/graph.iterator.models.forward
+RelWithDebInfo/graph.iterator.models.forward
+Deployment/graph.iterator.models.forward
+Deployment/graph.iterator.models.forward
+Development/graph.iterator.models.forward
+Development/graph.iterator.models.forward
+27/31 Test #30: test.graph.iterator.models.forward .........***Not Run   0.00 sec
+      Start 31: test.graph.iterator.models.bidirectional
+Could not find executable graph.iterator.models.bidirectional
+Looked in the following places:
+graph.iterator.models.bidirectional
+graph.iterator.models.bidirectional
+Release/graph.iterator.models.bidirectional
+Release/graph.iterator.models.bidirectional
+Debug/graph.iterator.models.bidirectional
+Debug/graph.iterator.models.bidirectional
+MinSizeRel/graph.iterator.models.bidirectional
+MinSizeRel/graph.iterator.models.bidirectional
+RelWithDebInfo/graph.iterator.models.bidirectional
+RelWithDebInfo/graph.iterator.models.bidirectional
+Deployment/graph.iterator.models.bidirectional
+Deployment/graph.iterator.models.bidirectional
+Development/graph.iterator.models.bidirectional
+Development/graph.iterator.models.bidirectional
+28/31 Test #31: test.graph.iterator.models.bidirectional ...***Not Run   0.00 sec
+29/31 Test #27: test.graph.iterator.models.readable ........   Passed    0.00 sec
+30/31 Test #28: test.graph.iterator.models.inc .............   Passed    0.00 sec
+31/31 Test #29: test.graph.iterator.models.sentinel ........   Passed    0.00 sec
+
+68% tests passed, 10 tests failed out of 31
+
+Total Test time (real) =   0.03 sec
+
+The following tests FAILED:
+          7 - test.is_connected (Failed)
+         10 - test.weights (Failed)
+         15 - test.erase_edge_range (Not Run)
+         17 - test.replace_node (Failed)
+         18 - test.merge_replace_node (Failed)
+         23 - test.input_range (Failed)
+         24 - test.forward_range (Failed)
+         25 - test.bidirectional_range (Failed)
+         30 - test.graph.iterator.models.forward (Not Run)
+         31 - test.graph.iterator.models.bidirectional (Not Run)
+
+Writing marks to file...
+Marking feedback here
+!!specialmark  (Correctness)                            12.3/15
+
+!!marktab       **  MARKER'S  ASSESSMENT  **
+
+                            testing   ..  (7.5) 4.5
+
+                            bestpractice  (6)   3
+ ^
+ + =================================== +
+ + marker: simon                       +
+ + see my inline comments for feedback +
+ + =================================== +
+
+!!finalmark     **  FINAL  ASSIGNMENT  MARK:    20.55/30
+
+5286124 Wang, William                           3778/2 COMPA1
+
+
+
+
+Marked by z5061640 on Thu Aug 18 13:46:06 2022
+
+
