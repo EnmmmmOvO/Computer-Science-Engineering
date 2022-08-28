@@ -1,0 +1,58 @@
+Synchronous channels:
+
+  - send and receive must happen together
+
+Asynchronous channels:
+
+  A special case of asynch channels:
+    reliable FIFO channels
+
+  - send is non-blocking; puts a message in a queue
+  - receive pops a message from a queue
+    receive blocks if there aren't messages
+
+Q: what happens if the queue is full:
+A: varies from channel to channel
+   It might:
+   - block until there's space
+       (that's what we implemented in Producer-Consumer)
+   - drop messages if there's no space
+
+
+Conway's problem example:
+
+K = 5
+Let's say the input is:
+
+  aabaaaaabbaaaaaaaaaaaaaaaaabc .....
+
+The output should be:
+  2ab5a\n2b9a7\nabc ...
+
+
+In a synchronous transition diagram,
+ instead of having transitions
+
+   l,l': starting location; destination location
+   b: guard
+   f: state update
+
+   l -- b; f ---> l'
+
+Now we'll have three kinds of transitions:
+
+*internal transitions*
+
+   l -- b; f ---> l'
+
+*send transition*
+
+   send x on ch; and also guard b; state update f
+
+   l -- b; ch ⇐ x;f ---> l'
+
+*receive transition*
+
+   send x on ch; and also guard b; state update f
+
+   l -- b; ch ⇒ x;f ---> l'

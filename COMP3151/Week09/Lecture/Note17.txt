@@ -1,0 +1,76 @@
+In the slides' presentation of Chandy-Lamport algorithm:
+
+  we assume that messages are just sequence numbers.
+
+
+   Aaron ---> Becky ---> Cathy --> Aaron
+
+
+  Aaron ⇒ Becky : 1
+  Becky ⇒ Cathy : 2
+  Cathy ⇒ Aaron : 3
+  **Aaron wants to take a snapshot**  <-- here
+  **Aaron sends marker to Becky**
+  Aaron ⇐ Cathy : 3          
+  Becky ⇐ Aaron : 1
+  Cathy ⇐ Becky : 2
+  **Becky receives marker from Aaron**
+  **Becky sends a marker to Cathy
+    - records local state**
+  **Cathy receives marker from Becky**
+  **Cathy sends a marker to Aaron
+    - records local state**      
+  **Aaron receives marker from Cathy**
+  **Aaron record local state**
+
+State of system when snapshot is  taken:
+  All messages are sent, and still afloat.
+
+State of system in snapshot:
+  Aaron's local state:
+     sent: Aaron ⇒ Becky : 1
+     received: nothing
+     on channel:  Aaron ⇐ Cathy : 3
+
+  Becky's local state:
+     sent:     Becky ⇒ Cathy : 2                     
+     received: Becky ⇐ Aaron : 1
+
+  ^^ this never happened
+
+Q: What's the relationship between what was the case when we initiated,
+    and the snapshot as actually recorded?
+A: The snapshot can be reconstructed from the global history,
+   by reordering causally independent events.
+
+We can partition the history into:
+  pre-recording events  happens at node i, before node i sees a marker
+  post-recording events happens at node i, after node i sees a marker or initiates
+
+  Aaron ⇒ Becky : 1                      pre
+  Becky ⇒ Cathy : 2                      pre
+  Cathy ⇒ Aaron : 3                      pre
+  **Aaron wants to take a snapshot**
+  Aaron ⇐ Cathy : 3                      post
+  Becky ⇐ Aaron : 1                      pre
+  Cathy ⇐ Becky : 2                      pre
+  **Becky receives marker from Aaron**
+  **Cathy receives marker from Becky**
+  **Aaron record local state**          
+
+Observation (from the Chandy-Lamport paper):
+  pre-recording events can't depend on post-recording events
+Therefore: another ordering that is consistent with the causal order,
+    is to put all pre-events before all post-events.
+
+  Aaron ⇒ Becky : 1                      pre
+  Becky ⇒ Cathy : 2                      pre
+  Cathy ⇒ Aaron : 3                      pre
+  **Aaron wants to take a snapshot**
+  Becky ⇐ Aaron : 1                      pre
+  Cathy ⇐ Becky : 2                      pre
+  *** the snapshot is this state ***
+  Aaron ⇐ Cathy : 3                      post
+  **Becky receives marker from Aaron**
+  **Cathy receives marker from Becky**
+  **Aaron record local state**      

@@ -1,0 +1,190 @@
+This is a rough taxonomy of the old exam questions from 2008 and onwards.
+
+This page will soon be populated with whatever we ended up doing for the lecture.
+
+Algorithm understanding
+08q2 (mutual exclusion)
+08q5 (Ricart-Agrawala)
+09q2 (fast algorithm)
+10q2 (milk)
+11q1 (fast algorithm)
+13q1 (peterson's algorithm)
+13q5 (Lamport clocks)
+14q3 (byzantine generals)
+See the pictures.
+
+17q1 (semaphores)
+Algorithm development
+08q3 (Hamming's problem)
+09q3 (time-server)
+09q4 (dining philosophers)
+10q3 (president and bodyguard)
+11q2 (barriers)
+13q3 (A's and B's)
+14q2 (producer-consumer)
+17q3 (bees and bears)
+What I started doing during the lecture was wrong because I missed
+the "bee wakes up the bear" part.
+
+This solves inaccessibility by having two different phases for the
+      pot, one that only interacts on the bear's channel, and one that
+      only listens on the bee's channel.
+
+=== Bee ===
+while(true)
+  gather();
+  deposit ⇐ ();
+  ack ⇒ x;
+  if(x = ⊤)
+    wake_bear ⇐()
+
+=== Bear ===
+while(true)
+  wake_bear ⇒ _;
+  x = T;
+  while(x)
+    take ⇒ x; // transmit a boolean, T if there's more honey
+
+=== Pot ===
+int honey=0  (# units of honey)
+===========
+while(true)
+  while(honey < k)
+    deposit ⇒ ();
+    ack ⇐ (honey = k);
+    honey++;
+  while(0 < honey)
+    honey--;
+    take ⇐ (honey ≠ 0);
+17q5 (Hamming's problem)
+Proof
+08q4 (Hamming's problem)
+13q4 (L&G, AFR)
+14q4 (L&G, AFR)
+17q4 (L&G, AFR)
+With AFR:
+- introduce local auxiliary variables
+- have a global communication invariant
+  that connects the local auxiliaries.
+
+P_1: auxiliary variable int p
+      "how many messages have I sent on A"
+P_2: auxiliary variable int q
+      "have I received on B"
+P_3: auxiliary variable int r
+      "have I received on A"
+
+s1: p = 0
+l1: p = 1
+t1: p = 1
+s2: q = 0
+l2: q = 1 ∧ x = v
+t2: q = 1
+s3: r = 0
+l3: r = 1
+t3: r = 1 ∧ y = v - 1
+l4: ⊥
+
+I ≡ p = r ∧ q ≤ r
+
+That was AFR.
+We could also use:
+- L&G
+  - there's no need to separate p and r
+    but we have to prove interference freedom
+- Compositional
+  - we can have annotations that directly describe
+    the contents of messages transmitted so far
+
+   s1: h_{A,B} = ε
+   l1: h_{A,B} = ⟨(A,9)⟩
+   t1: h_{A,B} = ⟨(A,9),(B,v)⟩
+   s2: h_{B,C} = ε
+   l2: h_{B,C} = ⟨(B,x)⟩
+   t2: h_{B,C} = ⟨(B,x),(C,x-1)⟩
+   s3: h_{A,C} = ε
+   l3: h_{A,C} = ⟨(A,y)⟩
+   l4: h_{A,C} = ⟨(C,y)⟩
+   t3: h_{A,C} ∈ {⟨(A,_),⟨(C,y)⟩,
+                  ⟨(C,_),⟨(A,y)⟩}
+
+  Fortunately, only one of the two possible histories
+   in t3 is compatible with the other histories
+
+   Q(t1) ∧ Q(t2) ∧ Q(t3)
+   ⇒
+   y = v - 1
+
+- Floyd's
+Monitors
+13q2 (savings account problem)
+17q2 (one-lane bridge)
+First: what kind of precedence order does our monitor implementation have?
+
+  Immediate resumption requirement (IRR) (Brinch-Hansen and Hoare)
+    E < S < W
+  Signal-and-continue (Java style)
+    E = W < S
+
+Let's pick E < S < W            
+
+monitor B
+  condition direction;
+  int current_direct;
+  int cars; // currently on the bridge
+
+  entry(dir) {
+    if(dir ≠ current_direct ∧ cars > 0)
+      waitC(direction)
+    cars++;
+    current_direct = dir;
+  }
+
+  exit(dir) {
+    cars--;
+    if(cars==0)
+      while(¬emptyC(direction))
+        signalC(direction)
+  }
+
+If we were to adapt this solution to E = W < S
+ then we'd need to change the if to while in entry
+Requirements understanding
+08q1 (nested critical sections)
+09q1 (critical section tournament)
+10q1 (nested critical sections)
+21q2 (critical sections vs fairness)
+Show that no two-process mutex solution satisfies eventual entry
+  *without* weak fairness
+
+  P                   Q
+ _______________________________
+ while(true)       while(true)   
+  non-critical   |  non-critical 
+  pre-protocol   |  pre-protocol 
+  critical       |  critical     
+  post-protocol     post-protocol
+
+Observation 1: the pre-protocol must be non-empty.
+  Reason: if not, mutual exclusion fails
+
+Observation 2:
+  if P is in the pre-protocol and Q is in the ncs,
+  Q could spin in the ncs forever, thus violating eventual entry.
+21q2 (Transition diagrams)
+See also the pictures.
+
+One assumption was in my head but not in the text:
+ - acyclic and (finite-state)
+
+Technically, the answer to (a) is still no.
+
+  let the set of states be ℕ ∪ {∞}
+  ∞ is the exit location
+
+  n --A!--> n + 1
+Conceptual understanding
+21q1 (explain terms)
+Cryptographers
+09q5
+10q4

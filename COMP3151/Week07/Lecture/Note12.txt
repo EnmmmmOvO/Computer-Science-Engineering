@@ -1,0 +1,129 @@
+termination = convergence + deadlock freedom
+
+convergence:
+  - every step we take takes us somehow closer to termination
+deadlock-freedom:
+  - there's always someone who can take a step
+
+
+For this lecture, we're interested in proving that programs
+  *always* terminate, i.e. all their behaviours are
+  terminating behaviours
+
+We know from that thought experiment that
+  Alg 2.4 is not (x=50)-convergent
+
+  Alg 2.4 is ⊥-convergent
+
+
+An example of a partial order:
+  the "is a (strict) prefix of" ≺ relation on lists.
+
+  ≺ is irreflexive.
+  It's also asymmetric. [1,2] ≺ [1,2,3]
+
+With partial orders, there may be elements of the domain
+  that are unrelated.
+
+  e.g. [3,2,1]  and [1,2,3]
+
+
+Here's a WFO:
+  (ℕ,<) this is a WFO
+  because
+   (1) (ℕ,<) is a partial order:
+   (2) there are no infinitely descending chains.
+
+         5 > 4 > 2 > 1 > 0 ... stuck!
+
+  (ℝ,<) is this a WFO? no, because it's full of negative numbers
+
+
+         5 > 4 > 0 > -1 > -2
+
+  (ℝ+,<) is not a WFO either :( they're infinitely dense
+
+      1 > 1/2 > 1/4 > 1/8 > ...
+
+Well-founded orders have no infinitely descending chains.
+
+WFOs are relevant to termination:
+  "no infinitely descending chains" ≃ "no infinite executions"
+
+When we sort words in alphabetical order we're using the
+  lexicographic combination of the alphabetical order of the
+  characters
+
+    af <lex ak
+
+  (23,a)  <lex (23, b)
+
+Lexicographic order:
+
+  We have two well-founded sets: (ℕ,<) and (ℕ,<).
+  Then we're using (ℕ×ℕ,<lex)
+
+  (11,15) <lex (12,14)
+
+Componentwise order:
+
+  (11,15) ¬<com (12,14)
+
+
+The "first-element only" order:
+
+  (W1 × W2) where W1 is wellfounded:
+
+  (m1,n1) ≺ (m2,n2) iff m1 ≺ m2
+That's a well-founded order. Suppose you had an infinite descending chain in
+  the first-element only order. Then you also have an infinite chain in W1, by
+  definition. But W1 is wellfounded, so doesn't have any. Contradiction.
+
+
+
+In Example 1, did we actually need to use ℕ × ℕ?
+A: No, we used it for convenience.
+   When your program is deterministic, you can always use (ℕ,<)
+
+                                  s: max(ceil(x),0)*2 + 1
+  l: max(ceil(x),0)*2
+  t: 0
+
+When your WFO is (ℕ,<),
+  such a ranking function is
+  called a *variant*
+
+Intuition (AFR):
+
+  for a communication action,
+      either sender or receiver must descend down their chain
+       (get closer to convergence)
+      the other one either gets closer to convergence, or stays at the same rank.
+
+Q: Why do we only need *one* process to get closer to termination? Why not both?
+A: If you keep driving just one process down the chain, it eventually bottoms out.
+   Once that's done, the other process has to start descending:
+A': because the componentwise combination of two WFO:s is a WFO.
+
+
+Q: how do we prove that the following program is deadlock-free?
+
+  bit turn=0;
+
+  forever do              forever do
+  p0: non-critical     |  q0: non-critical
+  p1: await turn=0     |  q1: await turn=1
+  p2: critical section |  q2: critical section
+  p3: turn:=1          |  q3: turn:=0
+
+We know that this program doesn't satisfy eventual entry.
+But can it deadlock? (Can we reach a state where no transition is possible)
+A: no
+
+Q: How do we prove it?
+A: (1) check how can the processes be blocked
+       for p: turn≠0 ∧ P@p1
+       for q: turn≠1 ∧ Q@q1
+   (2) For deadlock freedom:
+         prove that both of the above can't be simultaneously true
+         easy, turn ∈ {0,1}.

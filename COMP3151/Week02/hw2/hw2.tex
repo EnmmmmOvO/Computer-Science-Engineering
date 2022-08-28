@@ -1,0 +1,114 @@
+\documentclass{article}
+
+\usepackage[printqrbox=false,printhint=false,printanswer=true,printmarkingguide=false,printdraftpaper=false]{unswalgos}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usetikzlibrary{shapes,fit}
+\usepackage{tkz-fct}
+\usepackage{wrapfig}
+\usepackage{subfig}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{booktabs,multicol,multirow}
+\usepackage{wasysym}
+\usepackage{tcolorbox}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOT}{NOT}
+
+\usepackage{xspace}
+
+\fancyfoot[L]{\leftmark}
+\fancyfoot[R]{\rightmark}
+
+\usepackage{listings}
+
+\definecolor{codebrown}{rgb}{0.8,0.44,0.2}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codebrown},
+    keywordstyle=\color{codepurple},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    numbers=left,
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    xleftmargin=0.035\textwidth
+}
+\lstset{style=mystyle}
+
+\usepackage{framed}
+% This enables new paragraphs without indentation
+\usepackage[parfill]{parskip}
+
+\newcommand{\sem}{22T2}
+\newcommand{\semester}{Term 2, 2022}
+\SubjectNo{COMP3151}
+\newcommand{\taskname}{Homework 2}
+\Institution{Jinghan Wang, z5286124} % Replace this with your name and zID
+
+
+\begin{document}
+\begin{Question} [\large\textbf {No skip {[4 marks]}}]
+
+\begin{lstlisting}[language=Promela]
+  byte x = 0;
+
+  active proctype P() {
+    x = 1;
+    x = 2;
+    x = 3;
+  }
+
+  ltl skip_2 { <>(x == 1 until x == 3) }
+\end{lstlisting}
+
+Here we would be surprised if the value of $x$ becomes $3$ immediately after being $1$. Yet Spin verifies that the property $skip\_2$ holds.
+
+Explain why this model nonetheless satisfies $skip\_2$. Also, give an LTL formula that better captures the intent stated above.
+
+\begin{answer}
+Answer: 
+\begin{quote}
+  When several processes are executed at the same time, it is possible.\\\\
+  First, When a process has completed the assignment of $x=2$, it has not started the assignment of $x = 3$. \\
+  Second, some other processes which are just getting started assign $x=1$ and do not start the assignment of $x=2$.\\
+  Third, The processes which are in the same places with first step assign $x=3$.\\\\
+  The change in x is as follows:
+  \begin{center}
+    $x= ...\ 2\ 1\ ...\ 1\ 3\ ...$
+  \end{center}
+
+  LTL formula:
+  \begin{center}
+    $ \diamond\  (x = 2\ \mathcal{U}\ (x = 1 \ \mathcal{U}\ x = 3)) $\\
+  $ \{<> (x == 2)\ until\ (x == 1\ until\ x == 3)\}$
+  \end{center}
+  \begin{quote}
+    \\
+  \end{quote}
+  
+\end{quote}
+\end{answer}
+
+
+\end{Question}
+
+\end{document}

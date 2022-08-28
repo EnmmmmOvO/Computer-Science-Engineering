@@ -1,0 +1,179 @@
+Concurrent programs
+- partial orders of events
+  (event: e.g. a line of code, machine instruction, ...
+          something we can execute atomically)
+- an interleaving: lining up the events in a row
+  in a manner that's consistent with the partial order
+   "some scheduling of the events that might happen when we run the program"
+
+States (Σ the set of all states)
+
+An interleaving gives rise to a *behaviour*
+
+Behaviour is an infinite sequence of states
+  Σ^ω  the set of all behaviours
+
+  The initial state,
+  the state after the first event,
+  the state after the second event,      
+  ....
+
+A *property* is a set of behaviours.
+ Intuitively: a property is what you want to happen
+ when you run a concurrent program.
+
+We say that a program P satisfies a property A if
+
+  ⟦P⟧ ⊆ A
+
+  ⟦P⟧ denotes the semantics of P
+   aka all possible behaviours of P
+
+
+Uncountable implies that it's infinite
+
+Uncountable means there's no bijection between the set of properties
+  and the set of natural numbers
+
+Suppose you tried to enumerate the behaviour:
+ you tried  to assign a natural number to every behaviour.
+
+
+
+σ = ♥ ♠ ♥ ♠ ♥ ♠ ♥ ♥ ♥ ♥ ...
+
+σ|3 = ♥ ♠ ♥
+
+
+(σ is a variable pronounced sigma
+ σ' is also a variable pronounced sigma-prime)
+
+
+cl(A)   for limit closure of A
+
+Our set of states Σ is ℕ (the natural numbers)
+
+A = { 0 0 0 0 ...,
+      0 1 1 1 ...,
+      0 1 2 2 ...,
+      0 1 2 3 3 3 3 ...,
+      .... }
+
+A is the set of all sequences of natural numbers that
+- start at zero
+
+- increment one number per state, until they reach some ceiling and
+  stay there forever
+
+What is the cl(A)?
+- The set of all behaviours that, if we observe them for a finite amount of time,
+  look indistinguishable from a behaviour in A.
+
+One behaviour in cl(A) is:
+  0 0 0 0 0 0 0 ....
+
+  (as an aside: A ⊆ cl(A))
+
+cl(A) = A ∪ {"all the natural numbers enumerated in order"}
+
+cl(∅) = ∅
+
+If A is not dense,
+  what's bigger? Σ^ω or A?
+A: Σ^ω is *always* bigger. By definition, it's the set of all behaviours.
+
+
+Take as definitions:
+ (1) A safety property is (by def) a limit-closed set
+ (1) A liveness property is (by def) a dense set
+
+ B^C "the set of everything in Σ^ω except B"
+
+ A - B   =  A ∩ B^C (1)
+
+ Σ^ω ∩ B = B
+
+ De Morgan:
+  (A ∩ B)^C   =   A^C ∪ B^C
+
+ cl(P) ∩  Σ^ω - (cl(P) - P)     
+ = (1)
+ cl(P) ∩  Σ^ω ∩ (cl(P) - P)^C
+ = (1)
+ cl(P) ∩  Σ^ω ∩ (cl(P) ∩ P^C)^C
+ = (De Morgan)
+ cl(P) ∩  Σ^ω ∩ (cl(P)^C  ∪ P^C^C)
+ = (double complement)
+ cl(P) ∩  Σ^ω ∩ (cl(P)^C  ∪ P)
+ = (identity)
+ cl(P) ∩  (cl(P)^C  ∪ P)
+ = (distributivity)
+ (cl(P) ∩ cl(P)^C)  ∪  (cl(P) ∩ P)
+ = (complementation)
+ ∅  ∪  (cl(P) ∩ P)
+ = (identity)
+ cl(P) ∩ P
+ = (because P ⊆ cl(P))
+ P
+
+
+safety: s2 will not exist before s1 liveness: s1 will eventually
+transition to s2?
+
+safety: memory does not go over 100MB liveness: memory will allocate at least than 100MB
+
+
+safety: the program never returns -1 after seeing an invalid input
+liveness: after seeing an invalid input, the program eventually returns something
+
+
+ ⊧  "models"  "entails"
+
+ V ⊧ φ
+ "the valuation V models the formula φ"
+
+ In a world where the set of true atomic propositions is V,
+ the formula φ is true.
+
+ {x,z,å} ⊧ x ∧ y        <-- is that a valid judgement? No, because y doesn't hold
+                            in our world
+
+ {x,y} ⊧ x ∧ y   <-- that's a valid judgement
+
+
+ ◯φ   "in the next state, φ holds"
+
+ φ 𝒰 ψ   "φ will hold for a finite amount of states; then, ψ will hold after that"
+"phi until psi"
+
+In the initial state, is this true?
+
+ ◯(◯♥) "in the next next state,
+        hearts is true"
+
+
+In propositional logic, the worlds (aka models)
+  were just sets of propositional atoms.
+
+In LTL, the worlds are behaviours.
+
+(Until this point, σ|n to denote the finite prefix
+ of σ of length n.)
+
+Now, σ|n to denote the *suffix* of σ that you obtain
+  by dropping the first n states.
+
+If my behaviour σ is the sequence of ℕs.
+
+  σ|2   =  2 3 4 5 6 7 ...
+
+
+ We can define ◇P  "eventually, P"
+
+ as
+
+   ◇P = ⊤ 𝒰 P
+
+   □P "in every future state, P holds"
+
+   □P = ¬(◇(¬P))

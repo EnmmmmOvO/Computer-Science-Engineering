@@ -1,0 +1,93 @@
+Locks:
+  - lock()  acquire()      --- pre-protocol
+    unlock() release()     --- post-protocol
+
+  Locks: only one process can claim the lock at one time.
+
+Semaphores:
+  - multiple process can pass through a semaphore at the same time.
+
+  Binary semaphores: (v,L)
+   - v number of free process slots, free tickets
+   - L processes on waiting list
+
+  For binary semaphores, v is always either 0 or 1.
+
+  A lock is a special case of a semaphore, namely a binary semaphore.
+
+            wait        signal
+acronyms    P           V
+dutch       passering   vrijgaven
+java        acquire     release
+
+
+Difference:
+- when we signal, we unblocke someone from the waiting set.
+  But: who gets unblocked? And to where do they get unblocked?
+
+busy-wait semaphores
+aka very weak semaphores
+- You're unblocked to the state *before* the wait.
+  You have to try another wait.
+  This means you can be preempted by people who weren't
+  on the waiting list when the signal came.
+- Who gets unblocked? Any member of L.
+
+weak semaphores
+- When a signal happens, one process, any process, is unblocked.
+- You're released to the state *after* the wait.
+  That is: you're released into the "critical section",
+   and don't have to retry the wait.
+
+strong semaphores
+- Processes are released in FIFO order.
+- You're released to the state *after* the wait.
+  That is: you're released into the "critical section",
+   and don't have to retry the wait.
+
+
+Q: What impact does weak vs. busy-wait have on eventual entry?
+   (for 2 processes)
+
+    Busy-wait (aka very weak) doesn't guarantee eventual entry.
+    Weak semaphores do guarantee eventual entry.
+
+Q: What about for 3 or more procs?
+
+    Weak semaphores don't guarantee eventual entry.
+    If you're unlucky, every signal happens when you're sharing the
+     waiting room with someone else, who push ahead.
+Q: but what about under weak fairness?
+    Still no :(
+
+    Weak fairness guarantees that if an action is *always* enabled,
+    then it will eventually happen.
+    (If a process is always not blocked, it will eventually
+     make progress).
+    But: you're not *always* unblocked.
+    You're *always eventually* unblocked.
+
+    Suppose p1 is on the waiting list.
+      p2 and p3 are forever taking turns entering the CS.
+    p1 will:
+    - sit on the wait list (be blocked)
+    - be unblocked whenever anyone's about to execute the pre-protocol.
+      (unblocked: you could possibly be chosen to go ahead)
+    - in the next state, you're blocked again.
+    - repeat ad infinitum
+
+Q: what about under strong fairness?
+A: Yes, strong fairness is enough (see above).
+
+
+(1) v = 1 + #signal(S) - #wait(S)
+(2) v ≥ 0
+(3) #CS = #wait(S) - #signal(S)
+
+Substitute (1) into (2)
+
+1 + #signal(S) - #wait(S) ≥ 0
+(add and subtract on both sides)
+1 ≥ #wait(s) - #signal(S) = #CS
+
+#CS ≤ 1

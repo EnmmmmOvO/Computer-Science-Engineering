@@ -1,0 +1,56 @@
+Week02 Wednesday
+
+Notes
+-- hw1 extended
+-- hw2, assignment 0
+
+
+Built-in operators
+
+- Normal propositional logic operators
+
+  ¬, ∧, ...
+
+- Temporal operators
+
+ ◯φ   "in the next state, φ holds"
+ φ 𝒰 ψ "φ holds for (at least) finitely
+        many states; then, ψ holds"
+ ◇φ "eventually, φ will hold"
+ □φ "φ always holds"
+
+ρ|3 "the timeline ρ without the first 3 states"
+
+◇□(♥ ∧ ♠) "eventually, ♥ ∧ ♠ is always true"
+
+
+
+ρ
+
+   ♥    -   ♠   ♠    ♠ 
+---|----|---|---|----|---   ....
+
+The above timeline does *not* satisfy
+  ρ ⊧ □(♥ 𝒰 ♠)
+
+If we replace heart #1 with nothing,
+is it satisfied?
+ A: no
+
+
+  ♥ 𝒰 ♠
+  For some n:
+  - ♥ must be true in the next n states
+  - in the n:th state, ♠ must be true
+
+
+ρ
+
+   ♥    -   ♠   ♥    ♥
+---|----|---|---|----|---   ....
+
+The above timeline does *not* satisfy
+  ρ ⊧ □(♥ 𝒰 ♠)
+
+
+partial order reduction (possibly in comp3153)

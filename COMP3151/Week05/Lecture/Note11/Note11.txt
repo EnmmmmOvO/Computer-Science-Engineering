@@ -1,0 +1,138 @@
+We've seen two examples of *binary* closed product
+  binary: the closed product of two transition systems
+
+In the homework, there's a ternary product (a product of three)
+
+Unary closed product. (closed product of one)
+
+
+Claim: the unary closed product of P is just P.
+A: No. I lied! It's not necessarily P.
+
+  The unary closed product of P is:
+    P, but with all I/O transition removed.
+
+
+Simplistic method:
+- Make local assertion networks
+- Show that all *internal* transitions preserve the truth of the annotations
+- Show that all *matching pairs* of I/O transitions
+    preserve the truth of the annotation.
+- No interference freedom check (because no shared variables)!
+
+
+A proof method is *sound* if
+- everything we can prove with the method is actually true
+
+A proof method is *complete* if
+- everything that is true, could be proven with the proof method
+
+An unsound proof method: engineer's induction
+  To prove ∀x∈ℕ. P(x):
+  it suffices to check:
+    P(0), P(1), P(2)
+
+In our context, incomplete means:
+  there are valid Hoare triples that we can't prove with the simplistic method.
+
+
+
+Current counter value:
+
+  [0 , 255]
+
+The reader needs to update to [1, 0]
+At the same time, someone reads.
+Reader reads from left to right.
+Updater updates from left to right.
+
+1 Reader reads 0 in first byte
+2 Writer writes: [1, 255]
+3 Writer writes: [1, 0]
+4 Reader reads 0 on th second byte
+
+End result: reader read [0,0]
+But that's too low: we need a result between [0,255] and [1,0]
+
+Reader should obtain a value:
+- Above-or-eq the most recent complete write
+- Below-or-eq the most recent initiated write
+
+1 Writer writes: [1, 255]
+2 Reader somehow reads [0,255] from whatever auxiliary state
+3 Writer writes: [1, 0]
+Reader returns [0,255]
+
+Yes that's fine, because [0,255] is above-eq most recent *complete* write
+
+
+== Auxiliary variables, aka ghost state
+
+A variable is auxiliary if:
+- it's never mentioned in guards
+- it's never sent or received from/to
+- no values flow from auxiliary to non-auxiliary variables
+
+State that doesn't affect the execution of the program,
+ it's just for marking.
+
+We've seen one example of ghost state before:
+- location annotations Q@q1
+
+
+Can we use Levin & Gries to prove mutual exclusion for the HW5
+algorithm?
+
+  We need to find an assertion network Q such that:
+
+  -Q meets all the L&G obligations
+  -Mutual exclusion:  Q(x2) ∧ Q(y2) ⇒ ⊥
+
+  Let's have ghost state updates:
+   z1 → z2   with  k:=3  (z doesn't hold the lock)
+   x2 → x1   with  k:=1  (x doesn't hold the lock)
+   y2 → y1   with  k:=2  (y doesn't hold the lock)
+
+  An assertion network:
+   Q(x1) = k ≠ 1
+   Q(x2) = ⊤
+   Q(y1) = k ≠ 2
+   Q(y2) = ⊤                
+   Q(z2) = ⊤
+   Q(z1) = k ≠ 3
+
+  This is the strongest (inductive) assertion network we can make.
+  But, it doesn't satisfy mutual exclusion:
+
+   Q(x2) ∧ Q(y2) ⇒ ...
+
+
+With AFR (with local ghost state and global invariant)
+
+   x1 → x2   with  k1:=1   (k1 = 1 means x is holding the lock)
+   y1 → y2   with  k2:=1
+   z2 → z1   with  k3:=1
+   x2 → x1   with  k1:=0
+   y2 → y1   with  k2:=0
+   z1 → z2   with  k3:=0
+
+Global communication invariant:
+  I =   (k1 + k2 + k3 = 1) ∧ 0 ≤ k1,k2,k3
+
+
+Assertion network (L&G style) for producer-filter-consumer:
+
+  Q(p1) =  i = msg
+  Q(p2) =  i+1 = msg
+  Q(f1) =  fwd ≤ msg ∧ ∀j. fwd≤j<msg. ¬P(f(j))
+  Q(f2) =  fwd < msg ∧ ∀j. fwd≤j<msg-1. ¬P(f(j))
+           ∧ x = f(msg-1)
+  Q(f3) =  fwd < msg ∧ ∀j. fwd≤j<msg-1. ¬P(f(j))
+           ∧ x = f(msg-1) ∧ P(x)
+  Q(c1) =  z = Σ_{j | 0 ≤ j < fwd ∧ P(j)} f(j)
+  Q(c2) =  z+y = Σ_{j | 0 ≤ j < fwd ∧ P(j)} f(j)
+
+Q(p1) ∧ Q(f1) ∧ Q(c1)
+= i = msg ∧ fwd ≤ msg ∧ ∀j. fwd≤j<msg. ¬P(f(j)) ∧
+  z = Σ_{j | 0 ≤ j < fwd ∧ P(j)} f(j)
+⇒ z = Σ_{j | 0 ≤ j < i ∧ P(j)} f(j)

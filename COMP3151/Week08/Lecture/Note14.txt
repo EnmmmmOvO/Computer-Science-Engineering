@@ -1,0 +1,194 @@
+   a*(b+c)  = a*b + a*c (distributive law)
+
+
+   P||Q = Q||P (commutativity of parallel composition)
+
+
+   spec = impl
+   spec ≥ impl
+
+
+   (depending on what = means)
+   equal processes satisfy the same properties
+
+   in order to prove {ϕ} P {ψ}
+    suppose P = Q is provable with process algebra
+
+    {ϕ} Q {ψ}
+    and get it for P for free (by substitution of equals)
+
+
+    a.(P||Q)     "the process which performs an a, then
+                  behaves as the parallel composition of P and Q"
+
+
+If you write
+
+    a.b.P       this means    a.(b.P)
+
+    .  can't associate to the left
+
+    . : label × process -> process
+
+
+When we wrote tick
+
+we really meant  tick.STOP     (if you prefer tick.0)
+
+   STOP (or 0) is a process that does nothing.
+     it has no transitions enabled.
+
+   It represents deadlock or termination.
+    (intution: they are observationally equivalent: we can't interact with them)
+
+
+  CLOCK1 = tick.STOP
+
+  CLOCK∞ = tick.CLOCK∞
+
+  CLOCK2∞ = tick.tock.CLOCK2∞
+
+
+P + Q is the process in which:
+
+  - all initial actions in both P and Q are enabled initially.
+  - as soon as action from P has happened, we can't do Q
+  - vice versa
+
+The choice between P and Q gets resolved as soon as either
+P *or* Q performs an action.
+
+Then P + STOP = P because STOP doesn't perform any actions.
+
+Question: what is a transition?
+
+Previously, we've had structured transitions:
+
+  P -- b; f --> P'
+
+In CCS, we don't have guards and state updates.
+Instead, labels are just arbitrary meaningless symbols
+chosen from an alphabet Σ.
+
+Intution:
+
+  P -- a --> P'   a denotes an atomic action, aka
+                  a unit of synchronisation
+
+For this lecture, we're not using transition diagrams.
+
+We're using *labelled transition systems*
+
+An LTS = (S,Σ,→)
+  S is a set of states
+  Σ is a set of labels
+  → ⊆ S × Σ × S
+
+The behaviours of both VM3 and VM4 are
+
+  {in50c⬝outCoke,in50c⬝outPepsi}
+
+
+  {a⬝b}
+  a.b.0
+= (identity of +: (b.0) + 0 = b.0)
+  a.((b.0) + 0)
+= (distributivity)
+  a.b.0 + a.0
+  {a⬝b,a}
+
+We were able to do some rewrite steps that added a behaviour(!)
+But, the new behaviour is a prefix of a behaviour we already have.
+
+If P = Q, and P has a behaviour b not in Q,
+  then b is a prefix of some behaviour in Q.
+
+If we accept distributivity,
+  equal processes satisfy the same safety properties
+
+
+Two processes P and Q are *partial trace equivalent* if:
+  every trace (aka behaviour) that P can do,
+    is a prefix of a trace that Q can do,
+      and vice versa.
+
+  a.b.0        = a.0 + a.b.0
+ {a⬝b}           {a, a⬝b}
+
+Q: why is safety enough for Hoare triples
+A: A (partial correctness) Hoare triple is a safety property
+
+  {φ} P {Ψ}
+  "if φ is true in the initial state, and if P terminates, the ψ holds
+   in the final state"
+  equivalent:
+  "if φ is true initially, P never terminates in a state satisfying ¬Ψ"
+
+Syntax of processes:
+
+  P := STOP      "do nothing"
+     | a.P       "do a then proceed as P"
+     | P + Q     "non-deterministic choice between P and Q"
+     | P || Q    "do P in parallel with Q", P|Q
+
+Fun fact though: you don't actually need ||.
+Every finite process is expressible with just prefixing, stop and +.
+Finite = recursion-free = the transition system is a DAG.
+
+
+CLOCKs = (tick.CLOCKs) + tock
+
+CLOCKs = (tick.CLOCKs) + tick <-- this way, we'll always do 1 tick
+
+We generally distinguish a special action called τ (silent action)
+τ is an action that is unobservable.
+
+CLOCKs = (tick.CLOCKs) + τ
+
+Is τ a label?
+  Yes, it's a label, but it's no something we can synchronise on.
+
+CLOCKt = tick.CLOCKt + tock.CLOCKt
+
+CLOCK' = tick.CLOCK'
+CLOCK'' = tock.CLOCK''
+CLOCKtt = CLOCK' + CLOCK''
+
+
+tick.beep | tock
+=
+tick.(beep.tock + tock.beep)
++ tock.(beep.tick + tick.beep)
+
+CCLOCK = CLOCKt
+
+
+u.a | ū.a
+=
+u.(a | ū.a)  + ū.(u.a | a) + τ.(a|a)
+
+
+
+u | ū = u.ū + ū.u + τ
+
+(u | ū)\u = τ
+
+(a.P)\a = STOP
+STOP\a = STOP
+
+(P | Q)\a = (P\a) | Q    if a does not occur in Q
+  (scope extension)
+
+(P + Q)\a = P\a + Q\a
+
+
+  stick        cobblestone
+ _________________________
+         lever
+
+Bisimilarity is the *largest* relation such that:
+   P is bisimilar to Q (written P ≃ Q) if:
+    ∀P',a.
+     P --a-> P', there exists Q' such that Q --a--> Q' and P' ≃ Q'
+    ∀Q',a.
+     Q --a-> Q', there exists P' such that P --a--> P' and P' ≃ Q'

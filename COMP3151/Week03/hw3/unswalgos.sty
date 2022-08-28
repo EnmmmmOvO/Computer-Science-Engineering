@@ -1,0 +1,213 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{unswalgos}[2019/12/23 Custom Package]
+% Author: Dr Abdallah Saffidine
+
+\RequirePackage{kvoptions}
+
+
+\newcommand{\SubjectNo}[1]{\def\@subjectno{#1}}
+\newcommand{\SubjectName}[1]{\def\@subjectname{#1}}
+\newcommand{\ExamType}[1]{\def\@examtype{#1}}
+\newcommand{\ExamPeriod}[1]{\def\@examperiod{#1}}
+\newcommand{\Questions}[1]{\def\@questions{#1}}
+\newcommand{\Marks}[1]{\def\@marks{#1}}
+\newcommand{\TimeAllowed}[1]{\def\@timeallowed{#1}}
+\newcommand{\ReadingTime}[1]{\def\@readingtime{#1}}
+\newcommand{\Institution}[1]{\def\@university{#1}}
+\long\def\Other#1{\def\@other{#1}}
+
+\usepackage[margin=25mm]{geometry}
+
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{15pt}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+
+\usepackage{background}
+\usepackage{graphicx}
+
+\usepackage[shortlabels,inline]{enumitem}
+\setenumerate[0]{label=\alph*),itemjoin = \qquad}
+\newlist{itemmultiplechoice}{enumerate}{10}
+\setlist[itemmultiplechoice]{label*=$\square$}
+\newlist{itemmultiplechoice*}{enumerate*}{10}
+\setlist[itemmultiplechoice*]{label*=$\square$,itemjoin = \qquad\qquad}
+
+\newlist{multichoice}{enumerate}{10}
+\setlist[multichoice]{label*=\textbf{[\Alph*]},itemsep=1mm,parsep=0mm,topsep=2mm}
+\newlist{multichoice*}{enumerate*}{10}
+\setlist[multichoice*]{label*=\textbf{[\Alph*]},itemjoin = \qquad\qquad}
+
+\usepackage{tikz}
+\newcommand{\qrbox}{\begin{tikzpicture} \draw (0, 0) rectangle (3, 3); \end{tikzpicture}}
+
+\usepackage{changepage}
+
+\backgroundsetup{
+  scale=1,
+  color=black,
+  opacity=1,
+  angle=0,
+  position=current page.south,
+  vshift=30mm,
+  contents={\printqrbox
+  }
+}
+
+\newcommand{\sparepage}[2]{
+\newpage
+\begin{center}
+#1
+\vfill
+#2
+\end{center}
+}
+
+%% Exam environment
+\newenvironment{exam}{%
+\begin{titlepage}
+\null
+\vfill
+\noindent
+\begin{minipage}{30mm}
+\includegraphics[width=\linewidth]{unsw-bw-logo.jpg}
+\end{minipage}
+\hspace{3mm}\begin{minipage}{\linewidth-30mm}
+\bf\Large Computer Science and Engineering\\
+{\Large \@subjectno~--- \large \@subjectname}\\
+{\bf\large \@examtype~\@examperiod}
+\end{minipage}
+\vspace{5mm}
+\begin{itemize}[itemsep=0mm]
+\item Time allowed: \@timeallowed
+\item Reading Time: \@readingtime
+\item This examination paper has \pageref{LastPage} pages.
+\item Total number of questions: \@questions
+\item Total marks available: \@marks
+\end{itemize}
+\begin{itemize}[itemsep=0mm]
+\OtherInstructions
+%\@other
+\end{itemize}
+\thispagestyle{fancy}
+\end{titlepage}
+\setcounter{page}{2}
+}{
+\sparepage{Spare page.}{END OF EXAM}
+}
+
+%% The Question environment
+\newcounter{question}
+\newcounter{subquestion}[question]
+\renewcommand{\thesubquestion}{\thequestion.\arabic{subquestion}}
+\newcommand{\@question}[1]{\refstepcounter{question}
+\subsection*{Question \thequestion \quad\textnormal{\textit{\small #1}}}}
+\newenvironment{Question*}[1][\unskip]{\newpage\@question{#1}}{}
+\newenvironment{Question}[1][\unskip]{\@question{#1}}{}
+
+\newcommand{\@subquestion}{\refstepcounter{subquestion}
+\paragraph*{\thesubquestion}}
+\newenvironment{Subquestion*}{\newpage\@subquestion}{}
+\newenvironment{Subquestion}{\@subquestion}{}
+
+
+
+\setlist[enumerate,1]{label={\sf[\Alph*]},ref={\sf[\Alph*]}}
+\setlist[enumerate,2]{label={\sf(\roman*)},ref={\sf(\roman*)}}
+
+\usepackage[tikz]{mdframed}
+\usepackage{xcolor,comment}
+\newmdenv[backgroundcolor=answerboxcolor,roundcorner=12pt,linewidth=2pt]{answerbox}
+\newmdenv[backgroundcolor=draftboxcolor,roundcorner=12pt,linewidth=2pt]{draftbox}
+\newmdenv[backgroundcolor=hintboxcolor]{hintbox}
+\newmdenv[backgroundcolor=markingboxcolor]{markingbox}
+
+\colorlet{answerboxcolor}{blue!20}
+\colorlet{hintboxcolor}{green!20}
+\colorlet{draftboxcolor}{yellow!20}
+\colorlet{markingboxcolor}{red!20}
+
+\newcommand{\MyCloseAndInputCutFile}{\FinalizeCutFile\immediate\closeout\CommentStream}
+\newcommand{\myexcludecomment}[1]{\message{Excluding comment '#1'}%
+    \csarg\def{#1}{\endgroup\begingroup\DefaultCutFileName \def\ThisComment####1{}\ProcessComment{#1}}%
+    \csarg\def{After#1Comment}{\MyCloseAndInputCutFile \endgroup}
+    \CommentEndDef{#1}}
+\newcommand{\myspecialcomment}[3]{\message{Special comment '#1'}%
+    \csarg\def{#1}{\endgroup\DefaultCutFileName #2\relax \SetUpCutFile\ProcessComment{#1}}%
+    \csarg\def{After#1Comment}{\MyCloseAndInputCutFile\input{\CommentCutFile}\relax #3}%
+    \CommentEndDef{#1}}
+
+\DeclareBoolOption[true]{printanswer}
+\DeclareBoolOption[true]{printdraftpaper}
+\DeclareBoolOption[true]{printhint}
+\DeclareBoolOption[true]{printmarkingguide}
+
+\DeclareBoolOption[true]{printqrbox}
+
+\ProcessKeyvalOptions*
+
+\ifunswalgos@printanswer \myspecialcomment{answer}{\begin{answerbox}}{\end{answerbox}} \myexcludecomment{makespace}
+\else \myexcludecomment{answer} \myspecialcomment{makespace}{}{}\fi
+\ifunswalgos@printdraftpaper \myspecialcomment{draftpaper}{\begin{draftbox}}{\end{draftbox}}
+\else \myexcludecomment{draftpaper} \fi
+\ifunswalgos@printhint \myspecialcomment{hint}{\begin{hintbox}}{\end{hintbox}}
+\else \myexcludecomment{hint} \fi
+\ifunswalgos@printmarkingguide \myspecialcomment{markingguide}{\begin{markingbox}}{\end{markingbox}}
+\else \myexcludecomment{markingguide} \fi
+
+\ifunswalgos@printqrbox \newcommand{\printqrbox}{\checkoddpage\ifoddpage \hspace{140mm}\qrbox \else \qrbox\hspace{140mm} \fi}
+\else \newcommand{\printqrbox}{} \fi
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\usepackage[noend,noline]{algorithm2e}
+\DontPrintSemicolon
+
+\usepackage{amsmath,amsthm,amssymb,amsfonts} % ams math things
+\usepackage{latexsym}
+\usepackage{mathtools}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{changepage}
+\usepackage[colorlinks=true,citecolor=black,linkcolor=black,urlcolor=blue]{hyperref}
+
+\usepackage{float}
+\restylefloat{table}
+
+% margins
+\setlength{\textheight}{225mm} \setlength{\textwidth}{150mm} \setlength{\oddsidemargin}{6.6mm} \setlength{\evensidemargin}{6.6mm} \setlength{\topmargin}{-5.4mm}
+
+% header and footer stuff
+\pagestyle{fancy}
+
+\lhead{\textsl{\@subjectno\ \sem\ ---\ \taskname}}
+\rhead{\textsl{(\@university)}}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.0pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+\usepackage{comment}
+\usepackage[color]{changebar}
+
+% equation numbering
+\numberwithin{equation}{section}
+
+% theorem stuff
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{definition}[thm]{Definition}
+\newtheorem{cor}[thm]{Corollary}
+
+% paired delimeter
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\newcommand{\countmarks}[1]{\noindent\textbf{[#1 marks]}}

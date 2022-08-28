@@ -1,0 +1,17 @@
+signal for semaphores:
+  - wake someone up, if someone is waiting
+  - increment v if noone is waiting
+
+signal for monitors:
+  - wake someone up, if someone is waiting
+  - do nothing if noone is waiting
+
+
+E: Entering process
+W: Waiting processes
+S: Signalling process
+
+ In Java:
+    E = W < S
+ In the Brinch Hansen cinematic universe:
+    E < S < W

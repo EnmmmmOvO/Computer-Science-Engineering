@@ -1,0 +1,20 @@
+Distributed mutual exclusion taxonomy:
+- Permission-based (Ricart-Agrawala)
+  - I can enter the CS once I have received
+    explicit permission to do so from everybody
+- Token-based (also Ricart-Agrawala)
+  - There's a single token floating around;
+  - Whoever holds the token gets to be in the CS.
+- Quorum-based
+  - A variant of permission-based solutions.
+  - Receive permission from a *quorum* of nodes,
+    instead of every node.
+    Quorum = a subset of the nodes, such that
+             all quorums overlap in some way.
+
+In Algorithm 2.1: explicit "while true" around the
+                  pseudocode
+
+
+Algorithm 2.3: note that sendToken is
+  not a stand-alone process, it is a subroutine.

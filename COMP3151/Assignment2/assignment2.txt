@@ -1,0 +1,5 @@
+https://youtu.be/L7bU6fuKBC0
+
+Reference List
+ICS '88: Proceedings of the 2nd international conference on SupercomputingJune 1988 Pages 621–626https://doi.org/10.1145/55364.55425
+Leslie Lamport, A New Solution of Dijkstra's Concurrent Programming Problem, Communications of the ACM 17(8):453-455 (August 1974).

@@ -1,0 +1,199 @@
+first: p reads nq (currently 0)
+then: q reads np (currently 0)
+q writes 1 to nq
+q enters the CS
+p writes 1 to np
+p at the await check:
+  1 = 0 ∨ 1 ≤ 1
+p enters the CS
+
+
+Idea:
+  once you're past
+   p6: await choosing[j] = false
+  one of two things will hold:
+  - either, j has already chosen
+            a ticket number
+  - or: they're somewhere in the
+    non-CS, and may choose a ticket
+    number in future.
+    if they do: they will read
+    your current ticket number
+    therefore: if they choose
+     a ticket number, it'll be
+     at least 1 bigger than yours
+
+
+Q: while you're going through max,
+   they've already read yours before
+   you update it to your current #.
+A: yes they can; if so, they might
+   get a smaller ticket number.
+   but the  await on p6 makes sure
+   that you know their ticket number
+   before you decide whether you
+   go before them or not.
+
+Lamport's objection:
+  Both Peterson and Dekker
+  assume that reads and writes
+  to single memory locations are
+  already atomic.
+
+  Arguably: a version of the
+  critical section problem has already
+  been solved on the hardware level.
+
+
+Suppose that process i is
+  executing line p7 to read
+  number[j]
+Meanwhile:
+  j is writing its ticket number
+  to number[j]
+In Lamport's setting,
+  process i can read any value.
+
+#1: we read a ticket number that's
+    too low            
+    we don't care: we'll just wait
+                   a bit longer
+
+#1: we read a ticket number that's
+    too high
+    if so: because we're past
+      await choosing[j] = false
+    therefore: since they're
+    still choosing, they must have
+    started choosing after we
+    wrote our ticket number
+    therefore: they've read our
+    ticket number, and
+    they'll end up with a ticket
+    number larger  than ours anyway
+
+
+Writings of Leslie Lamport:
+
+-  https://lamport.azurewebsites.net/pubs/pubs.html    
+
+Q: Why is the algorithm 1.6 almost correct?
+
+p1p2q1q2
+- gate1 = q
+  gate2 = 0
+  p@p3
+  q@q3
+p3p4
+- gate1 = q
+  gate2 = p
+p5
+- p is in the CS
+q3
+- gate1 = q
+  gate2 = q
+q4
+- q is in the CS
+
+For the generalisation to n processes,
+  see Lamport's paper
+
+
+Let's try to find a counterexample to
+  eventual entry
+
+p1q1q2q3p2q4q6
+p1q1q2q3p2q4q6
+p1q1q2q3p2q4q6
+p1q1q2q3p2q4q6
+here:
+- q enters the CS infinitely often
+- p writes its name on the first
+  sign infinitely often,
+   it's always instantly overwritten
+- p reads second sign infinitely
+  often, but always right after
+  q wrote its name there
+
+hence:
+ a counterexample to eventual
+ entry under weak fairness.
+
+the algorithm *does* satisfy a
+ related property, sometimes
+ called deadlock freedom.
+ (not to be confused w/ deadlock
+  freedom in the sense of
+  "noone can do anything")
+
+livelock:
+  we don't have deadlock,
+  there's always *something*
+  that can happen,
+  but what happens happens not
+  to be productive.
+
+Livelock freedom:
+  □(p@p1 ⇒ ◇(p@cs ∨ q@cs))
+
+
+Q: does the fast algorithm satisfies the property mentioned in the
+first slide? There are still n awaits
+
+A: yes.
+   O(1) pre-protocol in the absence of contention.
+   Contention means: more than one process in the preprotocol at a  time
+   You won't hit the awaits in the absence of contention.
+
+
+Waiting room door:
+- every process can "hold the door"
+  if a single process wants the door to be closed, it's closed.
+  the door is open if nobody is holding it.
+
+
+flag[i] = 0
+ - I'm in the non-CS
+flag[i] = 1
+ - I want to enter the waiting room
+   I'm in the process of trying
+   to enter the waiting room.
+flag[i] = 2
+ - I'm already in the waiting room.
+   But I'm not closing the door.
+flag[i] = 3
+ - I just entered the waiting room,
+   and I'm holder the door closed.
+flag[i] = 4
+ - I'm in the waiting room
+     (or the CS)              
+   I'm holding the door closed.
+   I will make sure the door
+   stays closed until the waiting
+   room empties.
+
+Intuition:
+ the await at line p3 represents
+ the door to the waiting room.
+
+Intention:
+ await ∀j. flag[j] < 3
+means
+ await flag[0] < 3
+ await flag[1] < 3
+ ...
+ await flag[n-1] < 3
+
+Depending on what order you run these
+sequentialised awaits in,
+the algorithm is either correct or not.
+
+Both XC and TS solutions sacrifice
+  eventual entry.
+  they have mutex, livelock free
+
+In TS solution.
+ If there's contention,
+ we're spinning on a TS.
+ that means we're flooding the bus with
+ writes

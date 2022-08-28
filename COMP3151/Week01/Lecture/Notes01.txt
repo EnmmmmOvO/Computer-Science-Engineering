@@ -1,0 +1,134 @@
+class Counter extends Thread {
+    static int n = 0;
+
+    public void run() {
+        for(int i = 0; i<100000; i++) {
+            int temp = n;
+            temp = temp + 1;
+            n = temp;
+        }
+    }
+}
+
+public class Count {
+
+    public static void main(String[] args)
+        throws InterruptedException {
+        Counter c1 = new Counter();
+        Counter c2 = new Counter();        
+        c1.start(); // invoke run() in a new thread
+        c2.start();
+        c1.join(); // wait until c1 is done
+        c2.join(); // wait until c1 is done
+        System.out.println("The value of n is: " + Counter.n);
+    }
+}
+
+
+⊤ (truth) to model "different", heads
+⊥ (falsity) to model "equal", tail
+
+a1  : "announcement 1": what C1 said publicly
+a2  : ..
+a3  : ..
+
+∧ -  and
+∨ -  or
+⇒ -  implies
+⊕ -  exclusive or     
+
+Claim:
+  a1 ⊕ a2 ⊕ a3 = ⊤     iff   there's an odd number of diffs
+
+  ⊥ ⊕ ⊥ ⊕ ⊥ = ⊥ ⊕ ⊥ = ⊥ <-- for no diffs
+  ⊤ ⊕ ⊥ ⊕ ⊥ = ⊤ ⊕ ⊥ = ⊤ <-- for one diff
+
+Let's start with the "NSA paid" case
+
+t1  : count toss result of C1
+t2  : ..
+t3  : ..
+
+We can define a1 in terms of the tosses
+  t1 ⊕ t3
+
+  a1 ⊕ a2 ⊕ a3
+  =
+  t1 ⊕ t3 ⊕ t2 ⊕ t1 ⊕ t3 ⊕ t2
+  = (associativity and commutativity of ⊕)
+  (t1 ⊕ t2 ⊕ t3) ⊕ (t1 ⊕ t2 ⊕ t3)
+  =
+  ⊥
+
+Case 2: suppose one of us paid (wlog C1 who paid)
+
+  a1 ⊕ a2 ⊕ a3
+  =
+  ¬(t1 ⊕ t3) ⊕ t2 ⊕ t1 ⊕ t3 ⊕ t2                          
+  =  (¬(t1 ⊕ t3) = ¬t1 ⊕ t3)
+  ¬t1 ⊕ t3 ⊕ t2 ⊕ t1 ⊕ t3 ⊕ t2
+  = t1 ⊕ ¬t1 ⊕ ⊥
+  = ⊤ ⊕ ⊥
+  = ⊤
+
+Suppose C1 didn't pay; suppose some else paid.
+  C1 knows the values of all our boolean variables,
+  *except* t2
+
+  there are two possible scenarios: C2 lied, or C3 lied
+  since C1 doesn't know t2, as far as C2 is concerned
+  it's either ⊤ or ⊥.
+  Depending on whether it is, either C2 lied or C3 lied.
+
+
+Hoare triple
+
+{ n = 0 } // precondition
+  for(int i = 0; i<100000; i++) {
+    n = n+1;
+  }
+{ n = 100000 } // postcondition
+
+
+P   : a program
+⟦P⟧ : semantics of P   "what P means"   "what P does"
+
+{ ⊤ }
+  n := 5
+{ n = 5 }
+
+
+{ ⊤ }
+  n := 0;
+  for(int i = 0; i<5; i++) {
+    n = n+1;
+  }        
+{ n = 5 }
+
+
+-1
+q1p1p2r1r2q2
+
+0 1 2
+
+Finite:
+  q1p1p2r1r2q2 <-- this is events
+
+  s1s2s3s4s5s6s7 <-- the states
+                  that the events
+                  take us to
+
+Make it infinite by
+repeating the final state
+forever
+
+  s1s2s3s4s5s6s7s7s7s7s7s7s7s7s7s7s7
+  s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7
+  s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7
+  s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7s7
+  s7s7s7s7...
+
+
+ We identify a property S
+ with the set of all behaviours that
+ satisfy the property.

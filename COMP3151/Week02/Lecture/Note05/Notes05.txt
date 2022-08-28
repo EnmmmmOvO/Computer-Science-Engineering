@@ -1,0 +1,127 @@
+Notes
+In a transition label
+
+  g; f
+
+when g = ⊤, we just write f
+
+When there's no state update (when f = I "the identity function"),
+then we write g
+
+Q: do we allow Σ to be infinite? Yes.
+
+Σ is the set of all possible states.
+
+What is a state?
+A: we don't bother specifying, because it's application dependent
+  usually, at least:
+  - a mapping from variable names to values
+  - which location every process is at
+
+Q: when we change the state, we also update the location, right?
+   or: when we change the location, we change the state?
+A: yes
+
+
+== Floyd's method on the first transition diagram
+
+P stands for the whole transition diagram.
+   aka the triangular number program
+
+We want to prove this Hoare triple:
+
+  {⊤} P {s = N*(N-1)/2}
+
+We must find an *annotation* for every location.
+The annotation should state something that's
+always true when we're at that location.
+
+1 The precondition implies the
+  start location's annotation
+2 The exit location's annotation
+  implies the postcondition.
+3 If the current location's annotation is true,
+  then if we take a transition, the next
+  location's annotation becomes true.
+
+Annotations (this is called an *assertion network*)
+
+l0: ⊤
+l1: i = 0
+l2: s = i*(i-1)/2
+l3: s = i*(i+1)/2
+l4: s = N*(N-1)/2
+
+Observe: the first two points above are trivial
+
+Examples of point 3.
+
+Consider the transition from l1 to l2.
+We must prove
+  i = 0 ⇒ (s = i*(i-1)/2)[s:=0]
+
+that is:
+
+  i = 0 ⇒ (0 = i*(i-1)/2)  <-- trivial
+
+Consider the transition from l2 to l3
+We must prove
+
+  s = i*(i-1)/2 ∧ i ≠ N ⇒ s+i = i*(i+1)/2
+
+You can prove this with some basic arithmetic
+
+
+Q(l_i) ∧ g ⇒ Q(l_j) o f
+
+o denotes function composition.
+
+(f o g)(x) = f(g(x))
+
+"If the annotation at l_i is true,
+ and the guard is true,
+ then, after updating the state with f,
+ the annotation at l_j is true"
+
+
+
+p1: wantp = 0                   
+p2: wantp = 0
+p3: wantp ≠ 0
+p4: wantp ≠ 0 ∧ wantq ≠ wantp
+p5: ⊤
+
+q1: wantq = 0                   
+q2: wantq = 0
+q3: wantq ≠ 0
+q4: wantq ≠ 0 ∧ wantp ≠ -wantq
+q5: ⊤
+
+Step 1: check that these annotations are inductive (separately)
+Step 2: check for interference
+
+  Suppose P is sitting at location p1. Therefore, wantp=0.
+  We need to check that no action that Q could take
+  falsifies wantp=0. Trivial because Q never changes wantp.
+
+  Suppose instead P is sitting at p4.
+
+   wantp ≠ 0 ∧ wantq ≠ wantp
+
+  We need to check that nothing Q can do falsifies this annotation.
+  There are two actions that are relevant are q2 and q5.
+
+  For q5:
+
+    wantp ≠ 0 ∧ wantq ≠ wantp ∧ ⊤ ⇒ wantp ≠ 0 ∧ 0 ≠ wantp (trivial)
+
+  For q2:
+
+    wantp ≠ 0 ∧ wantq ≠ wantp ∧ wantq = 0 ∧ wantp = -1 ⇒ wantp ≠ 0 ∧ 1 ≠ wantp
+   ..and one more.
+
+
+One final step: mutual exclusion holds.
+  Show that  the annotations of p4 and q4 cannot both be true.
+  Not possible because if so, wantp and wantq would have
+  simultaneously different and equal polarity.

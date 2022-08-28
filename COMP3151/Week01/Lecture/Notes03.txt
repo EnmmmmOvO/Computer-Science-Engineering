@@ -1,0 +1,122 @@
+Week01 Extra ltl
+until operator
+
+  φ until ψ
+
+  φ 𝒰 ψ   "φ holds for 0 or more states; immediately thereafter, ψ holds"
+
+eventually operator
+
+  eventually φ  "after 0 or more states, φ holds"
+  ◇φ  "eventually φ"
+
+  ◇φ  ≡ ⊤ 𝒰 φ   one possible definition in terms of existing operators
+
+  ◇φ  ≡ ¬φ 𝒰 φ   "φ is false for 0 or more states; then, it's true"
+
+  σ ⊧ ◇φ     iff there exists i ∈ ℕ s.t. σ|i ⊧ φ
+always operator
+
+  always φ "from every future state, φ holds"
+  □φ  "always φ"
+
+  □φ ≡ ¬(◇¬φ)           "φ is never false"
+
+  σ ⊧ □φ   iff for all i ∈ ℕ, σ|i ⊧ φ
+
+Let's prove this equation: □φ ≡ ¬(◇¬φ)
+  using the semantic definitions we introduced above
+
+To prove that two temporal logic formulas φ and ψ are equivalent,
+  we must prove that for behaviours σ,
+   σ ⊧ φ  iff σ ⊧ ψ
+
+σ ⊧ ¬(◇¬φ)
+
+iff (by definition)
+
+¬ (σ ⊧ ◇¬φ)
+
+iff (by definition)
+
+¬ (∃i. σ|i ⊧ ¬φ)
+
+iff (by definition)
+
+¬ (∃i. ¬(σ|i ⊧ φ))
+
+iff (logical law: ¬ ∃x. P ≡ ∀x. ¬ P)
+
+∀i. ¬¬(σ|i ⊧ φ)
+
+iff (double negation)
+
+∀i. σ|i ⊧ φ
+
+iff (by definition (backwards))
+
+σ ⊧ □φ
+
+QED
+
+We're using one logic (predicate logic, with ∀, ∃ and so on),
+to reason about another logic (temporal logic, with ◇, □, ◯, and so on)
+
+Two layers: metalogic (predicate logic)
+  object logic (temporal logic)
+
+
+□(φ ∧ ψ) ≡ □φ ∧ □ψ
+
+Proof:
+
+  σ ⊧ □(φ ∧ Ψ)
+iff (by def)
+  ∀i. σ|i ⊧ φ ∧ ψ      <-- this is the temporal logic conjunction (object logic)
+iff (by def)
+  ∀i. (σ|i ⊧ φ) ∧ (σ|i ⊧ ψ)  <-- this is the predicate logic conjunction (metalogic)
+iff (∀ distributes over conjunction)
+  (∀i. σ|i ⊧ φ) ∧ (∀i. σ|i ⊧ ψ)
+iff (by def (backwards (twice)))
+  σ ⊧ □φ  ∧  σ ⊧ □ Ψ
+iff (by def (backwards))
+  σ ⊧ □φ ∧ □ψ
+QED
+
+
+Encode "infinitely often"
+
+  "infinitely often" ≈ "always eventually"
+    no matter how far into the future we look, the thing is going to happen once more.
+
+  φ is true infinitely often:
+   □◇φ
+
+  "almost globally" (always true from some point onwards) ≈ (eventually, we reach a point whence it's always true)
+
+   ◇□φ
+
+Expressiveness limits of LTL:
+- Can't this be used to say "we can always reach the terminated state"?
+
+  □◇running
+
+  Why doesn't that work?
+  Suppose we remove the terminated state from our original transition system.
+  Then, the above formula still holds.
+
+Limitation: we can't express branching-time properties.
+
+Can we use LTL to express all linear-time properties then?
+A: No.
+- The set of all behaviours is uncountable (i.e. there's no way to assign a natural number to every behaviour)
+- (If the atomic props are countable),
+   then there are only countably many LTL formulas.
+
+Let's suppose the set of states is
+
+  Σ = {(, ), -}
+
+Property: the behaviour is a sequence of balanced parentheses followed by infinitely many -:s
+
+We can't write this in LTL!

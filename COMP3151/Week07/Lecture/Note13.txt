@@ -1,0 +1,159 @@
+Compositional verification (what we want):
+
+  prove the *components* of a system correct, separately
+  then have the *proofs* compose.
+
+  Ideally: when we compose the proofs, we shouldn't have to worry
+  about the implementation details of the components,
+  only their specifications.
+
+Ex: Hoare rule for sequential composition:
+
+ {φ} P {ρ}    {ρ} Q {ψ}
+ ______________________ (Seq) rule
+     {φ} P; Q {ψ}
+
+ Notice how we don't have to care about the implementation of P
+ nor Q, only what Hoare triples they satisfy.
+
+  P = x++
+  Q = x++
+
+   {x = 0} P {x = 1}    {x = 1} Q {x = 2}
+  ___________________________________________
+          {x = 0} P; Q {x = 2}
+
+   This inference step doesn't care what the implementation
+   of P is anymore. The inference would be equally valid
+   if instead of P we used another program that had the same
+   spec (Hoare triple)
+
+        {x = 0} x = x+23098709879087; x = 1 {x = 1}
+
+ You can think of the horizontal bar as implication.
+
+  A    B
+ ________ (rulename)
+    C
+
+  "If I have a proof of A, and a proof of B, I can invoke
+   (rulename) to get a proof of C"  
+
+Naturally, everyone thinks that's very nice, can't we have the
+same for concurrency.
+
+One rule you might want:
+
+  {φ} P {ψ}    {φ'} Q {ψ'}
+  ________________________ (pipe-dream parallel rule)
+   {φ ∧ φ'} P||Q {ψ ∧ Ψ'}
+
+This rule is unsound :(
+
+  {x = 0}        {x = 0}  
+  y = x;         z = x;   
+  x = y + 1   || x = z + 1
+  {x = 1}        {x = 1}  
+
+If the pipe-dream parallel rule was sound,
+ running these programs would always result in x=1.
+
+What can we do to get something a little bit like it?
+1. impose side conditions on the pipedream rule (OG)
+
+  {φ} P {ψ}    {φ'} Q {ψ'}   <--the proofs don't interfere
+  ________________________________________________________
+   {φ ∧ φ'} P||Q {ψ ∧ Ψ'}  
+
+  But: we've lost the main benefit compositionality:
+       we need to look at the implementations of P,Q
+       when we apply the rule
+2. adding more info to the specification than just
+  pre-and postcondition.
+  Rely-guarantee method (Cliff Jones)
+
+    Spec consist of:
+    - Precondition (what I assume is true initially)
+    - Postcondition (what's true when I'm done)
+    - Rely (what's something I require the environment not to do)
+    - Guarantee (what do I guarantee the environment that I won't do)
+
+  It's believed to be incomplete without auxiliary variables.
+3. restrict what processes are allowed to, so severely that the rule applies anyway
+
+
+  {φ} P {ψ}    {φ'} Q {ψ'}   P,Q use non-overlapping sets of resources
+  ________________________________________________________________
+   {φ ∧ φ'} P||Q {ψ ∧ Ψ'}
+
+  This rule is sound, but only applicable to programs that have
+  nothing to do with each other.
+
+
+
+  { ⊤ }  x := 2 { x= 2 }
+  the rule of consequence allows us to deduce for free
+  any Hoare triple with:
+  - a stronger precondition
+  - a weaker postcondition
+
+  z=1000000 ⇒ ⊤    { ⊤ }  x := 2 { x= 2 }   x = 2 ⇒ x is a prime number
+  __________________________________________________ (conseq)
+     { z=1000000 }  x := 2 { x is a prime number }    
+
+
+
+
+  (⟨C,1⟩⬝⟨D,1⟩⬝⟨E,2⟩⬝⟨C,1⟩⬝⟨E,5⟩)|{C,D} = ⟨C,1⟩⬝⟨D,1⟩⬝⟨C,1⟩
+
+
+ ⊧ h|{C} = ε ⇒ (h|{C} = ⟨C,1⟩) ∘ (⟦h ← h ⬝ ⟨C,1⟩⟧)
+iff
+ ⊧ h|{C} = ε ⇒ (h ⬝ ⟨C,1⟩)|{C} = ⟨C,1⟩)
+^^^that's fairly obvious
+
+  Algebraic law of filter that we use:
+
+   (h⬝h')|H = h|H ⬝ h'|H
+
+
+  Basic diagram rule gives us:
+
+   {h|{C} = ε}  P {h|{C} = ⟨C,1⟩⬝⟨C,2⟩}    (1)
+
+   {h|{C} = ε}  Q {∃y. h|{C} = ⟨C,y⟩⬝⟨C,x⟩}    (2)
+
+  Apply the parallel composition rule.
+
+   {h|{C} = ε ∧ h|{C} = ε}
+     P || Q
+   {h|{C} = ⟨C,1⟩⬝⟨C,2⟩ ∧
+    ∃y. h|{C} = ⟨C,y⟩⬝⟨C,x⟩
+   }                 (3)
+
+ Using the rule of consequence with (3) we get:
+
+ {h|{C} = ε} P || Q { h|{C} = ⟨C,1⟩⬝⟨C,2⟩ ∧ x = 2}     (4)
+
+ Using the rule of consequence:
+
+   {⊤ ∧ h = ε} P || Q { h|{C} = ⟨C,1⟩⬝⟨C,2⟩ ∧ x = 2}   (5)
+
+ Using the initialization rule:
+
+   {⊤} P || Q { h|{C} = ⟨C,1⟩⬝⟨C,2⟩ ∧ x = 2}   (6)
+
+
+Two roughly interchangeable terms:
+ - process algebra <-- you're probably Dutch
+ - process calculus <-- you're probably Italian
+
+ a + b = b + a   (commutativity of addition)
+
+ P || Q = Q || P (commutativity of parallel composition)
+
+ If P is a process, then
+
+  a.P is a process which:
+   1. performs the action a,
+      then proceeds as P.

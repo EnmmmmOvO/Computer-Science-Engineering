@@ -1,0 +1,14 @@
+chan ch = [0] of { byte }
+chan ach = [5] of { byte }
+
+active proctype P() {
+  ch ! 30; // this send never happens; nobody is receiving and the channel is synchronous
+
+  printf("** P sent a message!\n") // also never happens
+}
+
+active proctype R() {
+  ach ! 30; // this send does happen; it goes in the queue
+
+  printf("** R sent a message!\n")
+}

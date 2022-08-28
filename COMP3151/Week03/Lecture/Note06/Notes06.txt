@@ -1,0 +1,195 @@
+Notes
+So far we've seen two crit sec
+solutions:
+
+- Dekker's algorithm (attempt 5)
+- Manna-Pnueli algorithm
+
+Assumptions:
+- reads and writes to shared
+  memory are atomic
+- nothing else is available
+  that can be executed
+  atomically
+
+OG (Owicki-Gries)
+
+- annotate each location
+  with an invariant
+- show (separately for each
+        process)
+  that the assertions are
+  inductive
+- show interference freedom
+
+
+(common ⊕ tp ⊕ tq) = 1 ∧
+P@p4 ⇒ tp = 1 ∧
+Q@q4 ⇒ tq = 1 ∧
+¬(common=tp ∧ common=tq)
+
+If P@p4=⊤ Q@q4=⊤, then
+
+(common ⊕ tp ⊕ tq) = 1 ∧ // an odd number of bits are set
+tp = 1 ∧                 // at least two of them are set
+tq = 1 ∧                    // hence: all three are set
+¬(common=tp ∧ common=tq) // but: all three are different
+
+
+
+Is this invariant preserved by
+ the transition from q3 to q4?
+
+We need to prove the following impl:
+
+(common ⊕ tp ⊕ tq) = 1 ∧
+P@p4 ⇒ tp = 1 ∧
+⊥ ⇒ tq = 1 ∧
+¬(common=tp ∧ common=tq) ∧
+tq = 1
+
+  ⇒
+
+(common ⊕ tp ⊕ tq) = 1 ∧ // this is already in our assumptions
+P@p4 ⇒ tp = 1 ∧ // this is already in our assumptions
+⊤ ⇒ tq = 1 ∧ // tq = 1 is already in our assumption
+¬(common=tp ∧ common=tq) ∧ // this is already in our assumptions
+
+
+Desiderata:
+
+- Mutual exclusion
+- Eventual entry
+- Deadlock freedom
+- Absence of unnecessary delay
+
+
+Eventual entry:
+
+   □(P@waitp ⇒ ◇P@csp)
+
+Linear waiting:
+
+   is a linear time property (more on this later)
+
+Bounded waiting is not.
+
+   If you look at a single behaviour,
+   you can tell how many bypasses happened in that behaviour.
+
+   But you don't know if there's another behaviour with more
+   bypasses or not.
+
+What would the annotation in the CS be?
+
+p1: non-crit
+p2: wantp := true
+p3: last := 1
+p4: await wantq=false ∨ last ≠ 1
+    { wantp = true ∧
+      (wantq=false ∨ last ≠ 1)
+    }
+p5: critical section
+p6: wantp = false
+
+Can q interfer with this annotation?
+ q1 -> q2: nothing happens, so no
+ q2 -> q3: we might have interfence
+ q3 -> q4: setting last := 2 cannot
+           falsify last ≠ 1
+ q4 -> q5: before this transition,
+            wantp=false or last≠2
+           last ≠ 2 is the only that
+           doesn't contradict p4's
+           annotation,
+           but if so, the second
+           conjunct of the annotation
+           cannot hold.
+
+Our annotation can be interfered with
+ only by q2->q3. We compensate by
+
+    { wantp = true ∧
+      (wantq=false ∨ last ≠ 1 ∨
+       Q@q3)
+    }        
+
+
+In Peterson's algorithm:
+
+- the in[i] flag is:
+  which trap is process i currently at
+- the last[i] flag is:
+  the PID of the last process to
+  approach the i:th trap
+
+Does Peterson's algorithm obey the LCR restriction?
+The problematic line is the await
+- k, j and i: not shared
+- in[k] and last[j] are in fact shared
+- hence this presentation does not satisfy LCR restr.
+- but: we can read first in[k] then last[j] without
+  breaking the algorithm
+
+np,nq are both currently 0
+process p reads 0 from nq
+process q reads 0 from np
+process p writes 0+1 to np
+process q writes 0+1 to nq
+
+If we assume p2 is executed atomically,
+ the tiebreaker is pointless.
+
+p picks ticket number 1
+q picks ticket number 2
+p enters CS, finishes, sets np=0
+p picks ticket number 3
+q enters CS, finishes, sets nq=0
+q picks ticket number 4
+...
+hence: ticket numbers can grow unboundedly large
+- it's theoretically possibly that we run out
+  of space in the integer variables.
+  in practice, will never happen.
+- we can't meaningfully analyse this algorithm with
+  Spin, because the required state space is infinite.
+
+Idea:
+  Invariant (1) can be proven inductive if we annotate
+  every location with (1).
+  Once we have that, we know that □(np = 0 ⇔ P@p1..2)
+
+  Once we have proven invariant (1), because we know
+  that it holds in every state, we get to assume it
+  in the proof of future invariants.
+
+Q: in Simplified Bakery, is "for all" universal quantification (∀)
+    or is it a for-loop?
+A: the latter
+
+P@p1..2  is shorthand for  P@p1 ∨ P@p2
+
+Q: could we leave out disjunct #1 on the await on p4.
+A: No, we can't.
+   If we do, then if a process
+   stays in the non-critical section forever,
+   then we're never getting past the await.
+   Hence: we lose eventual entry.
+
+Q: what happens if we drop the post-protocol?
+   We skip the number[i] = 0 at p6.
+A: the procs will get one turn exactly, period,
+   if the first process to exit the crit sect
+   never tries to reenter.
+
+Let's split line p2,q2 into two!
+
+1. p reads nq = 0
+2. q reads np = 0
+3. q sets nq = 1
+4. q gets to enter the CS
+5. p sets np = 1
+6. p gets to enter the CS, because np ≤ nq, 1 ≤ 1
+
+If we just split p2 into read-then-write,
+  we break mutual exclusion.

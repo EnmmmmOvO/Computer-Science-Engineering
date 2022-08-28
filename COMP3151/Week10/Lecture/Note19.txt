@@ -1,0 +1,173 @@
+These notes are about the 2020 exam, which is available on the Ed forum.
+
+Pretzel vending machine spec:
+
+  □(c ⇒ ◇p)
+
+The Pretzel vending machine
+ also satisfies this spec:
+
+  □(p ⇒ ◇c)
+
+Two kinds of transition systems:
+- those that we drive
+- those that the environment drives
+  and hence,
+  that the environment can block
+
+- Transition diagrams
+    l --b; f--> l'
+  (completely absent in this paper)
+- Labelled transition systems
+
+  (S,L,→)
+  - S is a set of states
+  - L is a set of labels
+  - → ⊆ S × L × S
+
+  Transitions don't have guards
+    nor any side effects.
+
+Earlier in the course,
+  the atomic propositions in LTL
+  were claims about *states*
+
+Now, they are labels:
+
+  □(c ⇒ ◇p)
+
+Q: why ◇ instead of ◯?
+A: just because
+   generally, use of ◯ is discouraged
+   because it breaks stutter
+   invariance
+
+Another LTL formula that would work:
+
+  □(c ⇒ ◇c)
+
+  ^^ a silly formula that RvG would
+     want to not hold
+
+
+Q1 (a):
+  Reactive systems interact with an
+  environment; closed systems don't
+
+Q1 (b):
+  Compositional method proves things
+  about open systems.
+  LG and AFR only work for
+   closed products
+
+Q2 (a):
+  □(close ⇒ ◇open)
+
+ (b):
+  {open, request}
+  {open, request, timeout}
+   intuitively:
+     the user can block timeout
+     by requesting really fast
+   OTOH:
+     the server could set a
+     super short timeout
+
+
+ σ is a behaviour
+  (in the course, a infinite
+   sequence of states)
+  (today, a possibly finite
+    sequence of labels)
+
+ φ is a temporal logic formula
+
+   σ ⊧ φ "σ models φ"
+    φ is a true claim about the
+      behaviour σ
+
+
+  P is a program
+    (or a transition diagram)
+    (or a LTS)
+
+  P ⊧ φ "P models φ"  
+
+   for all behaviours that P has,
+   φ is a true claim about that
+   behaviour.
+
+
+   P ⊧B φ "P models φ with blockables B"
+
+  φ is a true statement about:
+  - all behaviours allowed by P
+  - all partial behaviours allowed by P,
+     that can only be extended by actions
+     in B
+
+Pretzel system has one behaviour:
+
+  (cp)^ω
+
+When we consider the Pretzel system with
+  blockable actions {c}
+
+  (cp)^ω, ε, cp, cpcp, cpcpcp, ...  
+
+  P ⊧{c} □◇c   <-- that's invalid
+X neXt      is ◯ (next-state)
+F Finally   is ◇ (eventually)
+G Globally  is □ (always)
+
+ X((X(enabled(t)) ⇒ F(taken(t)))
+
+
+Rob augments ⊧ with two things:
+- a set of blockable actions
+   (where can traces be cut off in the middle)
+   where you say which actions are
+     environment actions
+- a completeness criterion
+   (which traces should not be considered)
+   where you plug in fairness conditions
+
+*default* completeness criterion
+- all maximal traces are considered
+  maximal trace: a trace that can't be extended
+  this is often called *progress*
+  "if something can happen, something
+    will happen"
+
+Kripke structures are transition systems
+with:
+- no labels on the arrows
+- a *satisfaction relation* that tells
+  you for each state, what's true
+  in that state
+
+  Ti = tick.Ti
+  A = tick!.ring.A
+
+
+We consider tick.Ti
+to abbreviate Σ_{1}. a_i.P_i, where
+  a_1 = tick and P_1 and T_i
+
+ T1 -- tick, {ε} --> T1
+__________________________________         _____________________
+T1 | T2 -- tick, {L} --> T1 | T2            A -- tick!, {ε} --> ring.A
+_____________________________________________________________________
+  (T1 | T2) | A -- τ, {L⬝L, R} -- > (T1 | T2) | ring.A
+
+beep ⌣ tick?
+beep ⌣ tock?
+
+For CCS:
+  two transitions are concurrent if they originate from disjoint components
+
+ tick will always have annotation {L}
+ tock will always have annotation {L}
+ beep will always have annotation {R}
+
+Therefore: tick and beep are concurrent; tick tock are not.

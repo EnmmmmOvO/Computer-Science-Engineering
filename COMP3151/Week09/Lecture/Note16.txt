@@ -1,0 +1,50 @@
+- We assume that the number of generals is fixed.
+- In other words: permissioned consensus problem.
+
+- Permissionless consensus (blockchain)
+
+- Ways around FLP:
+
+  1. Assume that we *can* detect crashes
+  2. Give up on "we must always reach consensus"
+     Instead: "we must always reach consensus with probability 1"
+
+  x:= heads
+  while(x ≠ tails)
+    x := coin_flip() <--- fair coin (50% heads, 50% tails)
+
+  This program doesn't *always* terminate:
+    if the RNG produces an infinite stream heads
+
+  Terminates with probability 1
+
+The FLP theorem is about permissioned consensus,
+  asynchronous communication, and no faults.
+
+Permissionless consensus is even more impossible.
+
+Permissionless consensus is impossible even if we have:
+  completely synchronous point-to-point message passing,
+  and no faults
+
+  Permissionless ≃
+       we can't know how many other participants there are
+
+  A solution is a process P such that:
+
+   ∀n.
+     P | P | ... | P    <-- n copies of P in parallel
+    - we will reach consensus
+    - non-triviality assumption:
+        P^n →* decided_1
+        P^n →* decided_2
+
+   If P is a solution, then it isn't.
+
+     P^2n = P^n | P^n →* decided_1 | decided_2
+
+"Almost the same"
+- If the vote diff among the loyal generals
+  is greater than the number of traitors,
+    the decision should be the majority vote.
+- If the vote is close, the traitors get to pick.
