@@ -73,3 +73,6 @@
 &emsp;&emsp;&emsp;&emsp;&emsp;[18 (2022-08-05)](https://www.youtube.com/watch?v=FgvUk-lbIok&list=PLt4WIqcTn9kLq4RURZGmF1Tbf2zU3xyCV&index=19)
 - Slide [15](/Week10/Lecture/Lecture15.pdf) [16](/Week10/Lecture/Lecture16.pdf)
 - Note [18](/Week10/Lecture/Note18/)  [19](/Week10/Lecture/Note19.txt)
+
+## Reference 
+- [3151-notes](https://lukakerr.github.io/uni/3151-notes)
