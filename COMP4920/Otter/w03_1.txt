@@ -1,0 +1,319 @@
+Unknown Speaker  0:01  
+In a way, this is actually quite historical is my first lecture here at UNSW. So everyone so unfortunately, I have just joining us now view nearly six months ago. So it's very easy to remember my start date, because that was at April who say, so yeah, I started on, I started on fourth of April being here. I'm joining, I've joined as professor at the csae. My research area is the main section on AI and machine learning and ubiquitous computing. So a lot with settled data in the wild data coming from sensors, ranging from wearables and send them to mobile phones and pockets and to set them on the road and infrastructures, and also big datasets. I enjoy teaching this, I'm actually very excited to be here today. Seeing you, in person. Before joining Savi, I was at RMIT. And as you know, the last how many years now to hobbies, widget production back to face to face, but I was teaching online so it's really good to be back in person. Um, anyway, for thought. I like to acknowledge the available people that are in traditional custodians of this land, I'll also want to pay my respects to the elders both past and present and extended to other Aboriginal and Torres Strait Islanders who are present here today. So I'm going to take up quite a very different emergency said and, and I really admire him for teaching without slides, that's really the opposite of myself. So you're gonna get accustomed to sort of two different styles of teaching very different. But I think as much as you engage with that, I'll let you be able to engage with me feel free to interact, ask me questions, I like to ask to actually have a conversation. And, and also, we come from, I think, very different schools of thoughts as well. Well, he's a philosopher, right. So um, he has given you a lot of the things you need about the underlying philosophy or ethics. And he saris off the different sorts of thoughts. Whereas I'm going to be very practical. And basically get get you to actually start be thinking about some of these issues in your own practice, as a computer scientist, as a software engineer, so who for as a UX designer, whatever you want to be, basically, so technologies now. So this is the agenda is pretty people on. So I've had a lot of experience teaching different courses, in my, you know, lifetime, different lifestyles, academic in different universities. So I have taught the Monash and also at RMIT, when I was also visiting academic, in some situations is sufficient in Europe. But these, these things normally are covered in only two or three lectures. So, yeah, so you're gonna go, we're going to pack a lot of things today. So first of all, ethics, SEC has covered recently, in the past two weeks, you know, some of the important principles and theory of what ethics is, I should not repeat that. But it's one of those practices says ethics really is, in essence, getting used to being what you what you should do, at a certain context of sort of suasion, and and in practice, there are different realms, you have to consider your ethics as a individual, your personal life, your family life, and also, you know, the ethics, your own ethics and moral code, your profession. So, before I go further Maybe let me just ask,
+
+Unknown Speaker  5:02  
+how many of you here are just doing purely computer science degree? So you're going to be computer scientists. So what about software engineering? Right? Anyone doing double degree combination of a couple of things and want to share and, you know, some kind of interesting combination that you think is kind of unique that people don't quite normally pick? Yes, computer engineering and biomedical and computer engineering, but I love that. Okay. Anyone else? Yes. I'm fine. All that goes into higher ethics. Right, um, anyone else in the room? That does something not to be docile. I'm sorry, ours, consign arts, was that. Right? Okay. And any specialization of the arts yet? Oh, all right. Okay. They're good. Anyone we're back, Want to share something different? Right. So if you're doing some other degree beyond just computer science, then you also need to think about the professional ethics in that real well, not just so what I'm going to cover today is a lot more of the science and engineering. So I also stockpiled ethics. So that's to do with the typical widely accepted moral codes in the society.
+
+Unknown Speaker  6:44  
+Now,
+
+Unknown Speaker  6:46  
+Ah, thank you people online, I can see you one mention of consigned media, that's very good. Okay. So values, principles, purpose, responsibilities, and practices. These are some of the constructs, when when someone asks you to write an ethics code or moral code of your own, you know, personally or as a profession, these are some of the constructs, you have to think about when you want to construct the ethics framework. So what is values? And values? Or let me start just to get get, get the conversation going. So values are basically what's important. What's important to you?
+
+Unknown Speaker  7:48  
+What we believe
+
+Unknown Speaker  7:53  
+what we strive for, can anyone suggest an example of personal value? Yes. Do you know how do no harm yet? Well, that is more a principle rather than a value outside. So if the value is human, is our value, right? Yes. Honestly, that's right. That's an example of value. So if your reservoir basic principles is how can we translate that values into responsibility? So how we can act on it? So honesty is about you won't be
+
+Unknown Speaker  8:41  
+done? Why? Right.
+
+Unknown Speaker  8:45  
+Very good. Anyone, anyone else? What is an example of an individual personal value?
+
+Unknown Speaker  8:57  
+Sorry, our environment, you valid ear? Monitors, right? So maybe being environmentally conscious, right? That could be your principal. So that that's so values and principles. Um, and so this would be on individual but also as a profession. As a profession, one value could be you know, you that let's say value integrating, right? If you agree, then you're going to be you're going to make sure you'll need that value as a profession as computer scientists, and all that. So responsibilities that are the expectations, how we can act informed by our values and our principles. So if you have a set of principles and especially you notice the prison Will are the profession you expect others to also perform following. So, responsibilities basically you know, getting you to be able to then have an expectation and basically if this responsibilities are agreed beforehand you can already have even an agreement on what is responsible you should be and practices are the things that we do to meet these responsibilities now, have a talk about the one purpose now, purpose is the thing that this lives to our values and principles it gives meaning to motivation why why is this important? Why we need to be environmentally conscious for example, so, purpose what what is it what does the company exist for So, that's why it is very common and I will say even advisable that companies startups they have mission statements because they know the purpose of the company they know the purpose of the tech they building core right. So, these are normally the constructs of the epics framework and why is it important for our profession as a computer scientist what is important to do no harm in computer science I mean maybe if you're in a medical profession that is very clear Well, I don't think I started out but this the widespread impact of computing we all have Spears you know the benefit of it obviously the modern computing but also automation so, when when I mentioned responsibilities responsibility always lies on the moral agents or the decision makers but the problem is with more automation that that sense of responsibilities becomes more like a gray area which is a big question mark where the responsibly lies when automation start to paint voice in decision making systems that employ in other ways okay let's have a flashback are that all growth rate Alpine who actually was born before the Internet yes me too many of us then start to play out that my friend so what was the experience before we have internet or even mobile phone when you have to rely on this old friend to actually communicate with each other? What is there any shifting in your values or your principles responsibilities will extend here and share because then people can they can also hear you Can I shift can I turn this is it
+
+Unknown Speaker  13:34  
+still poppin All right well Good day
+
+Unknown Speaker  13:38  
+now so took like a lot longer they were much more expensive
+
+Unknown Speaker  13:42  
+liquid lotto smokeless liquid the access to look information. Yeah, do you remember what it was like? meeting a friend before? Before the holiday day out of your life to sitting there waiting and wondering if they'll go to show like how would you go looking into a little discuss with them like with them or you're gonna meet like, like, if they're running late, or you just have to wait for like, if they cancel, they'll do we'll just be waiting the whole day.
+
+Unknown Speaker  14:17  
+You spend a whole week organizing to beat somebody time to place pay, and you get there. And if they were late, you didn't know if the bus had broken down or something. So the average time that everyone would wait, that was considered polite, was about two hours. And if you left in less time than two hours, that meant you were like, not very nice, because if you're coming from the suburbs and you're meeting in town, what lateness means now is something you expect to hear from someone in 30 seconds. I'm running five minutes late. They can be running an hour late. They can't possibly let you know there's no way they can let you know. They're on a bus. They're in seven hills, and you're at town hall. What Are you gonna do it?
+
+Unknown Speaker  15:01  
+Yes, that's correct. And you're laughing at it now, but that was being exactly one of the theaters, you know, having a group meeting, you know, only those into, you know, how a project, you know, okay, let's make a central station x. Well, five minutes late, right? Maybe this, you know, he just needs to bust? Well, that needs to matter 15 minutes, because the bus around that particular minutes, maybe, you know, and, and then the first thing come up after a while, then you leave because you have a threshold. And, and the value he was on to example, you know, being late. You should not be like, maybe that will be whatever principle, and you have a responsibility, but, but right now, because of available technology that that has become that shift. You know, if you'd like, you can actually tag someone, but back then he couldn't. Right. So you were really late back, then you really have to bind up. If you have a person, you just have a person. And maybe you know, go through the old pay firing the telephone boss. Find a quiet somewhere. And then basically, you know, call the home not even apparently saying, Yeah, but if I'm sorry, please help them Sorry, I've missed him or her. So he was very light. So yeah, that was time before we have the internet. And basically, technology disrupts our lives. It creates a whole way of even this disrupts all these different constructs that I mentioned before. That's why we need these um, assignment methods and computing. So before your quitter. Oh, gotcha discussion? Is technology neutral.
+
+Unknown Speaker  17:07  
+Is technology neutral?
+
+Unknown Speaker  17:11  
+Let me just let me just say, go once like butter that says, what it means by technology neutral. Somebody proposed that? Well, in this valley, it's your thesis that is like guns don't kill people, people kill people. That's what technology is neutral. Now, let me just ask you to write the racial right hand if you think if your reverse image is neutral, all racial left hand if you think if you think this is not, the technology is not neutral. 123.
+
+Unknown Speaker  17:54  
+Right, we live in a middle we have people say yes, technology is neutral. And people don't like what you're saying. Right? Even this, this and they don't have the same opinion. Okay. In fact, this is a very complicated topic and is still very much you know, heavily research even till today. If you look at this paper, this was proposed in 2000. And then again, it was reinforced in his other philosophy, for example, can say, it basically says, Well, you know, I agree that technology is really about how do you I mean, this is the one you use it make technology, so people well, but the thing is, like, this is very new. This was just yesterday news article at The Guardian. So So Matt apologizes over him appropriate content passing by Molly.
+
+Unknown Speaker  19:14  
+So happens Molly. She took her own life.
+
+Unknown Speaker  19:21  
+She took her own life after seeing images on Instagram, that that actually are related to self harm and suicide. Well, in the beginning, they say, well, it's our own fault. We don't have any responsibility over it. She's gonna save all those pictures, but actually actually violates the policies all these are Oh, I'm not supposed to be shown to other agents. So, so now, I think that men only realize yes, I should we should take responsibility over. So, what do you think is technology and you want to elaborate was also contributed to this session
+
+Unknown Speaker  20:35  
+you know, yeah, technology can neutral biases that was process bias
+
+Unknown Speaker  20:55  
+there could be biases, if so, operating person is there, there could be biases that the technology is based on based on the datasets, and then of course, not neutral. So, there's a great comment anyone wants to add? Yes.
+
+Unknown Speaker  21:13  
+YouTubers learning model blowing sexism or racism,
+
+Unknown Speaker  21:16  
+sexism, racism, for datasets. Very good voice. Anyone else?
+
+Unknown Speaker  21:27  
+Yes. The Machine Learning reflects the inequalities already exist.
+
+Unknown Speaker  21:37  
+Right. So, again, and I thought about machine learning. I'm looking at chat. Great discussion on the chat people just say our audio technology neotropic is compelling technology is always based on the Creator values, there is no inherent bias in technology rather than how it's used or manipulated. So another one who meant well, that's the same slide that technology being mutual distributor created was not mutual advice. Right. Very good discussion. A couple of different papers on this topic. But the cons are actually provisions. First of all, technology is neither good nor bad. Nor is it neutral. That's what he said. Why? Because I thought the expansion of this technology interaction with the social inequalities that are really this technological environment, we're going to have environmental, social and human consequences that go far beyond the immediate Curse of the technical devices and practices adult and technology can have in result with a different context under different skill sets. So So practices provided are physically well known, it's not usable. Because it has he could have consequences.
+
+Unknown Speaker  23:07  
+So
+
+Unknown Speaker  23:10  
+I think he's a proponent of this borrowing from the point of view of causal causality. Now, another paper from Mojo is technology neutral from article 1996. Measured in the morning for the neutrality based on technology with the abs as a means to the S Line beyond outside of our thinking or expectation. also assume that available means have no causal inference for the truth is technology tool is only means that in theory, if the second clock profession, since we are the mere pawns of the real power brokers, we buy our innocence at a tremendous cost to be innocent, we must be heartless. And if you will just article it's interesting to say that, you know, if the Knology has a positive impact, we celebrate it. But it has a negative consequence consequences. we shy away from it well, in our technology, that's the goal of the user or agent, human agent. There are a lot of different use of it. So you also have a separate pool, shared a paper other file five on this on the margins and computers that actually also discussed that. They may charge a fee I mean, in that paper, you can tell me where we're all set, but in a paper I've never really read two days ago. I think says that yes, it is unusual. But the recharges Ramiz based on the moral agency that so he has have an agent. So an agent of the technology. But these days, as I tell people with automation, their agency start to become more and more automated towards the engine or the technology itself. So this is why and there's also another article from Kate Crawford that that now is becoming your actual reading or your we find, we just have plus one can Halliburton can order from we have seen some online topics that we could consider. And I mean, you could still descend either way, because the human experts are still quite divided on whether they order more and more these days, the article that I read are going towards the direction of technology is not this demo, I like to go back to this again and again, what value we are the impacts or of these technologies, we are the ones who are responsible in creating technologies, you're alive. It will become a theory of knowledge. So researcher, as a developer, you might invent a set of feature that might end up on on the Facebook platform map or more in a certain era anthropology or it might end up the biomedical engineering might end up in basically automating a decision whether, you know, selling drugs has to be purchased and sent away to a certain person, for example. Right. So our values, physicals responsibility practices, how do we align it to the purpose all? Why did technology be created in the first place?
+
+Unknown Speaker  27:01  
+Now?
+
+Unknown Speaker  27:04  
+Why do we have to have ethical principles? Can we just rely on the law? If the law says no, we will do.
+
+Unknown Speaker  27:15  
+But let me ask you this question.
+
+Unknown Speaker  27:18  
+Can an action be ethical were illegal?
+
+Unknown Speaker  27:23  
+Yes.
+
+Unknown Speaker  27:25  
+Yes. Can an action be illegal but unethical? Oh, yes.
+
+Unknown Speaker  27:38  
+I suppose. Sorry. Was it was
+
+Unknown Speaker  27:44  
+right. Can you repeat it? Yes. Right.
+
+Unknown Speaker  27:50  
+Like it's hard to leave whatever it was, but it's probably okay. Thank you. Same one is if you see some on industry
+
+Unknown Speaker  28:16  
+right, so let me just repeat those. The first one has to do with the wars. What is legal, then there might not be legal coverage, for example. And second is about responsibility of someone getting injured and whether you should be having more responsibility of taking care of that person. Yes,
+
+Unknown Speaker  28:41  
+I'm an interesting example, depending on someone's perspective, abortion.
+
+Unknown Speaker  28:46  
+There's a very interesting, very interesting how even the topic of abortion which has passed a passport in several states in US last year as we know, but not United States. So, origins may look beautiful. But is it ethical?
+
+Unknown Speaker  29:13  
+So based on this
+
+Unknown Speaker  29:21  
+say, for example, slavery has been played out, not legally safe places, so very easily. Yeah. So slavery used to be illegal, but now it's illegal. So that's therefore, what I'm trying to say here is we cannot just refer to the legal course, who to refer to as an ethical amount. Their ethical principles is much broader than the legal codes. So And we can even use it to interpret precise or evaluate existing laws, or even proposed new laws or even abolish logs, right for example, the law for that particular example, that used to be legal controlled by more, or even things like owning owning a gun in Australia now and, and normally, because because of this very broad aspect of ethical principles, organizations, and a semi professional, we have code of ethics or code of conduct. And they're quite different. There's just very subtle differences. So core values in the fair I use instead of virtues, so guiding our principles. So for example, code of ethics in a broad way says we have respect for the rights and dignity of people for call as a lot more specific, saying, you know, if it's a call upon our company, because it's our ethics for ethics, you are expected to support colleagues and treat everyone respect and courtesy so you can see that it's more specific. But both her ethics and Code of Conduct require commitment of the members of either organization or profession to come forth. And in some, and if not, most places, if you do not comply with the code of ethics and code of conduct, you could be expelled from the organization or from the profession. So there are examples of ethics and code of conduct. So here it is, it's a code of ethics for psychologists. So pick up on it any website. So there are five principle here, including medications, to delegate responsibility, and really just as a recap of people's right to dignity. And here it basically the Code of Ethics by America as well as people's associations. So what does it mean, if you are a herniated bulges, you're expected to bind to this curve. That is that one people kind of assume on but if you look at the other ones, it's quite interesting speech also, it means in some of the code of conduct, there is versus be open and honest regarding your work. obtain more consent and necessary permissions, way of competing ethical obligation to Forex pies made to resolve accessible, protect and preserve your records and maintain respectful ethical professional relationships. So these are a lot of different samples. I need to highlight is research researching degree component of us as students a semester and I feel affiliated with the university. We we need to bite to this quarter of responsible conduct of research, especially especially because all the universities in Australia are parties to discourage. So it wants to know if we're responsible for our research. Whenever we look at all the different parts, again, I like to find the values of it beyond was actually principles, because the values talk about a heart. If you understand the value, then you'll be able to understand the principles much easier. Let me just take one, you know in the opening page.
+
+Unknown Speaker  34:19  
+This code basically says the code establishes a framework of responsible research conduct that provides a foundation for high quality research, credibility and committee trust in the research. Now based on this on our sheet, why the valley notes like Black Hole Research That's right, very good. The value that we want to uphold is high quality, credible and trustworthy research. We all want to make sure that research that comes out of universities, including the dissemination of research, sadden me how teaching you the knowledge that you get the these are high quality, these are credible, these approximately, so he's evaluated Michael. And what principles then follow that value? I want to read if you can with this out of your reading, I think this week. So there's a lot of things there, but just calling them out honesty, regard transparency, fairness, respect, recognition, probably promotion or responsible research practices. And if you go over, there's the responsibility on resolution and also the responsibility of the researchers, you and I. Now, why do we care? Because I was incredible impact and impact to benefit as a pilot, right? So here's just a couple of lists of Australian inventions that are pretty famous Wi Fi, right, you're all using it came out of CSR is ours research, I actually glued to their cover, which is pretty cool. I love all those things. As I just pointed out just one example, you and I become even more and more aggressive. The diversity here, sorry, consequences. And also the sort of status, the action that powers on impacts animals for the world. So that's high quality federal property research. These only can be insured if we all follow you know, this code of conduct research. And I can tell you the horror stories, but you can just go to retraction watch
+
+Unknown Speaker  37:11  
+a lot of them I
+
+Unknown Speaker  37:14  
+find it amusing horror stories to tell us you didn't want to do you know, go to retraction watch. There's this very famous paper the one let me just see a pointer here. So this paper money 98 published in The Lancet ah, actually is based on overpopulation anyway, but he's He was highly cited. There was a basically saying that well, you know, childhood vaccination is positive.
+
+Unknown Speaker  37:58  
+Right? Okay.
+
+Unknown Speaker  38:01  
+Has become essentially used as a weapon of anti vaccination, remember, only was only retracted CCNE as part of that. But what is interesting is even after refraction, the damage can be done. If you look at the refractive watch website, the number has a citation actually increase that he was retracted because actually caught a lot of potential in that paper. And what more citations with that paper. Um, this is pretty new. This just happened a couple of weeks ago. And these guys who work at The Ohio State University and and basically, it's a lot of falsification of data, and plagiarism. So, and the research is just reporting completely wrong things. Of course, this would be very harmful. Because if you actually base your you know, better at what was going on this research,
+
+Unknown Speaker  39:19  
+people got cancer might be harm is this. Yeah, there are a lot of others like this. There was one read a couple a couple of months ago about the link between 5g and COVID-19.
+
+Unknown Speaker  39:39  
+And an extra practice. So now it's up to you where to go. Alright, so why so these need condoms I would advise even as we as you leave the university once you graduate This year next year, you and I will continue to be our research will continue to grow in our knowledge. Even if you do, if you go into a tech company, you still have to do market research and user research, the principles apply the same principle of like, we need to have these integrating in a way from doctors. And also, yeah. Thanks to our high school who has kindly given us all ACM membership, including us student, so we don't need to pay for a membership. I don't have you, but you are an ACM member. Right? You are an exam member. So CFC pays for the organizational membership. And that leads me to buy today's important ethics and professional conduct.
+
+Unknown Speaker  41:03  
+So let's take a look.
+
+Unknown Speaker  41:09  
+Now, please read this by heart, and I want to ask you again, what is the value they will not depart?
+
+Unknown Speaker  41:37  
+What is it? Yes. There's implications that anyone who clean technology has an impact on and we want to increase the profit. Are you good? Yeah. So something that is all value is basically to preserve or, you know, the public group is very good. Yeah. And this current values, the public is demanding or misses the public good. So competing with the public good is about we want to preserve. So this is how you supposed to read coats and coats, this is how I read it. Because a lot of the samples you get, this is very long. But what is the heart of it, that's why it's important for getting value, what is the heart of these ethical codes or code of conduct? If you have lost lots of Islamic centers, was the juice is at the heart of it, then the value. And here, the value is computing for the public good. Again, that's my only partition, but you hope you and I agree on it right? Just by reading. So based on based on that value, why should it be possible if you want to make sure our computing technologies that we continue to adapt, look, even the legal unit testing that we do this type of feature that we do, the user analysis that we do will serve the public. So these are several key points on the general ethical principles. So contribute to society and to human well being. And not all people are stakeholders being MDC person. Sometimes when you when you design something, let's say we're designing a game, right? We definitely gate we might be thinking about, we can't say it's a game for everyone, we can say it's a game for a certain persona or a certain group. Could be students could be teenagers, could be, you know, stay at home parents. But there are other stakeholders in that technology that you definitely. So this is something we we need to actually very fun. And this will be actually part of the exercise of your assignment, which I'll talk more towards the second is the fourth arm. Be honest and forcefully prepare, respect the work required producing that means getting a new function is hard. Do not take it lightly. So first, start the work that comes into it. The spec proxy on our company providentially. I want to read this. I believe you've read it because it's partially material this week. And again, it's also functionally principles. So if you want to be a leader, you going through some meetings, these are these are things that you need to physically hold on hold to. And basically, number four is enforcing compliance that occurred. So you're expected to uphold, promote and respect the principles of the code as a competing professional, which means to you, you violate this code, you are not being consistently membership. And there was some member that, you know, in cases happen, you could be expelled from the medical profession. Not in here, it's not person here. But this is not typically the case. Like, for example, my medical profession, it didn't occur. To me it was like to be revived and all of these things. If you're a software engineer, there's even something even more specific for you. Is this even a join statement from ACM I triple E? for software engineers? Sorry, software. So let's go back to the valley competing for public good question is good for him.
+
+Unknown Speaker  46:32  
+So, when we when we actually, when we actually think about our software, design, we have to consider all users
+
+Unknown Speaker  46:46  
+it is very tempting, always, that you want, you only want to please your client,
+
+Unknown Speaker  46:54  
+you know, you might be a software company, you solve a house that is commissioned by the devil or something. Right. And this is what they think is valuable or important. But that your clients only one of the stakeholders, your users, you see is this lot of software creating or algorithmic creating is actually going to be for the good of your user. That will I owe you deserves, there might be other users. And this is where we need to start thinking about how do we identify the users. So the first thing is a user is any body that will be gaining value from your from your product by being a task within your product. So have you identify your user then proceed to transit this problem? Will that product solve problems on this user or segment? Market?
+
+Unknown Speaker  48:13  
+And then,
+
+Unknown Speaker  48:15  
+and therefore you need to do in order to understand what adds value you need to study it. And this is where often that can be complex, ethically, because how you study a user. Do you need to ask them directly all the time? Why are you gonna ask your user? Do it directly? Do you survey them, we monitor them? Do you know if they go into like engage deals? Do you know your your let's say make sure you wouldn't be a privacy preserving feature on tuition going forward, make sure you each and obviously, understand what it is privacy preserving, for example.
+
+Unknown Speaker  49:06  
+So
+
+Unknown Speaker  49:08  
+there's a lot of when we are there will be new computing the technology and all that we have, we have no choice but to think about the user. And often we have to involve the writer beginning in our design process.
+
+Unknown Speaker  49:34  
+So
+
+Unknown Speaker  49:36  
+there's a lot of different types of user research methods. Let me just before I go on about the sweater, let me just stop there by saying that even if you try to involve any users in your design A couple of things to consider, right? First is do you get everybody in concept to be to be part of your research? And there are a lot of different methods you can investigate this. Now tell me one thing. Before you're on a break, I want to ask you how many of you have just installed a new app? In your car in the past two, one or two weeks? They are very way off. Tell me an app that you find is useless Yeah,
+
+Unknown Speaker  50:54  
+so I bought your Nokia, like at like nuclear.
+
+Unknown Speaker  51:00  
+Like to make it look like it was great. But yeah.
+
+Unknown Speaker  51:06  
+They went for like reading texts. He saw reading text, never reading text. Yeah. Like texting.
+
+Unknown Speaker  51:13  
+But Jaffe, time beyond
+
+Unknown Speaker  51:17  
+audio, okay.
+
+Unknown Speaker  51:20  
+All right. Yeah. Literally in the app. Apple Bottom is just like a blank screen with the word button. Every penny.
+
+Unknown Speaker  51:39  
+All right. Microphone, I'm so sorry. What's your name? Okay. So our friend, he bought an app. Okay. So it's a free app. It's an app to do just generate numbers on random. No, it just goes up.
+
+Unknown Speaker  52:09  
+That basically just increment the number whenever you press the button, okay? Right, so somebody just thought, Okay, this will be consulting the user and we didn't deploy it. In fact, as much as all day in the app store that doesn't have any other horrible app that you will maybe doesn't there might be navigation on your desktop that you just have to do you just have to leave. But then once you're done with the task app, you are fine. All right.
+
+Unknown Speaker  52:57  
+Yep. But anyone else?
+
+Unknown Speaker  53:09  
+So it's important for us to actually understand the user who will use our product, and therefore these artists use their research right?
+
+Unknown Speaker  53:22  
+Now. So what we do often is we want to look at how people use the app, for example.
+
+Unknown Speaker  53:37  
+Got it, let's say somebody that could enter the bathroom. Try to narrow, uninstall, uninstall, I actually did that. Okay, this this, we're at a point, like maybe five different five different trials. And they saw, maybe we should, we should pre add that before we press of the button, we do something. So people talk, these are things for people to engage and will not install it. So these are things professionally, right? analyze the data on your own. And that's what people do all the time. And this will be done in a way that is basically the testing. So in here, but you know, that base, obviously, you need to have an asset to the life you could have lived every morning that users can have on the way here observation room and then on to level two, the present a task manager how the fact that things are closer that goes in here. So you're trying to look at the behavior rather than attitudes are there the y axis here is the weather. The user research is more to do with observing Yeah, attitude or behavior. And yeah, feasibility testing, for example. And that's more qualitative. So you don't need only can be with a small number of users. Whereas you can, if you want to feel towards large scale, I think you want to be able to capture people's attention. You want to be able to capture the opinions of surveys. And that could be quantitative as well, sort of on the x axis was qualitative or quantitative. And the top quadrant here is behavior and loss, you can get beat, especially at testing. But and this is what big companies do all the time. So I've example, there was a TED Talk by the UFC, they have guests on Facebook, who say, the light bomb, then you and I have used that you three months to develop and refine, given the size and shape of the life, this monitoring the different ways. So as you monitor the button, only as one person, but that light button was actually being monitored by a woman, Daniel Burnham has resigned on Facebook, to see the different paths and shape of the light button that was tested. Maybe we realize, actually, the last one shape and size and the look and feel change quite a bit. We didn't realize in one shape or another have made it more engaging than the other example. That's the way they did their design reaction as well. So with all this, you might think Wait a minute packets really FFC newsrooms while doing user research?
+
+Unknown Speaker  57:07  
+Yes, my friend.
+
+Unknown Speaker  57:29  
+Thank you privacy competish confidentiality is one of the principles of ACM. And so if we collect data from users, they need to know about it. That's basically what you're saying. Right? Yes,
+
+Unknown Speaker  57:45  
+like the safety thing like automated driving, so.
+
+Unknown Speaker  57:56  
+Yeah, so if you're to test automated automation, right, we knew that going to be an extreme example of the way that a lot of fastening so you think we can avoid use of research practice. So researchers mental work, when you go out there where the company is insolvent, or you saw your arm? Before that, I think this is where we didn't have our plans at the festival. And the different ways to actually have different protocols engaged user before you start user research. In whichever method you use, either one packet capture a small, small sample and issues from focus groups or interviews through last year behavior through clickstream analysis or through AD testing. It is important to have these physicals that that you could that stand up to let's say your boss or client asked to do something unethical. I think let's just stop there. People were awkward or for 10 minutes break. Make sure you come back,
+
+Unknown Speaker  59:32  
+because I promise. I'll wrap this back by the end of this week. So hopefully you can see it. Online. It's early next week. Okay, so come back at 116 All right. Well, yes, we're supposed to be back
+
+Unknown Speaker  1:11:26  
+people over
+
+Unknown Speaker  1:12:01  
+Thank you, Tom, for QBO response. So to check, because the response has to do with my question whether, when if ethics and user research, and how to respond to that user should not? Yes, because they're probably not exploited or acquisition of ice. Okay. Now
+
+Unknown Speaker  1:12:33  
+there is this human research ethics argument. So, I show you before, what I showed you the core was basically the core of conduct and ethics for responsible research. So, that's to do with you. So, we said, this one here is sort of a new, we research on human subjects. Okay. So, I mean, you're, you're doing research on human subjects, then this document was for you. And how do we use essential pigment again, this the Texas is just a screenshot on the first page. I won't read it, because I hope you will take time to read it. But basically, it actually explains what is research and why do you use human when we were using subjects in your profession, you can use these as well. So even as you leave university, whenever you do a lot of research, product research, you need to download something new, you need to consider some of these guides and therefore a lot of common issues and practices that we get to be helpful when we are doing research with human subjects. So the first is,
+
+Unknown Speaker  1:14:10  
+that is rules.
+
+Unknown Speaker  1:14:13  
+Do we need ethics approvals? Where are they where are the cases where we do research? Where we actually need ethics approvals or not.
+
+Unknown Speaker  1:14:29  
+So for example
+
+Unknown Speaker  1:14:33  
+let's let's say a very simple example. You want to add a new interface one atm, right? That's any interface on ATM that means we going on in physical minute cyborg safer and efficient. You don't have to actually try to cover your you know, your hand a long time with no physical problem people have been looking at UK mean your password or your pin. And you got to make sure what you're showing works in the public space. The last thing we want to observe people using the new ATM interface
+
+Unknown Speaker  1:15:27  
+we are supposed to record why we don't mean any harm
+
+Unknown Speaker  1:15:42  
+moving as a Publix and the question is, how do you plan to stay home with?
+
+Unknown Speaker  1:15:50  
+People? Yes, do we want to have some way of recording write up the record and just you know, taking some photos. And again, you know, having you as a data point in Sunday's report without you knowing who are the important airport, and it could be an employee, it could be poorer, it could be some of these whatever the issue are, then while that's when you need to start a setting when you get at schools are not able to do this. If you actually push it into university that's publicly funded, or if your company is socialist and inspired by politics, or by federal levels, most of the time, you do need to have it in school and never need to study involving human subjects. But the risks are very, it could be very low risk, simple things like doing a survey, I mean, we do survey all the time. But yes, we do need to be able to answer that is very Molly's voice unless your surveys are involving people from vulnerable groups or people who are under 18, for example. So these are the hiring overs. So the guidelines here actually give you a bit of information about what's so important is people that you involve in affordable need to be one watt contributor.
+
+Unknown Speaker  1:17:47  
+And this should be voluntary content.
+
+Unknown Speaker  1:17:52  
+And whenever you apply for global money to power and design for a whole beforehand, so that ethics committee can review it and see whether this is high risk or low risk it's also important how you're recruited and it will also also make it even more precise and any idea why I'm going to recruit participants
+
+Unknown Speaker  1:18:23  
+and
+
+Unknown Speaker  1:18:26  
+the culture to the risks of the ethics well all right, no response give me five who are usually very groups are thinking about the compensation compensation is quite so whether compensation for bias your results? Well, in essence, you we should be maybe actually getting an assignee that piece of whatever's next 30 minutes or an hour, normally that comes with wherever you are at any given point when actually, some studies show that you actually offer globalization as you get more engaged with society rather than you getting people who are you know, not, you know, not quite willing to do it because they're not offering you their time. So the thing is, I assume you're going to be at risk Because depends on the passionately relationship goal. So for example, if I'm running a new site on my research, and I want to be able to use the see to validate your my research, and I'm pretty new, my student is my password this will be a big black for me because they might think there could be some foreshadow manipulation the use of that student teacher relationship. So how do you mess up she goes without putting it fine with completely in the public domain. It shouldn't be it is not the direct. These are
+
+Unknown Speaker  1:20:50  
+more general sampling on message students, for example. So you should not be coerced, participating. We collect all using this information, we store them. Normally in ethics approval, one of the Partner Portal was used before they have at least five years before any historian soil. And how do you keep this confidential? How many people are secret service.
+
+Unknown Speaker  1:21:24  
+So
+
+Unknown Speaker  1:21:27  
+this is where some of the history of ethics, human research ethics, a lot of us documents that the Australian HMRC got on computers, ethics. And ultimately, a lot of other countries defined it. One of the historical point is the mirror report card in my info center. So this was the picture of the trial of the year her daughter's solo it is these weren't any gym lockers that I missed the Holocaust. So well, they're Their argument was basically this was a naval fire gas chambers. And the different portrait that happened in the concentration camp was basically trying to come up with a more pure iron Aryan race as a new story, but they also use it as an apology, to fire lots of different new medicines.
+
+Unknown Speaker  1:22:50  
+So
+
+Unknown Speaker  1:22:53  
+with these are decided and their headquarters that came up on the year before. People want basically, their voluntary consent of the field subject is absolutely essential. So that was the code. Number one, that if you if you only have a one out of 10, that's a one in three constant on human subjects is absolutely essential. And there's even more detail such for what is consent, the person needs to have a capacity to consent and free to vote portion. So they should not be forced to give you consent. And they need to understand what they're consenting to. What is the content given? So what is the risk benefit involved? And that's the only one you need to provide whenever you are somebody participating yesterday. And we got our points. qualified researchers need to use supporters if you're not qualified for searching skill, you should only be able to say the degree of risk should not exceed the benefits. So it is more risky than beneficial than not you decide and you postpone they always have one more concept. At the end of the day, this new remarkable career was justifying why he was never use online as an ethics is a code of ethics for human research. Who said the focus was a lot more on just the Human Rights aspects rather than the actual, physical, powerful
+
+Unknown Speaker  1:24:49  
+human research.
+
+Unknown Speaker  1:24:52  
+So another historical point of universe checkups is the big word So I've been at this Bible Medical Association. And this has gone from refinement many, many model violence, even having the latest revision was just a couple of months ago.
+
+Unknown Speaker  1:25:14  
+I don't know what revision number is that. So, so this is actually the ethical principles on conducting humanist ethics in medical field, the medical.
+
+Unknown Speaker  1:25:35  
+So you have the general principles like, you know, basically, you should not harm your participants, and basically looking at the resort and benefits. But it also add a lot of other things, as I say, kind of normal words, and assigning clients and protocols and during the research, how do you actually define it, and basically, consistency of the protocol, if you're make sure your data is valid, that you piping them, the way you do your let's say, a protocol for trials, if you want to do treatment on both a everybody age should be treated the same. That's why we have the same protocol otherwise, you take on a consistent, the finding will not be consistent. There's also a second privacy confidentially. Informed consent. And there's also a lot of detail about how do you get informed consent, use of Facebook word participants? are some words that are uncomfortable, some are not. How do you get him? How do you want them whether they're on Facebook or not? In order not to actually coupled with the data, but at the same time, they need to be aware that at some things they might get, like work for provisions? And also, then how do you submit the result? Participants have the right to get accepted results? Because if they're part of the data, they have the right view as there is no unless they think intervention. Once you once you've deployed the operating file within practice, and in terms of intervention was not proven valid? How do you actually then rectify how to go back to your daughter study? So a lot of these are there in medical research, because they have a direct direct interaction with the end user patients right? Now to go back to their users.
+
+Unknown Speaker  1:27:54  
+If you look at this, talk and read the little metal thing, let me just start off by asking you here. How many of you here either as a student of practitioner you might be already working in a company and apartment? How many of you have done any of these things matter? All? Right, right. Even as an assignment, we want to submit
+
+Unknown Speaker  1:28:24  
+Yes. Your ideas.
+
+Unknown Speaker  1:28:29  
+What about focus groups? Does anyone have experience running focus groups or being part of a poster? Right? And what about things like usability testing? Has anyone tried this new testing?
+
+Unknown Speaker  1:28:54  
+Lab online?
+
+Unknown Speaker  1:28:58  
+Lab? Can you tell us a bit more about this experience
+
+Unknown Speaker  1:29:14  
+he needed to declare the test session and the group was the third was the members of that class including the tutor as well. We did have to provide Sam wouldn't have to formally speak out that we will keep everything confidential and private. Everything will be used for the purpose of the of the of the evaluations of the prototype only. Then we carried on the whole testing session without a lot of interesting details that we missed out on We've died a product that we didn't think of before. We did have a really good outcome out of that.
+
+Transcribed by https://otter.ai
