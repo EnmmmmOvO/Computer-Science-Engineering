@@ -1,0 +1,7 @@
+main :: Int
+     =
+    let f :: (Int -> Int -> Int) =
+        recfun f :: (Int -> Int -> Int) x = 
+          recfun g :: (Int -> Int) y = y + y;
+
+    in f 2 3;

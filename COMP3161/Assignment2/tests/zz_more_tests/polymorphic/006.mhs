@@ -1,0 +1,3 @@
+main = recfun f x = case x of 
+ Inl z -> z; 
+ Inr k -> k;;

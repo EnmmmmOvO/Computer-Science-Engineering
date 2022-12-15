@@ -1,0 +1,8 @@
+main
+     = let f =
+            recfun f x = 2 * x;
+       in let
+           g =
+            recfun g x = -x;
+
+       in g (f 2);

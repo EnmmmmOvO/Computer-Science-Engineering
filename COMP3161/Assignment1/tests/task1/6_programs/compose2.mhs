@@ -1,0 +1,19 @@
+
+main :: Int 
+     = 
+    let
+        compose2 :: ((Int -> Int) -> (Int -> Int -> Int) -> Int -> Int) =
+            recfun compose2 :: ((Int -> Int) -> (Int -> Int -> Int) -> Int -> Int) f =
+                recfun compose2' :: ((Int -> Int -> Int) -> Int -> Int) g =
+                    recfun compose2'' :: (Int -> Int) x = f (g x x);
+
+    in let
+        dub :: (Int -> Int) =
+            recfun dub :: (Int -> Int) x = x * 2;
+
+    in let
+        mul :: (Int -> Int -> Int) =
+            recfun mul :: (Int -> Int -> Int) x =
+                recfun mul' :: (Int -> Int) y = x * y;
+
+     in compose2 dub mul 3 ; -- 2 * (3 * 3) == 18

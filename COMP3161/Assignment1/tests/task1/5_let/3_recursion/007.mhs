@@ -1,0 +1,4 @@
+main :: Int = let sum :: [Int] -> Int
+                        = recfun sum :: [Int] -> Int
+                                   x = if null x then 0 else head x + sum (tail x);
+                 in sum (Cons 3 (Cons 2 (Cons 1 Nil)));

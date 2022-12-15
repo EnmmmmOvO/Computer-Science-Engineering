@@ -1,0 +1,5 @@
+main = 
+  if True 
+    then let g = recfun f x = x; in g
+    else let g = recfun f x = x; in g
+  ;

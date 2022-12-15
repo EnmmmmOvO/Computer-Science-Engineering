@@ -1,0 +1,153 @@
+Arith ::= Num Nat
+        | Var String
+        | Plus Arith Arith
+        | Times Arith Arith
+        | Let String Arith Arith
+
+(Let s e1 e2) ∼  let s = e1 in e2 end
+
+
+
+let
+  x = 5
+in
+  x + x
+end <-- well-scoped
+
+let
+  x = 5
+in
+  x + y
+end <-- not well-scoped
+
+let
+  x = x
+in
+  x + x
+end <-- not well-scoped
+
+
+Γ ⊢ e ok
+
+Γ (the context) is a set of (bound) judgements
+  however, we're too lazy to write set brackets
+
+  ⊢ e ok     that means      {} ⊢ e ok
+
+  j, Γ ⊢ e ok   that means   {j} ∪ Γ ⊢ e ok
+
+                x bound ∈ {x bound}      x bound ∈ {x bound}
+                __________________       __________________
+                x bound ⊢ Var x ok       x bound ⊢ Var x ok
+__________      ___________________________________________
+⊢ Num 5 ok       x bound ⊢ Plus (Var x) (Var x) ok
+__________________________________________
+⊢ Let x (Num 5) (Plus (Var x) (Var x)) ok
+
+
+We don't want this judgement to be derivable:
+
+  ⊢ Let x (Var x) (Plus (Var x) (Var x)) ok
+ ...unprovable
+ _________    
+ ⊢ Var x ok          x bound ⊢ Plus (Var x) (Var x) ok
+__________________________________________
+ ⊢ Let x (Var x) (Plus (Var x) (Var x)) ok
+
+Q: For this one, does the fact that we got stuck in the proof
+   show that it's not well-scoped?
+
+A: In this case, yes, but in general, no.
+
+   In this case: for every construct (Let, Plus, Var) ...
+   there's exactly one inference rule,
+   and exactly one way to apply that rule.
+
+   Or, in other words: the ok judgements are unambiguous.
+
+   But, if the rules are ambiguous, you might get stuck
+   because you took the wrong path further up in the
+   proof tree.
+
+
+     A ⊢ A ∨ B
+
+
+     A             B
+   _____ ∨I1     _____ ∨I2
+   A ∨ B         A ∨ B
+
+      unprovable :(
+      _____
+      A ⊢ B
+   ___________ ∨I2
+    A ⊢ A ∨ B                        
+
+Q: Then how do you prove that a judgement
+   doesn't hold for ambiguous rules?
+
+A: In order to prove that  t J  is unprovable,
+   prove:  (⊥ means "false")
+
+      t J ⇒ ⊥
+
+   By induction on t J, or by case analysis on how
+   t J could have been derived.
+
+Q: Could you prove it by trying all possibilities?
+
+A: Yes, but there might be infinitely many.
+
+
+One example of an operational semantics is β-reduction
+for the lambda calculus.
+It tells you how a program can perform a single step.
+
+⟦⬝⟧ <-- semantic brackets
+That's notation for a function.
+⟦ ⟧ the brackets are the name of a function,
+    and the argument is writen inside the brackets.
+
+Compositional means that the semantics of the whole
+  should be defined in terms of the semantics
+  of its parts.
+
+  ⟦Plus e1 e2⟧ = f(⟦e1⟧,⟦e2⟧)   for some f
+
+E[x:=v]  <--- function update
+          (reminiscent of substitution)
+
+a function that behaves exactly as E,
+ except it returns v for x
+
+
+E[x:=v] = λy. if x = y then v else E(y)
+
+SOS: Gordon Plotkin (early 80's)
+
+let x = 1+1+1+1+1+1+1+1+.... a billion times
+in
+  5 <-- call by name would be better
+end
+
+let x = 1+1+1+1+1+1+1+1+.... a billion times
+in
+  x + x <-- here, we might prefer call-by-value
+            call-by-name does two billion+1 addition
+
+(* In this (fake) programming language, print
+   returns a number.
+ *)
+let x = print "hello world!"
+in
+  x + x
+
+*Maximal* traces: traces that can be extended no further.
+*Final* states: a subset of the states that we choose.
+*Complete* traces: maximal traces that end in a final state.
+
+Undefined behaviour
+
+A state that not final,
+ but has no outgoing transitions,
+ has undefined behaviour.

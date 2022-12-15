@@ -1,0 +1,5 @@
+main = let x = case Inl (True, 7) of
+		  Inl x -> Inr x;
+		  Inr y -> Inl y; ;
+       in x;
+

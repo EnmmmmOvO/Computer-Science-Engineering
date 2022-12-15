@@ -1,0 +1,340 @@
+(λx. t)  a function with no name,
+         that accepts x as its argument,
+         and has t as its body.
+
+(λx. t) u   applying the aforementioned
+            function to the argument u
+
+β-reduction specifies what happens when
+we call a function: we should execute
+the body, but with x replaced with u.
+
+  (λx. t) u ↦β t[x:=u]
+
+Q: For (λx. t) is t the body of the function? or that which the
+function returns? The slides seem to contradict with your description
+
+A: Both. In functional programming languages
+   (e.g. Haskell) the body of a function is
+   just a description of a value
+
+add :: Int -> Int -> Int
+add x y = x + y -- RHS is both body and return
+                   value
+
+
+  (λx. x + 5) 4 ↦β 4 + 5
+  ^^just for illustration, 4 + and 5 aren't
+    things (yet)
+
+
+Q: How would multiple arguments be denoted in this syntax?
+
+A: See next slide.
+
+ (λx.λy. x + y)
+
+  ^^^ A function, which given a number x
+       returns *another* function,
+        which, given a number y,
+          returns x + y
+
+"Multi-argument" functions like this
+ -- that is, multiple arguments encoded with
+    nesting
+ -- is called curried functions (Haskell Curry)
+
+(λa. f a) b "the function λa. f a applied to
+             argument b"
+
+
+(λx. λy. x + y) = λx y. x + y
+
+β-reduction: a step that enters a function
+             somewhere
+
+β-redex: an unevaluated function call:
+         something that looks like this:
+
+          (λx. t) u   <--- that's a β-redex
+
+Q: s -- is that a λ function?
+A: s is a term in the λ-calculus
+
+Q: I'm finding it hard to read the difference between "t" and “λx. t”
+
+  if t is a computation
+    (that is, would produce a value if we
+              do some computation)
+  (λx. t)  is a *function* that will perform the
+           computation t once we call it
+
+Application is left-associative:
+
+  a b c = (a b) c
+
+
+ T
+ =
+ (λx. λy. f (y x)) 5 (λx. x)
+ =
+ ((λx. λy. f (y x)) 5) (λx. x)
+ ^^^ ^^^^^^   ^^^^ ^^^  <-- that's a β-redex
+ ↦β
+ (λy. f (y x))[x:=5] (λx. x)
+ =
+ (λy. f (y 5)) (λx. x) <-- the whole term is a β-redex
+ ↦β
+ f ((λx. x) 5)
+ ↦β
+ f 5
+
+ Because T β-reduces to f 5, and f 5 cannot be further
+ reduced,
+ we say that f 5 is a β-normal form of T.
+
+ If you want to, you can think of normal forms
+ as analogous to values.
+
+ now we're stuck
+
+
+Confluence means that any choice you make
+during a λ-calculus computation (aka β-reduction)
+is ultimately meaningless, because no matter
+where you choose to reduce first,
+you'll compute the same normal form eventually.
+
+For any given λ-term t, if t has a normal form,
+  then this normal form is unique.
+
+It *may* be the case that one path is
+ "more efficient" than another.
+Sometimes, one path will require more β-reductions
+than another to reach the normal form.
+
+Q: can you have terms that don't reach a normal
+   form, despite it existing?
+
+A: No. If there is a normal form, it's always
+   reachable.
+
+Q: does every term have a normal form?
+
+  (λx. x x) (λx. x x)
+  ↦β
+  (x x)[x:=(λx. x x)]
+  =
+  (λx. x x) (λx. x x)
+
+This term clearly has no normal form.
+Its only β-reduction is to itself.
+
+
+α-equivalence:
+  terms that are equal except in the choice of
+  bound names
+
+  (λx. x) ≡α (λy. y)
+
+β-equivalence:
+  terms that can be reduced to the same thing
+  by performing some (0 or more) β-reductions
+
+  (λx. x 5) f ≡β f 5 ≡β (λx. f x) 5
+
+αβ-equivalence: both of the above.
+
+
+We don't have values, we just have functions.
+To encode values as functions, the idea is:
+
+  given a value, what would you *do* with it
+
+Q: What would you use a boolean value for?
+A: You want to behave differently depending on
+   your value.
+
+Q: What would you use a number n for?
+A: do some task n times (e.g. in a for loop)
+
+Encode what you are as what you'd do.
+
+A boolean, then, denotes a choice between
+doing two things (as in if-then-else).
+
+Then true corresponds to choosing the first thing.
+    false corresponds to choosing the second thing.
+
+Booleans as binary functions, where the arguments
+  represent the choices.
+
+  true  ≡ λx. λy. x
+  false ≡ λx. λy. y
+
+  not   ≡ λb. λx. λy. b y x
+          or if you prefer:
+          λb. b false true
+
+  p ∧ q
+  =
+  if p then q else false
+
+
+  in the λ-calculus, you don't need if-then-else
+
+  and   ≡ λp. λq. p q false
+
+  where false is shorthand for the def above
+
+  p ⊕ q ≡ if p then ¬q else q
+
+  xor ≡ λp. λq. p (not q) q
+
+Q: What would you use a number n for?
+A: do some task n times (e.g. in a for loop)
+
+A number is a function which takes two arguments.
+The first argument corresponds to the task,
+the second argument corresponds to what you start from.
+
+    0  ≡ λf. λx. x               Z
+    1  ≡ λf. λx. f x             S Z
+    2  ≡ λf. λx. f(f x)          S(S Z)
+    3  ≡ λf. λx. f(f(f x))       S(S(S Z))
+    ...
+
+You'll notice these look *a lot* like Peano numbers
+
+  data Nat = Z | S Nat
+
+  suc(x) = x + 1
+
+  suc ≡ λn. λf. λx. n f (f x)
+      or, if you prefer
+        λn. λf. λx. f(n f x)
+
+
+  suc 1
+  =
+  (λn. λf. λx. n f (f x)) (λf. λx. f x)
+  ↦β
+  λf. λx. (λf. λx. f x) f (f x)
+          ^^^^^^^^^^^^^^^
+  ↦β
+  λf. λx. (λx. f x) (f x)
+          ^^^^^^^^^^^^^^^
+  ↦β
+  λf. λx. f (f x)
+  =
+  2
+
+  add ≡ λn m f x. n f (m f x)
+      or
+        λn m. n suc m
+
+  add 1 1
+  =
+  (λn m f x. n f (m f x)) (λf x. f x) (λf x. f x)
+  ^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+  ↦β
+  (λm f x. (λf x. f x) f (m f x)) (λf x. f x)
+  ↦β
+  (λf x. (λf x. f x) f ((λf x. f x) f x))
+                        ^^^^^ ^^^^^^^^
+  ↦β
+  (λf x. (λf x. f x) f ((λx. f x) x))
+  ↦β
+  (λf x. (λf x. f x) f (f x))
+         ^^^^^^^^^^^^^      
+  ↦β
+  (λf x. (λx. f x) (f x))
+  ↦β
+  (λf x. f (f x))
+  =
+  2
+
+  idea: you can compute n*m
+         m + m + m + m + ... + m
+            ^^^^ n copies of m
+
+  mult ≡ λn m. n (add m) 0
+
+
+The Y combinator allows you to write
+  functions that behave like recursive functions.
+
+  Y g ≡αβη g(Y g)
+
+The fact that the Y combinator exists is the reason
+why the (untyped) λ-calculus fails as a foundation
+of mathematics.
+
+If you're defining the foundations of mathematics,
+you probably want it to be consistent.
+You probably want false to be unprovable.
+
+ Y not ≡αβη not(Y not)
+
+In other words: we can write down a term
+ that is equivalent to its own negation.
+
+But the fix later introduced by e.g. Church
+  is to restrict the λ-calculus to make Y
+  undefinable, by introducing a type system.
+
+Here, yet again, an important PL tool (type systems)
+were studied by logicians before your grandparents
+were born.
+
+ Y g ≡αβη g(Y g)
+
+ Y = (λf. (λx. f (x x)) (λx. f (x x)))
+
+ Y g
+ =
+ (λf. (λx. f (x x)) (λx. f (x x))) g
+ ↦β
+ (λx. g (x x)) (λx. g (x x))
+ ↦β
+ g ((λx. g (x x)) (λx. g (x x)))
+ ≡η
+ g ((λg. (λx. g (x x)) (λx. g (x x))) g)
+ ≡α
+ g ((λf. (λx. f (x x)) (λx. f (x x))) g)
+ =
+ g (Y g)
+ ≡αβη
+ g (g (Y g))
+
+For this reason, the Y-combinator allows you
+to program recursive functions.
+
+
+ Let's define factorial
+   fact 0 = 1
+   fact n = n*fact(n-1)
+
+ eq_0 = a function that returns true iff
+        its argument is 0
+
+ pred = a function that given a number returns
+        its predecessor (bottoming out at 0)
+
+ eq_0 is easy to define, pred is hard
+
+ g = λf n.
+        (eq_0 n)
+          1
+          (mult n (f (pred n)))
+
+ fact = Y g
+
+Q: I said λ-calculus is confluent, but
+   what if you keep expanding Y instead
+   of ever choosing a branch.
+A:
+ fact 1    has normal form 1
+           but it *also* has a path that diverges
+           but, on the divergent path, you can always
+           get back on track by evaluating the if.

@@ -1,0 +1,275 @@
+Syntax
+- the study of what is considered a well-formed program
+- which strings of text correspond to which programs (lexing,parsing)
+
+Static semantics
+- the study of what the program means
+Things we can say about the meaning of a program,
+without actually running it.
+
+- Types
+- Scoping (which occurences of "x" refer to the same variable)
+
+With static semantics, we can
+- Make predictions about what will happen when the program runs
+- Impose requirements (beyond the syntax) that must be satisfied
+  before it makes sense to run the program.
+
+  public static void main(String[] args) {
+    System.out.println(x);
+  }
+  ^^ this is syntactically well-formed,
+     but it's not well-scoped.
+     We have x which is a free variable.
+
+Dynamic semantics
+- What does the program do:
+  what are the allowed behaviours of a program when we execute it.
+
+
+  U   B
+ ______  &I
+  U & B
+
+If you have a proof of U,
+ and a proof of B,
+then you can apply &I rule,
+to get a proof of U&B
+
+Inference rules are crafting recipes.
+
+If I have a way of obtaining sticks,
+ and I have a way of obtaining cobblestone,
+then I can use a recipe to get a lever!
+
+  stick    cobblestone
+  ____________________
+         lever
+
+Nats as:
+
+1. A Haskell datatype declaration
+
+  data Nat = Z | S Nat
+
+2. As a (wall-of-text) inductive
+   definition
+
+  1. 0 ∈ Nat
+  2. ∀n. n ∈ Nat, then S n ∈ Nat
+
+3. The exact same thing.
+
+{0, S 0, S S 0, ...}
+
+ {n | n Nat}
+
+Every judgement you can build
+by applying the rules N1 and N2
+finitely many times.
+
+
+  n Even
+ ______________  E2
+ (S (S n)) Even
+
+E2 is an inference rule.
+The things above and below are *judgements*
+
+   ________ E1
+    0 Even
+ ____________  E2
+  S S 0 Even
+ _____________ O1
+  S S S 0 Odd
+
+Q: Is that a formal way of writing it or just informal?
+
+A: It's a formal way of writing it.
+   It's called a *proof tree*.
+
+  <this is unprovable :(>
+  _______
+  )(() M
+ __________ MN
+  ()(()) M
+
+A point:
+- you actually have to think
+  when you play the proof video game :(
+- sometimes, if you choose the wrong rule,
+  or apply the right rule in the wrong way,
+  you'll get stuck.
+- if your derivation gets stuck, that doesn't
+  mean that what you're trying to prove is
+  false. maybe you just took a wrong turn.
+
+   <stuck>        <stuck>
+  _______         _______
+     ( M          )(()) M
+ ____________________ MJ
+  ()(()) M  
+
+Q: When can we come to a conclusion that something we are trying to
+prove is actually false, if there are many ways to try out all
+combinations of applying rules?
+
+A: In general, we don't get a way of doing that. To do that, you can't
+reason *in* the system of inference rules, instead you have to do
+meta-reasoning *about* the inference rules (e.g., by induction, or by
+case analysis)
+
+The three rules that define M give us ways to conclude that
+strings are matching parens. They give us no way to say what
+isn't matching parens.
+
+Sometimes, you can't test all combinations, because there are
+infinitely many.
+
+  ___ ME  ___________
+  ε M      ()(()) M  
+ ____________________ MJ
+     ()(()) M
+
+Q: sorry but the language "as it adds strings to M" is what?
+
+A: if we were to add the rule Q to our
+   existing three rules,
+   as part of the definition of M,
+   we would be able to infer that some strings
+   are now part of M that previously weren't
+
+
+ A   B
+ _____    written horizontally A,B ⊢ C
+   C
+
+
+   iron ingot
+  ___________ IB-I
+   iron block
+
+   iron block
+  ___________ IB-E
+   iron ingot
+
+If I want a sword, I need to take apart my block.
+
+
+
+
+  A ⇒ (B ⇒ C) ⊢ (A ∧ B) ⇒ C
+
+
+                 A ∧ B          
+                 ______ ∧E-1
+   A ⇒ (B ⇒ C)     A           A ∧ B
+     _________________⇒E       ____ ∧E-2
+      B ⇒ C                     B
+    ___________________________________ ⇒E
+                   C
+_________________________ __________________ ⇒I
+               (A ∧ B) ⇒ C
+
+
+If I have a bunch of inference rules
+
+               n Nat
+  _____ (0)  ________ (1)
+  0 Nat       S n Nat             
+
+together, (0) and (1) form an *inductive definition*
+of the set Nat.
+
+Two ways of thinking about what that means:
+1. Nat is the smallest (wrt subset inclusion) set that is closed under (0) and (1).
+2. Nat is the set of everything that can be obtained by appling
+   (0) and (1) finitely many times.
+
+"No junk" -- Nat contains what the rules say, and nothing else.
+
+There are many sets that are closed under (0) and (1).
+
+  {0, S 0, S S 0, S S S 0, ...,
+   S !, S S !, S S S !, ..} <-- this set is still closed under (0,1)
+
+
+
+Theorem op_eq_cl:
+  ∀s s M ⇒ op(s) = cl(s)
+Proof
+  By rule induction (aka by induction on the deriviation of s M)
+
+  Case ME: op(ε) = cl(ε)
+    op(ε) = 0 = cl(ε)
+  Case MN: If op( s ) = cl ( s ) <-- that's the IH
+           then  op( (s) ) = cl( (s) ) <-- that's the proof obligation
+
+    op( (s) )
+    (by defn)
+    1 + op(s)
+    = (by IH)
+    1 + cl(s)
+    = (by defn (backward))
+    cl( (s) )
+
+  Case MJ: If  op(s1) = cl(s1),
+           and op(s2) = cl(s2), then
+             op(s1s2) = cl(s1s2)
+
+    op(s1s2) = op(s1) + op(s2) = cl(s1) + cl(s2) = cl(s1s2)
+QED
+
+Q: is s1s2  s1 multiplied by s2?
+A: These are variables that denote strings,
+   so it's s1 concatenated with s2.
+   alt: s1⬝c2   s1++s2   s1@s2    s1⌢s2
+
+ P(n) = S n Odd'
+
+ P(0)
+
+ P(n) ⇒ P(S S n)
+
+Theorem bla:
+ ∀n. n Even ⇒ S n Odd'
+Proof
+  By rule induction on "n Even".
+
+  Case E1: We must prove  S 0 Odd'
+  -- immediate from the O1 rule.
+
+  Case E2: We assume S n Odd' (IH)
+             we must prove S S S n Odd'
+  -- immediate from the O2 rule
+
+     S n
+    ________ O2
+    S S S n
+QED
+
+ ...         ...
+______   ___________
+1 Arith  2 X 3 Arith
+_______________ S
+1 + 2 x 3 Arith
+
+
+ ...            ...
+______       ___________
+1 + 2 Arith    3 Arith
+_______________ M
+1 + 2 x 3 Arith
+
+(1 + 2) x 3 ≠ 1 + (2 x 3)
+here: our grammar is ambiguous :(
+
+When you write function arrows in e.g. Haskell
+
+  A --> B --> C   =   A --> (B ---> C)
+
+ "a function which, given an A, returns a function from B to C"
+
+ (A --> B) ---> C
+
+ "a function which, given another function from A to B, returns C"

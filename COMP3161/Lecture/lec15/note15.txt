@@ -1,0 +1,34 @@
+Universally quantified types imply both freedom and constraints,
+but for different people.
+
+  foo :: ∀x. x -> x
+
+The *caller* of the function gains freedom from the universal
+ type: they can instantiate it however they like.
+
+    foo@Int 5
+    foo@Bool True
+    ...
+
+The *implementor* of foo gains only constraints
+  There are really only two implementations of foo:
+  - the identity function
+  - a function that never returns
+
+Existential types reverse the freedom/constraints situation:
+- When I *create* a value which has an existential type,
+  I can instantiate the existential to anything I want.
+- When I *use* a value of an existential type,
+  I must cope with any possible instance of it that might
+  come my way.
+
+
+- Pack: make a module
+- Open: use a module
+
+_________________________________ a' fresh
+Open (Pack τ e) (a.x. e') ↦ e'[a:=a',x:=e]
+
+
+Q: Any recommendations for sources or practices for this new feature? 
+A: on notice

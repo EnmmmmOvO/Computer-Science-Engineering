@@ -1,0 +1,2 @@
+main :: Int
+     = (recfun f :: (Int -> Int) x = x + x) 1;

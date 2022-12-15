@@ -1,0 +1,993 @@
+
+!!section banner
+#######  #####   #####   #####     #     #####  #
+#       #     # #     # #     #   ##    #     # #    #
+#             # #     # #        # #          # #    #
+ #####   #####   #####  ######     #     #####  #######
+      # #       #     # #     #    #    #            #
+#     # #       #     # #     #    #    #            #
+ #####  #######  #####   #####   #####  #######      #
+
+5286124 Wang, William                           3778/2 COMPA1
+
+Submissions:-
+
+S 0     Wed Nov  2 03:20:39 2022        5286124 wed14a Eval 4:16
+S 1     Wed Nov  2 10:29:57 2022        5286124 wed14a Eval 4:23
+
+Sat Nov 12 16:14:57 2022                ## vx02.orchestra.cse.unsw.EDU.AU ##
+!!section listing
+----------------
+/tmp/COMP3161.1490391.run
+----------------
+Archive:  /home/cs3161/22T3.work/Eval/minhs1.zip
+   creating: minhs1/
+  inflating: minhs1/Setup.hs
+  inflating: minhs1/run_tests_cabal.sh
+  inflating: minhs1/Main.hs
+  inflating: minhs1/run_tests_stack.sh
+  inflating: minhs1/minhs1.cabal
+  inflating: minhs1/stack.yaml
+   creating: minhs1/tests/
+   creating: minhs1/tests/task1/
+   creating: minhs1/tests/task1/3_variables/
+  inflating: minhs1/tests/task1/3_variables/002.out
+  inflating: minhs1/tests/task1/3_variables/003.out
+  inflating: minhs1/tests/task1/3_variables/001.out
+  inflating: minhs1/tests/task1/3_variables/000.out
+  inflating: minhs1/tests/task1/3_variables/000.mhs
+  inflating: minhs1/tests/task1/3_variables/001.mhs
+  inflating: minhs1/tests/task1/3_variables/003.mhs
+  inflating: minhs1/tests/task1/3_variables/002.mhs
+   creating: minhs1/tests/task1/2_nestedexpr/
+  inflating: minhs1/tests/task1/2_nestedexpr/006.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/002.out
+  inflating: minhs1/tests/task1/2_nestedexpr/003.out
+  inflating: minhs1/tests/task1/2_nestedexpr/007.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/005.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/001.out
+  inflating: minhs1/tests/task1/2_nestedexpr/000.out
+  inflating: minhs1/tests/task1/2_nestedexpr/004.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/004.out
+  inflating: minhs1/tests/task1/2_nestedexpr/000.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/001.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/005.out
+  inflating: minhs1/tests/task1/2_nestedexpr/007.out
+  inflating: minhs1/tests/task1/2_nestedexpr/003.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/002.mhs
+  inflating: minhs1/tests/task1/2_nestedexpr/006.out
+  inflating: minhs1/tests/task1/2_nestedexpr/008.out
+  inflating: minhs1/tests/task1/2_nestedexpr/008.mhs
+   creating: minhs1/tests/task1/1_primops/
+   creating: minhs1/tests/task1/1_primops/partial/
+  inflating: minhs1/tests/task1/1_primops/partial/Flag
+  inflating: minhs1/tests/task1/1_primops/partial/000.mhs
+  inflating: minhs1/tests/task1/1_primops/partial/001.mhs
+  inflating: minhs1/tests/task1/1_primops/partial/002.mhs
+   creating: minhs1/tests/task1/1_primops/primops/
+  inflating: minhs1/tests/task1/1_primops/primops/006.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/012.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/016.out
+  inflating: minhs1/tests/task1/1_primops/primops/002.out
+  inflating: minhs1/tests/task1/1_primops/primops/003.out
+  inflating: minhs1/tests/task1/1_primops/primops/013.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/007.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/011.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/005.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/001.out
+  inflating: minhs1/tests/task1/1_primops/primops/015.out
+  inflating: minhs1/tests/task1/1_primops/primops/014.out
+  inflating: minhs1/tests/task1/1_primops/primops/000.out
+  inflating: minhs1/tests/task1/1_primops/primops/004.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/010.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/004.out
+  inflating: minhs1/tests/task1/1_primops/primops/010.out
+  inflating: minhs1/tests/task1/1_primops/primops/014.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/000.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/001.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/015.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/011.out
+  inflating: minhs1/tests/task1/1_primops/primops/005.out
+  inflating: minhs1/tests/task1/1_primops/primops/013.out
+  inflating: minhs1/tests/task1/1_primops/primops/007.out
+  inflating: minhs1/tests/task1/1_primops/primops/003.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/016.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/002.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/006.out
+  inflating: minhs1/tests/task1/1_primops/primops/012.out
+  inflating: minhs1/tests/task1/1_primops/primops/Skip
+  inflating: minhs1/tests/task1/1_primops/primops/008.out
+  inflating: minhs1/tests/task1/1_primops/primops/009.out
+  inflating: minhs1/tests/task1/1_primops/primops/009.mhs
+  inflating: minhs1/tests/task1/1_primops/primops/008.mhs
+   creating: minhs1/tests/task1/1_primops/unarynegate/
+  inflating: minhs1/tests/task1/1_primops/unarynegate/000.out
+  inflating: minhs1/tests/task1/1_primops/unarynegate/000.mhs
+   creating: minhs1/tests/task1/1_primops/listops/
+  inflating: minhs1/tests/task1/1_primops/listops/Marks
+  inflating: minhs1/tests/task1/1_primops/listops/002.out
+  inflating: minhs1/tests/task1/1_primops/listops/003.out
+  inflating: minhs1/tests/task1/1_primops/listops/001.out
+  inflating: minhs1/tests/task1/1_primops/listops/004.mhs
+  inflating: minhs1/tests/task1/1_primops/listops/004.out
+  inflating: minhs1/tests/task1/1_primops/listops/001.mhs
+  inflating: minhs1/tests/task1/1_primops/listops/003.mhs
+  inflating: minhs1/tests/task1/1_primops/listops/002.mhs
+   creating: minhs1/tests/task1/0_basics/
+   creating: minhs1/tests/task1/0_basics/bools/
+  inflating: minhs1/tests/task1/0_basics/bools/Marks
+  inflating: minhs1/tests/task1/0_basics/bools/001.out
+  inflating: minhs1/tests/task1/0_basics/bools/000.out
+  inflating: minhs1/tests/task1/0_basics/bools/000.mhs
+  inflating: minhs1/tests/task1/0_basics/bools/001.mhs
+   creating: minhs1/tests/task1/0_basics/lists/
+  inflating: minhs1/tests/task1/0_basics/lists/Marks
+  inflating: minhs1/tests/task1/0_basics/lists/002.out
+  inflating: minhs1/tests/task1/0_basics/lists/001.out
+  inflating: minhs1/tests/task1/0_basics/lists/001.mhs
+  inflating: minhs1/tests/task1/0_basics/lists/002.mhs
+   creating: minhs1/tests/task1/0_basics/ints/
+  inflating: minhs1/tests/task1/0_basics/ints/Marks
+  inflating: minhs1/tests/task1/0_basics/ints/002.out
+  inflating: minhs1/tests/task1/0_basics/ints/003.out
+  inflating: minhs1/tests/task1/0_basics/ints/001.out
+  inflating: minhs1/tests/task1/0_basics/ints/000.out
+  inflating: minhs1/tests/task1/0_basics/ints/000.mhs
+  inflating: minhs1/tests/task1/0_basics/ints/003.mhs
+  inflating: minhs1/tests/task1/0_basics/ints/002.mhs
+  inflating: minhs1/tests/task1/0_basics/ints/Skip
+   creating: minhs1/tests/task1/0_basics/main/
+  inflating: minhs1/tests/task1/0_basics/main/Marks
+  inflating: minhs1/tests/task1/0_basics/main/main.mhs
+  inflating: minhs1/tests/task1/0_basics/main/Main.hs
+  inflating: minhs1/tests/task1/0_basics/main/main.out
+   creating: minhs1/tests/task1/4_ifthenelse/
+  inflating: minhs1/tests/task1/4_ifthenelse/006.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/002.out
+  inflating: minhs1/tests/task1/4_ifthenelse/003.out
+  inflating: minhs1/tests/task1/4_ifthenelse/007.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/005.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/001.out
+  inflating: minhs1/tests/task1/4_ifthenelse/000.out
+  inflating: minhs1/tests/task1/4_ifthenelse/004.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/004.out
+  inflating: minhs1/tests/task1/4_ifthenelse/000.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/001.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/005.out
+  inflating: minhs1/tests/task1/4_ifthenelse/007.out
+  inflating: minhs1/tests/task1/4_ifthenelse/003.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/002.mhs
+  inflating: minhs1/tests/task1/4_ifthenelse/006.out
+  inflating: minhs1/tests/task1/4_ifthenelse/008.out
+  inflating: minhs1/tests/task1/4_ifthenelse/008.mhs
+   creating: minhs1/tests/task1/6_programs/
+  inflating: minhs1/tests/task1/6_programs/Marks
+  inflating: minhs1/tests/task1/6_programs/compose2.out
+  inflating: minhs1/tests/task1/6_programs/test.out
+  inflating: minhs1/tests/task1/6_programs/lambda.mhs
+  inflating: minhs1/tests/task1/6_programs/lambda.out
+  inflating: minhs1/tests/task1/6_programs/test.mhs
+  inflating: minhs1/tests/task1/6_programs/compose2.mhs
+   creating: minhs1/tests/task1/5_let/
+   creating: minhs1/tests/task1/5_let/5_blackhole/
+  inflating: minhs1/tests/task1/5_let/5_blackhole/Flag
+  inflating: minhs1/tests/task1/5_let/5_blackhole/Marks
+  inflating: minhs1/tests/task1/5_let/5_blackhole/004.mhs
+  inflating: minhs1/tests/task1/5_let/5_blackhole/000.mhs
+  inflating: minhs1/tests/task1/5_let/5_blackhole/001.mhs
+  inflating: minhs1/tests/task1/5_let/5_blackhole/003.mhs
+  inflating: minhs1/tests/task1/5_let/5_blackhole/002.mhs
+  inflating: minhs1/tests/task1/5_let/5_blackhole/Skip
+   creating: minhs1/tests/task1/5_let/2_application/
+  inflating: minhs1/tests/task1/5_let/2_application/002.out
+  inflating: minhs1/tests/task1/5_let/2_application/003.out
+  inflating: minhs1/tests/task1/5_let/2_application/001.out
+  inflating: minhs1/tests/task1/5_let/2_application/000.out
+  inflating: minhs1/tests/task1/5_let/2_application/004.mhs
+  inflating: minhs1/tests/task1/5_let/2_application/004.out
+  inflating: minhs1/tests/task1/5_let/2_application/000.mhs
+  inflating: minhs1/tests/task1/5_let/2_application/001.mhs
+  inflating: minhs1/tests/task1/5_let/2_application/003.mhs
+  inflating: minhs1/tests/task1/5_let/2_application/002.mhs
+   creating: minhs1/tests/task1/5_let/4_partial_application/
+  inflating: minhs1/tests/task1/5_let/4_partial_application/Marks
+  inflating: minhs1/tests/task1/5_let/4_partial_application/006.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/002.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/003.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/007.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/005.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/001.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/000.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/004.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/004.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/000.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/001.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/005.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/007.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/003.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/002.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/006.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/008.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/009.out
+  inflating: minhs1/tests/task1/5_let/4_partial_application/009.mhs
+  inflating: minhs1/tests/task1/5_let/4_partial_application/008.mhs
+   creating: minhs1/tests/task1/5_let/0_simple/
+  inflating: minhs1/tests/task1/5_let/0_simple/006.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/002.out
+  inflating: minhs1/tests/task1/5_let/0_simple/003.out
+  inflating: minhs1/tests/task1/5_let/0_simple/005.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/001.out
+  inflating: minhs1/tests/task1/5_let/0_simple/000.out
+  inflating: minhs1/tests/task1/5_let/0_simple/004.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/004.out
+  inflating: minhs1/tests/task1/5_let/0_simple/000.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/001.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/005.out
+  inflating: minhs1/tests/task1/5_let/0_simple/003.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/002.mhs
+  inflating: minhs1/tests/task1/5_let/0_simple/006.out
+   creating: minhs1/tests/task1/5_let/1_functions/
+  inflating: minhs1/tests/task1/5_let/1_functions/006.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/002.out
+  inflating: minhs1/tests/task1/5_let/1_functions/003.out
+  inflating: minhs1/tests/task1/5_let/1_functions/007.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/005.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/001.out
+  inflating: minhs1/tests/task1/5_let/1_functions/000.out
+  inflating: minhs1/tests/task1/5_let/1_functions/004.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/004.out
+  inflating: minhs1/tests/task1/5_let/1_functions/000.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/001.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/005.out
+  inflating: minhs1/tests/task1/5_let/1_functions/007.out
+  inflating: minhs1/tests/task1/5_let/1_functions/003.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/002.mhs
+  inflating: minhs1/tests/task1/5_let/1_functions/006.out
+   creating: minhs1/tests/task1/5_let/3_recursion/
+  inflating: minhs1/tests/task1/5_let/3_recursion/Marks
+  inflating: minhs1/tests/task1/5_let/3_recursion/006.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/002.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/003.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/007.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/005.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/001.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/000.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/004.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/004.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/000.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/001.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/005.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/007.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/003.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/002.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/006.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/fac.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/008.out
+  inflating: minhs1/tests/task1/5_let/3_recursion/008.mhs
+  inflating: minhs1/tests/task1/5_let/3_recursion/fac.out
+   creating: minhs1/tests/driver/
+  inflating: minhs1/tests/driver/Diff.hs
+  inflating: minhs1/tests/driver/Check.hs
+   creating: minhs1/MinHS/
+  inflating: minhs1/MinHS/Syntax.hs
+  inflating: minhs1/MinHS/TypeChecker.hs
+  inflating: minhs1/MinHS/Pretty.hs
+  inflating: minhs1/MinHS/Evaluator.hs
+  inflating: minhs1/MinHS/Parse.hs
+  inflating: minhs1/MinHS/Env.hs
+bonus_tests/
+bonus_tests/task6/
+bonus_tests/task3/
+bonus_tests/task4/
+bonus_tests/task5/
+bonus_tests/task2/
+bonus_tests/task2/cons.out
+bonus_tests/task2/cons.mhs
+bonus_tests/task2/basic_add.out
+bonus_tests/task2/cons_unapplied.mhs
+bonus_tests/task2/unapplied.mhs
+bonus_tests/task2/basic_sub.mhs
+bonus_tests/task2/unary.out
+bonus_tests/task2/unary.mhs
+bonus_tests/task2/basic_sub.out
+bonus_tests/task2/unapplied.out
+bonus_tests/task2/cons_unapplied.out
+bonus_tests/task2/basic_add.mhs
+bonus_tests/task5/basic.mhs
+bonus_tests/task5/basic.out
+bonus_tests/task5/nonrec.out
+bonus_tests/task5/nonrec.mhs
+bonus_tests/task4/basic.mhs
+bonus_tests/task4/basic.out
+bonus_tests/task4/nonrec.out
+bonus_tests/task4/nonrec.mhs
+bonus_tests/task3/recursive.mhs
+bonus_tests/task3/three.mhs
+bonus_tests/task3/three.out
+bonus_tests/task3/recursive.out
+bonus_tests/task3/basic.mhs
+bonus_tests/task3/basic.out
+bonus_tests/task6/reclist.mhs
+bonus_tests/task6/reclist.out
+bonus_tests/task6/functions.out
+bonus_tests/task6/functions.mhs
+bonus_tests/task6/basic.mhs
+bonus_tests/task6/basic.out
+-rw-r----- z5286124/z5286124 2496 2022-11-02 10:29 Evaluator.hs
+
+===============================================================================
+-rw-r----- 1 cs3161 cs3161 2496 Nov  2 10:29 Evaluator.hs
+===============================================================================
+
+     1  module MinHS.Evaluator where
+     2  import qualified MinHS.Env as E
+     3  import MinHS.Syntax
+     4  import MinHS.Pretty
+     5  import qualified Text.PrettyPrint.ANSI.Leijen as PP
+     6  import Control.Exception
+     7
+     8  type VEnv = E.Env Value
+     9
+    10  data Value = I Integer
+    11             | B Bool
+    12             | Nil
+    13             | Cons Integer Value
+    14             | Func VEnv [Char] [[Char]] Exp
+    15             deriving (Show)
+    16
+    17  instance PP.Pretty Value where
+    18    pretty (I i) = numeric $ i
+    19    pretty (B b) = datacon $ show b
+    20    pretty (Nil) = datacon "Nil"
+    21    pretty (Cons x v) = PP.parens (datacon "Cons" PP.<+> numeric x PP.<+> PP.pretty v)
+    22    pretty _ = undefined -- should not ever be used
+    23
+    24  evaluate :: Program -> Value
+    25  evaluate [Bind _ _ _ e] = evalE E.empty e
+    26  evaluate bs = evalE E.empty (Let bs (Var "main"))
+    27
+    28  evalE :: VEnv -> Exp -> Value
+    29  evalE evl (Num n) = I n
+    30  evalE evl (Con "True") = B True
+    31  evalE evl (Con "False") = B False
+    32  evalE evl (Con "Nil") = Nil
+    33
+    34  evalE evl (If b e1 e2) =
+    35    case evalE evl b of
+    36      B True -> evalE evl e1
+    37      B False -> evalE evl e2
+    38
+    39  evalE evl (App (Prim Neg) (Num n)) = I (-n)
+    40
+    41  evalE evl (App (App (Prim sy) e1) e2) =
+    42    case (evalE evl e1, evalE evl e2) of
+    43      (Nil, _) -> Nil
+    44      (_, Nil) -> Nil
+    45      (I n1, I n2) -> case sy of
+    46        Add -> I (n1 + n2)
+    47        Sub -> I (n1 - n2)
+    48        Mul -> I (n1 * n2)
+    49        Quot -> I (quot n1 n2)
+    50        Eq -> B (n1 == n2)
+    51        Ne -> B (n1 /= n2)
+    52        Lt -> B (n1 < n2)
+    53        Le -> B (n1 <= n2)
+    54        Gt -> B (n1 > n2)
+    55        Ge -> B (n1 >= n2)
+    56
+    57  evalE evl (App (App (Con "Cons") (Num e1)) e2) = Cons e1 (evalE evl e2)
+    58  evalE evl (App (Prim Null) (Con "Nil")) = B True
+    59  evalE evl (App (Prim Null) e) = B False
+    60
+    61  evalE evl (App (Prim Head) (App (Con "Cons") (Num n)))  = I n
+    62  evalE evl (App (Prim Head) (App e1 e2)) = evalE evl (App (Prim Head) e1)
+    63  evalE evl (App (Prim Head) (Con "Nil"))  = error ("List is empty")
+    64
+    65  evalE evl (App (Prim Tail)(App (App (Con "Cons") (Num n)) (Con "Nil"))) = Cons n Nil
+    66  evalE evl (App (Prim Tail) (App (App (Con "Cons") (Num n)) e2)) = evalE evl (App (Prim Tail) e2)
+    67  evalE evl (App (Prim Tail) (Con "Nil"))  = error ("List is empty")
+    68
+    69  evalE evl (Let [] e) = evalE evl e
+    70  evalE evl (Let ((Bind s _ [] e1):xs) e2) =
+    71    let temp = E.add evl (s, (evalE evl e1)) in evalE temp (Let xs e2)
+    72  evalE evl (Let ((Bind f _ v e1):xs) e2) =
+    73    let temp = E.add evl (f, (Func evl f v e1)) in evalE temp (Let xs e2)
+    74
+    75  evalE evl (Var v) =
+    76    case E.lookup evl v of
+    77      Just (Func evl _ [] e) -> evalE evl e
+    78      Just e -> e
+    79      Nothing -> Nil
+    80
+    81  evalE evl e = error("Else situation")
+Warning: The package list for 'hackage.haskell.org' is 33 days old.
+Run 'cabal update' to get the latest list of available packages.
+Resolving dependencies...
+Build profile: -w ghc-8.8.4 -O1
+In order, the following would be built (use -v for more details):
+ - minhs1-0.1.0.0 (exe:minhs-1) (first run)
+Build profile: -w ghc-8.8.4 -O1
+In order, the following will be built (use -v for more details):
+ - minhs1-0.1.0.0 (exe:minhs-1) (first run)
+Configuring executable 'minhs-1' for minhs1-0.1.0.0..
+Preprocessing executable 'minhs-1' for minhs1-0.1.0.0..
+Building executable 'minhs-1' for minhs1-0.1.0.0..
+[1 of 7] Compiling MinHS.Env        ( MinHS/Env.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/MinHS/Env.o )
+[2 of 7] Compiling MinHS.Syntax     ( MinHS/Syntax.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/MinHS/Syntax.o )
+[3 of 7] Compiling MinHS.Parse      ( MinHS/Parse.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/MinHS/Parse.o )
+[4 of 7] Compiling MinHS.TypeChecker ( MinHS/TypeChecker.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/MinHS/TypeChecker.o )
+[5 of 7] Compiling MinHS.Pretty     ( MinHS/Pretty.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/MinHS/Pretty.o )
+[6 of 7] Compiling MinHS.Evaluator  ( MinHS/Evaluator.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/MinHS/Evaluator.o )
+[7 of 7] Compiling Main             ( Main.hs, /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1-tmp/Main.o )
+Linking /tmp/COMP3161.1490391.run/minhs1/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs1-0.1.0.0/x/minhs-1/build/minhs-1/minhs-1 ...
+!!section tests
+!!section assess
+***************************************
+* TASK ONE: Base Assignment           *
+***************************************
+* 116 : passes all tests (pre-filled) *
+* -33 : call by name is used          *
+* -10 : small-step semantics is used  *
+* *************************************
+Running test: 5_let/2_application/004.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/2_application/000.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/2_application/003.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/2_application/002.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/2_application/001.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/004.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/000.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/005.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/007.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/006.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/009.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/003.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/002.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/008.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/4_partial_application/001.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/004.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/000.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/005.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/007.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/006.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/003.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/002.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/fac.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/008.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/3_recursion/001.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/0_simple/004.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 5_let/0_simple/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 5_let/0_simple/005.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 5_let/0_simple/006.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/0_simple/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 5_let/0_simple/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 5_let/0_simple/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 5_let/1_functions/004.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/000.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/005.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/007.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/006.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/003.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/002.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 5_let/1_functions/001.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 3_variables/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 3_variables/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 3_variables/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 3_variables/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/ints/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/ints/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/lists/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/lists/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/bools/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/bools/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 0_basics/main/main.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 6_programs/lambda.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 6_programs/test.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 6_programs/compose2.mhs (worth 2) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 2_nestedexpr/004.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/005.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/007.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/006.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 2_nestedexpr/008.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: 2_nestedexpr/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/004.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/005.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/007.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/006.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 4_ifthenelse/008.mhs (worth 1) :-  Stdout Check Failed:
+-0
++1
+
+Running test: 4_ifthenelse/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/partial/000.mhs (worth 1) :-  No .err file found. Printing output...
+minhs-1: divide by zero
+Running test: 1_primops/partial/002.mhs (worth 1) :-  No .err file found. Printing output...
+minhs-1: List is empty
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:67:44 in main:MinHS.Evaluator
+Running test: 1_primops/partial/001.mhs (worth 1) :-  No .err file found. Printing output...
+minhs-1: List is empty
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:63:44 in main:MinHS.Evaluator
+Running test: 1_primops/unarynegate/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/010.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/004.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/005.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/007.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/006.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/009.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/014.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/008.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/011.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/primops/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/listops/004.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/listops/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/listops/002.mhs (worth 1) :-  Stdout Check Passed!
+Running test: 1_primops/listops/001.mhs (worth 1) :-  Stdout Check Passed!
+Passed 54 out of 93 tests: 58% Correct. Total of 54 marks.
+!!specialmark  (Base )                                  54/116
+(unless you committed egregious style violations, making your code hard to read, you get these marks)
+!!specialmark  (Fudge)                                  3/3
+***************************************
+* TASK TWO: Partially-applied Primops *
+***************************************
+* 17 : passes all tests               *
+* (-4 per test failed)                *
+* -5 : not evaluating arguments       *
+* -5 : possibility of name clashes    *
+* *************************************
+Running test: basic_sub.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: cons_unapplied.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: unary.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: basic_add.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: cons.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: unapplied.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Passed 0 out of 6 tests: 0% Correct. Total of 0 marks.
+!!nospecialmark  (PartialPrimops )                              0/17     <== mark altered (no original mark)
+***************************************
+* TASK THREE: N-ary Functions         *
+***************************************
+* 17 : passes all tests               *
+* (-6 per test failed)                *
+* -10 : possibility of name clashes   *
+* *************************************
+Running test: basic.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: recursive.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: three.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Passed 0 out of 3 tests: 0% Correct. Total of 0 marks.
+!!nospecialmark  (NAry)                                         0/17     <== mark altered (no original mark)
+***************************************
+* TASK FOUR: Multiple Let Bindings    *
+***************************************
+* 17 : passes all tests               *
+* (-10 per test failed)               *
+* *************************************
+Running test: nonrec.mhs (worth 1) :-  Stdout Check Passed!
+Running test: basic.mhs (worth 1) :-  Stdout Check Passed!
+Passed 2 out of 2 tests: 100% Correct. Total of 2 marks.
+!!nospecialmark  (LetBindings)                                  17/17     <== mark altered (no original mark)
+***************************************
+* TASK FIVE: Non-recursive Let Funcs  *
+***************************************
+* 17 : passes all tests               *
+* (-10 per test failed)               *
+* -10 : possibility of name clashes   *
+* *************************************
+Running test: nonrec.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: basic.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Passed 0 out of 2 tests: 0% Correct. Total of 0 marks.
+!!nospecialmark  (NonRecLetFunctions)                           0/17     <== mark altered (no original mark)
+***************************************
+* TASK SIX: Letrec                    *
+***************************************
+* 17 : passes all tests               *
+* (-6 per test failed)                *
+* -7 : storing unevaluated thunks     *
+* -5 : otherwise over-complicated     *
+* *************************************
+Running test: basic.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: reclist.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Running test: functions.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-1: Else situation
+CallStack (from HasCallStack):
+  error, called at ./MinHS/Evaluator.hs:81:15 in main:MinHS.Evaluator
+
+Stdout was:
+
+Passed 0 out of 3 tests: 0% Correct. Total of 0 marks.
+!!nospecialmark  (LetRec)                                       0/17     <== mark altered (no original mark)
+
+!!marktab       **  MARKER'S  ASSESSMENT  **
+
+
+!!latepen       ** LATE PENALTY (4 DAYS +23 HOURS LATE)  -42.5
+
+!!finalmark     **  FINAL  ASSIGNMENT  MARK:    31.5/170
+
+5286124 Wang, William                           3778/2 COMPA1
+
+
+
+
+
+
+
+
+
+
+Marked by z5260040 on Wed Nov 16 22:10:56 2022
+
+
+
+
+
+
+Marked by z5260040 on Wed Nov 16 22:19:26 2022
+
+

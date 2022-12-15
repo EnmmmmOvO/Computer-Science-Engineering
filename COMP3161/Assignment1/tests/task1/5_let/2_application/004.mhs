@@ -1,0 +1,10 @@
+-- more partial app
+main :: Int
+     =
+ let f :: (Int -> Int) =
+        recfun f :: (Int -> Int) x = x + 1;
+
+ in let 
+     g :: (Int -> Int) = f;
+
+ in g 1;

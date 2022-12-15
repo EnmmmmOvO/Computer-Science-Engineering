@@ -1,0 +1,26 @@
+--
+-- until p f  yields the result of applying f until p holds.
+--
+-- (slow in the interpreter)
+--
+
+main :: Int
+     = 
+    let otherwise :: Bool = True;
+
+    in let
+        longtime :: (Int -> Bool)
+                 = recfun f :: (Int -> Bool) i = 100000 < i;
+
+    in let
+        inc :: (Int -> Int) = 
+                   recfun f :: (Int -> Int) x = x + 1;
+
+    in let
+        until :: ((Int -> Bool) -> (Int -> Int) -> Int -> Int) =
+          recfun until :: ((Int -> Bool) -> (Int -> Int) -> Int -> Int) p =
+            recfun v_ :: ((Int -> Int) -> Int -> Int) f =
+                recfun w_ :: (Int -> Int) x = 
+                    if (p x) then x else until p f (f x) ;
+
+    in until longtime inc 0;

@@ -1,0 +1,17 @@
+main :: Bool
+    = let not :: (Bool -> Bool) =
+            recfun f :: (Bool -> Bool) x = 
+              if x then False else True;
+      in let 
+           and :: (Bool -> Bool -> Bool) =
+            recfun and :: (Bool -> Bool -> Bool) x = 
+              recfun and' :: (Bool -> Bool) y =
+                if x then if y then True else False else False;
+       in let               
+           or :: (Bool -> Bool -> Bool) =
+            recfun or :: (Bool -> Bool -> Bool) x = 
+              recfun or' :: (Bool -> Bool) y =
+                if x then True else if y then True else False;
+       in let x :: Bool = True;
+       in let y :: Bool = False;
+       in not x `or` not y `and` x;

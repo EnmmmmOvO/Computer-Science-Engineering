@@ -1,0 +1,3 @@
+main 
+     = let t = True; 
+       in t;

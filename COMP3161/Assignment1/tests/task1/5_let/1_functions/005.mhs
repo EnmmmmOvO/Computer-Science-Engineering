@@ -1,0 +1,11 @@
+-- test environment
+
+main :: Int =
+    let f :: (Int -> Int  -> Int -> Int -> Int -> Int) =
+        (recfun f :: (Int -> Int -> Int -> Int -> Int -> Int) x =   -- 6
+           recfun f :: (Int -> Int -> Int -> Int  -> Int) x =       -- 5
+              recfun f :: (Int -> Int -> Int -> Int) x =            -- 4
+                 recfun f :: (Int -> Int -> Int) x =                -- 3
+                    recfun f :: (Int -> Int) x =                    -- 2
+                        (2*x)) ;
+    in f 0 0 0 0 7;

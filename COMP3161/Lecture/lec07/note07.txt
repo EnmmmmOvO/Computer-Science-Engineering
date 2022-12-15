@@ -1,0 +1,199 @@
+For example, assignment:
+
+  x := 5;  // sometimes  this syntax
+
+  x = 5;   // sometimes  this syntax
+
+Last week, we looked at *expressions*,
+which evaluate to values.
+
+  1 + 2 + 3 ⇓ 6
+
+Statements generally don't have values.
+
+  x := 5;
+  y := 3
+
+It doesn't make sense to ask
+  "what is the value of that program"
+
+
+A stereotypical imperative language has three layers:
+ - expressions     x+3
+ - statements      y := x+3;  (statements may contain expressions)
+ - top-level declarations
+
+   int foo() {
+     y := x+3;
+   }
+
+A sterotypical *functional* language doesn't have statements.
+
+
+  if b then
+    p
+  else
+    q
+
+  This denotes a tree:
+
+  (If b p q)
+
+Where C-like languages might do:
+
+  if(b) {
+    P
+  } else {
+    Q
+  }
+
+  if b then
+    P
+  else
+    Q
+  fi
+
+
+  var x ⬝
+  x := y + 1
+
+  ^^^there's a scope error
+
+  var y ⬝             
+  var x ⬝
+  x := y + 1
+
+  ^^^we're using y before initialisation
+
+  var y ⬝             
+  var x ⬝
+  y := 0;
+  x := y + 1
+
+
+   P Stmt
+  _______________
+  Γ ⊢ P welltyped
+
+
+  var y ⬝
+  // here, y is declared
+  var x ⬝
+  // here, y,x are declared
+  y := 0;
+  // here, y is declared and initialised, x is declared
+  x := y + 1
+  // here, x,y are declared and initialised
+
+
+ _ ; _ ⊢ _ ok ⇝ _   is a quaternary judgement
+                    with weird mixfix notation
+
+  var x ⬝
+  var y ⬝
+    // we are up-to here in the scope checking
+    (var y ⬝ // shadows the other y
+     y := 0);
+    x := y;   <-- this is a use-before-init error!
+
+
+   y ∈ {x,y}   FV(0) ⊆ {}
+  ________________________
+  {x,y},{} ⊢ y := 0 ok ⇝ {y}
+  _________________________________
+  {x,y},{} ⊢ var y ⬝ y := 0 ok ⇝ {}
+
+
+  var y is not a self-contained statement
+
+  var y ⬝ s,   where s is a statement,  is a statement
+
+  var y ⬝ s  "execute the statement s, in a scope where
+              a fresh variable y is declared"
+
+
+  while(1) {
+    int x=5; // the scope of x implicitly extends to the right over ;
+    x := x + 1;
+  }
+
+  in our notation, you might do:
+
+  while 1 do
+    var x ⬝
+      (x := 5;
+       x := x + 1
+      )
+  od
+
+
+FV : free variables
+
+FV(x + y + 1) = {x,y}
+
+Q: for the "if else" and "while" case, it seems our rules only give
+out variables that are "always" initialized, but is missing some
+variables that "may" be initialized
+
+A: Yes, this is deliberate. We want to determine that
+   a program is well-behaved on *every* possible
+   code path, so we don't care if a variable *may*
+   be initialised, we only care which variables
+   *must* be initialised.
+
+Q: what if the program initialized some variables that we are not aware of
+
+A: there's a tute question about exactly this (defer)
+
+Q: Why is the result of the loop empty set not W?
+
+  while 0 do
+    x := 0
+  od
+
+  ^^ when we run that program, nothing becomes initialised.
+
+
+  (σ : x ↦ v)(x) = v
+  (σ : x ↦ v)(y) = σ(y)   if x ≠ y
+
+
+ σ2 ⊢ e ⇓ v    v ≠ 0
+(σ1, while e do s od) ⇓ σ2  (σ2,s) ⇓ σ3
+__________________________
+(σ1, while e do s od) ⇓ σ3
+
+
+(σ1, while e do s od) ⇓ σ2
+__________________________  (merged version)
+(σ1, while e do s od) ⇓ σ2
+
+
+(σ1, while e do s od) ⇓ σ2          
+__________________________
+(σ1, while e do s od) ⇓ σ2
+___________________________
+(σ1, while e do s od) ⇓ σ2
+
+
+(σ⬝y⬝x) : x ↦ 0 ⊢ x + 1 ⇓ 1
+_________________________________
+((σ⬝y⬝x) : x ↦ 0, y := x + 1) ⇓ (σ⬝y⬝x) : x ↦ 0 : y ↦ 1
+_____________________________
+(σ⬝y, var x ⬝ y := x + 1) ⇓ (σ⬝y) : y ↦ 1
+
+
+If you want more Hoare logic, take literally any other course
+
+  COMP2111, COMP6721, COMP4161,
+  whatever Albert Nymeyer's course code is
+
+
+   {True} p {x = 0}
+I can apply  the rule of consequence to obtain this:
+
+   {x = 2} p {x is an even number}
+
+
+   while(true) do skip od <-- this program satisfies
+                              every Hoare triple!

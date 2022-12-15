@@ -1,0 +1,6 @@
+main :: Bool
+     =
+    let f :: (Int -> Bool) =
+        recfun f :: (Int -> Bool) x = if 0 < 10 then True else (f (x - 1));
+    in
+        f 16;

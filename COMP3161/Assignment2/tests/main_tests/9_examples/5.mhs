@@ -1,0 +1,11 @@
+main =
+let x = 1;
+in 
+let y = 2;
+in 
+ let f = (recfun f z = z);
+ in 
+   if (f (True))
+        then (Inl (x + y))
+        else (Inr x);
+

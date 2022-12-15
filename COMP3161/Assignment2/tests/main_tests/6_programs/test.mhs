@@ -1,0 +1,6 @@
+main
+     =
+    let f =
+        recfun f x = if 0 < 10 then True else (f (x - 1));
+    in
+        f 16;

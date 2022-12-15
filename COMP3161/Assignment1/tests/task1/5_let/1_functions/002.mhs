@@ -1,0 +1,12 @@
+-- make sure they bind correctly
+
+main :: Int
+     =
+    let x :: Int = 2;
+
+    in let
+        square :: (Int -> Int)
+               = recfun square :: (Int -> Int) x = x * x;
+
+    in square (square x);
+        

@@ -1,0 +1,3 @@
+main :: [Int] = let nil :: [Int] = Nil;
+                 in let cons3nil :: [Int] = Cons 3 nil;
+                     in cons3nil;

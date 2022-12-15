@@ -1,0 +1,9 @@
+main
+     = 
+    let g =
+        recfun g' x = x * x;
+
+    in let 
+        f = g;  -- :: Int -> Int
+    
+    in g 7;

@@ -1,0 +1,2 @@
+-- simple int literal
+main :: Int = 0;

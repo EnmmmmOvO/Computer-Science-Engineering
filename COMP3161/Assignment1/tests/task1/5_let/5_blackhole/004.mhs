@@ -1,0 +1,19 @@
+--
+-- fixed point combinator should type, but be detected as a black hole
+-- in our *strict* language.
+--
+main :: Int
+    =
+    let
+        y :: ((Int -> Int) -> Int)
+          = recfun y :: ((Int -> Int) -> Int) f = 
+                let x :: Int = f x 
+                in x ;
+
+    in let
+        inc :: (Int -> Int)
+            = recfun inc :: (Int -> Int) x = x + 1;
+
+    in y (inc) ;
+
+

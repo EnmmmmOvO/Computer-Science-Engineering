@@ -1,0 +1,523 @@
+\documentclass[a4paper,answers]{exam}
+\usepackage{hyperref}
+%\usepackage{eulervm}
+\usepackage{mathpartir}
+%\usepackage{pgffor}
+%\usepackage{ascii}
+\usepackage{xcolor}
+\usepackage{placeins} %for FloatBarrier
+\usepackage{version,a4wide}
+\usepackage{indentfirst} 
+%,pifont}
+%\usepackage{textcomp}
+\usepackage{amsmath,amsthm}
+\usepackage{haskell,grammar,alltt}
+\usepackage{stmaryrd}
+\usepackage{centernot}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{amssymb}
+\usepackage{lipsum}
+\renewcommand{\ttdefault}{cmtt}
+\pointname{ marks}
+\qformat{\textbf{Question \thequestion} $\ $ (\thepoints)\hfill}
+\newcommand\llangle{\langle\!\langle}
+\usepackage{enumitem}
+\setlist[description]{font=\bfseries, leftmargin=3.5cm, style=nextline}
+
+\makeatletter
+\newcommand{\xMapsto}[2][]{\ext@arrow 0599{\Mapstofill@}{#1}{#2}}
+\def\Mapstofill@{\arrowfill@{\Mapstochar\Relbar}\Relbar\Rightarrow}
+\makeatother
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning,shapes.geometric,fit,calc}
+
+\tikzset{initial text={},on grid, auto, thin,
+    every state/.style={circle,minimum size=.6cm,
+      %draw=blue!50,
+      draw=black,
+      thin,fill=none,text=black},
+    node distance=1.2cm,on grid,auto,
+    bend angle=35}
+\newcommand\rrangle{\rangle\!\rangle}
+\newcommand{\mapstos}[0]{\stackrel{\star}{\mapsto}}
+\newcommand{\mapstoc}[0]{\stackrel{!}{\mapsto}}
+
+\begin{document}
+\begin{flushright}
+    $\ $\\[1em] Name: Jinghan Wang \\[1em]
+     Student Number: z5286124 \\[5em]
+ \end{flushright}
+\begin{center}
+\textsc{\Large The University of New South Wales}\\[3em]
+{\Huge COMP3161/9164 22T3\\[0.3em] Concepts of Programming Languages}\\[3em]
+{\Large \textbf{Assignment 0
+Proofs}}\\[1em]
+{\large \textit{Term 3, 2022}}\\[3em]
+{\large
+    \begin{description}[labelindent=3em]
+    \item[Marks:] 24 Hours. 15\% of overall marks for the course.\\
+    A mark of x (out of 100) on this assignment will\\
+    translate to .15x course marks.
+    \item[Due date:] \textbf{Sunday, 9th of October 2022, 12 noon (Sydney Time)}\\[3.5em]
+\end{description}
+}
+\end{center}
+
+\section*{Task}
+\large \noindent In this assignment you will formally model a language of boolean computations using a variety of semantic techniques, including its syntax and sematics, and its compilation to various target languages.\\
+\indent Prepare your answers in one PDF file, preferably using \LaTeX, where all prose is typeset. Figures may be drawn, but make sure they are legible. Please ensure all mathematics is formatted correctly. Some guidance will be posted on the course website.\\\\
+{\large \noindent Submit your PDF using the CSE give system, by typing the command
+\begin{alltt}
+give cs3161 Proofs Proofs.pdf
+\end{alltt}
+or by using the CSE give web interface.}
+
+%\setcounter{latest@ques}{1}
+\newpage
+\section*{Part A (25 marks)}
+\noindent Consider the language of boolean expressions $\mathcal{P}$ containing just literals ($\mathtt{True}$, $\mathtt{False}$), parentheses,
+conjunction ($\wedge$) and negation ($\neg$):
+$$ \mathcal{P} = \{ \mathtt{True}, \mathtt{False}, \neg \mathtt{True}, \neg \mathtt{False}, \mathtt{True} \wedge \mathtt{False},  \neg(\mathtt{True} \wedge \mathtt{False}), \dots \} $$
+
+\begin{itemize}
+    \item[1.] Write down a set of inference rules that define the set $\mathcal{P}$. The rules may be ambiguous. \textit{(5 marks)}
+\begin{solution}
+     \begin{gather*}
+        \inferrule{c \in \{\mathtt{True}, \mathtt{False}\}}{c\ \mathtt{Bool}}\quad  
+        \inferrule{e\ \mathtt{Bool}}{\neg e\ \mathtt{Bool}}\quad
+        \inferrule{e\ \mathtt{Bool}}{(e)\ \mathtt{Bool}}\quad 
+        \inferrule{e_1\ \mathtt{Bool}\quad e_2\ \mathtt{Bool}}{e_1 \land e_2\ \mathtt{Bool}}\quad
+    \end{gather*}
+\end{solution}
+
+\item[2.] The operator $\neg$ has the highest precedence, and conjunction is right-associative.
+Define a set of simultaneous judgements to define the language without any ambiguity. \textit{(5 marks)}
+\begin{solution}
+     \begin{gather*}
+        \inferrule{c \in \{\mathtt{True}, \mathtt{False}\}}{c\ \mathtt{Atom}}\quad 
+        \inferrule{e\ \mathtt{Atom}}{\neg e\ \mathtt{Atom}}\quad
+        \inferrule{e\ \mathtt{AndEx}}{(e)\ \mathtt{Atom}}\\
+        \inferrule{e_1\ \mathtt{Atom}\quad e_2\ \mathtt{AndEx}}{e_1 \land e_2\ \mathtt{AndEx}}\quad 
+        \inferrule{e\ \mathtt{Atom}}{e\ \mathtt{AndEx}}
+    \end{gather*}
+\end{solution}
+
+\item[3.] Here is an abstract syntax B for the same language:
+\begin{center}
+$\mathcal{B} ::= \textsf{Not}\ \mathcal{B}\ |\ \textsf{And}\ \mathcal{B}\ \mathcal{B}\ |\ \textsf{True}\ |\ \textsf{False}\ $    
+\end{center}
+Write an inductive definition for the \textit{parsing} relation connecting your unambiguous
+judgements to this abstract syntax. \textit{(5 marks)}
+\begin{solution}
+    \begin{gather*}
+    \inferrule{ }{\mathsf{True}\ \mathcal{B} \longleftrightarrow \mathsf{True}}\mathsf{True}\quad \quad
+    \inferrule{ }{\mathsf{False}\ \mathcal{B} \longleftrightarrow \mathsf{False}}\mathsf{False}\quad\\
+    \inferrule{x\ \mathcal{B} \longleftrightarrow x'\quad y\ \mathcal{B} \longleftrightarrow y'}{\mathsf{And }\ a\ b\ \mathcal{B} \longleftrightarrow a' \land b'}\mathsf{And}\quad \quad \inferrule{x\ \mathcal{B} \longrightarrow x'}{\mathsf{Not}\ x\ \mathcal{B} \longrightarrow \neg x'}\mathsf{Not}
+\end{gather*}
+\end{solution}
+
+\item[4.] Here is a big-step semantics for the language $\mathcal{B}$
+    \begin{gather*}
+        \inferrule{ x \Downarrow \mathsf{True} }{\mathsf{Not}\ x \Downarrow \mathsf{False}}\quad
+        \inferrule{ x \Downarrow \mathsf{False } }{\mathsf{Not}\ x \Downarrow \mathsf{True}}\quad
+        \inferrule{ x \Downarrow \mathsf{False } }{\mathsf{And}\ x\ y \Downarrow \mathsf{False}}\quad
+        \inferrule{ x \Downarrow \mathsf{True} \quad y \Downarrow v }{\mathsf{And}\ x\ y \Downarrow v}\\
+        \inferrule{ \quad }{ \mathsf{True} \Downarrow \mathsf{True} }\quad
+ \inferrule{ \quad }{ \mathsf{False} \Downarrow \mathsf{False} }
+    \end{gather*}
+
+\begin{itemize}
+\item[a)] Show the evaluation of \textsf{And (Not (And True False))} \textsf{True} with a derivation tree. \textit{(5 marks)}
+\begin{solution}
+     \begin{gather*}
+        \inferrule{\inferrule{\inferrule{\inferrule{ }{\ \textsf{True} \Downarrow \textsf{True}\ }\quad \ \inferrule{ }{\ \textsf{False} \Downarrow \textsf{False}\ }}{\textsf{And True False} \Downarrow \textsf{False}}}{\quad  \textsf{Not (And True False)} \Downarrow \textsf{True} \quad }\quad \quad \quad  \inferrule{\quad}{\ \textsf{True} \Downarrow \textsf{True}\ }}{\ \quad \quad \quad \textsf{And (Not (And True False))} \textsf{True} \Downarrow \textsf{True}\ \quad \quad \quad }
+    \end{gather*}
+\end{solution}
+
+\item[b)] Consider the following inference rule:
+\begin{gather*}             
+\inferrule{ y \Downarrow \mathsf{False } }{\mathsf{And}\ x\ y \Downarrow \mathsf{False}}
+\end{gather*}
+If we assume that $x\ \mathcal{B}$ holds, is this rule derivable? Is it admissible? And if we \textit{don't} assume that $x\ \mathcal{B}$ holds, how does this change your answers? Justify your answers. \textit{(5 marks)}
+
+\begin{solution}
+\begin{itemize}
+    \item \small If the $x\ \mathcal{B}$ is not holds, the inference rule can derivable and admissible.\\[0.5em]
+According to the topic, the $\mathsf{And}\ x\ y\ \Downarrow \mathsf{False}$ have two composition method.\\[0.5em]
+First is followed the forth semantics which the x is \textsf{True} situation, which is followed by the inference rule.
+\begin{gather*}
+    \normalsize\inferrule{\inferrule{ }{x \Downarrow \mathsf{True}}\quad \inferrule{ }{y \Downarrow \mathsf{False}}}{\mathsf{And}\ x\ y\ \Downarrow \mathsf{False}}
+\end{gather*}
+\small Second is followed the third semantics which the $x$ is \textsf{False} situation. Whatever $y$ is, the inference rule is following.
+\begin{gather*}
+    \normalsize\inferrule{\inferrule{ }{x \Downarrow \mathsf{False}}\quad \inferrule{ }{y \Downarrow \mathsf{False}}}{\mathsf{And}\ x\ y\ \Downarrow \mathsf{False}}
+\end{gather*}
+\small According to the two discussion above, the inference rule can derivable and is admissible.
+    \item If the $x\ \mathcal{B}$ is not holds, the inference rule is also admissible but cannot derivable. For the $\mathsf{And}$ operation, if any element of the $\mathsf{And}$ operation is not $\mathsf{True}$, the result is $\mathsf{False}$. So this inference rule is admissible.\\
+\end{itemize}
+\end{solution}
+\end{itemize}
+\end{itemize}
+
+\newpage
+\section*{Part B (20 marks)}
+\noindent Here is a small-step semantics for a language $\mathcal{L}$ with \texttt{True, False} and \texttt{if} expressions:
+\begin{gather*}
+    \inferrule{ c \mapsto c' }{(\texttt{If}\ c\ t\ e) \mapsto (\texttt{If}\ c'\ t\ e) }(1)\quad
+    \inferrule{ }{(\texttt{If}\ \texttt{True}\ t\ e) \mapsto t }(2)\quad
+    \inferrule{ }{(\texttt{If}\ \texttt{False}\ t\ e) \mapsto e }(3)
+\end{gather*}
+
+\begin{itemize} 
+    \item[1.] Show the full evaluation of the term $(\texttt{If}\ \texttt{True}\ (\texttt{If}\ \texttt{True}\ \texttt{False}\ \texttt{True})\ \texttt{False})$. \texttt{(5 marks)}
+\begin{solution}
+    \begin{align*}
+        &(\texttt{If}\ \texttt{True}\ (\texttt{If}\ \texttt{True}\ \texttt{False}\ \texttt{True})\ \texttt{False})&\\
+        \mapsto\ &(\texttt{If}\ \texttt{True}\ \texttt{False}\ \texttt{False})& \small\texttt{According to (2)}\\
+        \mapsto\ &\texttt{False}& \small\texttt{According to (2)}
+    \end{align*}
+\end{solution}
+
+\item[2.] Define an equivalent \emph{big-step} semantics for $\mathcal{L}$. \textit{(5 marks)}
+\begin{solution}
+    \begin{gather*}
+        \inferrule{ }{\texttt{True} \Downarrow \texttt{True}}\mathsf{True} \quad \quad \quad \quad \inferrule{ }{\texttt{False} \Downarrow \texttt{False}}\mathsf{False}\\
+        \inferrule{\quad c \Downarrow \texttt{True} \quad t \Downarrow t' \quad}{(\texttt{If}\ c\ t\ e) \Downarrow t'}\mathsf{If_1} \quad  \inferrule{\quad c \Downarrow \texttt{False} \quad e \Downarrow e' \quad}{(\texttt{If}\ c\ t\ e) \Downarrow e'}\mathsf{If_2}
+    \end{gather*}
+\end{solution}
+
+\item[3.] Prove that if $e \Downarrow v$ then $e \stackrel{\star}{\mapsto} v$, where $\Downarrow$ is the big-step semantics you defined in the previous question, and $\stackrel{\star}{\mapsto}$ is the reflexive and transitive closure of $\mapsto$. Use rule induction on $e \Downarrow v$. \textit{(10 marks)}
+\begin{solution}
+    \\[0.5em]\small According to the topic, $\mapstos$ be the reflexive and transitive closure of $\mapsto$. We can mark them $\mathsf{refl}$ and $\mathsf{trans}$.
+    \normalsize$$
+        \inferrule{ }{e \mapstos e}\mathsf{refl} \quad \quad \inferrule{e \mapsto e' \quad e' \mapstos e''}{e \mapstos e''}\mathsf{trans}
+    $$
+    \small We also want to prove $\mathsf{If\ True}\ t\ e \mapstos t$ and $\mathsf{If\ False}\ t\ e  \mapstos e$ is true.
+    $$
+    \normalsize\inferrule{\inferrule{ }{(\mathsf{If\ True}\ t\ e) \mapsto t}(2)\quad \inferrule{ }{t \mapstos t}\mathsf{refl}}{(\mathsf{If\ True}\ t\ e) \mapstos t}\mathsf{trans}\ (2')\quad \inferrule{\inferrule{ }{(\mathsf{If\ False}\ t\ e) \mapsto e}(3)\quad \inferrule{ }{e \mapstos e}\mathsf{refl}}{(\mathsf{If\ False}\ t\ e) \mapstos e}\mathsf{trans}\ (3')
+    $$
+    \small\begin{itemize}[leftmargin=*]
+        \item[] $Base\ Case\ (e=v,\ from\ rule\ \mathsf{True})$ We must show that $\mathsf{True} \mapstos \mathsf{True}$, which is true by rule $\mathsf{refl}$.
+        \item[] $Base\ Case\ (e=v,\ from\ rule\ \mathsf{False})$ We must show that $\mathsf{False} \mapstos \mathsf{False}$, which is true by rule $\mathsf{refl}$.
+        \item[] $Inductive\ Case\ (from\ rule\ \mathsf{If_1})$ We know that $c \Downarrow \mathsf{True}$ and $t \Downarrow t'$, which gives us the inductive hypotheses:
+        \begin{itemize}
+            \item[\bullet] $IH_1 -\ c\mapstos \mathsf{True}$
+            \item[\bullet] $IH_2 -\ t\mapstos \mathsf{t'}$
+        \end{itemize}
+        Showing our overall goal:
+        \normalsize\begin{align*}
+            \texttt{If}\ c\ t\ e &\mapstos \texttt{If}\ \mathsf{True}\ t\ e & IH_1\\
+            \quad &\mapstos t & (2')\\
+            \quad &\mapstos \mathsf{t'} & IH_2
+        \end{align*}
+        \small\item[] $Inductive\ Case\ (from\ rule\ \mathsf{If_2})$ We know that $c \Downarrow \mathsf{False}$ and $e \Downarrow e'$, which gives us the inductive hypotheses:
+        \begin{itemize}
+            \item[\bullet] $IH_1 -\ c\mapstos \mathsf{False}$
+            \item[\bullet] $IH_2 -\ e\mapstos \mathsf{e'}$
+        \end{itemize}
+        Showing our overall goal:
+        \normalsize\begin{align*}
+            \texttt{If}\ c\ t\ e &\mapstos \texttt{If}\ \mathsf{False}\ t\ e & IH_1\\
+            \quad &\mapstos e & (3')\\
+            \quad &\mapstos \mathsf{e'} & IH_2\\
+        \end{align*}
+    \end{itemize}
+\end{solution}
+\end{itemize}
+
+
+\newpage
+\section*{Part C (15 marks)}
+\begin{itemize} 
+\item[1.] Define a recursive $compilation\ function\ c : \mathcal{B} \mapsto \mathcal{L}$ which converts expressions in $\mathcal{B}$ to expressions in $\mathcal{L}$. (5 marks)
+\begin{solution}
+    \begin{gather*}
+        c\ (\mathsf{True}) = \mathsf{True}\\[0.3em]
+        c\ (\mathsf{False}) = \mathsf{False}\\[0.3em]
+        c\ (\mathsf{Not}\ e) = \mathsf{If}\ e\ \mathsf{False}\ \mathsf{True}\\[0.3em]
+        c\ (\mathsf{And}\ e_1\ e_2) = \mathsf{If}\ e_1\ (\mathsf{If}\ e_2\ \mathsf{True}\ \mathsf{False})\ \mathsf{False}
+    \end{gather*}
+\end{solution}
+
+\item[2.] Prove that for all $e$, $e \Downarrow v$ implies $c(e) \Downarrow v$, by rule induction on the assumption that $e \Downarrow v$. \textit{(10 marks)}
+\begin{solution}
+    \small\begin{itemize}[leftmargin=*]
+        \item[] $Base\ Case\ (e = \mathsf{True})$ According to the Part B, $\mathsf{True} \Downarrow \mathsf{True}$, therefore, $v = \mathsf{True}$. We must show that $c\ (\mathsf{True}) \Downarrow \mathsf{True}$, which is true that $c\ (\mathsf{True}) = \mathsf{True} \Downarrow \mathsf{True}$.
+        \item[] $Base\ Case\ (e = \mathsf{False})$ According to the Part B, $\mathsf{False} \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$. We must show that $c\ (\mathsf{False}) \Downarrow \mathsf{False}$, which is true that $c\ (\mathsf{False}) = \mathsf{False} \Downarrow \mathsf{False}$.
+        \item[] $Inductive\ Case\ (e = \mathsf{Not}\ e')$
+        \begin{itemize}[leftmargin=*]
+            \item[] Assuming $e' = \mathsf{True}$, According to the Part A, $e = (\mathsf{Not}\ \mathsf{True}) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$. We must show that $c\ (e) \Downarrow \mathsf{False}$, which is true that $$c\ (e) = c\ (\mathsf{Not}\ e') = (\mathsf{If}\ \mathsf{False}\ \mathsf{False}\ \mathsf{True}) \Downarrow \mathsf{False}$$.
+            \item[] Assuming $e' = \mathsf{False}$, According to the Part A, $e = (\mathsf{Not}\ \mathsf{False}) \Downarrow \mathsf{True}$, therefore, $v = \mathsf{True}$. We must show that $c\ (e) \Downarrow \mathsf{True}$, which is true that $$c\ (e) = c\ (\mathsf{Not}\ e') = (\mathsf{If}\ \mathsf{False}\ \mathsf{False}\ \mathsf{True}) \Downarrow \mathsf{True}$$.
+        \end{itemize}
+        \item[] $Inductive\ Case\ (e = \mathsf{And}\ e_1\ e_2)$
+            \begin{itemize}[leftmargin=*]
+                $$c\ (e) = c\ (\mathsf{And}\ e_1\ e_2) = \mathsf{If}\ \mathsf{e_1}\ (\mathsf{If}\ e_2\ \mathsf{True}\ \mathsf{False})\ \mathsf{False}$$\\
+                \item[] Assuming $e_1 \Downarrow \mathsf{False}$, According to the Part A, $e = (\mathsf{And\ False}\ e_2) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$. We must show that $c\ (e) \Downarrow \mathsf{False}$, which is true that \begin{gather*}
+                    \inferrule{\inferrule{ }{\mathsf{e_1} \Downarrow \mathsf{False}}\mathsf{False}\quad \inferrule{ }{\mathsf{False} \Downarrow \mathsf{False}}\mathsf{False}}{(\mathsf{If}\ \mathsf{e_1}\ (\mathsf{If}\ e_2\ \mathsf{True}\ \mathsf{False})\ \mathsf{False}) \Downarrow \mathsf{False}}\mathsf{If_2}
+                \end{gather*}
+                \item[] Assuming $e_1 \Downarrow \mathsf{True}, e_2 \Downarrow \mathsf{True}$, According to the Part A, $e = (\mathsf{And\ True\ True}) \Downarrow \mathsf{True}$, therefore, $v = \mathsf{True}$. We must show that $c\ (e) \Downarrow \mathsf{True}$, which is true that 
+                \begin{gather*}
+                    \inferrule{\inferrule{ }{\mathsf{e_1}\Downarrow \mathsf{True}}\mathsf{True}\quad \inferrule{\inferrule{ }{\mathsf{e_2} \Downarrow \mathsf{True}}\mathsf{True}\quad \inferrule{ }{\mathsf{True} \Downarrow \mathsf{True}}\mathsf{True}}{(\mathsf{If}\ \mathsf{e_2}\ \mathsf{True}\ \mathsf{False}) \Downarrow \mathsf{True}}\mathsf{If_1}}{(\mathsf{If}\ \mathsf{e_1}\ (\mathsf{If}\ \mathsf{e_2}\ \mathsf{True}\ \mathsf{False})\ \mathsf{False}) \Downarrow \mathsf{True}}\mathsf{If_1}
+                \end{gather*}
+                \item[] Assuming $e_1 \Downarrow \mathsf{True}, e_2 \Downarrow \mathsf{False}$, According to the Part A, $e = (\mathsf{And\ True\ False}) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$. We must show that $c\ (e) \Downarrow \mathsf{False}$, which is true that 
+                \begin{gather*}
+                    \inferrule{\inferrule{ }{\mathsf{e_1}\Downarrow \mathsf{True}}\mathsf{True}\quad \inferrule{\inferrule{ }{\mathsf{e_2} \Downarrow \mathsf{False}}\mathsf{False}\quad \inferrule{ }{\mathsf{False} \Downarrow \mathsf{False}}\mathsf{False}}{(\mathsf{If}\ \mathsf{e_2}\ \mathsf{True}\ \mathsf{False}) \Downarrow \mathsf{False}}\mathsf{If_2}}{(\mathsf{If}\ \mathsf{e_!}\ (\mathsf{If}\ \mathsf{e_2}\ \mathsf{True}\ \mathsf{False})\ \mathsf{False}) \Downarrow \mathsf{True}}\mathsf{If_1}
+                \end{gather*}
+            \end{itemize}
+        
+    \end{itemize}
+\end{solution}
+\end{itemize}
+
+\newpage
+\section*{Part D (40 marks)}
+\begin{itemize}
+    \item [1.] Here is a term in $\lambda$-calculus:
+    \begin{center}
+        $(\lambda n.\ \lambda f.\ \lambda x.\ (n\ f\ (f\ x)))\ (\lambda f.\ \lambda x.\ f\ x)$
+    \end{center}
+    \begin{itemize}
+        \item[a)] Fully $\beta$-reduce the above $\lambda$-term. Show all intermediate beta reduction steps.\textit{(5 marks)}
+        \begin{solution}
+            \begin{align*}
+                &(\lambda n.\ \lambda f.\ \lambda x.\ (n\ f\ (f\ x)))\ (\lambda f.\ \lambda x.\ f\ x)\\
+                \mapsto_\beta\ & (\lambda f.\ \lambda x.\ ((\lambda f.\ \lambda x.\ f\ x)\ f\ (f\ x)))\\
+                \mapsto_\beta\ & (\lambda f.\ \lambda x.\ ((\lambda x.\ f\ x)\ (f\ x)))\\
+                \mapsto_\beta\ & (\lambda f.\ \lambda x.\ f\ (f\ x))
+            \end{align*}
+        \end{solution}
+        
+        \item[b)] Identify an $\eta$-reducible expression in the above (unreduced) term. \textit{(5 marks)}
+        \begin{solution}
+            \begin{align*}
+                &(\lambda n.\ \lambda f.\ \lambda x.\ (n\ f\ (f\ x)))\ (\lambda f.\ \lambda x.\ f\ x)\\
+                \mapsto_\eta\ & (\lambda n.\ \lambda f.\ \lambda x.\ (n\ f\ (f\ x)))\ (\lambda f.\ f)
+            \end{align*}
+        \end{solution}
+    \end{itemize}
+
+    \item[2.] Recall that in $\lambda$-calculus, booleans can be encoded as binary functions that return one of their arguments:
+        $$ \mathbf{T} \equiv (\lambda x.\ \lambda y.\ x) $$
+        $$ \mathbf{F} \equiv (\lambda x.\ \lambda y.\ y) $$
+    Either via $\mathcal{L}$ or directly, define a function $d : B \rightarrow \lambda$ which converts expressions in $\mathcal{B}$ to $\lambda$-calculus. \textit{(5 marks)}
+    \begin{solution}
+        \begin{gather*}
+            d\ (\mathsf{True}) = ((\lambda x.\ \lambda y.\ x)\ \mathsf{True}\ \mathsf{False})\\[0.3em]
+            d\ (\mathsf{False}) = ((\lambda x.\ \lambda y.\ y)\ \mathsf{True}\ \mathsf{False})\\[0.3em]
+            d\ (\mathsf{Not}\ e) = ((\lambda x.\ x\ \mathsf{False\ True})\ d\ (e))\\[0.3em]
+            d\ (\mathsf{And}\ e_1\ e_2) = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ d\ (e_1)\ d\ (e_2))
+        \end{gather*}
+    \end{solution}
+
+    \item[3.] Prove that for all $e$ such that $e \Downarrow v$ it holds that $d(e) \equiv_{\alpha \beta \eta}\ v'$, where $v'$ is the
+    $\lambda$-calculus encoding of $v$. \textit{(10 marks)}
+    \begin{solution}
+        \small\begin{itemize}[leftmargin=*]
+            \item[] $Base\ Case\ (e = \mathsf{True})$, According to the Part B, $\mathsf{True} \Downarrow \mathsf{True}$, therefore, $v = \mathsf{True}$. We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{True}$, which is true that
+            \begin{align*}
+                d\ (\mathsf{True}) & \ =((\lambda x.\ \lambda y.\ x)\ \mathsf{True}\ \mathsf{False})\\
+                & \mapsto_\beta  (\lambda y.\ \mathsf{True})\ \mathsf{False}\\
+                & \mapsto_\beta  \mathsf{True}
+            \end{align*}
+            \item[] $Base\ Case\ (e = \mathsf{False})$ According to the Part B, $\mathsf{False} \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$. We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{False}$, which is true that
+            \begin{align*}
+                d\ (\mathsf{False}) & \ =((\lambda x.\ \lambda y.\ y)\ \mathsf{True}\ \mathsf{False})\\
+                & \mapsto_\beta  (\lambda y.\ y)\ \mathsf{False}\\
+                & \mapsto_\beta  \mathsf{False}
+            \end{align*}
+            \item[] $Inductive\ Case\ (e = \mathsf{Not}\ e')$
+            \begin{itemize}[leftmargin=*]
+                \item[$\bullet$] Assuming $e' = \mathsf{True}$, According to the Part A, $e = (\mathsf{Not}\ \mathsf{True}) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$. Also according to the prove above, $d\ (\mathsf{True}) = \mathsf{True}$. We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{False}$.
+                \begin{align*}
+                    d\ (e) = d\ (\mathsf{Not}\ e')&\  =  ((\lambda x.\ x\ \mathsf{False\ True})\ d\ (e'))\\
+                    &\ = ((\lambda x.\ x\ \mathsf{False\ True})\ \mathsf{True})\\
+                    & \mapsto_\beta (\mathsf{True\ False\ True})
+                \end{align*}
+                $(\mathsf{True\ False\ True})$ write in if-then-else structure is $\mathsf{If\ True\ False\ True}$ which can encode to $\mathsf{False}$. \\
+                \item[$\bullet$] Assuming $e' = \mathsf{False}$, According to the Part A, $e = (\mathsf{Not}\ \mathsf{False}) \Downarrow \mathsf{True}$, therefore, $v = \mathsf{True}$. Also according to the prove above, $d\ (\mathsf{False}) = \mathsf{False}$. We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{True}$.
+                \begin{align*}
+                    d\ (e) = d\ (\mathsf{Not}\ e')&\  =  ((\lambda x.\ x\ \mathsf{False\ True})\ d\ (e'))\\
+                    &\ = ((\lambda x.\ x\ \mathsf{False\ True})\ \mathsf{False})\\
+                    & \mapsto_\beta (\mathsf{False\ False\ True})
+                \end{align*}
+                $(\mathsf{False\ False\ True})$ write in if-then-else structure is $\mathsf{If\ False\ False\ True}$ which can encode to $\mathsf{True}$.\\
+            \end{itemize}
+            \item[] $Inductive\ Case\ (e = \mathsf{And}\ e_1\ e_2)$
+            \begin{itemize}[leftmargin=*]
+                \item[] According to the prove above
+                \begin{gather*}
+                    d\ (\mathsf{True}) = \mathsf{True}\ \ \ 
+                    d\ (\mathsf{False}) = \mathsf{False}
+                \end{gather*}
+                \item[$\bullet$] Assuming $e_1 \Downarrow \mathsf{True}, e_2 \Downarrow \mathsf{True}$, According to the Part A, $e = (\mathsf{And\ True\ True}) \Downarrow \mathsf{True}$, therefore, $v = \mathsf{True}$.  We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{True}$.
+                \begin{align*}
+                    d\ (e) = d\ (\mathsf{And}\ e_1\ e_2) &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ d\ (e_1)\ d\ (e_2))\\
+                    &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ \mathsf{True\ True})\\
+                    & \mapsto_{\beta} ((\lambda y.\ \mathsf{True}\ y\ \mathsf{False})\ \mathsf{True})\\
+                    & \mapsto_{\beta} (\mathsf{True\ True\ False}))
+                \end{align*}
+                $(\mathsf{True\ True\ False})$ write in if-then-else structure is $\mathsf{If\ True\ True\ False}$ which can encode to $\mathsf{True}$.\\\\
+                
+                \item[$\bullet$] Assuming $e_1 \Downarrow \mathsf{True}, e_2 \Downarrow \mathsf{False}$, According to the Part A, $e = (\mathsf{And\ True\ False}) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$.  We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{False}$.
+                \begin{align*}
+                    d\ (e) = d\ (\mathsf{And}\ e_1\ e_2) &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ d\ (e_1)\ d\ (e_2))\\
+                    &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ \mathsf{True\ False})\\
+                    & \mapsto_{\beta} ((\lambda y.\ \mathsf{True}\ y\ \mathsf{False})\ \mathsf{False})\\
+                    & \mapsto_{\beta} (\mathsf{True\ False\ False}))
+                \end{align*}
+                $(\mathsf{True\ False\ False})$ write in if-then-else structure is $\mathsf{If\ True\ False\ False}$ which can encode to $\mathsf{False}$.\\\\
+            
+            
+                \item[$\bullet$] Assuming $e_1 \Downarrow \mathsf{False}, e_2 \Downarrow \mathsf{True}$, According to the Part A, $e = (\mathsf{And\ False\ True}) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$.  We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{False}$.
+                \begin{align*}
+                    d\ (e) = d\ (\mathsf{And}\ e_1\ e_2) &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ d\ (e_1)\ d\ (e_2))\\
+                    &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ \mathsf{False\ True})\\
+                    & \mapsto_{\beta} ((\lambda y.\ \mathsf{False}\ y\ \mathsf{False})\ \mathsf{True})\\
+                    & \mapsto_{\beta} (\mathsf{False\ True\ False}))
+                \end{align*}
+                $(\mathsf{False\ True\ False})$ write in if-then-else structure is $\mathsf{If\ False\ True\ False}$ which can encode to $\mathsf{False}$.\\\\
+                
+                
+                \item[$\bullet$] Assuming $e_1 \Downarrow \mathsf{False}, e_2 \Downarrow \mathsf{False}$, According to the Part A, $e = (\mathsf{And\ False\ False}) \Downarrow \mathsf{False}$, therefore, $v = \mathsf{False}$.  We must show that $v'$ is the $\lambda$-calculus encoding of $\mathsf{False}$.
+                \begin{align*}
+                    d\ (e) = d\ (\mathsf{And}\ e_1\ e_2) &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ d\ (e_1)\ d\ (e_2))\\
+                    &\ = ((\lambda x.\ \lambda y.\ x\ y\ \mathsf{False})\ \mathsf{False\ False})\\
+                    & \mapsto_{\beta} ((\lambda y.\ \mathsf{False}\ y\ \mathsf{False})\ \mathsf{False})\\
+                    & \mapsto_{\beta} (\mathsf{False\ False\ False}))
+                \end{align*}
+                $(\mathsf{False\ False\ False})$ write in if-then-else structure is $\mathsf{If\ False\ False\ False}$ which can encode to $\mathsf{False}$.\\
+            \end{itemize}    
+        \end{itemize}
+    \end{solution}
+
+    \item[4.] Suppose we added \textit{unary local function definitions} to our language $\mathcal{P}$. Here's an example in concrete syntax:
+    \[
+      \begin{array}{l}
+        \mathsf{let} \\
+        \;\;\mathit{g}(\mathit{x}) = \neg\mathit{x} \\
+        \mathsf{in} \\
+        \;\; \mathit{g}(\mathsf{True})\\
+        \mathsf{end}
+        
+      \end{array}
+    \]
+    We limit ourselves to non-recursive bindings (meaning functions can't call themselves), and first-order functions (meaning functions require boolean arguments).
+    \begin{itemize}
+        \item[a)]  Extend the \textit{abstract} syntax for $\mathcal{B}$ from question A.3 so that it supports the         features used in the above example. Use first-order abstract syntax with         explicit strings. You don't have to extend the parsing relation. \textit{(5 marks)}
+        \begin{solution}
+           \small\begin{align*}
+               &\mathcal{B} ::= \mathsf{let}\ \mathcal{S(S)} = \mathcal{B} \  \mathsf{in} \  \mathcal{B} \  \mathsf{end}\ \mid\ \mathsf{Not}\  \mathcal{B}\  \mid\ \mathsf{And} \  \mathcal{B} \  \mathcal{B}\ \mid \  \mathsf{True}\  \mid\  \mathsf{False}\  \mid\ \mathcal{S}\\ &\mathcal{S} :: string
+           \end{align*}
+        \end{solution}
+        \item[b)] Define a scope-checking judgement, similar to the \textbf{ok} judgement from the lectures. It should check (a) that all names of variables and functions are used only within their scopes; and (b) that names used in variable (or function) position are indeed the names of variables (or functions). Hence, the following expressions should both be rejected:
+        \begin{mathpar}
+        \begin{array}{l}
+            \mathsf{let} \\
+            \;\;\mathit{f}(\mathit{x}) = \neg\mathit{x} \\
+            \mathsf{in} \\
+            \;\; \mathit{f}(\mathit{x})\\
+            \mathsf{end}
+            \end{array}
+            \and
+            \begin{array}{l}
+            \mathsf{let} \\
+            \;\;\mathit{f}(\mathit{x}) = \neg\mathit{x} \\
+            \mathsf{in} \\
+            \;\; \mathit{f}(\mathit{f})\\
+            \mathsf{end}
+            \end{array}
+            \and
+            \begin{array}{l}
+            \mathsf{let} \\
+            \;\;\mathit{f}(\mathit{x}) = \mathit{x}(\mathsf{True}) \\
+            \mathsf{in} \\
+            \;\; \mathit{f}(\mathsf{False})\\
+            \mathsf{end}
+        \end{array}    
+        \end{mathpar}
+        The following are examples of things that should be accepted: nullary definitions, nested definitions, and shadowed definitions.
+        \begin{mathpar}
+        \begin{array}{l}
+            \mathsf{let} \\
+            \;\;\mathit{f}(\mathit{x}) =\\
+        
+            \quad\mathsf{let} \\
+            \quad\;\;\mathit{g}(\mathit{y}) = \neg\mathit{x}\wedge\mathit{y} \\
+            \quad\mathsf{in} \\
+            \quad\;\; \mathit{g}(\mathit{x}) \wedge \neg\mathit{g}(\mathit{x})\\
+            \quad\mathsf{end}\\
+            \mathsf{in} \\
+            \;\; \mathit{f}(\mathsf{False})\\
+            \mathsf{end}
+            \end{array}
+            \and
+            \begin{array}{l}
+            \mathsf{let} \\
+            \;\;\mathit{f}(\mathit{x}) = \mathit{x}(\mathsf{True}) \\
+            \mathsf{in} \\
+            \quad\mathsf{let} \\
+            \quad\;\;\mathit{f}(\mathit{x}) = \mathit{f}(\mathit{x}) \\
+            \quad\mathsf{in} \\
+            \quad\;\; \mathit{f}(\mathsf{True})\\
+            \quad\mathsf{end}\\
+            \mathsf{end}
+        \end{array}    
+        \end{mathpar}
+        Note that the latter example is not a recursive call. \textit{(10 marks)}
+        \begin{solution}
+        \small\begin{gather*}
+            \Gamma\ \text{means context}.\quad \quad \quad
+            \inferrule{}{\Gamma \vdash \mathsf{True}  \  \textbf{ok}} \quad \quad \quad \quad \inferrule{}{\Gamma \vdash \mathsf{False} \  \textbf{ok}} \\[0.5em]
+            \inferrule{s \  boundv \in \Gamma}{\Gamma \vdash s \  \textbf{ok}} \quad \quad \quad  \inferrule{s \  boundf \in \Gamma\\ \Gamma \vdash e \  \textbf{ok}}{\Gamma \vdash s(e) \  \textbf{ok}} \\[0.5em]
+            \inferrule{\Gamma \vdash e \ \textbf{ok}}
+            {\Gamma \vdash \mathsf{Not} \ e \  \textbf{ok}} \quad \quad \quad  \inferrule{\Gamma \vdash e_1 \  \textbf{ok}\\
+            \Gamma \vdash e_2 \  \textbf{ok}
+            }
+            {\Gamma \vdash \mathsf{And} \  e_1 \  e_2 \  \textbf{ok}} \\[0.5em]
+             \inferrule{
+            s_2 \ boundv,\ \Gamma\vdash e_1 \ \textbf{ok} \\
+            s_1 \ boundf,\ \Gamma \vdash e_2 \  \textbf{ok}}{\Gamma \vdash \mathsf{let} \  s_1(s_2) \  = \  e_1 \  \mathsf{in} \  e_2 \  \mathsf{end} \  \textbf{ok}} \\
+        \end{gather*}
+        \end{solution}
+    \end{itemize}
+\end{itemize}
+
+\section*{Late Penalty}
+
+You may submit up to five days (120 hours) late. Each day of lateness corresponds
+to a 5\% reduction of your total mark. For example, if your assignment is worth
+88\% and you submit it two days late, you get 78\%. If you submit it more than
+five days late, you get 0\%.
+
+Course staff cannot grant assignment extensions---if you need an extensions,
+you have to apply for special consideration through the standard procedure.
+More information here: \url{https://www.student.unsw.edu.au/special-consideration}
+
+\section*{Plagiarism}
+Many students do not appear to understand what is regarded as plagiarism. This is
+no defense. Before submitting any work you should read and understand the UNSW plagiarism policy
+\url{https://student.unsw.edu.au/plagiarism}.
+
+All work submitted for assessment must be entirely your own work. We regard
+unacknowledged copying of material, in whole or part, as an extremely serious offence.
+In this course submission of any work derived from another person, or solely or
+jointly written by and or with someone else, without clear and explicit acknowledgement,
+will be severely punished and may result in automatic failure for the course and
+a mark of zero for the course. Note this includes including unreferenced work from
+books, the internet, etc.
+
+Do not provide or show your assessable work to any other person. Allowing another
+student to copy from you will, at the very least, result in zero for that assessment. If
+you knowingly provide or show your assessment work to another person for any reason,
+and work derived from it is subsequently submitted, you will be penalized, even if the
+work was submitted without your knowledge or consent. This will apply even if your
+work is submitted by a third party unknown to you. You should keep your work private
+until submissions have closed.
+
+If you are unsure about whether certain activities would constitute plagiarism ask
+us before engaging in them!
+
+\end{document}
+

@@ -1,0 +1,3 @@
+main :: Bool
+     = let t :: Bool = True; 
+       in t;

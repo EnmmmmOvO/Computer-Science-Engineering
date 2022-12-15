@@ -1,0 +1,14 @@
+main
+     = 
+    let lt0
+            = recfun lt0 x = 
+                         if x < 0 then True else False;
+    in let  
+        gt1
+            = recfun gt1 x = x > 1;
+    in 
+        if lt0 (-10) then if gt1 0 then False
+                                   else True   -- success
+                  else False;
+
+    

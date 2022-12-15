@@ -1,0 +1,46 @@
+Possible value?
+  1 p1 p2 q1 q2 r1 r2
+  -1
+    p1
+    q1
+    r1
+     x,y,z = 0
+    p2
+     n = 1
+    r2
+     n = 1
+    q2
+     n = -1
+   2 p1 p2 r1 q1 q2 r2
+
+
+   0  r1 r2 p1 q1 p2 q2
+
+
+   forever do
+     non-critical section
+     while(true);
+     critical section
+     skip
+
+   forever do
+     non-critical section
+     skip
+     critical section
+     skip
+
+For safety properties, it's helpful to think *invariants*
+
+  P@p3 ⇒ turn=1
+
+  Q@q3 ⇒ turn=2
+
+P never wants to enter the critical section
+  then Q never gets a turn
+
+ await turn = 1       *blocked* if turn ≠ 1
+                      can do a no-op and proceed to the next line
+                       if turn = 1
+   while(turn≠1)
+
+

@@ -1,0 +1,8 @@
+main :: [Int] = let xs :: [Int] = Cons 0 (Cons 1 (Cons 2 Nil));
+                 in let mapInc :: [Int] -> [Int]
+                     = (recfun map :: (Int -> Int) -> ([Int] -> [Int])
+                                       f = recfun map2 :: ([Int] -> [Int]) 
+                                                   xs  =  if null xs then Nil else Cons (f (head xs)) (map2 (tail xs)))
+                                 (recfun inc :: (Int -> Int) x = x + 1);
+                     in mapInc xs;
+                     

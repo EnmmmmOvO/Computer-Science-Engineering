@@ -1,0 +1,23 @@
+main
+     =
+    let f =
+           recfun f x = -1;
+    in let f  =
+           recfun f x = -2;
+    in let f  =
+           recfun f  x = -3;
+    in let f =
+           recfun f x = -4;
+    in let f =
+           recfun f x = -5;
+    in let f =
+           recfun f x = -6;
+    in let f =
+           recfun f x = -7;
+    in let f =
+           recfun f x = -8;
+    in let f =
+           recfun f x = -9;
+    in let f =
+           recfun f x = True;
+    in f 7;

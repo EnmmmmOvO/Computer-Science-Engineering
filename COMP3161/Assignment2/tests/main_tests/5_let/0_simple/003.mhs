@@ -1,0 +1,4 @@
+main
+     = let a = True;
+    in let b = False;
+    in if 1 < 2 then a else b;

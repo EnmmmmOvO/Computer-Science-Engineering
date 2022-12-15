@@ -1,0 +1,11 @@
+main
+     =
+    let f  =
+        recfun f  x =
+            recfun g  y = x * -y;
+
+    in let z  = 
+        recfun z  x = f 3;   -- discards 2, returns \y -> 3 * -y
+
+    in z 2 4;
+            

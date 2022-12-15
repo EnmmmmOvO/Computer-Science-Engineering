@@ -1,0 +1,2 @@
+main :: Bool
+     = if True then True else False;

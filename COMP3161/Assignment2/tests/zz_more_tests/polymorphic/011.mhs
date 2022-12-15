@@ -1,0 +1,4 @@
+main = recfun f x = 
+  if (fst x) then (snd x) else f (True, 10);
+
+

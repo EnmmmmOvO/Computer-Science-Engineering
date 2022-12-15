@@ -1,0 +1,11 @@
+main :: Int
+     =
+    let f :: (Int -> Int -> Int) =
+        recfun f :: (Int -> Int -> Int) x =
+            recfun g :: (Int -> Int) y = x * -y;
+
+    in let z :: (Int -> Int -> Int) = 
+        recfun z :: (Int -> Int -> Int) x = f 3;   -- discards 2, returns \y -> 3 * -y
+
+    in z 2 4;
+            

@@ -1,0 +1,162 @@
+We were introducing type combinators to MinHS:
+
+  product types (tuples)         conjunction
+  sum types (tagged unions)      disjunction
+  the unit type                  true
+  the empty type                 false
+
+                                 negation
+
+  ¬A   ≡   A ⇒ False
+
+By making a type system for these types, we accidentally
+defined constructive propositional logic (w/different syntax)
+
+
+
+
+rec t. τ  ≃  τ[t := rec t τ]
+
+≃ type isomorphism
+
+Two types are isomorphic if there's a bijection between them
+
+Int × Bool ≠ Bool × Int
+Int × Bool ≃ Bool × Int
+
+IntList ≃  rec t. 1 + (Int × t)
+
+[]     InL ()   :    1 + a       for all a
+
+[1]    InR (1,InL ())   a + (Int × (1 + b))  for all a,b
+
+
+       roll(InL ()) : rec t. 1 + (Int × t)
+
+       roll(InR (1,roll(InL()))) : rec t. 1 + (Int × t)
+
+       unroll(roll(InL ())) : 1 + (Int × (rec t. 1 + (Int × t)))
+
+
+       unroll cancels roll:
+
+       ____________________
+       unroll(roll(e)) ↦ e
+
+
+One huge problem with this representation of types.
+Expression won't have a unique most general type.
+
+data IntList = Nil | Cons Int IntList
+
+IntList ≃ rec t. 1 + (Int × t)
+
+data IntTree = Nil | Node Int IntTree IntTree
+
+IntTree ≃ rec t. 1 + (Int × t × t)
+
+
+
+ roll(InL ())    is this a tree or a list?
+                  a: both!
+
+What you *can* do with recursion combinators is
+  define "anonymous" recursive types
+  you can use a recursive type in your program,
+  without having previously defined it using e.g. data
+
+
+data Either a b = Left a    -- in MinHS, Left is InL
+               | Right a    -- in MinHs, Right is InR
+
+
+For classical logic, we need more rules:
+
+
+  Γ,a ⊢ P    Γ,¬a ⊢ P
+ ____________________
+        Γ ⊢ P
+
+
+  P = NP
+
+ There exists a polynomial-time algorithm for a problem in NP
+
+ In a *constructive* proof, we would have to actually
+   show a concrete algorithm, and prove that it's polynomial.
+
+ In a *classical* proof, you could (for example)
+   assume that there is no such algorithm, and prove that
+   nonsense follows
+
+
+  recfun f :: (Int × Int) → (Int × Int)  x = (snd x, fst x)
+  recfun f :: (Int × Bool) → (Bool × Int) x = (snd x, fst x)
+  recfun f :: (Bool × Int) → (Int × Bool) x = (snd x, fst x)
+
+
+swap = type a. type b. recfun swap (a × b) → (b × a)
+
+swap@Int = type b. recfun swap (Int × b) → (b × Int)
+
+swap@Int@Bool = recfun swap (Int × Bool) → (Bool × Int)                               
+
+
+ id = (type a. recfun f :: (a -> a))   : ∀a. a -> a
+
+
+ id@Int     :   Int -> Int
+
+
+  type a.
+    let x = id@a in
+      type a. id@a ∘ x) --- this should *not* type check
+
+
+  type a. (id@a, type b. id@b)
+
+
+In first-order logic, you can quantify over terms, but not over
+ propositions
+
+
+  (a = b + c) ∧ φ         a is a term, b and c are terms,
+                          b + c is a term
+                          the whole thing is a proposition
+                          φ is a proposition
+
+Legal:
+
+  ∀a. (a = b + c) ∧ φ
+
+Illegal:
+
+  ∀φ. (a = b + c) ∧ φ
+
+In second-order logic, you can quantify over propositions
+  (which denote properties of terms)
+
+In third-order logic, you can quantify over
+  properties of properties of terms
+
+People care about: first-order, second-order logic,
+                   higher-order logic (union of n-order logic for all n)
+
+
+The more general your type, the fewer elements it has.
+
+  Bool -> Bool       2² = 4  (total, terminating functions)
+
+     T   F
+     a   b
+
+  ∀z. z -> z         1 (the identity function)
+
+  ∀x y. x → y        0
+
+The more general your type, the more properties about your function
+  are suggested by just its type signature
+
+Q: can we do case analysis on what type z is?
+A: In MinHS, no. If it were there would be many more functions
+   in the generic signature.      

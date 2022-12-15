@@ -1,0 +1,4 @@
+main = recfun f x = case (snd x) of
+  Inl y -> fst x;
+  Inr z -> z;; 
+

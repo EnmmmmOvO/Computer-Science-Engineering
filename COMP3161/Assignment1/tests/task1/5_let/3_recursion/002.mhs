@@ -1,0 +1,10 @@
+main :: Int
+     = let fib :: (Int -> Int) =
+            recfun fib :: (Int -> Int) n =
+                    if n == 0 then 0
+                    else if n == 1 then 1
+                    else fib (n - 2) + fib (n - 1) ;
+       in let 
+           n :: Int = 25 ; -- approximately 1 second on my laptop
+
+       in fib n ;

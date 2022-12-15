@@ -1,0 +1,1 @@
+main = snd (1,True);

@@ -1,0 +1,7 @@
+main
+     =
+    let f =
+        recfun f x = 
+            recfun g y = x + y;
+    in f 1 2;
+

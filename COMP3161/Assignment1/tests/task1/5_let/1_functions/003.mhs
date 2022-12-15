@@ -1,0 +1,11 @@
+--
+-- fails due to lack of unique names in Tc monad.
+--
+main :: Int
+     =
+    let main1 :: (Int -> Int)
+             = recfun main1 :: (Int -> Int) x = 
+                           if x < 10 then main1 (x+1) else x;
+
+    in main1 0;
+    

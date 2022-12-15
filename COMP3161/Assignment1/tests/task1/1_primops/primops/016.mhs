@@ -1,0 +1,5 @@
+--  (-3055753 if they use `quot`. -3055754 if they use `div`)
+--
+-- the spec says to use `quot`
+
+main :: Int = (591125662431) / (517);

@@ -1,0 +1,11 @@
+-- test environment
+
+main =
+    let f =
+        (recfun f x =   -- 6
+           recfun f x =       -- 5
+              recfun f x =            -- 4
+                 recfun f x =                -- 3
+                    recfun f x =                    -- 2
+                        (2*x)) ;
+    in f 0 0 0 0 7;

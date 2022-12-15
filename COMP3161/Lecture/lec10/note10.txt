@@ -1,0 +1,245 @@
+We made a small-step semantics where the *states* have three components:
+
+- the expression we're evaluating
+- a stack (the context in which we're evaluating)
+- a mode "returning mode" ≺ and "evaluating mode" ≻
+
+
+  (Apply <<f.x.e>> □) ▷ s ≺ v
+
+  v is the value we're returning         
+  ≺ tells us that we're in returning mode
+  s denotes the rest of the stack
+  ▷ means "push the stack frame in the LHS onto the stack on the RHS"
+  (Apply <<f.x.e>> □) a stack frame:
+   - we're in a context where we're evaluating the RHS of a function application (□)
+   - we've already evaluated the LHS of Apply to a function value: <<f.x.e>>
+
+
+(x=4,x=3,x=2,•)(x) = 4 this corresponds to *shadowing*,
+                       the x=3, and x=2 represent older bindings that cannot be accessed
+                       in the current scope
+
+let x = 2 in
+  let x = 3 in
+    let x = 4 in
+      x
+
+
+  s | η ≺ v
+  s | η ≻ e
+
+  states have:
+  - a stack (same meaning as before)
+  - an environment (to look up values)
+  - a value or an expression depending on whether we're in returning or evaluating mode
+
+The stack keeps track of the context in which you're currently evaluating.
+
+  ∘ ≻ (Plus (Num 1) (Num 2))
+  ↦c
+  (Plus □ (Num 2)) ▷ ∘ ≻ Num 1
+
+
+  x=3,•   an environment where x is 3 and no other variables are in scope
+
+  ∘ | x=3,• ≻ (Plus (Num 1) (Var x))
+  ↦E
+  (Plus □ (Var x)) ▷ ∘ | x=3,• ≻ (Num 1)
+  ↦E
+  (Plus □ (Var x)) ▷ ∘ | x=3,• ≺ 1
+  ↦E
+  (Plus 1 □) ▷ ∘ | x=3,• ≻ Var x
+  ↦E
+  (Plus 1 □) ▷ ∘ | x=3,• ≺ 3
+  ↦E
+  ∘ | x=3,• ≺ 4
+
+
+
+let x = 3
+in
+  let f(y) = x + y
+  in
+    let x = 4
+    in
+      f(x)
+
+
+The question here is:
+- 7
+  does x refer to the x that was in scope when the function was *defined*
+  (lexical scoping)
+- 8
+  or, does x refer to the x that was in scope when the function was *called*
+  (dynamic binding)
+
+Today, we're going for lexical scoping.
+
+
+∘ | • ≻ (λx. x) 5
+↦E
+(□ 5) ▷ ∘ | • ≻ (λx. x)
+↦E
+(□ 5) ▷ ∘ | • ≺ (λx. x)
+↦E
+((λx. x) □) ▷ ∘ | • ≻ 5
+↦E
+((λx. x) □) ▷ ∘ | • ≺ 5                    
+↦E
+∘ | x=5,• ≻ x
+↦E
+∘ | x=5,• ≺ 5
+
+...we would have liked to reach:
+
+∘ | • ≺ 5
+
+
+∘ | x=3,• ≻ ((λx. x) 5) + x
+↦E
+...
+↦E
+(Plus □ x) ▷ ∘ | x=5,x=3,• ≺ 5
+↦E
+(Plus 5 □) ▷ ∘ | x=5,x=3,• ≻ x
+↦E
+(Plus 5 □) ▷ ∘ | x=5,x=3,• ≺ 5
+↦E
+∘ | x=5,x=3,• ≺ 10
+
+
+∘ | x=3,• ≻ ((λx. x) 5) + x
+↦E
+...
+↦E
+(Apply (λx. x) □) ▷ (Plus □ x) ▷ ∘ | x=3,• ≺ 5
+↦E
+x=3,• ▷ (Plus □ x) ▷ ∘ | x=5,x=3,• ≺ 5
+↦E
+(Plus □ x) ▷ ∘ | x=3,• ≺ 5
+↦E
+(Plus 5 □) ▷ ∘ | x=3,• ≻ x
+↦E
+(Plus 5 □) ▷ ∘ | x=3,• ≺ 3
+↦E
+∘ | x=3,• ≺ 8
+
+
+On slide 11, the concrete syntax expression would be something like
+  (λx. x + 1) 3
+
+You enter a return state when you have finished evaluating a subexpression.
+For two reasons:
+- You've done some intermediate step, and need to plug the result into a hole
+  before you can proceed
+- You have no hole left to plug it into (the empty stack),
+  the computation is done.
+
+
+((λx. (λy. x)) 3) 4
+↦β
+(λy. 3) 4
+↦β
+3
+
+
+Blue environment: η'
+- the environment as it was when the function was defined
+Red environment: η
+- the environment when the function was *called*
+
+When we're in the scope of the function (when we're evaluating the body),
+  we want to be in η'
+When we return from the function, we want to get back to η
+
+
+let x = 3
+in
+  let f(y) = x + y
+  in
+    let x = 4
+    in
+      f(x) + x
+
+
+In the blue environment (the environment in which f was defined), x=3
+In the red environment (where f was called), x=4
+
+
+Refinement:
+  Every behaviour of the implementation is a behaviour that is allowed by the
+  specification.
+  (Also known as forward simulation)
+  "the implementation doesn't add any behaviour that's not in the specification"
+Backwards simulation:
+  Every behaviour that the specification can do, the implementation can also do.
+
+Often, you only have refinement because the high-level specification leaves some
+  room for implementation decisions.
+
+
+Here's a language with two constructs:
+
+  L ::= 1 | 2 | 3
+
+Here's the operational semantics:
+
+  _____    _____
+  1 ↦ 2    1 ↦ 3
+
+This language contains *non-determinism*: the result of evaluating the expression "1"
+ is not unique.
+
+When we implement this language, we choose some *refinement* of the specification to
+implement.
+
+
+  ______   <--- this would be a refinement of ↦
+  1 ↦c 2
+
+We could also choose:
+- an implementation that always gives 3
+- an implementation that flips a coin, and gives 2 if heads 3 if tails
+
+
+  _____   <--- this is an *incorrect* implementation of the spec (not a refinement of ↦)
+  2 ↦c 3 
+
+
+My implementation consists of the empty set of rules.
+Is this a correct implementation?
+A: Yes! (The empty set of rules refines every specification)
+
+Q: is this a correct implementation?
+  _____
+  1 ↦c 1
+
+A: It depends on what the final states are.
+
+   if the final states are {1,2,3}, yes
+
+   if the final states are {2,3}, yes!
+
+  Refinement tells us that every computation in the implementation
+  that successfully returns a value, must have a corresponding
+  computation in the specification.
+
+
+∘ ≺ (+ (+ (N 2) (N 3)) (N 4))
+
+You can imagine repeatedly "unwinding the stack" by putting everything back
+into the hole where it came from.
+
+
+You might specify a security protocol:
+
+  generate a secret private key x;
+  xor my secret message with my private key
+  send the encrypted message on the network
+
+A valid refinement of the above would be:
+
+  generate the private key 0
+  xor my secret message 0
+  send the "encrypted" message on the network

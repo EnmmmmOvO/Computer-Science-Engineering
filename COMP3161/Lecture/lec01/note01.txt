@@ -1,0 +1,45 @@
+  1    2    3    4    5
+  🕁   🕁   🕁   🕁   🕁
+
+A mole is disturbing a row of five graves. The mole is always
+underneath one of the graves.
+
+1. Each day, we may attempt to catch the mole by
+   digging up a grave. If we found the mole, we win;
+   otherwise, we put the grave back in order and go to sleep.
+2. Each night, the mole must move from its current position to an
+   adjacent grave.
+
+Find a sequence of digs that is guaranteed to find the mole.
+
+
+
+=============================================
+
+A winning sequence is 2 3 4 2 3 4.
+
+The key thing is to track the set of positions the mole could be in.
+
+{1,2,3,4,5}
+ 2
+{1,3,4,5}
+then, the mole moves
+{2,3,4,5}
+ 3
+{2,4,5}
+mole moves:
+{1,3,4,5}
+ 4
+{1,3,5}
+mole moves:
+{2,4}
+ 2
+{4}
+mole moves:
+{3,5}
+ 3
+ {5}
+mole moves:
+ {4}
+ 4
+ {}

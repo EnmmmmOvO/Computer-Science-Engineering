@@ -1,0 +1,6 @@
+main = 
+  let g = recfun f x = 
+            if True 
+              then (let h = recfun g y = x; in h) 
+              else (let h = recfun g y = (x+1); in h) ; 
+  in g;

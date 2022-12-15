@@ -1,0 +1,176 @@
+What are types?
+
+- Types are a kind of static semantics judgement.
+
+What are types for?
+
+Pragmatic answer:
+- help programmers write better code by allowing
+  some failures to happen at compile-time instead of
+  runtime
+- language implementors can write simpler language
+  implementations, and sometimes, more powerful
+  optimisations, if they know that their code is
+  well-typed.
+
+A more formal answer:
+- types should give you properties
+
+For a well-designed type system,
+  we'd like all type-correct programs to be
+  guaranteed to have some desirable property.
+
+Examples:
+- No type correct program ever encounters a runtime type error
+  (divide a list by an integer)
+- Type correct programs should have no undefined behaviour
+- Type correct programs should never leak resources.
+   (memory leaks, unclosed file handlers, ...)
+   linear types
+- Type correct programs should communicate correctly
+  with the environment according to a given communication
+  protocol.
+   session types
+- Guarantee the absence of out-of-bounds accessess
+   dependent types, sized types
+
+
+- Type safety: type correct programs should have no undefined behaviour.
+
+When you design a type system,
+1. you decide a property P you want your program to satisfy
+2. formulate some overapproximation of P that is computationally tractable
+   at compile time.
+
+This illustrates that Haskell's type system *overapproximates*
+  type safety: it errs on the safe side, and rejects some programs
+  that would be fine if we happened to run them.
+
+Every interesting type system does this.
+
+Big-step judgement:
+
+  let x = 5 in x + 3 ⇓ 8
+
+Small-step traces:
+
+  let x = 5 in x + 3 ↦ 5 + 3 ↦ 8
+
+*Behaviours* are infinite traces.
+
+If we have a trace, and it's not already infinite,
+  we can make it a behaviour by repeating the final state forever.
+
+  let x = 5 in x + 3,
+  5 + 3,
+  8,
+  8,
+  8,
+  8,
+  ...
+
+A property is a set of (allowed) behaviours.
+
+  In mathematical logic, it's often convenient to
+  identify a predicate with the set of objects
+  that satisfy the predicate.
+
+"No undefined behaviour" is a property
+
+σ ranges over behaviours
+
+The set of all undefined behaviours:
+  {σ | there exists a state in σ that is stuck but not final }
+
+A state of a small-step semantics is *stuck* if
+  it has no outgoing transitions.
+
+  P is stuck if ¬∃P'. P ↦ P'
+
+A final state is an element of the set of final states.
+  (When you define a small-step semantics, you need to decide
+   what the set of final states is)
+
+  e.g., for our language of arithmetic expressions earlier,
+        the final states were the set of numerical constants
+
+Safety and liveness: informally defined by Leslie Lamport
+   formally defined by Alpern & Schneider
+
+Q: why is it prefix but not postfix, what's the rule of sorting behaviours
+
+A behaviour is an infinite sequence of states
+
+  s1, s2, s3, s4, ...
+
+A *finite prefix* of a behaviour is obtained by taking only the first n
+elements of a behaviour, for some n ∈ ℕ.
+
+  s1, s2
+  s1, s2, s3, ...
+
+Why not postfix: there is no last element to start chopping from.
+
+Theorem (Alpern & Schneider):
+
+  Every property is the intersection of a safety property and a livenes
+  s property.
+
+Proof: take COMP3151 (or read Alpern & Schneider's paper)
+
+Axiomatic semantics (Hoare logic):
+ {φ} P {ψ}   {precondition} program {postcondition}
+
+ If we execute P in an initial state satisfying φ,
+ then, if we terminate, we'll terminate in a state satisfying ψ.
+
+A Hoare triple is a safety property --- it can be violated by a finite prefix.
+
+ {x = 0} P {x = 2}
+
+ A violation of this property would be a behaviour where we reach a final state
+ where x ≠ 2
+
+What we're calling properties are sometimes called *linear-time properties*
+ to distinguish them from other things you might mean by "property"
+
+Simply typed lambda calculus has *ground types*
+  things like Int, Bool, ... (doesn't matter)
+  they are the type of simple objects that aren't functions
+and also *function types*:  τ1 → τ2    a function that given an argument
+                                       of type τ1 returns a value of type τ2
+
+The application rule guarantees that in a function application,
+  the type of the argument is structurally smaller than the type of its function.
+
+  (λx. x x) (λx. x x) ↦β (λx. x x) (λx. x x)
+
+If we were to assign this term a type, we would have to give
+  (λx. x x) some type τ.
+
+  (λx. x x) (λx. x x)  some type τ → τ1
+
+  this requires τ = τ → τ1, which is false.
+
+There's two reasons you might consider only type safety,
+  and not type liveness.
+
+1. liveness is computationally (and theoretically) more difficult
+2. unlike in logical foundations,
+   it's fine if programs don't terminate.
+    (web server, operating system)
+
+
+*Progress* is satisfied if:
+
+  ∀s τ. s : τ   ⇒ s ∈ F   ∨   ∃s'. s ↦ s'
+
+*Preservation* is satisfied if:
+
+  ∀s s' τ. s : τ    ∧   s ↦ s'    ⇒    s' : τ
+
+
+Progress and preservation together imply type safety.
+
+ Suppose we have progress and preservation,
+  and there exists s : τ  s.t. s ∉ F and s has no outgoing transitions.

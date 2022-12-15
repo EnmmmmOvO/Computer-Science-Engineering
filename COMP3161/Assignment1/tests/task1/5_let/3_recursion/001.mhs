@@ -1,0 +1,4 @@
+main :: Int
+     = ((recfun f :: (Int -> Int -> Int) x = 
+            recfun g :: (Int -> Int) y =
+                     if x == 10 then y else f (x+1) (y+2)) 0) 2 ;-- 2^20

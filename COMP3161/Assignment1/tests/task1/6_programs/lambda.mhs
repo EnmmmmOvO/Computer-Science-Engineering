@@ -1,0 +1,57 @@
+--
+-- some lambda calculus.
+--
+-- bit tricky in a monomorphic setting, how to do S-combinator?
+--
+
+main :: Int
+     =
+
+--------------------------------------------------------------
+ let k :: (Int -> Int -> Int) =
+    recfun k :: (Int -> Int -> Int) p =
+        recfun k' :: (Int -> Int) q = p;
+
+in let 
+     k1 :: (Int -> Int -> Int) =
+        recfun k1 :: (Int -> Int -> Int) p =
+            recfun k1' :: (Int -> Int) q = q;
+
+ in let
+     i :: (Int -> Int) =
+        recfun i :: (Int -> Int) x = x;
+
+--------------------------------------------------------------
+ in let
+    -- now , let's reimplement booleans:
+    true :: (Int -> Int -> Int) = k;
+
+ in let
+    false :: (Int -> Int -> Int) = k1;
+
+--------------------------------------------------------------
+-- and a conditional operator
+ in let
+    iF :: ((Int -> Int -> Int) -> Int -> Int -> Int) =
+     recfun iF :: ((Int -> Int -> Int) -> Int -> Int -> Int) p =
+       recfun p_ :: (Int -> Int -> Int) m =
+         recfun p__ :: (Int -> Int) n = p m n;
+ 
+ in let
+    elsE :: (Int -> Int) = i; -- just syntax
+
+ in let
+    theN :: (Int -> Int) = i; -- just syntax
+
+--------------------------------------------------------------
+
+ in let 
+    a :: (Int -> Int -> Int) = true;
+
+ in let
+    b :: (Int -> Int -> Int) = false;
+
+--------------------------------------------------------------
+in 
+    iF (a) (theN 7) (elsE 8);   -- should equal 7
+

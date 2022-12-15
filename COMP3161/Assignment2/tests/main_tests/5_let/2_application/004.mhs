@@ -1,0 +1,10 @@
+-- more partial app
+main
+     =
+ let f =
+        recfun f x = x + 1;
+
+ in let 
+     g = f;
+
+ in g 1;

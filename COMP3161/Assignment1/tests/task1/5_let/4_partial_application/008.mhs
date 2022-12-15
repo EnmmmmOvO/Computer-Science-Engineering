@@ -1,0 +1,12 @@
+main :: Int
+     =
+ let x :: Int = 8;
+
+ -- do they correctly get the environment for the partial eval?
+ in let 
+     f :: (Int -> Int -> Int) =
+        recfun f :: (Int -> Int -> Int) w =
+          recfun g :: (Int -> Int) y =
+               y + x + w + 1;
+
+ in f 3 2;

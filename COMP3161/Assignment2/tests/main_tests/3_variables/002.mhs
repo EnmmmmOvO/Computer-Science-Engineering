@@ -1,0 +1,3 @@
+main 
+     = let v = 1 - 2; 
+       in v;

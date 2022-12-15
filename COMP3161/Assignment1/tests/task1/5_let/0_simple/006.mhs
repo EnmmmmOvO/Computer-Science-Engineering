@@ -1,0 +1,24 @@
+
+main :: Int
+     =
+    -- x + y
+    let plus :: (Int -> Int -> Int)
+             = recfun g :: (Int -> Int -> Int) x =
+                        recfun g' :: (Int -> Int) y = x + y; 
+
+    -- x + 1
+    in let
+        inc :: (Int -> Int)
+            = recfun g :: (Int -> Int) x = x + 1;
+
+    -- f x  = g (4 + 1) 10
+    in let
+        f :: (Int -> Int)
+          = recfun f :: (Int -> Int) x =
+              if x == 10 then 10
+                         else let y :: Int = f (x+1);
+                              in
+                              plus (let z :: Int = 4; 
+                                    in inc z) y ;
+            
+    in f (-1003) ; -- 10 + 5 == 15

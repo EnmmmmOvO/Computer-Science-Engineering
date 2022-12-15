@@ -1,0 +1,17 @@
+During ex.type lecture we talked about positive and negative
+ occurrences of type variables.
+
+This applies to subtyping as follows:
+- Type variables that occur positively can be treated covariantly
+- Type variables that occur negatively can be treated contravariantly
+
+
+Type variables to the right of a function arrow,
+  or underneath any other construct, are positive
+Type variables to the left of a function arrow are negative
+
+
+ data Foo a = Foo (a -> Bool) -> Bool
+                   ^ that one can be covariant,
+                     because it occurs double-negatively
+                     aka positively

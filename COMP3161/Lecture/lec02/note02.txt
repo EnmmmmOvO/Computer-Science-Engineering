@@ -1,0 +1,249 @@
+Let's do an inductive definition of the set of natural numbers ℕ.
+
+The natural numbers are those that can be constructed using the
+following rules:
+
+  1. 0 ∈ ℕ
+  2. If n ∈ ℕ, then n+1 ∈ ℕ.
+
+We call this an inductive definition, because it tells you how to
+build natural numbers from other things (in this case natural numbers)
+
+Haskell data type declarations are inductive definitions in disguise.
+
+  1. ∀s. If s ∈ String, then IdentT(s) ∈ Token
+  2. ∀n. If n ∈ Int, then LitT(n) ∈ Token
+  3. LParenT ∈ Token
+  ...
+
+Q: What distinguishes an inductive definition from a recursive
+   definition?
+
+  Nothing (important).
+  Moral distinction:
+
+  - inductive definitions give rules for building bigger things from
+    smaller things
+
+  - recursive definitions give rules for decomposing bigger things
+    into smaller things
+
+Q: what does : mean in Haskell?
+
+   : is one of the constructors of the List datatype
+
+-- a is a type variable (placeholder for a type)
+data List a =
+    []
+  | a : List a  <-- : is written in infix,
+                      unlike the constructors of Token
+
+
+2. If x is an element, and xs is a list,
+   then  x:xs   is a list.
+
+Q: For the Natural numbers example, the "base case" was "0 belongs to
+the natural numbers". What is the equivalent of the "base case" in the
+Token example?
+
+A: Literally all the cases, because Tokens don't actually use
+recursion
+
+Theorem triangular_numbers_closed_form:
+  ∀n ∈ ℕ. sumTo n = n*(n+1)/2
+Proof
+  By induction on n.
+
+  * Base case:  sumTo 0 = 0*(0+1)/2
+
+     sumTo 0
+     = (by defn)
+     0
+     = (by arithmetic)
+     0*(0+1)/2
+
+  * Inductive case:
+      assuming   sumTo n = n*(n+1)/2        (IH)
+      then       sumTo(n+1) = (n+1)*(n+2)/2
+
+     sumTo(n+1)
+     = (by defn)
+     n + 1 + sumTo n
+     = (by IH)
+     n + 1 + n*(n+1)/2
+     = (by arithmetic)
+     ...
+     =
+     (n+1)*(n+2)/2
+QED
+
+
+  1. 0 ∈ ℕ
+  2. If n ∈ ℕ, then n+1 ∈ ℕ.
+
+The trouble with this definition is it assumes you've already defined
++, which is a recursive definition on the natural numbers.
+
+The way that Guiseppe Peano (spelling?) wrote it is more like this:
+
+  1. Z ∈ ℕ
+  2. If n ∈ ℕ, then S(n) ∈ ℕ.
+
+S --- the successor operator.
+
+   3     S(S(S(Z)))
+
+Structural induction is:
+ induction on how the datatype element was built.
+ one proof obligation per clause in your datatype definition
+
+Theorem add_right_identity:
+  ∀n ∈ Nat. add n Z = n
+Proof
+  By structural induction on n.
+
+  ** Case n=Z, show  add Z Z = Z
+
+    add Z Z
+    = (by defn)
+    Z
+
+  ** Case n=Suc m,
+      assuming:   add m Z = m  (IH)
+      show:       add (S m) Z = S m
+
+     add (S m) Z
+     = (by definition)
+     S(add m Z)
+     = S(m)
+QED
+
+-- S is just a nonsense symbol (data constructor)
+-- When I define Nat (a type),
+   I also define *the constructors* of the same type, namely Z and S
+
+  P(xs) ≡ take (length xs) xs = xs
+
+Theorem take_length:
+  ∀xs. take (length xs) xs = xs
+Proof
+  By structural induction on xs
+
+  ** Case xs=[]
+      we must prove: take (length []) [] = []
+
+      take(length []) []
+      = (by definition)
+      take 0 []
+      = (by definition)
+      []
+
+
+  ** Case xs = x:ys
+      assuming   take (length ys) ys = ys       (IH)
+      show       take (length (x:ys)) (x:ys) = x:ys
+
+         take (length (x:ys)) (x:ys)
+         = (by definition)
+         take (1 + length ys) (x:ys)
+         = (by definition of take, 3rd clause of mytake)
+         x:take (length ys) (ys)
+         = (by IH)
+         x:ys
+QED
+
+
+++ (pronounced append) is a function for concatenating two lists
+
+
+Theorem take_drop_five:
+  ∀xs. take 5 xs ++ drop 5 xs = xs
+Proof
+  By structural induction on xs.
+
+  Case xs=[], show  take 5 [] ++ drop 5 [] = []
+        (skip, too boring)
+
+  Case xs = x:ys,
+     assuming   take 5 ys ++ drop 5 ys = ys    (IH)
+     show       take 5 (x:ys) ++ drop 5 (x:ys) = x:ys
+
+       take 5 (x:ys) ++ drop 5 (x:ys)
+       = (by defns of take and drop)
+       x:take 4 ys ++ drop 4 ys
+       = (by IH)
+       we're stuck :( can't apply the IH
+QED 
+
+Todo: generalise the goal statement before doing the induction.
+
+
+Theorem take_drop_five:
+  ∀xs. ∀n. take n xs ++ drop n xs = xs
+Proof
+  By structural induction on xs.
+
+  Case xs=[], show  ∀n. take n [] ++ drop n [] = []
+        (skip, by case analysis on whether n=0 or not)
+
+  Case xs = x:ys,
+     assuming   ∀n. take n ys ++ drop n ys = ys    (IH)
+     show       ∀n. take n (x:ys) ++ drop n (x:ys) = x:ys   (G)
+
+     It suffices to prove (G) for some arbitrary but fixed n
+       (universal introduction)
+
+       We proceed by case analysis on whether n=0 or not.
+
+       if n=0,
+
+          take 0 (x:ys) ++ drop 0 (x:ys)
+          = (by defn)
+          [] ++ x:ys
+          = (by defn of ++)
+          x:ys
+
+       if n ≠ 0
+
+          take n (x:ys) ++ drop n (x:ys)
+          = (by defns of take and drop)
+          x:take (n-1) ys ++ drop (n-1) ys
+          = (by defn of ++)
+          x:(take (n-1) ys ++ drop (n-1) ys)
+          = (by IH)
+          x:ys
+QED      
+
+
+  x:ys ++ ys =  (x:ys) ++ zs
+
+  x:(ys ++ zs)
+
+
+Monotonicity of +:
+
+  If x < y,  then   x + z < y + z
+
+Theorem height_lt_leaves:
+  ∀t. height t < leaves t
+Proof
+  By structural induction on t.
+
+  Case t=Leaf: height Leaf < leaves Leaf
+    trivial (0 < 1)
+
+  Case t=Branch x l r
+    assume   height l < leaves l   (IH1)
+    assume   height r < leaves r   (IH2)
+      show   height(Branch x l r) < leaves(Branch x l r)
+
+      height(Branch x l r)
+      = (by defn)
+      1 + max (height l) (height r)
+      ≤ (by intimidiation)
+      1 + height l + height r
+      ≤ (by IH1, and monotonicity of +)
+      leaves l + height r
+      < (by IH2, and monotonicity of +)
+      leaves l + leaves r
+QED

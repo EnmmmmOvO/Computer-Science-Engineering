@@ -1,0 +1,1 @@
+main = (recfun f x = x) 1;

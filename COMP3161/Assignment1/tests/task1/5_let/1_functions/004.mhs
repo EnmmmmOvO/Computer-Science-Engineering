@@ -1,0 +1,23 @@
+main :: Bool
+     =
+    let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -1;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -2;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -3;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -4;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -5;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -6;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -7;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -8;
+    in let f :: (Int -> Int) =
+           recfun f :: (Int -> Int) x = -9;
+    in let f :: (Int -> Bool) =
+           recfun f :: (Int -> Bool) x = True;
+    in f 7;

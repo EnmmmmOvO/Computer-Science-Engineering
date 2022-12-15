@@ -1,0 +1,108 @@
+- They're all using functions as arguments.
+  (Functions can be treated as values).
+
+  I can do that in C (function pointers).
+
+- In all 3 examples, they describe pure functions.
+  A *pure function* is a function that:
+  - doesn't change the state in any way
+     (no side effects)
+  - doesn't depend on the state in any way
+     (e.g., no read from global mutable variables)
+
+  A pure function computes a value that depends
+  only on the arguments of the function, and does
+  nothing else.
+
+  The Haskell type system forces you to be pure,
+  but other functional programming languages
+  typically don't.
+
+
+  Let's write some Standard ML:
+   (a functional programming language
+    originally from 70's)
+
+
+val x = ref 0;
+
+fun f(n) = n + 1
+
+fun f(n) = (x:= n; n + 1)
+
+- The program can decide on how it's evaluated.
+  The programmer doesn't write a sequence of instructions,
+  but rather a description of the value they want.
+  Program itself decides the execution path.
+
+^^ That's a pretty crisp definition of declarative programming languages
+
+Functional programming languages are typically thought of as a subset
+ of declarative programming languages, but also include others:
+
+- Logic programming languages (PROLOG)
+
+
+Two examples:
+
+  p; q  <- sequential composition.
+           Do I evaluate p or q first?
+           If the answer changes the final result in any way,
+           you're not a purely functional programming language.
+
+Evaluation. We have two choices:
+
+  (λx. x + x) (5 + 5) ↦ (5+5) + (5+5)   (using β-reduction)
+                      ↦* 20
+  (λx. x + x) (5 + 5) ↦ (λx. x + x) 10
+                      ↦ 10 + 10
+                      ↦ 20
+
+Here, it seems that evaluation is indeed a confluence.
+
+The language of arithmetic expressions from last week has
+ confluent evaluation,
+ but you typically wouldn't think of it as a functional
+ programming language because there's no functions.
+
+
+The type of functions from Bool to Int
+
+  Bool -> Int
+
+The type of addition
+
+  Int -> (Int -> Int) which we'll write Int -> Int -> Int
+
+(The function arrow is right associative)
+
+let x = 5 in x * x * x  ↦ x*x*x [x:=5] ↦ 5*5*5
+
+
+(recfun f :: (Int -> Int) x = x * x * x) 5
+
+(λx. x * x * x) 5 ↦β x * x * x[x:=5] = 5*5*5
+
+For equality, we'll adopt the following convention:
+- bools and ints are equality-comparable
+- functions are not. Equality on functions could be:
+
+  - Pointer equality
+  - Syntactic equality
+  - α-equivalence
+  - Extensional equivalence: f = g   iff ∀x. f x = g x
+
+  The first three are too boring.
+  The last is too expensive (actually undecidable).
+
+
+We have a choice to make when defining the semantics
+of pure languages:
+
+- Substitution semantics (λx. s) t ↦β s[x:=t]
+- Environment semantics  (σ, (λx. s) t) ↦β (σ : x ↦ t, s)
+
+ _______________________________
+ (Eq (Num 4) (Num 5)) ↦ Lit False
+__________________________________
+(If (Eq (Num 4) (Num 5)) e2 e3) ↦ (If (Lit False) e2 e3)

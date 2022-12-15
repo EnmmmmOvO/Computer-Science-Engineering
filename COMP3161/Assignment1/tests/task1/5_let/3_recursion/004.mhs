@@ -1,0 +1,5 @@
+main :: Int
+     = 
+    let f :: (Int -> Int)
+          = recfun f :: (Int -> Int) x = if x < 100 then f (x+1) else x;
+    in f 0 ;

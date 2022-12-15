@@ -1,0 +1,7 @@
+main :: Bool
+     = 
+    let x :: Int = 1;
+    in
+        if x < 2 
+            then True
+            else False;

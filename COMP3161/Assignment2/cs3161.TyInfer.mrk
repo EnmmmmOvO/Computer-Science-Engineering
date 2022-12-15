@@ -1,0 +1,1713 @@
+
+!!section banner
+#######  #####   #####   #####     #     #####  #
+#       #     # #     # #     #   ##    #     # #    #
+#             # #     # #        # #          # #    #
+ #####   #####   #####  ######     #     #####  #######
+      # #       #     # #     #    #    #            #
+#     # #       #     # #     #    #    #            #
+ #####  #######  #####   #####   #####  #######      #
+
+5286124 Wang, William                           3778/2 COMPA1
+
+Submissions:-
+
+S 0     Thu Nov 24 19:07:41 2022        5286124 wed14a TyInfer 3:20
+
+Sat Dec 03 14:55:55 2022                ## vx10.orchestra.cse.unsw.EDU.AU ##
+!!section listing
+----------------
+/tmp/COMP3161.1161097.run
+----------------
+Archive:  /home/cs3161/22T3.work/TyInfer/minhs.zip
+   creating: minhs2/
+  inflating: minhs2/minhs2.cabal
+  inflating: minhs2/run_tests_cabal.sh
+   creating: minhs2/MinHS/
+  inflating: minhs2/MinHS/Evaluator.hs
+  inflating: minhs2/MinHS/TyInfer.hs
+  inflating: minhs2/MinHS/Subst.hs
+  inflating: minhs2/MinHS/Parse.hs
+  inflating: minhs2/MinHS/Pretty.hs
+  inflating: minhs2/MinHS/TCMonad.hs
+  inflating: minhs2/MinHS/Env.hs
+  inflating: minhs2/MinHS/Syntax.hs
+  inflating: minhs2/Main.hs
+  inflating: minhs2/stack.yaml
+   creating: minhs2/tests/
+ extracting: minhs2/tests/Flag
+   creating: minhs2/tests/driver/
+  inflating: minhs2/tests/driver/Diff.hs
+  inflating: minhs2/tests/driver/Check.hs
+   creating: minhs2/tests/zz_more_tests/
+ extracting: minhs2/tests/zz_more_tests/Flag
+   creating: minhs2/tests/zz_more_tests/basic_exprs/
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/intTest.mhs
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/000.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/Flag
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ConTest3.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ifTest1.mhs
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ConTest2.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/PrimOpTest.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ConTest1.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ConTest3.mhs
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ConTest2.mhs
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/intTest.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/InlTest1.mhs
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/000.mhs
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/ConTest1.mhs
+  inflating: minhs2/tests/zz_more_tests/basic_exprs/ifTest1.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/InlTest1.out
+ extracting: minhs2/tests/zz_more_tests/basic_exprs/PrimOpTest.mhs
+   creating: minhs2/tests/zz_more_tests/advanced_polymorphic/
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/001.out
+ extracting: minhs2/tests/zz_more_tests/advanced_polymorphic/Flag
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/012.mhs
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/004.out
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/001.mhs
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/004.mhs
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/003.out
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/012.out
+  inflating: minhs2/tests/zz_more_tests/advanced_polymorphic/003.mhs
+   creating: minhs2/tests/zz_more_tests/polymorphic/
+  inflating: minhs2/tests/zz_more_tests/polymorphic/006.out
+ extracting: minhs2/tests/zz_more_tests/polymorphic/Flag
+  inflating: minhs2/tests/zz_more_tests/polymorphic/009.out
+  inflating: minhs2/tests/zz_more_tests/polymorphic/011.out
+  inflating: minhs2/tests/zz_more_tests/polymorphic/005.mhs
+  inflating: minhs2/tests/zz_more_tests/polymorphic/ifTest3.out
+  inflating: minhs2/tests/zz_more_tests/polymorphic/008.out
+  inflating: minhs2/tests/zz_more_tests/polymorphic/008.mhs
+  inflating: minhs2/tests/zz_more_tests/polymorphic/009.mhs
+  inflating: minhs2/tests/zz_more_tests/polymorphic/011.mhs
+  inflating: minhs2/tests/zz_more_tests/polymorphic/006.mhs
+  inflating: minhs2/tests/zz_more_tests/polymorphic/005.out
+  inflating: minhs2/tests/zz_more_tests/polymorphic/ifTest3.mhs
+   creating: minhs2/tests/zz_more_tests/complex_exprs/
+ extracting: minhs2/tests/zz_more_tests/complex_exprs/Flag
+  inflating: minhs2/tests/zz_more_tests/complex_exprs/ifTest2.out
+  inflating: minhs2/tests/zz_more_tests/complex_exprs/010.out
+  inflating: minhs2/tests/zz_more_tests/complex_exprs/ifTest2.mhs
+  inflating: minhs2/tests/zz_more_tests/complex_exprs/010.mhs
+   creating: minhs2/tests/main_tests/
+   creating: minhs2/tests/main_tests/0_basics/
+ extracting: minhs2/tests/main_tests/0_basics/Flag
+   creating: minhs2/tests/main_tests/0_basics/ints/
+ extracting: minhs2/tests/main_tests/0_basics/ints/000.out
+ extracting: minhs2/tests/main_tests/0_basics/ints/001.out
+ extracting: minhs2/tests/main_tests/0_basics/ints/Flag
+ extracting: minhs2/tests/main_tests/0_basics/ints/Skip
+ extracting: minhs2/tests/main_tests/0_basics/ints/Marks
+ extracting: minhs2/tests/main_tests/0_basics/ints/002.mhs
+ extracting: minhs2/tests/main_tests/0_basics/ints/002.out
+ extracting: minhs2/tests/main_tests/0_basics/ints/001.mhs
+ extracting: minhs2/tests/main_tests/0_basics/ints/000.mhs
+ extracting: minhs2/tests/main_tests/0_basics/ints/003.out
+ extracting: minhs2/tests/main_tests/0_basics/ints/003.mhs
+   creating: minhs2/tests/main_tests/0_basics/main/
+ extracting: minhs2/tests/main_tests/0_basics/main/Flag
+ extracting: minhs2/tests/main_tests/0_basics/main/Marks
+ extracting: minhs2/tests/main_tests/0_basics/main/main.mhs
+ extracting: minhs2/tests/main_tests/0_basics/main/main.out
+   creating: minhs2/tests/main_tests/0_basics/bools/
+ extracting: minhs2/tests/main_tests/0_basics/bools/000.out
+ extracting: minhs2/tests/main_tests/0_basics/bools/001.out
+ extracting: minhs2/tests/main_tests/0_basics/bools/Flag
+ extracting: minhs2/tests/main_tests/0_basics/bools/Marks
+ extracting: minhs2/tests/main_tests/0_basics/bools/001.mhs
+ extracting: minhs2/tests/main_tests/0_basics/bools/000.mhs
+   creating: minhs2/tests/main_tests/6_programs/
+ extracting: minhs2/tests/main_tests/6_programs/Flag
+ extracting: minhs2/tests/main_tests/6_programs/Marks
+  inflating: minhs2/tests/main_tests/6_programs/test.out
+  inflating: minhs2/tests/main_tests/6_programs/test.mhs
+   creating: minhs2/tests/main_tests/2_nestedexpr/
+  inflating: minhs2/tests/main_tests/2_nestedexpr/000.out
+ extracting: minhs2/tests/main_tests/2_nestedexpr/001.out
+ extracting: minhs2/tests/main_tests/2_nestedexpr/006.out
+ extracting: minhs2/tests/main_tests/2_nestedexpr/Flag
+ extracting: minhs2/tests/main_tests/2_nestedexpr/Marks
+  inflating: minhs2/tests/main_tests/2_nestedexpr/005.mhs
+  inflating: minhs2/tests/main_tests/2_nestedexpr/008.out
+ extracting: minhs2/tests/main_tests/2_nestedexpr/002.mhs
+ extracting: minhs2/tests/main_tests/2_nestedexpr/002.out
+  inflating: minhs2/tests/main_tests/2_nestedexpr/008.mhs
+  inflating: minhs2/tests/main_tests/2_nestedexpr/004.out
+ extracting: minhs2/tests/main_tests/2_nestedexpr/006.mhs
+ extracting: minhs2/tests/main_tests/2_nestedexpr/001.mhs
+ extracting: minhs2/tests/main_tests/2_nestedexpr/000.mhs
+  inflating: minhs2/tests/main_tests/2_nestedexpr/007.out
+ extracting: minhs2/tests/main_tests/2_nestedexpr/004.mhs
+ extracting: minhs2/tests/main_tests/2_nestedexpr/003.out
+  inflating: minhs2/tests/main_tests/2_nestedexpr/007.mhs
+ extracting: minhs2/tests/main_tests/2_nestedexpr/003.mhs
+  inflating: minhs2/tests/main_tests/2_nestedexpr/005.out
+ extracting: minhs2/tests/main_tests/Flag
+   creating: minhs2/tests/main_tests/3_variables/
+  inflating: minhs2/tests/main_tests/3_variables/000.out
+  inflating: minhs2/tests/main_tests/3_variables/001.out
+ extracting: minhs2/tests/main_tests/3_variables/Flag
+ extracting: minhs2/tests/main_tests/3_variables/Marks
+  inflating: minhs2/tests/main_tests/3_variables/002.mhs
+  inflating: minhs2/tests/main_tests/3_variables/002.out
+  inflating: minhs2/tests/main_tests/3_variables/001.mhs
+  inflating: minhs2/tests/main_tests/3_variables/000.mhs
+   creating: minhs2/tests/main_tests/4_ifthenelse/
+  inflating: minhs2/tests/main_tests/4_ifthenelse/000.out
+  inflating: minhs2/tests/main_tests/4_ifthenelse/001.out
+  inflating: minhs2/tests/main_tests/4_ifthenelse/006.out
+ extracting: minhs2/tests/main_tests/4_ifthenelse/Flag
+ extracting: minhs2/tests/main_tests/4_ifthenelse/Marks
+  inflating: minhs2/tests/main_tests/4_ifthenelse/005.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/002.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/002.out
+  inflating: minhs2/tests/main_tests/4_ifthenelse/004.out
+  inflating: minhs2/tests/main_tests/4_ifthenelse/006.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/001.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/000.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/007.out
+  inflating: minhs2/tests/main_tests/4_ifthenelse/004.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/003.out
+  inflating: minhs2/tests/main_tests/4_ifthenelse/007.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/003.mhs
+  inflating: minhs2/tests/main_tests/4_ifthenelse/005.out
+   creating: minhs2/tests/main_tests/1_primops/
+ extracting: minhs2/tests/main_tests/1_primops/Flag
+   creating: minhs2/tests/main_tests/1_primops/dividebyzero/
+ extracting: minhs2/tests/main_tests/1_primops/dividebyzero/000.out
+ extracting: minhs2/tests/main_tests/1_primops/dividebyzero/Flag
+ extracting: minhs2/tests/main_tests/1_primops/dividebyzero/Marks
+ extracting: minhs2/tests/main_tests/1_primops/dividebyzero/000.mhs
+   creating: minhs2/tests/main_tests/1_primops/unarynegate/
+ extracting: minhs2/tests/main_tests/1_primops/unarynegate/000.out
+ extracting: minhs2/tests/main_tests/1_primops/unarynegate/Flag
+ extracting: minhs2/tests/main_tests/1_primops/unarynegate/Marks
+ extracting: minhs2/tests/main_tests/1_primops/unarynegate/000.mhs
+   creating: minhs2/tests/main_tests/1_primops/primops/
+  inflating: minhs2/tests/main_tests/1_primops/primops/013.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/000.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/001.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/006.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/Flag
+ extracting: minhs2/tests/main_tests/1_primops/primops/009.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/011.out
+  inflating: minhs2/tests/main_tests/1_primops/primops/012.mhs
+  inflating: minhs2/tests/main_tests/1_primops/primops/Skip
+ extracting: minhs2/tests/main_tests/1_primops/primops/Marks
+ extracting: minhs2/tests/main_tests/1_primops/primops/005.mhs
+  inflating: minhs2/tests/main_tests/1_primops/primops/014.mhs
+  inflating: minhs2/tests/main_tests/1_primops/primops/015.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/008.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/002.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/002.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/008.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/014.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/015.out
+  inflating: minhs2/tests/main_tests/1_primops/primops/009.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/004.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/010.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/011.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/013.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/006.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/016.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/001.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/000.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/007.out
+  inflating: minhs2/tests/main_tests/1_primops/primops/016.mhs
+  inflating: minhs2/tests/main_tests/1_primops/primops/010.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/004.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/003.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/007.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/012.out
+ extracting: minhs2/tests/main_tests/1_primops/primops/003.mhs
+ extracting: minhs2/tests/main_tests/1_primops/primops/005.out
+   creating: minhs2/tests/main_tests/7_products/
+ extracting: minhs2/tests/main_tests/7_products/Flag
+   creating: minhs2/tests/main_tests/7_products/3_nested_products/
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/000.out
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/001.out
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/006.out
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/Flag
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/Marks
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/005.mhs
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/008.out
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/002.mhs
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/002.out
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/008.mhs
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/004.out
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/006.mhs
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/001.mhs
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/000.mhs
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/007.out
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/004.mhs
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/003.out
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/007.mhs
+ extracting: minhs2/tests/main_tests/7_products/3_nested_products/003.mhs
+  inflating: minhs2/tests/main_tests/7_products/3_nested_products/005.out
+   creating: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/000.out
+  inflating: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/001.out
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/Flag
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/Marks
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/002.mhs
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/002.out
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/001.mhs
+ extracting: minhs2/tests/main_tests/7_products/2_mixed_two_tuple/000.mhs
+   creating: minhs2/tests/main_tests/7_products/1_two_tuple/
+  inflating: minhs2/tests/main_tests/7_products/1_two_tuple/001.out
+ extracting: minhs2/tests/main_tests/7_products/1_two_tuple/Flag
+ extracting: minhs2/tests/main_tests/7_products/1_two_tuple/Marks
+ extracting: minhs2/tests/main_tests/7_products/1_two_tuple/002.mhs
+ extracting: minhs2/tests/main_tests/7_products/1_two_tuple/002.out
+ extracting: minhs2/tests/main_tests/7_products/1_two_tuple/001.mhs
+  inflating: minhs2/tests/main_tests/7_products/1_two_tuple/003.out
+ extracting: minhs2/tests/main_tests/7_products/1_two_tuple/003.mhs
+   creating: minhs2/tests/main_tests/7_products/0_zero_tuple/
+ extracting: minhs2/tests/main_tests/7_products/0_zero_tuple/Flag
+ extracting: minhs2/tests/main_tests/7_products/0_zero_tuple/Marks
+ extracting: minhs2/tests/main_tests/7_products/0_zero_tuple/0.mhs
+  inflating: minhs2/tests/main_tests/7_products/0_zero_tuple/1.out
+ extracting: minhs2/tests/main_tests/7_products/0_zero_tuple/1.mhs
+ extracting: minhs2/tests/main_tests/7_products/0_zero_tuple/0.out
+   creating: minhs2/tests/main_tests/5_let/
+   creating: minhs2/tests/main_tests/5_let/1_functions/
+  inflating: minhs2/tests/main_tests/5_let/1_functions/000.out
+  inflating: minhs2/tests/main_tests/5_let/1_functions/001.out
+  inflating: minhs2/tests/main_tests/5_let/1_functions/006.out
+ extracting: minhs2/tests/main_tests/5_let/1_functions/Flag
+ extracting: minhs2/tests/main_tests/5_let/1_functions/Marks
+  inflating: minhs2/tests/main_tests/5_let/1_functions/005.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/008.out
+  inflating: minhs2/tests/main_tests/5_let/1_functions/002.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/002.out
+  inflating: minhs2/tests/main_tests/5_let/1_functions/008.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/004.out
+  inflating: minhs2/tests/main_tests/5_let/1_functions/006.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/001.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/000.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/007.out
+  inflating: minhs2/tests/main_tests/5_let/1_functions/004.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/007.mhs
+  inflating: minhs2/tests/main_tests/5_let/1_functions/005.out
+ extracting: minhs2/tests/main_tests/5_let/Flag
+   creating: minhs2/tests/main_tests/5_let/3_recursion/
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/000.out
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/001.out
+ extracting: minhs2/tests/main_tests/5_let/3_recursion/Flag
+ extracting: minhs2/tests/main_tests/5_let/3_recursion/Marks
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/005.mhs
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/fac.out
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/002.mhs
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/002.out
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/fac.mhs
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/001.mhs
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/000.mhs
+  inflating: minhs2/tests/main_tests/5_let/3_recursion/005.out
+   creating: minhs2/tests/main_tests/5_let/0_simple/
+  inflating: minhs2/tests/main_tests/5_let/0_simple/000.out
+  inflating: minhs2/tests/main_tests/5_let/0_simple/001.out
+  inflating: minhs2/tests/main_tests/5_let/0_simple/006.out
+ extracting: minhs2/tests/main_tests/5_let/0_simple/Flag
+ extracting: minhs2/tests/main_tests/5_let/0_simple/Marks
+  inflating: minhs2/tests/main_tests/5_let/0_simple/005.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/002.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/002.out
+  inflating: minhs2/tests/main_tests/5_let/0_simple/004.out
+  inflating: minhs2/tests/main_tests/5_let/0_simple/006.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/001.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/000.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/004.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/003.out
+  inflating: minhs2/tests/main_tests/5_let/0_simple/003.mhs
+  inflating: minhs2/tests/main_tests/5_let/0_simple/005.out
+   creating: minhs2/tests/main_tests/5_let/2_application/
+  inflating: minhs2/tests/main_tests/5_let/2_application/000.out
+  inflating: minhs2/tests/main_tests/5_let/2_application/001.out
+ extracting: minhs2/tests/main_tests/5_let/2_application/Flag
+ extracting: minhs2/tests/main_tests/5_let/2_application/Marks
+  inflating: minhs2/tests/main_tests/5_let/2_application/002.mhs
+  inflating: minhs2/tests/main_tests/5_let/2_application/002.out
+  inflating: minhs2/tests/main_tests/5_let/2_application/004.out
+  inflating: minhs2/tests/main_tests/5_let/2_application/001.mhs
+  inflating: minhs2/tests/main_tests/5_let/2_application/000.mhs
+  inflating: minhs2/tests/main_tests/5_let/2_application/004.mhs
+   creating: minhs2/tests/main_tests/5_let/4_partial_application/
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/000.out
+ extracting: minhs2/tests/main_tests/5_let/4_partial_application/Flag
+ extracting: minhs2/tests/main_tests/5_let/4_partial_application/Marks
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/005.mhs
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/008.out
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/002.mhs
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/002.out
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/008.mhs
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/000.mhs
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/003.out
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/003.mhs
+  inflating: minhs2/tests/main_tests/5_let/4_partial_application/005.out
+   creating: minhs2/tests/main_tests/9_examples/
+ extracting: minhs2/tests/main_tests/9_examples/Flag
+ extracting: minhs2/tests/main_tests/9_examples/Marks
+  inflating: minhs2/tests/main_tests/9_examples/6.out
+ extracting: minhs2/tests/main_tests/9_examples/0.mhs
+  inflating: minhs2/tests/main_tests/9_examples/2.mhs
+  inflating: minhs2/tests/main_tests/9_examples/1.out
+  inflating: minhs2/tests/main_tests/9_examples/1.mhs
+  inflating: minhs2/tests/main_tests/9_examples/3.out
+  inflating: minhs2/tests/main_tests/9_examples/5.mhs
+  inflating: minhs2/tests/main_tests/9_examples/2.out
+  inflating: minhs2/tests/main_tests/9_examples/0.out
+  inflating: minhs2/tests/main_tests/9_examples/4.mhs
+  inflating: minhs2/tests/main_tests/9_examples/3.mhs
+ extracting: minhs2/tests/main_tests/9_examples/6.mhs
+  inflating: minhs2/tests/main_tests/9_examples/4.out
+  inflating: minhs2/tests/main_tests/9_examples/5.out
+   creating: minhs2/tests/main_tests/8_sums/
+ extracting: minhs2/tests/main_tests/8_sums/Flag
+   creating: minhs2/tests/main_tests/8_sums/2_case/
+  inflating: minhs2/tests/main_tests/8_sums/2_case/000.out
+ extracting: minhs2/tests/main_tests/8_sums/2_case/Flag
+ extracting: minhs2/tests/main_tests/8_sums/2_case/Marks
+  inflating: minhs2/tests/main_tests/8_sums/2_case/002.mhs
+  inflating: minhs2/tests/main_tests/8_sums/2_case/002.out
+  inflating: minhs2/tests/main_tests/8_sums/2_case/000.mhs
+   creating: minhs2/tests/main_tests/8_sums/1_right/
+  inflating: minhs2/tests/main_tests/8_sums/1_right/001.out
+ extracting: minhs2/tests/main_tests/8_sums/1_right/Flag
+ extracting: minhs2/tests/main_tests/8_sums/1_right/Marks
+  inflating: minhs2/tests/main_tests/8_sums/1_right/002.mhs
+  inflating: minhs2/tests/main_tests/8_sums/1_right/002.out
+ extracting: minhs2/tests/main_tests/8_sums/1_right/001.mhs
+  inflating: minhs2/tests/main_tests/8_sums/1_right/003.out
+ extracting: minhs2/tests/main_tests/8_sums/1_right/003.mhs
+   creating: minhs2/tests/main_tests/8_sums/0_left/
+ extracting: minhs2/tests/main_tests/8_sums/0_left/Flag
+ extracting: minhs2/tests/main_tests/8_sums/0_left/Marks
+ extracting: minhs2/tests/main_tests/8_sums/0_left/0.mhs
+  inflating: minhs2/tests/main_tests/8_sums/0_left/1.out
+  inflating: minhs2/tests/main_tests/8_sums/0_left/1.mhs
+ extracting: minhs2/tests/main_tests/8_sums/0_left/0.out
+ extracting: minhs2/Setup.hs
+  inflating: minhs2/run_tests_stack.sh
+  inflating: minhs2/tests/main_tests/5_let/1_functions/008.mhs~
+  inflating: minhs2/tests/main_tests/5_let/1_functions/008.out~
+-rw-r----- z5286124/z5286124 7403 2022-11-24 19:03 TyInfer.hs
+
+===============================================================================
+-rw-r----- 1 cs3161 cs3161 7403 Nov 24 19:03 TyInfer.hs
+===============================================================================
+
+     1  module MinHS.TyInfer where
+     2
+     3  import qualified MinHS.Env as E
+     4  import MinHS.Syntax
+     5  import MinHS.Subst
+     6  import MinHS.TCMonad
+     7
+     8  import Data.Monoid (Monoid (..), (<>))
+     9  import Data.Foldable (foldMap)
+    10  import Data.List (nub, union, (\\))
+    11
+    12  primOpType :: Op -> QType
+    13  primOpType Gt   = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Bool)
+    14  primOpType Ge   = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Bool)
+    15  primOpType Lt   = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Bool)
+    16  primOpType Le   = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Bool)
+    17  primOpType Eq   = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Bool)
+    18  primOpType Ne   = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Bool)
+    19  primOpType Neg  = Ty $ Base Int `Arrow` Base Int
+    20  primOpType Fst  = Forall "a" $ Forall "b" $ Ty $ (TypeVar "a" `Prod` TypeVar "b") `Arrow` TypeVar "a"
+    21  primOpType Snd  = Forall "a" $ Forall "b" $ Ty $ (TypeVar "a" `Prod` TypeVar "b") `Arrow` TypeVar "b"
+    22  primOpType _    = Ty $ Base Int `Arrow` (Base Int `Arrow` Base Int)
+    23
+    24  constType :: Id -> Maybe QType
+    25  constType "True"  = Just $ Ty $ Base Bool
+    26  constType "False" = Just $ Ty $ Base Bool
+    27  constType "()"    = Just $ Ty $ Base Unit
+    28  constType "Pair"  = Just
+    29                    $ Forall "a"
+    30                    $ Forall "b"
+    31                    $ Ty
+    32                    $ TypeVar "a" `Arrow` (TypeVar "b" `Arrow` (TypeVar "a" `Prod` TypeVar "b"))
+    33  constType "Inl"   = Just
+    34                    $ Forall "a"
+    35                    $ Forall "b"
+    36                    $ Ty
+    37                    $ TypeVar "a" `Arrow` (TypeVar "a" `Sum` TypeVar "b")
+    38  constType "Inr"   = Just
+    39                    $ Forall "a"
+    40                    $ Forall "b"
+    41                    $ Ty
+    42                    $ TypeVar "b" `Arrow` (TypeVar "a" `Sum` TypeVar "b")
+    43  constType _       = Nothing
+    44
+    45  type Gamma = E.Env QType
+    46
+    47  initialGamma :: Gamma
+    48  initialGamma = E.empty
+    49
+    50  tv :: Type -> [Id]
+    51  tv = tv'
+    52   where
+    53     tv' (TypeVar x) = [x]
+    54     tv' (Prod  a b) = tv a `union` tv b
+    55     tv' (Sum   a b) = tv a `union` tv b
+    56     tv' (Arrow a b) = tv a `union` tv b
+    57     tv' (Base c   ) = []
+    58
+    59  tvQ :: QType -> [Id]
+    60  tvQ (Forall x t) = filter (/= x) $ tvQ t
+    61  tvQ (Ty t) = tv t
+    62
+    63  tvGamma :: Gamma -> [Id]
+    64  tvGamma = nub . foldMap tvQ
+    65
+    66  infer :: Program -> Either TypeError Program
+    67  infer program = do (p',tau, s) <- runTC $ inferProgram initialGamma program
+    68                     return p'
+    69
+    70  unquantify :: QType -> TC Type
+    71  {-
+    72  Normally this implementation would be possible:
+    73
+    74  unquantify (Ty t) = return t
+    75  unquantify (Forall x t) = do x' <- fresh
+    76                               unquantify (substQType (x =:x') t)
+    77
+    78  However as our "fresh" names are not checked for collisions with names bound in the type
+    79  we avoid capture entirely by first replacing each bound
+    80  variable with a guaranteed non-colliding variable with a numeric name,
+    81  and then substituting those numeric names for our normal fresh variables
+    82  -}
+    83
+    84  unquantify = unquantify' 0 emptySubst
+    85  unquantify' :: Int -> Subst -> QType -> TC Type
+    86  unquantify' i s (Ty t) = return $ substitute s t
+    87  unquantify' i s (Forall x t) = do x' <- fresh
+    88                                    unquantify' (i + 1)
+    89                                                ((show i =: x') <> s)
+    90                                                (substQType (x =:TypeVar (show i)) t)
+    91
+    92  unify :: Type -> Type -> TC Subst
+    93  unify (TypeVar x) (TypeVar y) =  return (if x == y then emptySubst else x =: TypeVar y)
+    94
+    95  unify (Base x) (Base y) = if x == y then return emptySubst else typeError (TypeMismatch (Base x) (Base y))
+    96
+    97  unify (Prod l1 r1) (Prod l2 r2) = do
+    98    _T1 <- unify l1 l2
+    99    _T2 <- unify (substitute _T1 r1) (substitute _T1 r2)
+   100    return (_T1 <> _T2)
+   101
+   102  unify (Sum l1 r1) (Sum l2 r2) = do
+   103    _T1 <- unify l1 l2
+   104    _T2 <- unify (substitute _T1 r1) (substitute _T1 r2)
+   105    return (_T1 <> _T2)
+   106
+   107  unify (Arrow l1 r1) (Arrow l2 r2) = do
+   108    _T1 <- unify l1 l2
+   109    _T2 <- unify (substitute _T1 r1) (substitute _T1 r2)
+   110    return (_T1 <> _T2)
+   111
+   112  unify (TypeVar x) y =
+   113      if x `notElem` tv y then
+   114          return (x =: y)
+   115      else
+   116          typeError (OccursCheckFailed x y)
+   117  unify y (TypeVar x) = unify (TypeVar x) y
+   118  unify x y = typeError (TypeMismatch x y)
+   119
+   120  generalise :: Gamma -> Type -> QType
+   121  generalise g t = foldr f init lst
+   122      where f a b = Forall a b
+   123            init  = Ty t
+   124            lst   = tv t \\ tvGamma g
+   125
+   126  inferProgram :: Gamma -> Program -> TC (Program, Type, Subst)
+   127  inferProgram env bs = do
+   128      let Bind name _ _ body = head bs
+   129      (exp, tau, subst) <- inferExp env body
+   130      let retype = substitute subst tau
+   131      let refill = allTypes (substQType subst) exp
+   132      let tt = generalise (substGamma subst env) retype
+   133      return ([Bind name (Just tt) [] refill], retype, subst)
+   134
+   135  inferExp :: Gamma -> Exp -> TC (Exp, Type, Subst)
+   136  -- -- Note: this is the only case you need to handle for case expressions
+   137  -- inferExp g (Case e [Alt "Inl" [x] e1, Alt "Inr" [y] e2])
+   138  -- inferExp g (Case e _) = typeError MalformedAlternatives
+   139  inferExp g (Num x) = return (Num x, Base Int, emptySubst)
+   140  inferExp g (Prim x) = unquantify (primOpType x) >>= \v -> return (Prim x, v, emptySubst)
+   141  inferExp g (Con x) =
+   142      case constType x of
+   143          Nothing -> typeError (NoSuchConstructor x)
+   144          Just tt -> unquantify tt >>= \v -> return (Con x, v, emptySubst)
+   145  inferExp g (Var x) =
+   146      case E.lookup g x of
+   147          Nothing -> typeError (NoSuchVariable x)
+   148          Just tt -> unquantify tt >>= \v -> return (Var x, v, emptySubst)
+   149
+   150
+   151  inferExp g (App e1 e2) = do
+   152        alpha  <- fresh
+   153        (_, tau1, t) <- inferExp g e1
+   154        (_, tau2, t') <- inferExp (substGamma t g) e2
+   155        u <- unify (substitute t' tau1) (Arrow tau2 alpha)
+   156        return (App e1 e2,
+   157               substitute u alpha,
+   158               u <> t' <> t)
+   159
+   160  inferExp g (If e e1 e2) = do
+   161        (_, tau, t) <- inferExp g e
+   162        u <- unify tau (Base Bool)
+   163        let w = substitute (u <> t) tau
+   164        if w /= Base Bool then
+   165           typeError (TypeMismatch (Base Bool) w)
+   166        else do
+   167            (_, tau1, t1) <- inferExp (substGamma (u <> t) g) e1
+   168            (_, tau2, t2) <- inferExp (substGamma (t1 <> u <> t) g) e2
+   169            u' <- unify (substitute t2 tau1) tau2
+   170            return (If e e1 e2, substitute u' tau2, u' <> t2 <> t1 <> u <> t)
+   171
+   172  inferExp g (Case e [Alt "Inl" [x] e1, Alt "Inr" [y] e2]) = do
+   173        (_, tau, t) <- inferExp g e
+   174        alfl <- fresh
+   175        alfr <- fresh
+   176        (_, taul, t1) <- inferExp (substGamma t $ E.add g (x, Ty alfl)) e1
+   177        (_, taur, t2) <- inferExp (substGamma (t1 <> t) $ E.add g (y, Ty alfr)) e2
+   178        u <- unify (substitute (t2 <> t1 <> t) $ Sum alfl alfr)
+   179                    (substitute (t2 <> t1) tau)
+   180        u' <- unify (substitute (u <> t2) taul)
+   181                    (substitute (u) taur)
+   182        return (Case e [Alt "Inl" [x] e1, Alt "Inr" [y] e2],
+   183                 substitute (u' <> u) $ taur,
+   184                 u' <> u <> t2 <> t1 <> t)
+   185
+   186  inferExp g (Case e _) = typeError MalformedAlternatives
+   187
+   188  inferExp g (Recfun (Bind f a [x] e)) = do
+   189    alf1 <- fresh
+   190    alf2 <- fresh
+   191    let gg = E.add g (x, Ty alf1)
+   192    let ggg = E.add gg (f, Ty alf2)
+   193    (_, tau, t) <- inferExp ggg e
+   194    u <- unify (substitute t alf2) (Arrow (substitute t alf1) tau)
+   195    return (Recfun (Bind f a [x] e),
+   196        substitute u (Arrow (substitute t alf1) tau),
+   197        u <> t)
+   198
+   199  inferExp g (Let [Bind x a [] e1] e2) = do
+   200    (_, tau, t) <- inferExp g e1
+   201    let gg = substGamma t g
+   202    let ggg = E.add gg (x, generalise gg tau)
+   203    (_, tau', t') <- inferExp ggg e2
+   204    return (Let [Bind x a [] e1] e2,
+   205            tau',
+   206            t' <> t)
+   207
+   208
+   209
+Warning: The package list for 'hackage.haskell.org' is 54 days old.
+Run 'cabal update' to get the latest list of available packages.
+Resolving dependencies...
+Build profile: -w ghc-8.8.4 -O1
+In order, the following would be built (use -v for more details):
+ - minhs2-0.1.0.0 (exe:check) (first run)
+ - minhs2-0.1.0.0 (exe:minhs-2) (first run)
+Build profile: -w ghc-8.8.4 -O1
+In order, the following will be built (use -v for more details):
+ - minhs2-0.1.0.0 (exe:check) (first run)
+ - minhs2-0.1.0.0 (exe:minhs-2) (first run)
+Configuring executable 'check' for minhs2-0.1.0.0..
+Configuring executable 'minhs-2' for minhs2-0.1.0.0..
+Preprocessing executable 'minhs-2' for minhs2-0.1.0.0..
+Building executable 'minhs-2' for minhs2-0.1.0.0..
+Preprocessing executable 'check' for minhs2-0.1.0.0..
+Building executable 'check' for minhs2-0.1.0.0..
+[1 of 9] Compiling MinHS.Env        ( MinHS/Env.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/Env.o )
+[1 of 9] Compiling MinHS.Env        ( MinHS/Env.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/Env.o )
+[2 of 9] Compiling MinHS.Syntax     ( MinHS/Syntax.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/Syntax.o )
+[2 of 9] Compiling MinHS.Syntax     ( MinHS/Syntax.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/Syntax.o )
+[3 of 9] Compiling MinHS.Subst      ( MinHS/Subst.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/Subst.o )
+[4 of 9] Compiling MinHS.Parse      ( MinHS/Parse.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/Parse.o )
+[3 of 9] Compiling MinHS.Subst      ( MinHS/Subst.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/Subst.o )
+[4 of 9] Compiling MinHS.Parse      ( MinHS/Parse.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/Parse.o )
+[5 of 9] Compiling MinHS.TCMonad    ( MinHS/TCMonad.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/TCMonad.o )
+[5 of 9] Compiling MinHS.TCMonad    ( MinHS/TCMonad.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/TCMonad.o )
+[6 of 9] Compiling MinHS.Pretty     ( MinHS/Pretty.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/Pretty.o )
+[6 of 9] Compiling MinHS.Pretty     ( MinHS/Pretty.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/Pretty.o )
+[7 of 9] Compiling MinHS.Evaluator  ( MinHS/Evaluator.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/Evaluator.o )
+[7 of 9] Compiling MinHS.Evaluator  ( MinHS/Evaluator.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/Evaluator.o )
+[8 of 9] Compiling MinHS.TyInfer    ( MinHS/TyInfer.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/MinHS/TyInfer.o )
+[8 of 9] Compiling MinHS.TyInfer    ( MinHS/TyInfer.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/MinHS/TyInfer.o )
+[9 of 9] Compiling Main             ( Main.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2-tmp/Main.o )
+[9 of 9] Compiling Main             ( tests/driver/Check.hs, /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check-tmp/Main.o )
+Linking /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/minhs-2/build/minhs-2/minhs-2 ...
+Linking /tmp/COMP3161.1161097.run/minhs2/dist-newstyle/build/x86_64-linux/ghc-8.8.4/minhs2-0.1.0.0/x/check/build/check/check ...
+!!section tests
+!!section assess
+Up to date
+Running test: main_tests/8_sums/2_case/000.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/8_sums/2_case/002.mhs (worth 5) :-  Stdout Check Failed. Expected
+
+main :: forall p. (p + Bool * Int) = let x :: forall b. (b + Bool * Int) = (case Inl ((True, 7)) of Inl x -> Inr x;
+                                                                                                    Inr y -> Inl y;);
+                                     in x;
+
+
+...but saw
+
+main :: forall p. (p + Bool * Int) = let x ::  = (case Inl ((True, 7)) of Inl x -> Inr x;
+                                                                          Inr y -> Inl y;);
+                                     in x;
+
+Running test: main_tests/8_sums/1_right/001.mhs (worth 2) :-  Stdout Check Passed!
+Running test: main_tests/8_sums/1_right/002.mhs (worth 2) :-  Stdout Check Passed!
+Running test: main_tests/8_sums/1_right/003.mhs (worth 2) :-  Stdout Check Passed!
+Running test: main_tests/8_sums/0_left/0.mhs (worth 2) :-  Stdout Check Passed!
+Running test: main_tests/8_sums/0_left/1.mhs (worth 2) :-  Stdout Check Passed!
+Running test: main_tests/5_let/0_simple/001.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let i :: Int = 1;
+              in (+) i i;
+
+
+...but saw
+
+main :: Int = let i ::  = 1;
+              in (+) i i;
+
+Running test: main_tests/5_let/0_simple/006.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let plus :: (Int -> Int -> Int) = (recfun g :: (Int -> Int -> Int) x = (recfun g' :: (Int -> Int) y = (+) x y));
+              in let inc :: (Int -> Int) = (recfun g :: (Int -> Int) x = (+) x 1);
+                 in let f :: (Int -> Int) = (recfun f :: (Int -> Int) x = if (==) x 10
+                                                                             then 10
+                                                                             else let y :: Int = f ((+) x 1);
+                                                                                  in plus let z :: Int = 4;
+                                                                                          in inc z y);
+                    in f ((- 1003));
+
+
+...but saw
+
+main :: Int = let plus ::  = (recfun g ::  x = (recfun g' ::  y = (+) x y));
+              in let inc ::  = (recfun g ::  x = (+) x 1);
+                 in let f ::  = (recfun f ::  x = if (==) x 10
+                                                     then 10
+                                                     else let y ::  = f ((+) x 1);
+                                                          in plus let z ::  = 4;
+                                                                  in inc z y);
+                    in f ((- 1003));
+
+Running test: main_tests/5_let/0_simple/004.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let a :: Int = 0;
+              in let b :: Int = 2;
+                 in let c :: Int = 3;
+                    in let d :: Int = 4;
+                       in let e :: Int = 5;
+                          in let f :: Int = 6;
+                             in let g :: Int = 7;
+                                in let h :: Int = 8;
+                                   in let i :: Int = 9;
+                                      in let j :: Int = 10;
+                                         in let k :: Int = 11;
+                                            in let l :: Int = 12;
+                                               in let m :: Int = 13;
+                                                  in let n :: Int = 14;
+                                                     in let o :: Int = 15;
+                                                        in let p :: Int = 16;
+                                                           in let q :: Int = 17;
+                                                              in let r :: Int = 18;
+                                                                 in let s :: Int = 19;
+                                                                    in let t :: Int = 20;
+                                                                       in let u :: Int = 21;
+                                                                          in let v :: Int = 22;
+                                                                             in let w :: Int = 23;
+                                                                                in let x :: Int = 24;
+                                                                                   in let y :: Int = 25;
+                                                                                      in let z :: Int = 26;
+                                                                                         in let za :: Int = 26;
+                                                                                            in let zb :: Int = 27;
+                                                                                               in let z1 :: Int = 1;
+                                                                                                  in let z2 :: Int = 2;
+                                                                                                     in let z3 :: Int = 3;
+                                                                                                        in let z4 :: Int = 4;
+                                                                                                           in let z5 :: Int = 5;
+                                                                                                              in let z6 :: Int = 6;
+                                                                                                                 in let z7 :: Int = 7;
+                                                                                                                    in let z8 :: Int = 8;
+                                                                                                                       in let z9 :: Int = 9;
+                                                                                                                          in let z10 :: Int = 10;
+                                                                                                                             in let z11 :: Int = 11;
+                                                                                                                                in let z12 :: Int = 12;
+                                                                                                                                   in let z13 :: Int = 13;
+                                                                                                                                      in let z14 :: Int = 14;
+                                                                                                                                         in let z15 :: Int = 15;
+                                                                                                                                            in let z16 :: Int = 16;
+                                                                                                                                               in let z17 :: Int = 17;
+                                                                                                                                                  in let z18 :: Int = 18;
+                                                                                                                                                     in let z19 :: Int = 19;
+                                                                                                                                                        in let z20 :: Int = 20;
+                                                                                                                                                           in let z21 :: Int = 21;
+                                                                                                                                                              in let z22 :: Int = 22;
+                                                                                                                                                                 in let z23 :: Int = 23;
+                                                                                                                                                                    in let z24 :: Int = 24;
+                                                                                                                                                                       in let z25 :: Int = 25;
+                                                                                                                                                                          in let z26 :: Int = 26;
+                                                                                                                                                                             in let z27 :: Int = 27;
+                                                                                                                                                                                in let z28 :: Int = 28;
+                                                                                                                                                                                   in let z29 :: Int = 29;
+                                                                                                                                                                                      in let z30 :: Int = 30;
+                                                                                                                                                                                         in let z31 :: Int = 31;
+                                                                                                                                                                                            in let z32 :: Int = 32;
+                                                                                                                                                                                               in let z33 :: Int = 33;
+                                                                                                                                                                                                  in let z34 :: Int = 34;
+                                                                                                                                                                                                     in let z35 :: Int = 35;
+                                                                                                                                                                                                        in let z36 :: Int = 36;
+                                                                                                                                                                                                           in let z37 :: Int = 37;
+                                                                                                                                                                                                              in let z38 :: Int = 38;
+                                                                                                                                                                                                                 in let z39 :: Int = 39;
+                                                                                                                                                                                                                    in let z40 :: Int = 40;
+                                                                                                                                                                                                                       in let z41 :: Int = 41;
+                                                                                                                                                                                                                          in let z42 :: Int = 42;
+                                                                                                                                                                                                                             in let z43 :: Int = 43;
+                                                                                                                                                                                                                                in let z44 :: Int = 44;
+                                                                                                                                                                                                                                   in let z45 :: Int = 45;
+                                                                                                                                                                                                                                      in let z46 :: Int = 46;
+                                                                                                                                                                                                                                         in let z47 :: Int = 47;
+                                                                                                                                                                                                                                            in let z48 :: Int = 48;
+                                                                                                                                                                                                                                               in let z49 :: Int = 49;
+                                                                                                                                                                                                                                                  in let z50 :: Int = 50;
+                                                                                                                                                                                                                                                     in let z51 :: Int = 51;
+                                                                                                                                                                                                                                                        in let z52 :: Int = 52;
+                                                                                                                                                                                                                                                           in let z53 :: Int = 53;
+                                                                                                                                                                                                                                                              in let z54 :: Int = 54;
+                                                                                                                                                                                                                                                                 in let z55 :: Int = 55;
+                                                                                                                                                                                                                                                                    in let z56 :: Int = 56;
+                                                                                                                                                                                                                                                                       in let z57 :: Int = 57;
+                                                                                                                                                                                                                                                                          in let z58 :: Int = 58;
+                                                                                                                                                                                                                                                                             in let z59 :: Int = 59;
+                                                                                                                                                                                                                                                                                in let z60 :: Int = 60;
+                                                                                                                                                                                                                                                                                   in let z61 :: Int = 61;
+                                                                                                                                                                                                                                                                                      in let z62 :: Int = 62;
+                                                                                                                                                                                                                                                                                         in let z63 :: Int = 63;
+                                                                                                                                                                                                                                                                                            in let z64 :: Int = 64;
+                                                                                                                                                                                                                                                                                               in let z65 :: Int = 65;
+                                                                                                                                                                                                                                                                                                  in let z66 :: Int = 66;
+                                                                                                                                                                                                                                                                                                     in let z67 :: Int = 67;
+                                                                                                                                                                                                                                                                                                        in let z68 :: Int = 68;
+                                                                                                                                                                                                                                                                                                           in a;
+
+
+...but saw
+
+main :: Int = let a ::  = 0;
+              in let b ::  = 2;
+                 in let c ::  = 3;
+                    in let d ::  = 4;
+                       in let e ::  = 5;
+                          in let f ::  = 6;
+                             in let g ::  = 7;
+                                in let h ::  = 8;
+                                   in let i ::  = 9;
+                                      in let j ::  = 10;
+                                         in let k ::  = 11;
+                                            in let l ::  = 12;
+                                               in let m ::  = 13;
+                                                  in let n ::  = 14;
+                                                     in let o ::  = 15;
+                                                        in let p ::  = 16;
+                                                           in let q ::  = 17;
+                                                              in let r ::  = 18;
+                                                                 in let s ::  = 19;
+                                                                    in let t ::  = 20;
+                                                                       in let u ::  = 21;
+                                                                          in let v ::  = 22;
+                                                                             in let w ::  = 23;
+                                                                                in let x ::  = 24;
+                                                                                   in let y ::  = 25;
+                                                                                      in let z ::  = 26;
+                                                                                         in let za ::  = 26;
+                                                                                            in let zb ::  = 27;
+                                                                                               in let z1 ::  = 1;
+                                                                                                  in let z2 ::  = 2;
+                                                                                                     in let z3 ::  = 3;
+                                                                                                        in let z4 ::  = 4;
+                                                                                                           in let z5 ::  = 5;
+                                                                                                              in let z6 ::  = 6;
+                                                                                                                 in let z7 ::  = 7;
+                                                                                                                    in let z8 ::  = 8;
+                                                                                                                       in let z9 ::  = 9;
+                                                                                                                          in let z10 ::  = 10;
+                                                                                                                             in let z11 ::  = 11;
+                                                                                                                                in let z12 ::  = 12;
+                                                                                                                                   in let z13 ::  = 13;
+                                                                                                                                      in let z14 ::  = 14;
+                                                                                                                                         in let z15 ::  = 15;
+                                                                                                                                            in let z16 ::  = 16;
+                                                                                                                                               in let z17 ::  = 17;
+                                                                                                                                                  in let z18 ::  = 18;
+                                                                                                                                                     in let z19 ::  = 19;
+                                                                                                                                                        in let z20 ::  = 20;
+                                                                                                                                                           in let z21 ::  = 21;
+                                                                                                                                                              in let z22 ::  = 22;
+                                                                                                                                                                 in let z23 ::  = 23;
+                                                                                                                                                                    in let z24 ::  = 24;
+                                                                                                                                                                       in let z25 ::  = 25;
+                                                                                                                                                                          in let z26 ::  = 26;
+                                                                                                                                                                             in let z27 ::  = 27;
+                                                                                                                                                                                in let z28 ::  = 28;
+                                                                                                                                                                                   in let z29 ::  = 29;
+                                                                                                                                                                                      in let z30 ::  = 30;
+                                                                                                                                                                                         in let z31 ::  = 31;
+                                                                                                                                                                                            in let z32 ::  = 32;
+                                                                                                                                                                                               in let z33 ::  = 33;
+                                                                                                                                                                                                  in let z34 ::  = 34;
+                                                                                                                                                                                                     in let z35 ::  = 35;
+                                                                                                                                                                                                        in let z36 ::  = 36;
+                                                                                                                                                                                                           in let z37 ::  = 37;
+                                                                                                                                                                                                              in let z38 ::  = 38;
+                                                                                                                                                                                                                 in let z39 ::  = 39;
+                                                                                                                                                                                                                    in let z40 ::  = 40;
+                                                                                                                                                                                                                       in let z41 ::  = 41;
+                                                                                                                                                                                                                          in let z42 ::  = 42;
+                                                                                                                                                                                                                             in let z43 ::  = 43;
+                                                                                                                                                                                                                                in let z44 ::  = 44;
+                                                                                                                                                                                                                                   in let z45 ::  = 45;
+                                                                                                                                                                                                                                      in let z46 ::  = 46;
+                                                                                                                                                                                                                                         in let z47 ::  = 47;
+                                                                                                                                                                                                                                            in let z48 ::  = 48;
+                                                                                                                                                                                                                                               in let z49 ::  = 49;
+                                                                                                                                                                                                                                                  in let z50 ::  = 50;
+                                                                                                                                                                                                                                                     in let z51 ::  = 51;
+                                                                                                                                                                                                                                                        in let z52 ::  = 52;
+                                                                                                                                                                                                                                                           in let z53 ::  = 53;
+                                                                                                                                                                                                                                                              in let z54 ::  = 54;
+                                                                                                                                                                                                                                                                 in let z55 ::  = 55;
+                                                                                                                                                                                                                                                                    in let z56 ::  = 56;
+                                                                                                                                                                                                                                                                       in let z57 ::  = 57;
+                                                                                                                                                                                                                                                                          in let z58 ::  = 58;
+                                                                                                                                                                                                                                                                             in let z59 ::  = 59;
+                                                                                                                                                                                                                                                                                in let z60 ::  = 60;
+                                                                                                                                                                                                                                                                                   in let z61 ::  = 61;
+                                                                                                                                                                                                                                                                                      in let z62 ::  = 62;
+                                                                                                                                                                                                                                                                                         in let z63 ::  = 63;
+                                                                                                                                                                                                                                                                                            in let z64 ::  = 64;
+                                                                                                                                                                                                                                                                                               in let z65 ::  = 65;
+                                                                                                                                                                                                                                                                                                  in let z66 ::  = 66;
+                                                                                                                                                                                                                                                                                                     in let z67 ::  = 67;
+                                                                                                                                                                                                                                                                                                        in let z68 ::  = 68;
+                                                                                                                                                                                                                                                                                                           in a;
+
+Running test: main_tests/5_let/0_simple/000.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Bool = let x :: Bool = True;
+               in x;
+
+
+...but saw
+
+main :: Bool = let x ::  = True;
+               in x;
+
+Running test: main_tests/5_let/0_simple/002.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let x :: Int = 1;
+              in let y :: Int = 2;
+                 in (+) x y;
+
+
+...but saw
+
+main :: Int = let x ::  = 1;
+              in let y ::  = 2;
+                 in (+) x y;
+
+Running test: main_tests/5_let/0_simple/005.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let a :: Int = 1;
+              in let b :: Int = 2;
+                 in let c :: Int = 3;
+                    in let d :: Int = 4;
+                       in let e :: Int = 5;
+                          in let f :: Int = 6;
+                             in let g :: Int = 7;
+                                in let h :: Int = 8;
+                                   in let i :: Int = 9;
+                                      in let j :: Int = 10;
+                                         in let k :: Int = 11;
+                                            in let l :: Int = 12;
+                                               in let m :: Int = 13;
+                                                  in let n :: Int = 14;
+                                                     in let o :: Int = 15;
+                                                        in let p :: Int = 16;
+                                                           in let q :: Int = 17;
+                                                              in let r :: Int = 18;
+                                                                 in let s :: Int = 19;
+                                                                    in let t :: Int = 20;
+                                                                       in let u :: Int = 21;
+                                                                          in let v :: Int = 22;
+                                                                             in let w :: Int = 23;
+                                                                                in let x :: Int = 24;
+                                                                                   in let y :: Int = 25;
+                                                                                      in let z :: Int = 26;
+                                                                                         in (*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) a b) c) d) e) f) g) h) i) j) k) l) m) n) o) p) q) r) s) t) u) v) w) x) y) z;
+
+
+...but saw
+
+main :: Int = let a ::  = 1;
+              in let b ::  = 2;
+                 in let c ::  = 3;
+                    in let d ::  = 4;
+                       in let e ::  = 5;
+                          in let f ::  = 6;
+                             in let g ::  = 7;
+                                in let h ::  = 8;
+                                   in let i ::  = 9;
+                                      in let j ::  = 10;
+                                         in let k ::  = 11;
+                                            in let l ::  = 12;
+                                               in let m ::  = 13;
+                                                  in let n ::  = 14;
+                                                     in let o ::  = 15;
+                                                        in let p ::  = 16;
+                                                           in let q ::  = 17;
+                                                              in let r ::  = 18;
+                                                                 in let s ::  = 19;
+                                                                    in let t ::  = 20;
+                                                                       in let u ::  = 21;
+                                                                          in let v ::  = 22;
+                                                                             in let w ::  = 23;
+                                                                                in let x ::  = 24;
+                                                                                   in let y ::  = 25;
+                                                                                      in let z ::  = 26;
+                                                                                         in (*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) ((*) a b) c) d) e) f) g) h) i) j) k) l) m) n) o) p) q) r) s) t) u) v) w) x) y) z;
+
+Running test: main_tests/5_let/0_simple/003.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Bool = let a :: Bool = True;
+               in let b :: Bool = False;
+                  in if (<) 1 2
+                        then a
+                        else b;
+
+
+...but saw
+
+main :: Bool = let a ::  = True;
+               in let b ::  = False;
+                  in if (<) 1 2
+                        then a
+                        else b;
+
+Running test: main_tests/5_let/1_functions/008.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let g :: forall j. (Int -> j -> Int) = (recfun f :: (Int -> j -> Int) x = if True
+                                                                                                                   then let h :: forall c. (c -> Int) = (recfun g :: (c -> Int) y = x);
+                                                                                                                        in h
+                                                                                                                   else let h :: forall f. (f -> Int) = (recfun g :: (f -> Int) y = (+) x 1);
+                                                                                                                        in h);
+                                      in g 1 1;
+
+
+...but saw
+
+main :: Int = let g ::  = (recfun f ::  x = if True
+                                               then let h ::  = (recfun g ::  y = x);
+                                                    in h
+                                               else let h ::  = (recfun g ::  y = (+) x 1);
+                                                    in h);
+              in g 1 1;
+
+Running test: main_tests/5_let/1_functions/001.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Bool = let lt0 :: (Int -> Bool) = (recfun lt0 :: (Int -> Bool) x = if (<) x 0
+                                                                              then True
+                                                                              else False);
+               in let gt1 :: (Int -> Bool) = (recfun gt1 :: (Int -> Bool) x = (>) x 1);
+                  in if lt0 ((- 10))
+                        then if gt1 0
+                                then False
+                                else True
+                        else False;
+
+
+...but saw
+
+main :: Bool = let lt0 ::  = (recfun lt0 ::  x = if (<) x 0
+                                                    then True
+                                                    else False);
+               in let gt1 ::  = (recfun gt1 ::  x = (>) x 1);
+                  in if lt0 ((- 10))
+                        then if gt1 0
+                                then False
+                                else True
+                        else False;
+
+Running test: main_tests/5_let/1_functions/006.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = (recfun f :: (Int -> Int) x = (+) x x) 1;
+
+
+...but saw
+
+main :: Int = (recfun f ::  x = (+) x x) 1;
+
+Running test: main_tests/5_let/1_functions/004.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Bool = let f :: forall a. (a -> Int) = (recfun f :: (a -> Int) x = (- 1));
+               in let f :: forall d. (d -> Int) = (recfun f :: (d -> Int) x = (- 2));
+                  in let f :: forall g. (g -> Int) = (recfun f :: (g -> Int) x = (- 3));
+                     in let f :: forall j. (j -> Int) = (recfun f :: (j -> Int) x = (- 4));
+                        in let f :: forall m. (m -> Int) = (recfun f :: (m -> Int) x = (- 5));
+                           in let f :: forall p. (p -> Int) = (recfun f :: (p -> Int) x = (- 6));
+                              in let f :: forall s. (s -> Int) = (recfun f :: (s -> Int) x = (- 7));
+                                 in let f :: forall v. (v -> Int) = (recfun f :: (v -> Int) x = (- 8));
+                                    in let f :: forall y. (y -> Int) = (recfun f :: (y -> Int) x = (- 9));
+                                       in let f :: forall a2. (a2 -> Bool) = (recfun f :: (a2 -> Bool) x = True);
+                                          in f 7;
+
+
+...but saw
+
+main :: Bool = let f ::  = (recfun f ::  x = (- 1));
+               in let f ::  = (recfun f ::  x = (- 2));
+                  in let f ::  = (recfun f ::  x = (- 3));
+                     in let f ::  = (recfun f ::  x = (- 4));
+                        in let f ::  = (recfun f ::  x = (- 5));
+                           in let f ::  = (recfun f ::  x = (- 6));
+                              in let f ::  = (recfun f ::  x = (- 7));
+                                 in let f ::  = (recfun f ::  x = (- 8));
+                                    in let f ::  = (recfun f ::  x = (- 9));
+                                       in let f ::  = (recfun f ::  x = True);
+                                          in f 7;
+
+Running test: main_tests/5_let/1_functions/007.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let g :: (Int -> Int) = (recfun f :: (Int -> Int) x = (+) x x);
+              in g 1;
+
+
+...but saw
+
+main :: Int = let g ::  = (recfun f ::  x = (+) x x);
+              in g 1;
+
+Running test: main_tests/5_let/1_functions/000.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int) = (recfun f :: (Int -> Int) x = (+) x x);
+              in f 1;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (+) x x);
+              in f 1;
+
+Running test: main_tests/5_let/1_functions/002.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let x :: Int = 2;
+              in let square :: (Int -> Int) = (recfun square :: (Int -> Int) x = (*) x x);
+                 in square (square x);
+
+
+...but saw
+
+main :: Int = let x ::  = 2;
+              in let square ::  = (recfun square ::  x = (*) x x);
+                 in square (square x);
+
+Running test: main_tests/5_let/1_functions/005.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: forall a. forall c. forall e. forall g. (a -> c -> e -> g -> Int -> Int) = (recfun f :: (a -> c -> e -> g -> Int -> Int) x = (recfun f :: (c -> e -> g -> Int -> Int) x = (recfun f :: (e -> g -> Int -> Int) x = (recfun f :: (g -> Int -> Int) x = (recfun f :: (Int -> Int) x = (*) 2 x)))));
+              in f 0 0 0 0 7;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (recfun f ::  x = (recfun f ::  x = (recfun f ::  x = (recfun f ::  x = (*) 2 x)))));
+              in f 0 0 0 0 7;
+
+Running test: main_tests/5_let/3_recursion/001.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = (recfun f :: (Int -> Int -> Int) x = (recfun g :: (Int -> Int) y = if (==) x 10
+                                                                                    then y
+                                                                                    else f ((+) x 1) ((+) y 2))) 0 2;
+
+
+...but saw
+
+main :: Int = (recfun f ::  x = (recfun g ::  y = if (==) x 10
+                                                     then y
+                                                     else f ((+) x 1) ((+) y 2))) 0 2;
+
+Running test: main_tests/5_let/3_recursion/fac.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = (recfun fac :: (Int -> Int) n = if (==) n 0
+                                                 then 1
+                                                 else (*) n (fac ((-) n 1))) 14;
+
+
+...but saw
+
+main :: Int = (recfun fac ::  n = if (==) n 0
+                                     then 1
+                                     else (*) n (fac ((-) n 1))) 14;
+
+Running test: main_tests/5_let/3_recursion/000.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int) = (recfun f :: (Int -> Int) x = if (==) x 100
+                                                                       then x
+                                                                       else f ((+) x 1));
+              in f 10;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = if (==) x 100
+                                               then x
+                                               else f ((+) x 1));
+              in f 10;
+
+Running test: main_tests/5_let/3_recursion/002.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let fib :: (Int -> Int) = (recfun fib :: (Int -> Int) n = if (==) n 0
+                                                                           then 0
+                                                                           else if (==) n 1
+                                                                                   then 1
+                                                                                   else (+) (fib ((-) n 2)) (fib ((-) n 1)));
+              in let n :: Int = 25;
+                 in fib n;
+
+
+...but saw
+
+main :: Int = let fib ::  = (recfun fib ::  n = if (==) n 0
+                                                   then 0
+                                                   else if (==) n 1
+                                                           then 1
+                                                           else (+) (fib ((-) n 2)) (fib ((-) n 1)));
+              in let n ::  = 25;
+                 in fib n;
+
+Running test: main_tests/5_let/3_recursion/005.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int) = (recfun f :: (Int -> Int) x = if (==) x 1000
+                                                                       then x
+                                                                       else f ((+) x 1));
+              in f 10;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = if (==) x 1000
+                                               then x
+                                               else f ((+) x 1));
+              in f 10;
+
+Running test: main_tests/5_let/2_application/001.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int) = (recfun f :: (Int -> Int) x = (*) 2 x);
+              in let g :: (Int -> Int) = (recfun g :: (Int -> Int) x = (- x));
+                 in g (f 2);
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (*) 2 x);
+              in let g ::  = (recfun g ::  x = (- x));
+                 in g (f 2);
+
+Running test: main_tests/5_let/2_application/004.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int) = (recfun f :: (Int -> Int) x = (+) x 1);
+              in let g :: (Int -> Int) = f;
+                 in g 1;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (+) x 1);
+              in let g ::  = f;
+                 in g 1;
+
+Running test: main_tests/5_let/2_application/000.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Bool = let isTrue :: (Bool -> Bool) = (recfun isTrue :: (Bool -> Bool) x = if x
+                                                                                      then True
+                                                                                      else False);
+               in let f :: (Int -> Bool) = (recfun f :: (Int -> Bool) x = (==) x 10);
+                  in isTrue (f 11);
+
+
+...but saw
+
+main :: Bool = let isTrue ::  = (recfun isTrue ::  x = if x
+                                                          then True
+                                                          else False);
+               in let f ::  = (recfun f ::  x = (==) x 10);
+                  in isTrue (f 11);
+
+Running test: main_tests/5_let/2_application/002.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let g :: (Int -> Int) = (recfun g' :: (Int -> Int) x = (*) x x);
+              in let f :: (Int -> Int) = g;
+                 in g 7;
+
+
+...but saw
+
+main :: Int = let g ::  = (recfun g' ::  x = (*) x x);
+              in let f ::  = g;
+                 in g 7;
+
+Running test: main_tests/5_let/4_partial_application/008.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let x :: Int = 8;
+              in let f :: (Int -> Int -> Int) = (recfun f :: (Int -> Int -> Int) w = (recfun g :: (Int -> Int) y = (+) ((+) ((+) y x) w) 1));
+                 in f 3 2;
+
+
+...but saw
+
+main :: Int = let x ::  = 8;
+              in let f ::  = (recfun f ::  w = (recfun g ::  y = (+) ((+) ((+) y x) w) 1));
+                 in f 3 2;
+
+Running test: main_tests/5_let/4_partial_application/000.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int -> Int) = (recfun f :: (Int -> Int -> Int) x = (recfun g :: (Int -> Int) y = (+) x y));
+              in f 1 2;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (recfun g ::  y = (+) x y));
+              in f 1 2;
+
+Running test: main_tests/5_let/4_partial_application/002.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: forall a. (a -> Int -> Int) = (recfun f :: (a -> Int -> Int) x = (recfun g :: (Int -> Int) y = (+) y y));
+              in f 2 3;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (recfun g ::  y = (+) y y));
+              in f 2 3;
+
+Running test: main_tests/5_let/4_partial_application/005.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: (Int -> Int -> Int) = (recfun f :: (Int -> Int -> Int) x = (recfun g :: (Int -> Int) y = (*) x ((- y))));
+              in let z :: forall h. (h -> Int -> Int) = (recfun z :: (h -> Int -> Int) x = f 3);
+                 in z 2 4;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (recfun g ::  y = (*) x ((- y))));
+              in let z ::  = (recfun z ::  x = f 3);
+                 in z 2 4;
+
+Running test: main_tests/5_let/4_partial_application/003.mhs (worth 7) :-  Stdout Check Failed. Expected
+
+main :: Int = let f :: forall a. forall c. (a -> c -> a) = (recfun f :: (a -> c -> a) x = (recfun g :: (c -> a) y = x));
+              in let g :: forall f. (f -> Int) = f 10;
+                 in g 3;
+
+
+...but saw
+
+main :: Int = let f ::  = (recfun f ::  x = (recfun g ::  y = x));
+              in let g ::  = f 10;
+                 in g 3;
+
+Running test: main_tests/1_primops/dividebyzero/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/008.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/009.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/001.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/006.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/011.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/004.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/007.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/000.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/002.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/005.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/014.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/010.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/primops/003.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/1_primops/unarynegate/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/001.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/006.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/004.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/007.mhs (worth 5) :-  Stdout Check Failed. Expected
+
+main :: Bool = let x :: Int = 1;
+               in if (<) x 2
+                     then True
+                     else False;
+
+
+...but saw
+
+main :: Bool = let x ::  = 1;
+               in if (<) x 2
+                     then True
+                     else False;
+
+Running test: main_tests/4_ifthenelse/000.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/002.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/005.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/4_ifthenelse/003.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/0_basics/main/main.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/0_basics/bools/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/0_basics/bools/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/0_basics/ints/001.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/0_basics/ints/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/0_basics/ints/003.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/6_programs/test.mhs (worth 5) :-  Stdout Check Failed. Expected
+
+main :: Bool = let f :: (Int -> Bool) = (recfun f :: (Int -> Bool) x = if (<) 0 10
+                                                                          then True
+                                                                          else f ((-) x 1));
+               in f 16;
+
+
+...but saw
+
+main :: Bool = let f ::  = (recfun f ::  x = if (<) 0 10
+                                                then True
+                                                else f ((-) x 1));
+               in f 16;
+
+Running test: main_tests/3_variables/001.mhs (worth 3) :-  Stdout Check Failed. Expected
+
+main :: Bool = let t :: Bool = True;
+               in t;
+
+
+...but saw
+
+main :: Bool = let t ::  = True;
+               in t;
+
+Running test: main_tests/3_variables/000.mhs (worth 3) :-  Stdout Check Failed. Expected
+
+main :: Int = let x :: Int = 1;
+              in x;
+
+
+...but saw
+
+main :: Int = let x ::  = 1;
+              in x;
+
+Running test: main_tests/3_variables/002.mhs (worth 3) :-  Stdout Check Failed. Expected
+
+main :: Int = let v :: Int = (-) 1 2;
+              in v;
+
+
+...but saw
+
+main :: Int = let v ::  = (-) 1 2;
+              in v;
+
+Running test: main_tests/7_products/0_zero_tuple/0.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/7_products/0_zero_tuple/1.mhs (worth 1) :-  Stdout Check Passed!
+Running test: main_tests/7_products/1_two_tuple/001.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/1_two_tuple/002.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/1_two_tuple/003.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/008.mhs (worth 5) :-  Stdout Check Failed. Expected
+
+main :: (Int * Bool) = let y :: Int = 1;
+                       in let x :: Bool = True;
+                          in ((*) y y, x);
+
+
+...but saw
+
+main :: (Int * Bool) = let y ::  = 1;
+                       in let x ::  = True;
+                          in ((*) y y, x);
+
+Running test: main_tests/7_products/3_nested_products/001.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/006.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/004.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/007.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/000.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/002.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/005.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/3_nested_products/003.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/2_mixed_two_tuple/001.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/2_mixed_two_tuple/000.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/7_products/2_mixed_two_tuple/002.mhs (worth 5) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/008.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/001.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/006.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/004.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/007.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/000.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/002.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/005.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/2_nestedexpr/003.mhs (worth 7) :-  Stdout Check Passed!
+Running test: main_tests/9_examples/0.mhs (worth 8) :-  Stdout Check Passed!
+Running test: main_tests/9_examples/6.mhs (worth 8) :-  Stdout Check Failed. Expected
+
+main :: Int = (recfun f :: (Int -> Int) x = x) 1;
+
+
+...but saw
+
+main :: Int = (recfun f ::  x = x) 1;
+
+Running test: main_tests/9_examples/4.mhs (worth 8) :-  Stdout Check Failed. Expected
+
+main :: Int = let x :: Int = 5;
+              in x;
+
+
+...but saw
+
+main :: Int = let x ::  = 5;
+              in x;
+
+Running test: main_tests/9_examples/5.mhs (worth 8) :-  Stdout Check Failed. Expected
+
+main :: (Int + Int) = let x :: Int = 1;
+                      in let y :: Int = 2;
+                         in let f :: forall a. (a -> a) = (recfun f :: (a -> a) z = z);
+                            in if f True
+                                  then Inl ((+) x y)
+                                  else Inr x;
+
+
+...but saw
+
+main :: (Int + Int) = let x ::  = 1;
+                      in let y ::  = 2;
+                         in let f ::  = (recfun f ::  z = z);
+                            in if f True
+                                  then Inl ((+) x y)
+                                  else Inr x;
+
+Running test: main_tests/9_examples/2.mhs (worth 8) :-  Stdout Check Passed!
+Running test: main_tests/9_examples/1.mhs (worth 8) :-  Stdout Check Passed!
+Running test: main_tests/9_examples/3.mhs (worth 8) :-  Stdout Check Passed!
+Running test: zz_more_tests/advanced_polymorphic/001.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall k. (Int -> k -> Int) = let g :: forall j. (Int -> j -> Int) = (recfun f :: (Int -> j -> Int) x = if (>) x 1
+                                                                                                                   then let h :: forall e. (e -> Int) = (recfun g :: (e -> Int) y = x);
+                                                                                                                        in h
+                                                                                                                   else let h :: forall h. (h -> Int) = (recfun g :: (h -> Int) y = x);
+                                                                                                                        in h);
+                                      in g;
+
+
+...but saw
+
+main :: forall k. (Int -> k -> Int) = let g ::  = (recfun f ::  x = if (>) x 1
+                                                                       then let h ::  = (recfun g ::  y = x);
+                                                                            in h
+                                                                       else let h ::  = (recfun g ::  y = x);
+                                                                            in h);
+                                      in g;
+
+Running test: zz_more_tests/advanced_polymorphic/004.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall k. (Int -> (k -> Int) * Int) = let g :: forall e. (Int -> (e -> Int) * Int) = (recfun f :: (Int -> (e -> Int) * Int) x = ((recfun h :: (e -> Int) z = x), (+) x 1));
+                                              in g;
+
+
+...but saw
+
+main :: forall k. (Int -> (k -> Int) * Int) = let g ::  = (recfun f ::  x = ((recfun h ::  z = x), (+) x 1));
+                                              in g;
+
+Running test: zz_more_tests/advanced_polymorphic/012.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall g. (Int -> (g -> Int) * Int) = (recfun f :: (Int -> (g -> Int) * Int) x = (let m :: forall e. (e -> Int) = (recfun h :: (e -> Int) m = let z :: Int = x;
+                                                                                                                                                      in x);
+                                                                                          in m, (+) x 1));
+
+
+...but saw
+
+main :: forall i. (Int -> (i -> Int) * Int) = (recfun f ::  x = (let m ::  = (recfun h ::  m = let z ::  = x;
+                                                                                               in x);
+                                                                 in m, (+) x 1));
+
+Running test: zz_more_tests/advanced_polymorphic/003.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall k. (Int -> k -> Int) = let g :: forall j. (Int -> j -> Int) = (recfun f :: (Int -> j -> Int) x = if True
+                                                                                                                   then let h :: forall c. (c -> Int) = (recfun g :: (c -> Int) y = x);
+                                                                                                                        in h
+                                                                                                                   else let h :: forall f. (f -> Int) = (recfun g :: (f -> Int) y = (+) x 1);
+                                                                                                                        in h);
+                                      in g;
+
+
+...but saw
+
+main :: forall k. (Int -> k -> Int) = let g ::  = (recfun f ::  x = if True
+                                                                       then let h ::  = (recfun g ::  y = x);
+                                                                            in h
+                                                                       else let h ::  = (recfun g ::  y = (+) x 1);
+                                                                            in h);
+                                      in g;
+
+Running test: zz_more_tests/polymorphic/ifTest3.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/polymorphic/008.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: ((Bool * Bool) -> Bool) = (recfun f :: ((Bool * Bool) -> Bool) x = if fst x
+                                                                              then fst x
+                                                                              else snd x);
+
+
+...but saw
+
+main :: ((Bool * Bool) -> Bool) = (recfun f ::  x = if fst x
+                                                       then fst x
+                                                       else snd x);
+
+Running test: zz_more_tests/polymorphic/009.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall j. forall f. ((j * f + j) -> j) = (recfun f :: ((j * f + j) -> j) x = (case snd x of Inl y -> fst x;
+                                                                                                    Inr z -> z;));
+
+
+...but saw
+
+main :: forall g. forall f. ((g * f + g) -> g) = (recfun f ::  x = (case snd x of Inl y -> fst x;
+                                                                                  Inr z -> z;));
+
+Running test: zz_more_tests/polymorphic/006.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall d. ((d + d) -> d) = (recfun f :: ((d + d) -> d) x = (case x of Inl z -> z;
+                                                                              Inr k -> k;));
+
+
+...but saw
+
+main :: forall d. ((d + d) -> d) = (recfun f ::  x = (case x of Inl z -> z;
+                                                                Inr k -> k;));
+
+Running test: zz_more_tests/polymorphic/011.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: ((Bool * Int) -> Int) = (recfun f :: ((Bool * Int) -> Int) x = if fst x
+                                                                          then snd x
+                                                                          else f ((True, 10)));
+
+
+...but saw
+
+main :: ((Bool * Int) -> Int) = (recfun f ::  x = if fst x
+                                                     then snd x
+                                                     else f ((True, 10)));
+
+Running test: zz_more_tests/polymorphic/005.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: forall f. (f -> f) = if True
+                                then let g :: forall a. (a -> a) = (recfun f :: (a -> a) x = x);
+                                     in g
+                                else let g :: forall d. (d -> d) = (recfun f :: (d -> d) x = x);
+                                     in g;
+
+
+...but saw
+
+main :: forall f. (f -> f) = if True
+                                then let g ::  = (recfun f ::  x = x);
+                                     in g
+                                else let g ::  = (recfun f ::  x = x);
+                                     in g;
+
+Running test: zz_more_tests/basic_exprs/ConTest2.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/intTest.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/InlTest1.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/ifTest1.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/000.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/ConTest3.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/ConTest1.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/basic_exprs/PrimOpTest.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/complex_exprs/ifTest2.mhs (worth 1) :-  Stdout Check Passed!
+Running test: zz_more_tests/complex_exprs/010.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: (Int -> Int) = (recfun f :: (Int -> Int) x = if (==) x 0
+                                                        then 0
+                                                        else f ((-) x 1));
+
+
+...but saw
+
+main :: (Int -> Int) = (recfun f ::  x = if (==) x 0
+                                            then 0
+                                            else f ((-) x 1));
+
+Passed 73 out of 122 tests: 59% Correct. Total of 326 marks.
+!!specialmark  (Base)                                   326/592
+!!specialmark  (Padding)                                8/8
+Up to date
+Running test: 000.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-2: MinHS/TyInfer.hs:(139,1)-(206,18): Non-exhaustive patterns in function inferExp
+
+
+Stdout was:
+
+Passed 0 out of 1 tests: 0% Correct. Total of 0 marks.
+!!specialmark  (Syntax)                                 0/1
+Up to date
+Running test: 001.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-2: MinHS/TyInfer.hs:(139,1)-(206,18): Non-exhaustive patterns in function inferExp
+
+
+Stdout was:
+
+Running test: 000.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-2: MinHS/TyInfer.hs:(139,1)-(206,18): Non-exhaustive patterns in function inferExp
+
+
+Stdout was:
+
+Passed 0 out of 2 tests: 0% Correct. Total of 0 marks.
+!!specialmark  (LetRec)                                 0/2
+Up to date
+Running test: 001.mhs (worth 1) :-  Executable returned non-zero exit code(1).
+Stderr was:
+minhs-2: MinHS/TyInfer.hs:(139,1)-(206,18): Non-exhaustive patterns in function inferExp
+
+
+Stdout was:
+
+Running test: 000.mhs (worth 1) :-  Stdout Check Failed. Expected
+
+main :: Int =
+  let f :: forall a. forall b. (a + b) -> Int = recfun f :: (a + b) -> Int x = f x;
+  in f(Inl 2);
+
+...but saw
+
+main :: forall d. d = let f :: forall a. forall b. ((a + b) -> Int) = (recfun f ::  x = f x);
+                      in f (Inl 2);
+
+Passed 0 out of 2 tests: 0% Correct. Total of 0 marks.
+!!specialmark  (TypeAnno)                               0/2
+
+!!marktab       **  MARKER'S  ASSESSMENT  **
+
+
+!!latepen       ** LATE PENALTY (3 DAYS +20 HOURS LATE)  -0
+!!ceiling       **  Applies to maximum, not raw mark.
+
+!!finalmark     **  FINAL  ASSIGNMENT  MARK:    334/600
+
+5286124 Wang, William                           3778/2 COMPA1
+
+
+Marked by z3528312 on Sat Dec  3 15:21:18 2022
+
+

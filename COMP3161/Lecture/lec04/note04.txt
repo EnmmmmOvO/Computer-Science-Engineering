@@ -1,0 +1,282 @@
+- Judgement (truth claim)
+
+  x S   "object x satisfies property X"
+
+  i Atom "the string i is a well-formed
+          atomic arithmetic expression"
+
+- Inference rules (tell which judgements hold)
+
+   x S  y S
+  __________
+   f(x,y) S
+
+  If x S holds, and if y S holds, then
+   f(x,y) holds
+
+- Ambiguity
+  (the presence of more than one possible
+   proof tree for the same judgement)
+
+
+Property about SExp and Arith:
+
+  ∀s. s SExp ⇔ s Arith
+
+Furthermore: SExp is unambiguous.
+
+ () M  ()() M
+ _____________
+ ()()() M
+
+ ()() M  () M
+ _____________
+ ()()() M        
+
+There's infinitely many ways to parse ε
+
+____ ME
+ ε M
+
+ε = εε
+
+___ ME  ____ ME
+ε M      ε M
+_________ MJ
+    ε M
+
+First, we have the same thing:
+  ∀s. s M ⇔ s L
+
+Furthermore, L is unambiguous.
+
+Theorem M_in_L:
+  ∀s1 s2. s1 L ∧ s2 L ⇒ s1s2 L
+Proof
+  By rule induction on s1 L.
+
+  Case LE: Prove: ε L ∧ s2 L ⇒ εs2 L
+    Immediate from the fact that εs2=s2.
+
+  Case LJ: Assuming: ∀s2. s1'' L ∧ s2 L ⇒ s1''s2 L (IH)
+                and: s1' N (A1)
+                and: s1'' L (A2)
+              Prove: s1's1''s2 L
+
+     Step1: apply (IH) to obtain
+              s1''s2 L (1)
+     Step2:
+
+      _____ (A1)    ________ (1)
+      s1' N         s1''s2 L
+      ___________________ LJ
+        s1's1''s2 L
+QED
+
+Theorem M_in_L:
+  ∀s. s M ⇒ s L
+Proof
+  By rule induction on s M.
+
+  Case ME: We need to prove ε L
+
+    _____ LE
+     ε L
+
+  Case MN: If s L (IH)
+           then (s) L
+   Using the fact that (s)ε = (s):
+
+     s L
+   _______ NN    ____ LE
+    (s) N         ε L
+  _____________________ LJ
+           (s) L
+
+  Case MJ: If s1 L (IH1)
+              s2 L (IH2)
+           then s1s2 L
+
+    We don't have a rule to apply here :(
+    *If* we had a rule like this:
+
+       s1 L    s2 L
+      ______________  LJ'
+         s1s2 L
+
+    We'd be done already. Solution: prove that LJ' is admissible.
+QED
+
+Whenever we have definitions by mutual recursion,
+we'll generally need to set up proofs by simultaneous induction.
+
+In simultaneous, we prove *two* statements in a single induction:
+  one statement about L, one statement about N.
+
+Theorem L_in_M:
+  (∀s. s L ⇒ s M) ∧ (∀s. s N ⇒ s M)
+Proof
+  By mutual induction on the premises s L and S N.
+
+  Case LE: prove ε M (trivial, from ME)
+
+  Case NN: assuming s M, prove (s) M
+   Immediate from MN rule.
+
+  Case LJ: If s1 M, and s2 M, then s1s2 M.
+   Immediate from MJ rule.
+QED
+
+
+
+(+ 3 (× 4 5))  <-- S-expression denoting the tree on slide 5.
+
+
+   _ Atom ↔ _ AST    denotes a binary judgement,
+                     where the objects go where
+                     the _:s are.
+  ^^  the parsing relation is a judgement that relates strings to terms
+
+
+Hierarchy of syntactic categories:
+  atomic expression:   1,2,3,4    (__)
+  product expression:  atomic expression, and also   a*b
+  sum expressions: product expression, and also a+b
+
+You could (if you were patient) set this up another way.
+
+  a A    b P          e A
+ ____________        _____
+   a × b P            e P
+
+You *could* instead do this:
+
+  a A    b P        a A    b A        
+ ____________      ____________    
+   a × b P           a × b P
+
+
+ parse ∘ unparse = id
+
+ ∘  function composition
+ id identity function:   id(x) = x
+
+ "if we unparse a tree, and then parse it, we'll get the same tree back"
+
+
+When parsing, some programmer choices (e.g., where to put parentheses)
+  were abstracted away from.
+ - No matter where you put your (redundant) parens,
+   you'll get the same the parse tree in the end.
+
+We *might* want:
+- No matter which local variable names the programmer chooses,
+  you'll get the same parse tree in the end.
+
+- There is no difference in meaning between:   f(x) = x + x,  and f(y) = y + y.
+
+α-equivalence:
+  two terms t1 and t2 are considered α-equivalent,
+  if t1 and t2 only differ in the choice of bound names.
+
+
+  let x = 5
+  in
+     E
+  end
+  to evaluate this expression, we might substitute x into E
+
+   E[x:=5]   "E but with x replaced with 5"
+
+   (x + 3 + x)[x:=5] = 5 + 3 + 5
+
+   (x + 3 + x)[x:=y] = y + 3 + y
+
+   (let y = 3 in x + y end)[x:=y] = ???
+
+   *If* we think of substitution as just textual replacement (we
+    shouldn't), we'll get something with a different meaning:
+
+     (let y = 3 in x + y end)[x:=y] = let y=3 in y + y end
+
+   We have obtained a phenomenon called *variable capture*:
+    the y on the RHS of the substituion [x:=y] is a *free* variable,
+    but after the "substitution" it is now bound.
+
+   We don't want this.
+
+   Two alternatives:
+   - Define *capture-avoiding* substitution:
+      rename bound variables as necessary to avoid clashes
+
+     (let y = 3 in x + y end)[x:=y] = let z=3 in y + z end    
+
+   - Define your substitution to be partial.
+     Then, substitution will have no defined behaviour in case of clashes.
+     Instead, it's somebody else's problem to α-convert (α-rename) *before*
+     the substitution to rename bound variables to preempt clashes.
+
+
+     (let y = 3 in x + y end)[y:=5] = let y = 3 in x + 5 (not what we want)
+
+     (let y = 3 in x + y end)[y:=5] = let y = 3 in x + y end
+     ^^ nothing happens!
+
+     ^^ related to shadowing. The y on the LHS of [y:=5] is *free*,
+        and is therefore not the same variable as the local y inside
+        the let expression. Therefore, any occurence of y inside let
+        doesn't refer to the y that we're replacing, thus we don't
+        have to do anything.
+
+A common compiler optimisation is *common subexpression elimination*.
+
+We find expressions e that are computed more than once in a program.
+Replace the redudant computation with a pattern where we save the result
+and reuse it later.
+
+In order to make this optimisation fire: we must identity subexpressions
+ that are equal and occur in more than one place.
+ If we can consider α-equivalent expressions equal, we can make this
+  optimisation do more work for us.'
+
+
+de Bruijn terms are lovely in implementations, but hard to read.
+ also: tend to involve a lot of annoying arithmetic on indexes.
+
+Readability issue: the same variable might be referred to by different
+numbers in the same term.
+
+
+ let x = 5 in
+     let y = 2 in
+         x + y
+     end
+     + x
+ end
+
+ let 5 in
+     let 2 in
+       (Var 1) + (Var 0)
+     end
+     + (Var 0)
+ end
+
+Q: yep. could you instead define them so the number is based on how
+many lets you have to go from the outermost thing?
+
+A: You probably could, but you'd have to fix which term you consider
+   "outermost".
+
+    Suppose we have a term E = let x = y in E1 end.
+
+    In the dB of that, the x is outermost.
+    But if we put E in a context, something else becomes outermost,
+    and we then need to do some arithmetic on the indexes in E to
+    obtain a well-formed term again.
+
+    ..but you'd regain the "same number same variable" property
+
+
+  Let a1 (x. a2)  is abstract syntax for
+
+  let x = a1 in a2 end

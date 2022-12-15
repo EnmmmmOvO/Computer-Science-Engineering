@@ -1,0 +1,148 @@
+#######  #####   #####   #####     #     #####  #
+#       #     # #     # #     #   ##    #     # #    #
+#             # #     # #        # #          # #    #
+ #####   #####   #####  ######     #     #####  #######
+      # #       #     # #     #    #    #            #
+#     # #       #     # #     #    #    #            #
+ #####  #######  #####   #####   #####  #######      #
+
+5286124	Wang, William                          	3778/2 COMPA1
+
+Submissions:-
+
+S 0	Mon Oct 10 11:43:49 2022	5286124 wed14a Proofs 0:12
+S 1	Mon Oct 10 14:50:54 2022	5286124 wed14a Proofs 0:15
+S 2	Tue Oct 11 14:09:45 2022	5286124 wed14a Proofs 1:15
+
+Fri Oct 28 13:45:04 2022		## vx05.orchestra.cse.unsw.EDU.AU ##
+!!section listing
+-rw-r----- z5286124/z5286124 108287 2022-10-11 14:09 Proofs.pdf
+!!section tests
+!!section assess
+
+=========================
+Comments for question 1
+-------------------------
+
+
+1: (5/5)
+
+2: (5/5)
+
+3: (0.5/5)
+	- Should have "B" on the right hand side.
+    - And rule: top and bottom's variables should be the same.
+    - And and Not rule: concrete and abstract syntax are wrong way around.
+
+4:
+
+a) (5/5)
+
+b) (0/5)
+    - Check lecture slides to find the definition for rules being derivable and admissible
+=========================
+!!specialmark  (Part A)                                	15.5/25
+
+=========================
+Comments for question 2
+-------------------------
+
+
+1: (5/5)
+
+2: (4.5/5)
+
+Very nice! Just don't forget to state what the set of evaluable expressions (just L)
+and final values are here.
+
+3: (9/10)
+
+The first reduction step in both of your inductive cases requires further justification.
+This relies on the fact that |->* is closed under contexts, meaning that
+
+        c |->* c' implies If c t e |->* If c' t e.
+It is enough to state that you used this fact together with I.H1, and either offer a brief
+explanation as to why it holds, or mention that it is provable via straightforward rule induction.
+
+Rest of the proof is well done.
+
+=========================
+!!specialmark  (Part B)                                	18.5/20
+
+=========================
+Comments for question 3
+-------------------------
+
+
+1: Almost, but you need to use recursion. The reason is, your definition of c doesn't necessarily give valid L expressions.
+To see why, note that using your definition, c(Not (Not True)) = If (Not True) False True, which is not a valid L expression
+since it has a Not in it. (3/5)
+
+2: Your case splitting is good but your induction doesn't quite work. You've only proven the property is true for axioms and
+rules applied once to axioms, which doesn't cover cases like Not (Not True). You've also mixed up = with ⇓, which isn't valid to
+do since equality in this context is taken to be syntactic equality (i.e. Not True ⇓ False but Not True /= False). (5/10)
+
+=========================
+!!specialmark  (Part C)                                	8/15
+
+=========================
+Comments for question 4
+-------------------------
+
+
+1:
+
+a) (5/5)
+
+b) (1/5)
+
+This isn't specific enough: we want you to identify an η-reducible subexpression.
+
+2: (5/5)
+
+Your definition for d(True) and d(False) is more complicated than it needs to be:
+why not just d(True) = T, d(False) = F?
+
+3: (4/10)
+
+*All* of your big-step rules in this proof should be coming from A, so I don't know
+why the base case says they come from part B here.
+
+Your inductive cases are also not quite right here: you should have 1 inductive case
+per each of the 4 big-step rules in A which aren't axioms (-3). It's insufficient to
+consider, say, expressions of the form e = Not e' in general and then prove the result
+holds when e' is True and False, because e' could be *any* expression, not just those two.
+For example, your proof doesn't show that d(Not (Not True)) ≡αβη T (-2).
+
+You haven't identified any inductive hypotheses here, although this is a consequence
+of the issues with your inductive cases (-1).
+
+What does "write in if-then-else structure" mean? You should simply be able to use
+pure β-reduction to figure out that True False True ≡β False, for example.
+
+4:
+
+a) (3/5)
+Answer is correct (although not thrilled about the let expression which is more
+syntax driven then AS usually is), however does not provide a means for functions to be
+called after they have been defined.
+
+
+b) (10/10)
+Im letting you off the hook for introducing function calls here (and even doing so in
+a syntax directed manner!) because the core ideas about keeping track of the contexts
+of the functions and variables are correct here.
+
+
+
+=========================
+!!specialmark  (Part D)                                	28/40
+
+!!marktab	**  MARKER'S  ASSESSMENT  **
+
+
+!!latepen	** LATE PENALTY (1 DAY +15 HOURS LATE)	 -10
+
+!!finalmark	**  FINAL  ASSIGNMENT  MARK:	60/100
+
+5286124	Wang, William                          	3778/2 COMPA1

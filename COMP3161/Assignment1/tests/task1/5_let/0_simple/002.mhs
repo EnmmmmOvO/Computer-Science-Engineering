@@ -1,0 +1,6 @@
+main :: Int
+     =
+    let x :: Int = 1;
+    in let
+        y :: Int = 2;
+    in x + y;
