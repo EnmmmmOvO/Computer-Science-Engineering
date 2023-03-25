@@ -1,0 +1,92 @@
+Tag,Marks,Test Name
+1-1,1,1-1 Testing peaceful mode causes player to take no damage
+1-2,1,1-2 Testing zombies spawn every 15 ticks in hard mode
+1-3,1,1-3 Test invincibility potions don't work in hard mode
+2-1,1,2-1 Testing movement of zombies
+2-2,1,2-2 Testing zombies cannot move through boulders and walls
+2-3,1,2-3 Testing zombies spawn with armour intermittently (at least once every 200 ticks)
+2-4,1,2-4 Testing zombie spawners spawn zombies every 20 ticks
+2-5,1,2-5 Testing destroying zombie spawners
+3-1,1,3-1 Test mercenary spawning
+3-2,1,3-2 Testing mercenaries cannot move through boulders and walls
+3-3,2,3-3 Testing bribing a mercenary ensures there is no battle
+3-4,1,3-4 Testing mercenaries spawn with armour
+4-1,1,4-1 Testing picking up all types of collectables
+4-2,1,4-2 Test picking up a key puts the key in the inventory
+4-3,1,4-3 Test invisibility potions ensure battles do not occur
+4-4,1,4-4 Test invincibility potions cause enemies to run away
+5-1,2,5-1 Test portals work both ways
+5-2,1,5-2 Test player cannot teleport into a wall
+6-1,1,6-1 Test basic movement of spiders
+6-2,1,6-2 Test spiders can traverse through walls
+6-3,1,6-3 Test spiders can traverse through switches
+6-4,1,6-4 Test spiders can move through closed doors
+6-5,1,6-5 Test spiders cannot move through boulders
+6-6,1,6-6 Test spider spawning reaches a mmaximum amount of spiders spawned
+7-1,1,7-1 Test achieving a basic exit goal
+7-2,0.5,7-2 Test a map with an enemies goal but with no enemies is automatically achieved"
+7-3,1,7-3 Testing achieving an enemies goal with a single spider on the map
+7-4,0.5,7-4 Test a map with a switch goal but no switch is automatically achieved"
+7-5,1,7-5 Test achieving a switch goal where there is one switch
+7-6,1,7-6 Test achieving a switch goal where there are two switches
+7-7,0.5,"7-7 Test a map with a treasure goal but no treasure is automatically achieved"
+7-8,0.5,7-8 Test a achieving a treasure goal with one treasure on the map
+7-9,1,7-9 Testing a treasure goal with two treasure on the map
+8-1,1,8-1 Test the player can move down
+8-2,1,8-2 Test the player can move up
+8-3,1,8-3 Test the player can move left
+8-4,1,8-4 Test the player can move right
+9-1,2,9-1 Test building a bow
+9-2,1,9-2 Test building a shield with a key
+9-3,1,9-3 Test building a shield with treasure
+10-1,1,10-1 Test picking up a bomb removes the bomb from the map
+10-2,1,10-2 Test picking up a bomb adds the bomb to the inventory
+10-3,1,10-3 Test placing a bomb removes it from the inventory
+10-4,1,10-4 Test placing a bomb places it on the map at the character's location
+10-5,1,"10-5 Test placing a bomb on a map cardinally adjacent to an active switch causes the bomb to detonate removing surrounding entites except for the player"
+10-6,1,10-6 Test placing a bomb diagonally adjacent to an active switch does not detonate the bomb
+10-7,1,10-7 Test placing a bomb cardinally adjacent to an inactive switch does not cause the bomb to explode
+10-8,1,10-8 Test placing a bomb diagonally adjacent to an inactive switch does not cause the bomb to explode
+11-1,2,11-1 Test pushing a boulder
+11-2,1,11-2 Test pushing a boulder into a wall
+11-3,1,11-3 Test the player is unable to push two boulders
+12-1,2,12-1 Test saving and loading a simple maze map
+12-2,2,12-2 Test saving and loading a map with boulders and switches
+12-3,3,12-3 Test saving and loading a map with enemies and collectables
+12-4,5,12-4 Test saving on a map containing all types of entities
+13-1,1,13-1 Test player cannot walk through a closed door
+13-2,1,13-2 Test player can pick up a key and add to inventory
+13-3,1,13-3 Test player can use a key to open a door
+13-4,1,13-4 Test the player can walk through an open door
+13-5,1,13-5 Test player cannot pickup two keys
+13-6,1,13-6 Test player can pick up a second key after using the first
+13-7,1,13-7 Test player cannot open a door with the wrong key
+14-1,1,"14-1 Testing newGame interface method normal operation"
+14-2,1,14-2 Testing newGame on a nonexistent dungeon
+14-3,1,14-3 Testing newGame on an invalid gamemode
+14-4,1,"14-4 Testing tick interface method normal operation"
+14-5,1,14-5 Testing tick with an invalid item
+14-6,1,14-6 Testing tick with an item that is not in the player's inventory
+15-1,1,15-1 Testing a map with EXIT and ENEMIES goal
+15-2,1,15-2 Testing a map with EXIT and SWITCH goal
+15-3,1,15-3 Testing a map with EXIT and TREASURE
+15-4,1,15-4 Testing that the exit goal must be achieved last in EXIT and TREASURE
+15-5,1,15-5 Test a map with ENEMIES and SWITCH goal
+15-6,1,15-6 Test a map with ENEMIES and TREASURE goal
+15-7,1,15-7 Test a map with SWITCH and TREASURE goal
+15-8,1,15-8 Testing a map with ENEMIES or EXIT goal
+15-9,1,15-9 Testing a map with EXIT or SWITCH goal
+15-10,1,15-10 Testing a map with EXIT or TREASURE goal
+15-11,1,15-11 Testing a map with ENEMIES or SWITCH goal
+15-12,1,15-12 Testing a map with ENEMIES or TREASURE goal
+15-13,1,15-13 Testing a map with SWTICH or TREASURE goal
+15-14,1,15-14 Testing a map with EXIT or TREASURE or SWITCH goal
+15-15,1,15-15 Testing a map with ENEMIES and EXIT and TREASURE and SWITCH goal
+15-16,1,15-16 Testing a map with ENEMEIS AND (TREASURE OR SWITCH) goal
+16-1,2,16-1 Test player battles spider and player or zombie dies
+16-2,2,16-2 Test player battles zombie and player or zombie dies
+16-3,2,16-3 Test player battles mercenary and player or mercenary dies
+16-4,2,16-4 Test player wins a battle against a spider with an invinicibility potion
+16-5,2,16-5 Test player wins a battle against a zombie with an invincibility potion
+16-6,2,16-6 Test a player wins a battle against a mercenary with an invincibility potion
+16-7,3,16-7 Test the player dies after battling 30 enemies consecutively
