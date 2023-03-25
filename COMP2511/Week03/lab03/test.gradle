@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'application'
+    id 'jacoco'
+}
+
+dependencies {
+    implementation files('lib/json.jar')
+    implementation files('lib/junit-platform-console-standalone-1.7.0-M1.jar')
+    implementation files('lib/jsonassert-1.2.3.jar')
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+    ignoreFailures = true
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+repositories {
+    mavenCentral()
+}
+
+group 'unsw.blackout'
+
+apply plugin: 'java'
+
+sourceSets.test.java.srcDirs = ['src']
+sourceSets.main.java.srcDirs = ['src']

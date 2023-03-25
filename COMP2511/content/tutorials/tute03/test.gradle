@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'application'
+    id 'jacoco'
+}
+
+dependencies {
+    testImplementation files('lib/junit-platform-console-standalone-1.7.0-M1.jar')
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+    ignoreFailures = true
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+
+sourceSets {
+    test {
+        java {
+            srcDirs  = ['src/wondrous/test']
+        }
+    }
+    main {
+        java {
+            srcDirs = ['src/wondrous']
+        }
+    }
+}

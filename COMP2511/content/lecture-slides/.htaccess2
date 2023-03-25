@@ -1,0 +1,13 @@
+<IfModule !mod_ssl.c> 
+  RedirectMatch /(.*)$ https://www.cse.unsw.edu.au/$1 
+</IfModule> 
+ 
+<IfModule mod_ssl.c> 
+  Header set WWW-Authenticate "Basic realm=\"COMP2511 Students and Staff Only\"" 
+  AuthName "COMP2511 Students and Staff Only" 
+  AuthType basic 
+   #AuthYPAuthoritative Off
+ 
+  Require netgroup COMP2511 CompFac_Programming 
+  require user z5113751 
+</IfModule> 

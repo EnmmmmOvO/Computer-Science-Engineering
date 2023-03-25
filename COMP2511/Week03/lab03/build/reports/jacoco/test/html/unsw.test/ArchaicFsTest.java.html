@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArchaicFsTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab03</a> &gt; <a href="index.source.html" class="el_package">unsw.test</a> &gt; <span class="el_source">ArchaicFsTest.java</span></div><h1>ArchaicFsTest.java</h1><pre class="source lang-java linenums">package unsw.test;
+
+import org.junit.jupiter.api.Test;
+
+import unsw.archaic_fs.*;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.EnumSet;
+
+<span class="fc" id="L14">public class ArchaicFsTest {</span>
+    @Test
+    public void testCdInvalidDirectory() {
+<span class="fc" id="L17">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+        // Try to change directory to an invalid one
+<span class="fc" id="L20">        assertThrows(UNSWNoSuchFileException.class, () -&gt; {</span>
+<span class="nc" id="L21">            fs.cd(&quot;/usr/bin/cool-stuff&quot;);</span>
+<span class="nc" id="L22">        });</span>
+<span class="fc" id="L23">    }</span>
+
+    @Test
+    public void testCdValidDirectory() {
+<span class="fc" id="L27">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L29">        assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L30">            fs.mkdir(&quot;/usr/bin/cool-stuff&quot;, true, false);</span>
+<span class="fc" id="L31">            fs.cd(&quot;/usr/bin/cool-stuff&quot;);</span>
+<span class="fc" id="L32">        });</span>
+<span class="fc" id="L33">    }</span>
+
+    @Test
+    public void testCdAroundPaths() {
+<span class="fc" id="L37">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L39">        assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L40">            fs.mkdir(&quot;/usr/bin/cool-stuff&quot;, true, false);</span>
+<span class="fc" id="L41">            fs.cd(&quot;/usr/bin/cool-stuff&quot;);</span>
+<span class="fc" id="L42">            assertEquals(&quot;/usr/bin/cool-stuff&quot;, fs.cwd());</span>
+<span class="fc" id="L43">            fs.cd(&quot;..&quot;);</span>
+<span class="fc" id="L44">            assertEquals(&quot;/usr/bin&quot;, fs.cwd());</span>
+<span class="fc" id="L45">            fs.cd(&quot;../bin/..&quot;);</span>
+<span class="fc" id="L46">            assertEquals(&quot;/usr&quot;, fs.cwd());</span>
+<span class="fc" id="L47">        });</span>
+<span class="fc" id="L48">    }</span>
+
+    @Test
+    public void testCreateFile() {
+<span class="fc" id="L52">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L54">        assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L55">            fs.writeToFile(&quot;test.txt&quot;, &quot;My Content&quot;, EnumSet.of(FileWriteOptions.CREATE, FileWriteOptions.TRUNCATE));</span>
+<span class="fc" id="L56">            assertEquals(&quot;My Content&quot;, fs.readFromFile(&quot;test.txt&quot;));</span>
+<span class="fc" id="L57">            fs.writeToFile(&quot;test.txt&quot;, &quot;New Content&quot;, EnumSet.of(FileWriteOptions.TRUNCATE));</span>
+<span class="fc" id="L58">            assertEquals(&quot;New Content&quot;, fs.readFromFile(&quot;test.txt&quot;));</span>
+<span class="fc" id="L59">        });</span>
+<span class="fc" id="L60">    }</span>
+
+    @Test
+    public void testTruncateAppend() {
+<span class="fc" id="L64">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L66">        assertThrows(IllegalArgumentException.class, ()-&gt; {</span>
+<span class="nc" id="L67">            fs.writeToFile(&quot;test.txt&quot;, &quot;My Content&quot;, EnumSet.of(FileWriteOptions.APPEND, FileWriteOptions.TRUNCATE));</span>
+<span class="nc" id="L68">        });</span>
+<span class="fc" id="L69">    }</span>
+
+    @Test
+    public void testAppendFile() {
+<span class="fc" id="L73">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L75">        assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L76">            fs.writeToFile(&quot;test.txt&quot;, &quot;My Content&quot;, EnumSet.of(FileWriteOptions.CREATE, FileWriteOptions.TRUNCATE));</span>
+<span class="fc" id="L77">            assertEquals(&quot;My Content&quot;, fs.readFromFile(&quot;test.txt&quot;));</span>
+<span class="fc" id="L78">            fs.writeToFile(&quot;test.txt&quot;, &quot; is the best&quot;, EnumSet.of(FileWriteOptions.APPEND));</span>
+<span class="fc" id="L79">            assertEquals(&quot;My Content is the best&quot;, fs.readFromFile(&quot;test.txt&quot;));</span>
+<span class="fc" id="L80">        });</span>
+<span class="fc" id="L81">    }</span>
+
+    @Test
+    public void testCdRootDir() {
+<span class="fc" id="L85">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L87">        assertDoesNotThrow(() -&gt; {</span>
+<span class="fc" id="L88">            fs.cd(&quot;..&quot;);</span>
+<span class="fc" id="L89">            assertEquals(&quot;&quot;, fs.cwd());</span>
+<span class="fc" id="L90">        });</span>
+<span class="fc" id="L91">    }</span>
+
+
+    @Test
+    public void testCdFile() {
+<span class="fc" id="L96">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L98">        assertThrows(UNSWNoSuchFileException.class, () -&gt; {</span>
+<span class="fc" id="L99">            fs.writeToFile(&quot;My Content.txt&quot;, &quot;My Content&quot;, EnumSet.of(FileWriteOptions.CREATE, FileWriteOptions.TRUNCATE));</span>
+<span class="nc" id="L100">            fs.cd(&quot;My Content.txt&quot;);</span>
+<span class="nc" id="L101">        });</span>
+<span class="fc" id="L102">    }</span>
+    @Test
+    public void testNotCreateAFile() {
+<span class="fc" id="L105">        ArchaicFileSystem fs = new ArchaicFileSystem();</span>
+
+<span class="fc" id="L107">        assertThrows(UNSWFileNotFoundException.class, () -&gt; {</span>
+<span class="nc" id="L108">            fs.writeToFile(&quot;My Content.txt&quot;, &quot;My Content&quot;, EnumSet.of(FileWriteOptions.TRUNCATE));</span>
+<span class="nc" id="L109">        });</span>
+<span class="fc" id="L110">    }</span>
+
+
+
+        // Now write some more!
+    // Some ideas to spark inspiration;
+    // - File Writing/Reading with various options (appending for example)
+    // - Cd'ing .. on the root most directory (shouldn't error should just remain on root directory)
+    // - many others...
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

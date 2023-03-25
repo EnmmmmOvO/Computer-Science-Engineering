@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArchaicFileSystem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab03</a> &gt; <a href="index.source.html" class="el_package">unsw.archaic_fs</a> &gt; <span class="el_source">ArchaicFileSystem.java</span></div><h1>ArchaicFileSystem.java</h1><pre class="source lang-java linenums">package unsw.archaic_fs;
+
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+
+/**
+ * Represents an 'archaic' file system. This allows you to 'open' files, 'make'
+ * directories, 'write' to a file, and so on.
+ * 
+ * Operates 'entirely' virtually, with no actual file write operations performed
+ * 
+ * Doesn't support ~ but does support `..`
+ */
+public class ArchaicFileSystem {
+<span class="fc" id="L17">    private List&lt;Inode&gt; inodeLookup = new ArrayList&lt;Inode&gt;();</span>
+<span class="fc" id="L18">    private List&lt;Inode&gt; currentPath = new ArrayList&lt;Inode&gt;();</span>
+
+    // Note... this is an indication of bad design here!
+    // next week we'll see how we can design this to be much better.
+<span class="fc" id="L22">    private Map&lt;Integer, List&lt;Integer&gt;&gt; folderMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L23">    private Map&lt;Integer, String&gt; fileContent = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L25">    public ArchaicFileSystem() {</span>
+        // create base folders
+        // i.e. /usr/
+        // / root directory
+<span class="fc" id="L29">        currentPath.add(_mkdir(-1, &quot;&quot;));</span>
+        try {
+<span class="fc" id="L31">            mkdir(&quot;/usr/&quot;, false, false);</span>
+<span class="nc" id="L32">        } catch (IOException e) {</span>
+            // presuming that we can't fail this creation!
+<span class="fc" id="L34">        }</span>
+<span class="fc" id="L35">    }</span>
+
+    public Inode lookupInode(int inode) {
+<span class="pc bpc" id="L38" title="2 of 4 branches missed.">        if (inode &gt;= 0 &amp;&amp; inode &lt; inodeLookup.size()) {</span>
+<span class="fc" id="L39">            return inodeLookup.get(inode);</span>
+        } else {
+<span class="nc" id="L41">            return null;</span>
+        }
+    }
+
+    private Inode _mkfile(int parent, String filename) {
+<span class="fc" id="L46">        int inode = inodeLookup.size();</span>
+<span class="fc" id="L47">        Inode file = Inode.createFile(filename, inode, parent);</span>
+<span class="fc" id="L48">        inodeLookup.add(file);</span>
+<span class="fc" id="L49">        folderMap.get(parent).add(inode);</span>
+<span class="fc" id="L50">        fileContent.put(inode, &quot;&quot;);</span>
+<span class="fc" id="L51">        return file;</span>
+    }
+
+    private Inode _mkdir(int parent, String dirName) {
+<span class="fc" id="L55">        int inode = inodeLookup.size();</span>
+<span class="fc" id="L56">        Inode dir = Inode.createFolder(dirName, inode, parent);</span>
+<span class="fc" id="L57">        folderMap.put(inode, new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L58">        inodeLookup.add(dir);</span>
+<span class="fc" id="L59">        return dir;</span>
+    }
+
+    private String formPathForInode(Inode inode) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (inode.getParentInode() == -1) {</span>
+<span class="fc" id="L64">            return inode.filename();</span>
+        } else {
+<span class="fc" id="L66">            return formPathForInode(lookupInode(inode.getParentInode())) + &quot;/&quot; + inode.filename();</span>
+        }
+    }
+
+    public void reformPathForInode(Inode inode, int stop) {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (inode.getParentInode() == stop) {</span>
+<span class="fc" id="L72">            return;</span>
+        } else {
+<span class="fc" id="L74">            reformPathForInode(lookupInode(inode.getParentInode()), stop);</span>
+<span class="fc" id="L75">            currentPath.add(inode);</span>
+        }
+<span class="fc" id="L77">    }</span>
+
+    private Inode lookupInodeInDirInode(String path, Inode inode, DeviceType wantedType) throws IOException {
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (inode.stat().getType() != DeviceType.FOLDER) {</span>
+<span class="nc" id="L81">            throw new IOException(formPathForInode(inode) + &quot; is a file not a folder&quot;);</span>
+        }
+
+<span class="pc bpc" id="L84" title="1 of 4 branches missed.">        if (path.equals(&quot;..&quot;) &amp;&amp; wantedType.equals(DeviceType.FOLDER)) {</span>
+<span class="fc" id="L85">            return inodeLookup.get(Math.max(inode.getParentInode(), 0));</span>
+        }
+
+<span class="fc" id="L88">        List&lt;Integer&gt; subInodes = folderMap.get(inode.getInode());</span>
+
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for (Integer subInode : subInodes) {</span>
+<span class="fc" id="L91">            Inode i = inodeLookup.get(subInode);</span>
+<span class="fc bfc" id="L92" title="All 4 branches covered.">            if (i.filename().equals(path) &amp;&amp; i.stat().getType().equals(wantedType)) {</span>
+                // move to next component
+<span class="fc" id="L94">                return inodeLookup.get(subInode);</span>
+            }
+<span class="fc" id="L96">        }</span>
+
+<span class="fc" id="L98">        return null;</span>
+    }
+
+    private Inode topPathComponent() {
+<span class="fc" id="L102">        return currentPath.get(currentPath.size() - 1);</span>
+    }
+
+    public void mkdir(String path, boolean createParentDirectories, boolean ignoreIfExists) throws IOException {
+        // not really fast at all, but simple...
+<span class="fc" id="L107">        Inode current = topPathComponent();</span>
+
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">        if (path.startsWith(&quot;/&quot;)) {</span>
+<span class="fc" id="L110">            path = path.substring(1);</span>
+<span class="fc" id="L111">            current = currentPath.get(0);</span>
+        }
+
+<span class="fc" id="L114">        String[] pathComponents = path.split(&quot;/&quot;);</span>
+
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        for (int i = 0; i &lt; pathComponents.length; i++) {</span>
+<span class="fc" id="L117">            Inode inode = lookupInodeInDirInode(pathComponents[i], current, DeviceType.FOLDER);</span>
+<span class="fc bfc" id="L118" title="All 2 branches covered.">            if (inode == null) {</span>
+<span class="pc bpc" id="L119" title="1 of 4 branches missed.">                if (createParentDirectories || i == pathComponents.length - 1) {</span>
+<span class="fc" id="L120">                    current = _mkdir(current.getInode(), pathComponents[i]);</span>
+<span class="fc" id="L121">                    folderMap.get(current.getParentInode()).add(current.getInode());</span>
+                } else {
+<span class="nc" id="L123">                    throw new UNSWFileNotFoundException(formPathForInode(current) + &quot;/&quot; + pathComponents[i]);</span>
+                }
+<span class="pc bpc" id="L125" title="2 of 4 branches missed.">            } else if (ignoreIfExists || i != pathComponents.length - 1) {</span>
+<span class="fc" id="L126">                current = inode;</span>
+            } else {
+<span class="nc" id="L128">                throw new UNSWFileAlreadyExistsException(formPathForInode(current) + &quot;/&quot; + pathComponents[i]);</span>
+            }
+        }
+<span class="fc" id="L131">    }</span>
+
+    public String cwd() {
+<span class="fc" id="L134">        return currentPath.stream().&lt;String&gt;map(i -&gt; i.filename()).collect(Collectors.joining(&quot;/&quot;));</span>
+    }
+
+    public void cd(String path) throws IOException {
+<span class="fc" id="L138">        Inode current = topPathComponent();</span>
+
+        // go to root
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        if (path.startsWith(&quot;/&quot;)) {</span>
+<span class="fc" id="L142">            path = path.substring(1);</span>
+<span class="fc" id="L143">            current = currentPath.get(0);</span>
+        }
+
+<span class="fc" id="L146">        String[] pathComponents = path.split(&quot;/&quot;);</span>
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        for (String component : pathComponents) {</span>
+<span class="fc" id="L148">            Inode inode = lookupInodeInDirInode(component, current, DeviceType.FOLDER);</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (inode == null) {</span>
+<span class="fc" id="L150">                throw new UNSWNoSuchFileException(formPathForInode(current) + &quot;/&quot; + component);</span>
+            } else {
+<span class="fc" id="L152">                current = inode;</span>
+            }
+        }
+
+<span class="fc" id="L156">        currentPath.clear();</span>
+<span class="fc" id="L157">        currentPath.add(inodeLookup.get(0));</span>
+<span class="fc" id="L158">        reformPathForInode(current, -1);</span>
+<span class="fc" id="L159">    }</span>
+
+    private Inode searchForInodeFileParent(String path) throws IOException {
+        // first we need to 'cd' into that path.
+<span class="fc" id="L163">        Inode current = topPathComponent();</span>
+
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">        if (path.startsWith(&quot;/&quot;)) {</span>
+<span class="nc" id="L166">            path = path.substring(1);</span>
+<span class="nc" id="L167">            current = currentPath.get(0);</span>
+        }
+
+<span class="fc" id="L170">        String[] pathComponents = path.split(&quot;/&quot;);</span>
+
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">        for (int i = 0; i &lt; pathComponents.length - 1; i++) {</span>
+<span class="nc" id="L173">            Inode inode = lookupInodeInDirInode(pathComponents[i], current, DeviceType.FOLDER);</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">            if (inode == null) {</span>
+<span class="nc" id="L175">                throw new UNSWFileNotFoundException(formPathForInode(current) + &quot;/&quot; + pathComponents[i]);</span>
+            } else {
+<span class="nc" id="L177">                current = inode;</span>
+            }
+        }
+
+<span class="fc" id="L181">        return current;</span>
+    }
+
+    public String readFromFile(String path) throws IOException {
+<span class="fc" id="L185">        Inode current = searchForInodeFileParent(path);</span>
+<span class="fc" id="L186">        String filename = path.substring(path.lastIndexOf('/') + 1);</span>
+<span class="fc" id="L187">        Inode inode = lookupInodeInDirInode(filename, current, DeviceType.FILE);</span>
+
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">        if (inode != null) {</span>
+<span class="fc" id="L190">            return fileContent.get(inode.getInode());</span>
+        } else {
+            // doesn't exist
+<span class="nc" id="L193">            throw new UNSWFileNotFoundException(formPathForInode(current) + &quot;/&quot; + filename);</span>
+        }
+    }
+
+    public void writeToFile(String path, String content, EnumSet&lt;FileWriteOptions&gt; opts) throws IOException {
+<span class="fc bfc" id="L198" title="All 4 branches covered.">        if (opts.contains(FileWriteOptions.TRUNCATE) &amp;&amp; opts.contains(FileWriteOptions.APPEND)) {</span>
+<span class="fc" id="L199">            throw new IllegalArgumentException(&quot;Can't have both Truncate &amp; Append enabled&quot;);</span>
+        }
+<span class="pc bpc" id="L201" title="1 of 4 branches missed.">        if (!opts.contains(FileWriteOptions.TRUNCATE) &amp;&amp; !opts.contains(FileWriteOptions.APPEND)) {</span>
+<span class="nc" id="L202">            throw new IllegalArgumentException(&quot;Has to have either Truncate or Append enabled&quot;);</span>
+        }
+
+<span class="fc" id="L205">        Inode current = searchForInodeFileParent(path);</span>
+<span class="fc" id="L206">        String filename = path.substring(path.lastIndexOf('/') + 1);</span>
+<span class="fc" id="L207">        Inode inode = lookupInodeInDirInode(filename, current, DeviceType.FILE);</span>
+
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (opts.contains(FileWriteOptions.CREATE)) {</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">            if (inode == null) {</span>
+<span class="fc" id="L211">                inode = _mkfile(current.getInode(), filename);</span>
+            } else {
+<span class="nc" id="L213">                throw new UNSWFileAlreadyExistsException(formPathForInode(current) + &quot;/&quot; + filename);</span>
+            }
+<span class="pc bpc" id="L215" title="1 of 4 branches missed.">        } else if (inode == null &amp;&amp; opts.contains(FileWriteOptions.CREATE_IF_NOT_EXISTS)) {</span>
+<span class="nc" id="L216">            inode = _mkfile(current.getInode(), filename);</span>
+<span class="fc bfc" id="L217" title="All 2 branches covered.">        } else if (inode == null) {</span>
+            // doesn't exist
+<span class="fc" id="L219">            throw new UNSWFileNotFoundException(formPathForInode(current) + &quot;/&quot; + filename);</span>
+        }
+
+        // now to write to it
+<span class="fc bfc" id="L223" title="All 2 branches covered.">        if (opts.contains(FileWriteOptions.TRUNCATE)) {</span>
+<span class="fc" id="L224">            fileContent.put(inode.getInode(), content);</span>
+<span class="pc bpc" id="L225" title="1 of 2 branches missed.">        } else if (opts.contains(FileWriteOptions.APPEND)) {</span>
+<span class="fc" id="L226">            fileContent.put(inode.getInode(), fileContent.get(inode.getInode()) + content);</span>
+        } // unreachable else
+<span class="fc" id="L228">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
