@@ -1,0 +1,18 @@
+Meeting content:
+1. Assigning tasks:
+	details in TaskAllocation.md file
+2. Working details (### VERY IMPORTANT ###):
+    Task allocation
+    Writing new tests for evolution of milestone3 & unresolved milestone2 feature
+    Refactor & Fix code smell
+    Extend the current design with respect to milestone3
+    Implement requirements according to the spec & design diagram
+    Implement interface methods
+3. Attendance
+    Haoyu Sun
+    Hongkun Zhang
+    Runyao Wang
+    Jinghan Wang
+    Qihan Zhuang
+4. Record of minutes
+    500min

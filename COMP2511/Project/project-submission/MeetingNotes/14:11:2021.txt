@@ -1,0 +1,17 @@
+Meeting content:
+1. Assigning tasks:
+	details in TaskAllocation.md file
+2. Working details (### VERY IMPORTANT ###):
+    Implement requirements according to the spec & design diagram
+    Implement interface methods
+    Design & Implement state pattern for game mode
+    Check coverage
+    Finish writing documentation
+3. Attendance
+    Haoyu Sun
+    Hongkun Zhang
+    Runyao Wang
+    Jinghan Wang
+    Qihan Zhuang
+4. Record of minutes
+    500min

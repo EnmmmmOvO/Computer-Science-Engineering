@@ -1,0 +1,15 @@
+gradlew
+gradlew.bat
+bin/
+.gradle/
+.idea/
+lib/
+gradle/
+build/
+out/
+bin/
+.DS_Store
+.classpath
+.project
+.settings
+yarn.lock

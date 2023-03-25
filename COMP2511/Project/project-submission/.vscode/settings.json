@@ -1,0 +1,6 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "coverage-gutters.showGutterCoverage": true,
+    "coverage-gutters.coverageReportFileName": "build/reports/jacoco/test/html/**/*/index.html",
+    "coverage-gutters.xmlname": "build/reports/jacoco/test/jacocoTestReport.xml"
+}

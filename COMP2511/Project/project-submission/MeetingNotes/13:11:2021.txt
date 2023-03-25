@@ -1,0 +1,14 @@
+Meeting content:
+1. Assigning tasks:
+	details in TaskAllocation.md file
+2. Working details (### VERY IMPORTANT ###):
+    Refactor & Fix code smell
+    Implement requirements according to the spec & design diagram
+    Integration & debug of implementation 
+3. Attendance
+    Haoyu Sun
+    Runyao Wang
+    Jinghan Wang
+    Qihan Zhuang
+4. Record of minutes
+    360min
