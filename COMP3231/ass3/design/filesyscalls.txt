@@ -1,0 +1,103 @@
+Design notes for file system calls (part of the system call solution set)
+-------------------------------------------------------------------------
+
+This part of the solution set covers the following:
+
+   - File system calls: open, read, write, lseek, close, dup2
+   - Current directory calls: chdir, __getcwd
+
+
+The system calls are actually called from arch/mips/mips/syscall.c.
+Pointer arguments are cast to userptr_t or const_userptr_t in order to
+use the compiler to help prevent accidentally dereferencing user-
+supplied pointers without calling copyin/copyout/copyinstr/copyoutstr
+properly. const_userptr_t, where suitable, also helps protect against
+getting the argument order for these functions wrong.
+
+The in-kernel prototypes for the system call functions are defined in
+include/syscall.h. They use the same error reporting/return value
+handling as the rest of the kernel: the return value of the function
+is an error code (0 for success) and any additional integer return
+value to be returned from the system call (such as with read or write)
+is handed back as an additional pointer argument.
+
+The actual file syscall implementations live in the new file
+userprog/file_syscalls.c.
+
+
+open
+----
+sys_open needs to:
+   - check for invalid flags
+   - copy in the supplied pathname
+   - open the file (use openfile_open)
+   - place the file in curproc's file table (use filetable_place)
+
+read
+----
+sys_read needs to:
+   - translate the file descriptor number to an open file object
+     (use filetable_get)
+   - lock the seek position in the open file (but only for seekable
+     objects)
+   - check for files opened write-only
+   - cons up a uio
+   - call VOP_READ
+   - update the seek position afterwards
+   - unlock and filetable_put()
+   - set the return value correctly
+
+We explicitly don't use the seek position or lock anything for
+non-seekable objects. This avoids holding a useless lock and avoids
+unwanted behavior on many devices, e.g. the console: if you hold a
+lock while waiting for console input, background jobs can't generate
+console output.
+
+write
+-----
+sys_write is the same as sys_read except that it writes.
+
+close
+-----
+sys_close needs to:
+   - validate the fd number (use filetable_okfd)
+   - use filetable_placeat to replace curproc's file table entry with NULL
+   - check if the previous entry in the file table was also NULL
+     (this means no such file was open)
+   - decref the open file returned by filetable_placeat
+
+lseek
+-----
+sys_lseek needs to:
+   - translate the file descriptor number to an open file object
+     (use filetable_get)
+   - check for unseekable objects
+   - lock the seek position in the open file
+   - compute the new seek position (maybe calling VOP_STAT to get the
+     object size)
+   - reject invalid (negative) seek positions
+   - update the seek position
+   - unlock and filetable_put()
+
+dup2
+----
+sys_dup2 needs to:
+   - validate the passed-in new fd (use filetable_okfd)
+   - check explicitly for oldfd == newfd
+   - translate old the file descriptor number to an open file object
+     (use filetable_get)
+   - incref the open file
+   - call filetable_put() before changing the table
+   - replace curproc's file table entry for newfd (use
+     filetable_placeat)
+   - decref the open file that was there before, if any
+   - return newfd
+
+chdir
+-----
+sys_chdir copies in the pathname and calls vfs_chdir.
+
+__getcwd
+--------
+sys___getcwd sets up a uio, then calls vfs_getcwd.
+

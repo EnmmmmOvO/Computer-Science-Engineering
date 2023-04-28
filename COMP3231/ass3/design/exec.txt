@@ -1,0 +1,414 @@
+Design notes for the exec system call (part of the system call solution set)
+----------------------------------------------------------------------------
+
+This part of the solution set covers the following:
+
+   - the execv system call
+
+execv
+-----
+
+sys_execv lives in userprog/runprogram.c along with a modified version
+of the old runprogram(). These functions share a good deal of their
+code.
+
+The interesting part of execv is the argument handling. From a student
+perspective there are two aspects to this: first, the C programming
+details of handling the pointers and string data, which requires
+really understanding how pointers and arrays and memory layout work in
+C at a level many students still won't quite have gotten yet. This is
+discussed below along with the details of the implementation here.
+
+The second and higher-level issue is that the arguments
+may be large. The total size of all the argument strings, possibly
+including padding and space for pointers or not, can be as large as
+ARG_MAX, which by default in OS/161 is 64K (65536 bytes). Many real
+systems have even larger limits (256k, 512k) or have been hacked to be
+entirely unlimited because of the way wildcards work in Unix: when you
+run a command with `*' in a directory that has a lot of files, the
+*shell* lists the directory and converts the command you typed to one
+that lists every file by name. So if you have a big directory with
+lots of files with long names, or a large source tree where you want
+to be able to work with patterns like "*/*/*.c", it's easy to use huge
+amounts of space.
+
+The difficulty is that you can't tell how much space you actually need
+without inspecting the strings you're going to be copying in, but you
+can't inspect the strings without copying them in. (You could add to
+the copyin/copyout API, but that's painful because those functions
+often have to be written in assembler and are easy to get wrong.)
+
+Therefore, one needs to either allocate a large block of size ARG_MAX
+for every exec, which can lead to assorted problems at runtime, or
+hack around the issue in one or another way; there are a lot of
+possible approaches all with their own sets of costs and benefits.
+
+The problem with allocating a large block is that with the memory
+sizes we have in OS/161, a 64K block is a substantial chunk (1/16) of
+the total memory in the system, and an even larger chunk of the memory
+that's available once the kernel is loaded and a process or two have
+been started. Furthermore, in OS/161 (at least on mips) the kernel
+heap is in direct-mapped memory and large allocations have to be
+physically contiguous. This means that (a) if several processes try to
+exec at once some of them are virtually certain to be unable to
+allocate, and (b) once the system has been up for a while and memory
+has gotten fragmented, the chances of being able to allocate even one
+64K contiguous block are pretty low. This is a real issue; with a
+naive implementation, testbin/psort running with 1M of RAM fails in
+its last stage when it tries to exec four copies of cat.
+
+Therefore, some workaround is needed, and the design exercise is to
+examine some choices, evaluate their pros and cons, choose one, and
+implement it. Because this is a solution set, and because it's sort of
+an interesting problem in its obscure way, I'm going to discuss all
+the choices I can think of. These break down into roughly four
+categories: simple hacks with significant downsides that are easy to
+implement, approaches that require virtual memory (which you might use
+in a real life kernel but are problematic in OS/161 at this stage of
+things), complicated hacks, and exotic/unorthodox approaches.
+
+Simple hacks
+------------
+
+One approach is to go ahead and kmalloc an ARG_MAX buffer on every
+exec, but use a lock or semaphore to limit the number of processes
+trying to do this at once. This is better than just kmallocing, but
+has been found (experimentally) to be inadequate in practice because
+of the memory fragmentation issue.
+
+The most simple hack that works is to reserve a single ARG_MAX buffer
+at boot time (either in the kernel heap or even just as a static
+buffer in the kernel .bss), slap a lock on it, and only allow one
+process to use it at a time. The chief problem with this is that it's
+a lot of memory and it's being wasted when you aren't using it, which
+is most of the time. Otherwise, it's a simple and effective approach.
+And it's not difficult to refit to one of the VM-based approaches
+later.
+
+Another hack is to begin by allocating a smaller buffer, small enough
+to be unproblematic (e.g. 4K), and if that overflows continue (or
+start over) with a full-size buffer. This should probably also take
+steps to make sure only one full-size buffer is in use at once. It
+doesn't avoid the memory fragmentation issue, but makes it only bite
+large execs (not the common case) and while it might not be so great
+for the real world it's probably good enough for use in OS/161.
+
+VM approaches
+-------------
+
+One can avoid needing to allocate a *contiguous* 64K block by
+allocating it from a memory-mapped region. (On mips that means in
+kseg2.) The simplest way to do this is to reserve a block of space in
+kseg2 and materialize pages for it when entering exec, then discard
+them at the end. Next simplest is to reserve the block and materialize
+pages for it only on demand; this will avoid needing to allocate the
+full 64K most of the time. This approach has the advantage that it's
+very easy to adopt as an improvement over a reserved section in the
+kernel .bss segment.
+
+A more elaborate version of this is to do all large kernel allocations
+in kseg2, and then just kmalloc the argv buffer. (It might still be a
+good idea to throttle how many execs are allowed to run at once.) This
+is a valid design choice for the VM system and has its own set of
+tradeoffs related to VM issues, which are beyond the scope of this
+document.
+
+The really elaborate form is to allocate pages for the argv buffer,
+and then instead of copying the argv buffer out to the new process (as
+described below), transfer the pages to the new process. If you
+allocate and transfer the pages one at a time, you can easily support
+a very large ARG_MAX, or have no limit at all other than the new
+process's maximum stack size. This is what Linux does last I heard.
+
+The downside of all these approaches is that they require support from
+and some measure of integration with the VM system. Because of the
+OS/161 assignment structure they are probably not suitable for this
+reason: if your class is doing the VM system assignment, you aren't
+doing it yet when implementing exec. (And hacking one of these methods
+into dumbvm is not worth your time.) Conversely, and if you aren't
+doing the VM system assignment and have been given the solution set,
+it's a large pile of fairly subtle code that you probably don't want
+to get involved in making changes to.
+
+Complicated hacks
+-----------------
+
+Using the VM system allows remapping pages and allocating them one at
+a time in a way that's transparent or mostly transparent to the argv
+handling and pointer manipulation code. Complicated hacks are ways to
+avoid requiring contiguous pages and/or allocating pages one at a time
+via explicit management of buffer chunks, without involving the VM
+system. The necessary logic is not transparent and can greatly
+increase the complexity of the argv handling code... which is probably
+not recommended for students.
+
+The basic scheme is to allocate the argv buffer in page-sized chunks
+(up to 16 of them for ARG_MAX of 64K with typical 4K pages) and
+finagle the copying code to make this work as if it's a single 64K
+buffer. The big downside with this is that you can't use copyinstr()
+to copy the argument strings into the buffer, because copyinstr() is
+written assuming it has a contiguous destination buffer. So you need
+to write a new variant of copyinstr() that interacts with your buffer
+structure. This can be done; it can even be done reasonably cleanly,
+at least on mips (there are architectures where copyin-type functions
+must be written in assembler) but it's complicated and delicate.
+
+A different but also fairly complicated approach is to write a
+copyinoutstr function that transfers a string directly from one
+address space to another without needing a kernel buffer, or using
+only a smallish fixed-size kernel buffer. The difficulty with this is
+that it also requires extending the copyin/copyout interface; also it
+requires either switching back and forth between address spaces a lot
+(which in OS/161 could be slow enough to be problematic) or elaborate
+VM system hacks to allow mapping two address spaces, or portions of
+them, at the same time.
+
+Exotic methods
+--------------
+
+Another family of approaches is to do more of the work in userspace.
+This involves creating a different system call with a simpler
+interface, implementing execv as a userspace wrapper around it, and
+also making corresponding changes the startup code that's run before
+main().
+
+The simplest way to do this is to have the alternative-exec system
+call take, instead of an argv array, a pointer to a blob and its
+length, and copy that blob to the stack of the new process. Then, the
+execv wrapper in libc would do the copying work to prepare this blob,
+and in the new process, you'd pass the address and length of the blob
+to __start and have __start unpack or adjust it so as to be able to
+pass the intended argc and argv to main().
+
+This avoids all the kernel-level allocation problems; it's easy to
+copy a blob one chunk at a time. However, it still requires
+implementing all the same pointer-slinging logic; that code just goes
+into userland instead of the kernel. In the abstract this is probably
+a good thing; putting complex code in userland where bugs can't make
+the system blow up is healthy. But since in OS/161 we don't have a
+debugger for user code, actually implementing it would likely be
+horribly aggravating.
+
+(A more elaborate version of this involving the VM system would
+transfer the blob's pages from the old process to the new process
+without copying them.)
+
+Things that don't work
+----------------------
+
+There's an additional category: approaches that don't actually work,
+or don't help. The first of these is to copy one string at a time:
+since you can have one argument that takes the whole 64K, you still
+need to allocate a large buffer and this doesn't buy you anything.
+
+Declaring a limit of, say, one page on the maximum length of any one
+string, and copying strings one at a time, would work fine if you were
+doing it in a vacuum; but this is against both the traditional and
+POSIX-specified behavior of exec.
+
+Setting ARG_MAX to one page instead of 64K would also work in a
+vacuum, but as this punts the problem rather than solving it, it's not
+what we're looking for. Part of the exercise in this assignment is to
+think about this problem and figure out an adequate solution.
+
+What this code does
+-------------------
+
+For the solution code, we can't rely on the VM system (since it needs
+to be independent of the VM solution set) and the exotic methods
+aren't appropriate. That leaves the simple hacks and the complicated
+hacks... of which the complicated hacks aren't such a good choice.
+Prior to OS/161 1.99.08 this code used kmalloc on each exec with a
+throttle; that code was replaced because it was found to be incapable
+of running testbin/psort. I do not want to reserve 1/16th of the
+system RAM, so what I'm going to do is the 4K/64K hack described
+above.
+
+I am tempted to also provide an implementation of a segmented argv
+buffer, complete with a custom variant of copyinstr, as an
+alternative; but as of this writing that doesn't seem entirely
+worthwhile.
+
+Integrating this code with your VM system
+-----------------------------------------
+
+If you have received this code, and are implementing a VM system, and
+would like to adopt one of the VM-enabled schemes discussed above, you
+can do the following:
+
+   - If you want to implement a reserved area in mapped virtual space,
+     change the code that calls kmalloc to initialize the reserved
+     area (and return its address) and the code that calls kfree to
+     discard the pages in the reserved area. It should be fairly clear
+     how to do this.
+
+   - If you are implementing large allocations in mapped virtual
+     space, you don't have to do anything. You might disable the code
+     that tries a page-sized buffer first; but you might not, too. It
+     might be faster for small execs. (Consider testing that.)
+
+   - It is probably not worthwhile to try to transfer the argv buffer
+     pages to the new process instead of copying them.
+
+Copying the strings
+-------------------
+
+Handling the argument strings potentially requires O(n) pointers (or
+equivalently, buffer offsets) during copying to keep track of where
+the strings are.
+
+It is allowed to count the size of this material against ARG_MAX, and
+so to avoid needing two large allocations or an extra non-POSIX limit
+on the number of argument strings, it is desirable keep this
+information in the same buffer space as the strings themselves.
+
+There are two reasonably tidy ways to do this. (And many more less
+tidy ways.) One is to copy the strings one after another into the
+beginning of the argv buffer, and then store the offsets to them in
+reverse order at the end of the buffer. If the strings run into the
+offsets, the buffer has overflowed. This scheme calls copyinstr for
+each string when copying in, then transforms the offsets into pointers
+for the destination address space within the buffer, and then can copy
+the buffer out as a single blob with a single call to copyout().
+
+The other way is to not store the offsets at all. This scheme copies
+the strings into the beginning of the buffer one by one, keeping track
+only of where they end. Then to copy out it calls copyoutstr() on each
+string, and uses the length returned by copyoutstr() to prepare a
+destination address space pointer, which it can write directly into
+place.
+
+Both of these scan through the strings the same number of times, and
+both need to do the same pointer and offset computations, so neither
+is obviously superior; the second method uses less space, but the
+first method makes fewer calls. This code uses the second method.
+
+Implementation
+--------------
+
+The exec implementation is written in terms of an abstraction for the
+argument handling, struct argbuf. This has the following operations:
+   - init
+   - cleanup
+   - allocate
+   - fromkernel
+   - copyin
+   - fromuser
+   - copyout
+
+argbuf_init initializes an argbuf; argbuf_cleanup cleans it up,
+including any state changes made by the other functions. The
+fromkernel and fromuser operations, respectively, load the argbuf with
+argument data from a kernel program string and from a user argv
+pointer. The allocate and copyin functions are called by the fromuser
+function. Finally, argbuf_copyout copies argument data out to a new
+user process.
+
+We do not support passing arguments from the menu, because this isn't
+required functionality, but it could be added in a fairly
+straightforward way.
+
+The argbuf structure contains:
+   - a data pointer
+   - the size of the allocated block (the maximum arguments size)
+   - the current length
+   - the number of arguments
+   - a "tooksem" flag
+
+The tooksem flag is set when we take the global argv throttle
+semaphore, which happens when allocating an ARG_MAX-size buffer. As
+discussed above we do this if a PAGE_SIZE buffer isn't big enough.
+Otherwise we just use PAGE_SIZE buffers, which are pretty harmless
+from a memory usage standpoint and chug away. (Maybe we should have a
+second throttle for those, but currently we don't.)
+
+During argbuf_copyin, the current length and number of arguments are
+incremented as we copy strings in, and if this reaches the max we
+fail. In argbuf_copyout these are fixed and we go through the strings
+until the position we're at reaches the length.
+
+The (global) exec throttle semaphore is created in exec_bootstrap(),
+which is called from the boot sequence.
+
+copyin
+------
+
+The function argbuf_copyin copies an argv vector from a supplied user
+argv pointer into the kernel. It works like this: it loops copying in
+one pointer from the userspace argv vector at a time. If this pointer
+is null, it stops. Since this pointer is itself a user pointer, it
+then calls copyinstr to fetch the string this pointer points to into
+the argv buffer space.
+
+The first string goes at the beginning of the buffer; subsequent
+strings follow, separated by their null terminators. Each string can
+be as long as the entire remaining buffer space. If we run out, we
+return E2BIG (per specs) rather than ENAMETOOLONG. As discussed above,
+we do not remember the sizes or locations of the strings, only the
+endpoint.
+
+copyout
+-------
+
+The function argbuf_copyout copies data from a struct argvdata out to
+a new user process's stack. The stack pointer is passed in via a
+pointer, so it can be updated and passed back. The user-level argc
+value and argv pointer are also handed back.
+
+It works like this: first we allocate space on the new process's user
+stack. We know how much space we need: one block of space for the
+strings (whose size is the total size stored in the argument buffer)
+and another block for the argv array itself. The argv array is one
+pointer per argument, plus an extra for the ending NULL. We put the
+strings at the top and the array under that, but it can just as easily
+be the other direction.
+
+Then we go through the argument data one string at a time. We compute
+what the user pointer to the string will be (the base address of the
+strings plus the current offset) and then use copyout to place it in
+the user's argv array. Then we use copyoutstr to send the string.
+Since copyoutstr tells us the length of the string it copied, we can
+easily find the next string without having to make excess calls to
+strlen or anything else. (Note that copyoutstr requires a maximum
+length: we know the string's length is ok, but since the cookie
+monster needs its cookie we give it the total remaining space in the
+string block. If something *should* go wrong this will keep it from
+chugging off the end of the buffer.)
+
+Finally we place the terminating NULL in the user argv array, and
+return the updated stack and the argc/argv values to the caller.
+
+loadexec
+--------
+
+Because runprogram() and execv() share a lot of logic, all this code
+goes in runprogram.c, and we've factored out much of the common code
+into a function called loadexec. This opens the program file, creates
+a new address space, loads the program into it, calls as_define_stack,
+and updates curthread->t_name. This is essentially the same as the
+corresponding code in the old runprogram(), except that it restores
+the thread's previous address space on error.
+
+The other significant thing it does is destroy the thread's old
+address space once the load is complete. Note that once this happens,
+execv must not fail -- there's nowhere left for it to return an error
+back to.
+
+runprogram
+----------
+
+Half of runprogram has been factored out; otherwise it's basically
+unchanged, except that it now sets up a basic argv for the new
+process. (It does not support argument passing from the menu, but
+could be made to with little difficulty.) It calls copyout_args after
+setting up the new address space.
+
+Note that if copyout_args fails because of an invalid pointer, it's
+because we messed up, so we panic.
+
+sys_execv
+---------
+
+sys_execv is basically the same as runprogram except that it calls
+copyin_args on the argv and copies in the program pathname before
+loading it.

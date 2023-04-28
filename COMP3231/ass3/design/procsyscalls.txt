@@ -1,0 +1,212 @@
+Design notes for process system calls (part of the system call solution set)
+----------------------------------------------------------------------------
+
+This part of the solution set covers the following:
+
+   - Process calls other than execv: getpid, waitpid, _exit, fork
+   - kill_curthread
+
+Process-related support
+-----------------------
+
+   The design assumes single-threaded processes, and that if
+multithreaded processes are to be added later, they will be supported
+by having multiple single-threaded processes (each with its own
+process id) sharing address spaces, filetables, and whatnot. Thus
+there is no "process" structure, just threads. Thus the terms "thread"
+and "process" are herein used more or less synonymously.
+
+   The thread structure gains only two new fields (and four more for
+handling priority information if the pqsched scheduler is in use; see
+below.) These fields are the file table, as described above, and the
+process id.
+
+   The process-id management code is entirely encapsulated in the new
+file thread/pid.c, whose header file is include/pid.h. The process ids
+0 and 1 are reserved; 0 is invalid, and 1 is reserved for the bootup
+process. Values from 2 (PID_MIN) through and including 32767 (PID_MAX)
+may be assigned to other processes.
+
+   The process-id management code uses an array of pointers to process
+info structures. These structures, struct pidinfo, contain the
+following members:
+	pi_pid		Process id of this process
+	pi_ppid		Process id of this process's parent
+	pi_exited	True if thread has exited
+	pi_exitstatus	Exit code (only valid if pi_exited!=0)
+	pi_cv		Condition variable for waiting for exit
+
+   In addition, there is one global lock for the entire pid management
+system (pidlock), a variable to hold the current candidate for next
+process id, and a counter for the current number of processes
+existing.
+
+   Process id allocation is fundamentally sequential, looping back to
+PID_MIN after PID_MAX is reached. This is significant: it is important
+not to reuse process ids very quickly (at least on the order of
+seconds, preferably minutes.) There are two reasons to be careful with
+this: first, on a system that uses pids for referring to processes, as
+most eventually do in some way or other (consider "kill" in Unix), if
+you reuse a pid too quickly someone might issue a kill and get the
+wrong process. Second, a lot of code in the real world assumes that
+the pair (getpid(), time(NULL)) uniquely identifies a process on a
+system; this pair is often used to generate unique IDs for various
+application-level protocols.
+
+   The process table is a fly-by-night hash table. The hash function
+is the pid modulo the table size, which is PROCS_MAX (presently 128,
+defiend in include/kern/limits.h.) Each slot may hold only one
+process; when allocating pids, if the next pid would hash to a slot
+that's already in use, we just don't use that pid and try the next one
+instead. This limits the maximum number of processes on the system at
+once to 128. This is more than the number of processes that will fit
+in kernel memory under the assignment 3 memory restrictions (at 4k per
+kernel thread stack, at most 128 processes at once will fit in the
+512k of memory at once, and some memory will be used for other
+things.) So this limit should be ample for CS161 use. The limit can be
+raised if desired; also, it would not be difficult to change the
+process table to allow resizing and rehashing.
+
+   The "interest" model used in the wait/exit code is that (per the
+specification) a parent process is always interested in the child
+processes it forks, and nobody else may be. (However, when kernel
+threads are created with thread_fork, if the pid return argument is
+NULL, it is assumed that the parent is actually not interested; this
+feature is only used by certain kernel thread forks, mostly in test
+code.) The parent process id is recorded in the pidinfo structure.
+
+   When a process exits, any pidinfo structures that list that process
+as the parent process have their parent process id set to INVALID_PID.
+When a pidinfo structure records both that its thread has exited (in
+the pi_exited member) and that its parent has exited or disowned it in
+this fashion, the pidinfo structure is removed and freed. Note that
+this can happen when either the parent or the child exits.
+
+   When the parent collects the child's exit status, the parent
+process id is also set to INVALID_PID, likewise allowing the pidinfo
+structure to be freed.
+
+   The actual process syscalls live in the new file
+userprog/proc_syscalls.c.
+
+
+getpid
+------
+   getpid just hands back curthread->pid.
+
+waitpid
+-------
+   The sys_waitpid function itself doesn't do anything besides copying
+the results out to userspace. The work is done by the function it
+calls: pid_wait() in thread/pid.c.
+
+   pid_wait() first checks for some basic error cases (note that
+processes may not wait for themselves...) and then gets the pid data
+lock. This allows it to fetch the pidinfo for the requested process;
+if it doesn't exist, or isn't a child of the current process, it
+returns an error.
+
+   Now it checks if the target hasn't exited yet. If so, and WNOHANG
+was used, it returns. If WNOHANG wasn't used, it waits. It doesn't
+loop on the CV, because there's no need: once the child exits, nothing
+can cause it to come back to life and cause the condition we wanted to
+wait for (exiting) to become false again.
+
+   Then it fetches the status, and finally calls pi_drop to free the
+pidinfo structure and release the process table slot.
+
+   We updated the menu code for running user programs (both the `p'
+and `s' commands) to call pid_wait(). This causes the menu system to
+wait for its subprocess to exit before printing another prompt.
+
+   There's a new test ("wt") for testing the pid_wait code from kernel
+level. This test lives in the new file test/waittest.c.
+
+
+_exit
+-----
+   sys__exit does nothing besides call thread_exit.
+
+   thread_exit has been modified so that it takes the process exit
+status as an argument. This status is immediately handed off to
+pid_setexitstatus().
+
+   pid_setexitstatus is the pid-management portion of exit. It first
+disowns all children by setting the parent pid field of their pidinfo
+structs to 0. (This may cause those pidinfo structs to be reclaimed.)
+
+   It then records its exit status; if the parent still exists, it
+broadcasts on the cv; if not, it calls pi_drop to free the pidinfo
+structure and release the process table slot.
+
+   thread_exit also now cleans up the current thread's file table.
+
+
+fork
+----
+   sys_fork itself takes care of the trapframe handling. The rest of
+the work is done by thread_fork and its related functions.
+
+   The trapframe for the new thread must live on the new thread's
+stack. Since we don't want to muck with the thread creation code to
+copy it directly onto the new stack (although this is possible), we
+pass it to the new thread. To avoid synchronization problems, we copy
+it twice: first in sys_fork we copy the parent thread's trapframe into
+a trapframe allocated with kmalloc. Then we pass this pointer through
+thread_fork to where the new thread starts, a function child_thread()
+in proc_syscalls.c. This function kfrees the pointer it's passed after
+first copying it into *another* trapframe on its stack. This final
+trapframe can then be passed to md_forkentry without making a mess.
+
+   md_forkentry is the machine-dependent function that adjusts the
+child process's trapframe for return from fork() and jumps to
+userlevel. There are three things it needs to do before calling
+mips_usermode: set the return value register to 0, set the
+error-return flag register to 0, and advance the program counter.
+
+
+fork-related thread changes
+---------------------------
+   thread_create now initializes the new thread fields. The process id
+is initialized to INVALID_PID, and the filetable is initialized to
+NULL. These are set for real in thread_fork. thread_destroy
+correspondingly assumes/asserts that the filetable and process id get
+cleaned up in thread_exit.
+
+   The boot sequence now calls pid_bootstrap, the pid management
+code's setup function. cpu_create() now also allocates a pid for the
+first thread on each cpu, using the reserved BOOT_PID (1) on the first
+cpu (and thus the first thread) because pid_alloc can't yet be called.
+
+   thread_fork has been modified so that instead of handing back the
+thread structure of the child thread (which is difficult to use
+correctly, as noted in comments in the original thread.c, because the
+child thread might exit before the parent thread finishes returning
+from thread_fork) it hands back the process id of the new thread.
+
+   In addition it now allocates a pid for the new thread and copies
+the new process-related phenomena (file table, address space) into the
+new thread. An optimization is performed: it's assumed that if the
+caller does not want to know what the pid was, the new thread must be
+intended to be a kernel thread and doesn't need a file table or
+address space. Furthermore, if the caller doesn't want to know the
+pid, it assumes that the caller must not want to wait for the child,
+so the child is automatically disowned using pid_disown().
+
+   The order of copying in thread_fork was chosen in order to minimize
+the hassle associated with cleaning up on failure - a lot of things
+might have to be undone on failure and some of them are not so easy to
+undo. For instance, there's a special function in the process id code,
+pid_unalloc, that undoes pid_alloc without requiring that the new
+thread actually run.
+
+
+kill_curthread
+--------------
+
+   With the various changes for waitpid and _exit, all this needs to
+do is call thread_exit(). We build a suitable exit status from the
+signal number already chosen.
+
+
+

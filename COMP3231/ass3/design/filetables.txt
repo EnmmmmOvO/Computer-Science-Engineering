@@ -1,0 +1,111 @@
+File tables and open files
+--------------------------
+
+Herein we provide two abstractions: open files and file tables.
+
+An open file is a wrapper around a vnode that keeps track of the
+per-open state. When you open a file, you get a new open file object;
+when you create another reference to an already-opened file (via dup2,
+fork, and similar operations) you share the open file object.
+
+A file table is a collection of open files, indexed by small integers
+(known as "file descriptors" or "file handles") and provides a set of
+abstract operations that permit the manipulations that system calls
+need to do.
+
+Open files appear as struct openfile and contain:
+   - a vnode
+   - an access mode (O_RDONLY, O_WRONLY, or O_RDWR)
+   - a seek position (of type off_t)
+as well as a reference count for sharing and locks for protection.
+
+The operations on the open file abstraction are:
+   openfile_open(), which calls vfs_open() on a path and returns an
+	open file object;
+   openfile_incref(), which increments the reference count;
+   openfile_decref(), which decrements the reference count, and
+	calls vfs_close() when the object goes away.
+
+System call code will typically manipulate the other contents (other
+than the reference count) of the open file object directly. The
+locking model is:
+
+   - The vnode member, of_vnode, is constant once the open file
+     object is created and does not need locking for access. So
+     is the access mode.
+
+   - The of_offsetlock member protects the seek position (of_offset)
+     field.
+
+   - The of_reflock field protects the reference count. Since this is
+     manipulated using the openfile_incref() and openfile_decref()
+     functions, external code should not need to use of_reflock, and
+     of_reflock is a leaf from a locking order perspective.
+
+File tables appear as struct filetable and each contain an array of
+open files. While this array is currently exposed, in principle the
+abstract operations on the file table are sufficient for all
+manipulations that need to be performed. These operations are:
+
+   filetable_create(), which constructs a new empty file table;
+   filetable_destroy(), which drops the references to any open files
+	in the table (with openfile_decref) and then destroys the
+	table;
+   filetable_copy(), which clones a file table, sharing the open files
+	it contains, as needed by fork();
+   filetable_okfd(), which checks a file descriptor for being in
+	range (nonnegative and less than OPEN_MAX) and returns true
+	if so and false otherwise;
+   filetable_get(), which retrieves the open file associated with a
+	numeric file descriptor;
+   filetable_put(), which should be called when done with the open
+	file retrieved with filetable_get();
+   filetable_place(), which inserts an open file in the table and
+	returns the file descriptor allocated for it;
+   filetable_placeat(), which inserts an open file in the table at a
+	specified place and returns the open file previously in that
+	position, or NULL if there was none.
+
+filetable_get() includes a call to filetable_okfd() for range checking
+and returns EBADF if out of range. It also returns EBADF if the open
+file entry in the table is NULL, that is, the file descriptor does not
+reference an open file. Therefore, the open file it returns should
+never be NULL.
+
+filetable_put() should be passed the open file previously retrieved by
+a successful call to filetable_get(). It is not valid to change this
+table entry before filetable_put() is called. If you need to, get your
+own reference to the open file with openfile_incref(), call
+filetable_put(), and then change the table. Otherwise the open file
+might disappear under you.
+
+filetable_placeat() does *not* include a call to filetable_okfd(),
+except as an assertion; call that first if not passing a known-good
+file descriptor value.
+
+You can place NULL with filetable_placeat(); this can be used e.g. to
+implement close().
+
+References: filetable_get() borrows the file table's reference to the
+open file object returned; use filetable_put() to give it back.
+However, filetable_place() and filetable_placeat() consume the
+reference passed in. (And filetable_placeat() returns a reference to
+the old file returned, if any.)
+
+Because we assume the file table will be a per-process object and not
+shared (file tables should be copied at fork time) and that processes
+are single-threaded, the file table objects do not require locking.
+However, the abstraction has intentionally been framed such that they
+can be made suitable for multithreaded processes without changing
+either the interface or code using the interface. (This is one of the
+reasons for filetable_put().)
+
+The maximum number of files that can be in a file table at once is
+OPEN_MAX, which is declared in limits.h and kern/limits.h. The value
+of OPEN_MAX can be changed (within reason) without breaking the code.
+Making the limit adjustable on the fly, as it is in modern Unix,
+should not be a difficult exercise.
+
+The open file abstraction is declared in openfile.h and implemented in
+syscall/openfile.c. The file table abstraction is declared in
+filetable.h and implemented in syscall/filetable.h.

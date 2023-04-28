@@ -1,0 +1,10 @@
+defs.mk
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+build
+kern/compile/[a-zA-Z]*
+.vscode
+*.code-workspace
+cscope.out

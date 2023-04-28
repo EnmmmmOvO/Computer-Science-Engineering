@@ -1,0 +1,56 @@
+Introduction
+
+In this project, I mainly modified the `syscall`, `file.h/c`, and `proc.h/c` files.
+
+For `syscall.c`, I added `switch-case` sections, providing an interface for the os161 system to discover and use functions such as `sys_open`. I made each of the `sys` functions I wrote return an int value to facilitate the transfer of errors. For retval, I passed its address directly into each function. If successful, the result of the operation is stored, facilitating subsequent successful and failed data return operations.
+
+For `file.h/c`, I simply added the `filetable` data structure to the `proc` data structure, ensuring that each thread has its own openfile. When a thread starts running, I initialize it and allocate three predefined file descriptors `stdin`, `stdout`, and `stderr` as the first three elements in the openfile array. When the thread ends, the filetable is destroyed.
+
+For `proc.h/c`, there are mainly three parts: the implementation of `sys` functions, filetable `ft` data structure, and openfile `of` data structure.
+
+    For the openfile data structure, the `create_of` function provides the construction of the data structure and returns its pointer. It records the file vnode pointer, initializes offset, permission, count, and lock values. `Increase_of` and `decrease_of` are operations to increase and decrease of_count, and `destroy_of` destroys the of.
+
+    For the filetable data structure, `create_ft` allocates space for `OPEN_MAX` size, and initializes the three predefined file descriptors. `Add_ft`, `del_ft`, and `destroy_ft` correspond to adding and deleting of and destroying the data structure. The `get_ft` function provides a pointer to the `ft_of` array's `fd` position. Since this function returns an int state, it passes in a pointer that requires a negative value and records it.
+
+    For the sys part of the functions, they are mainly implemented according to the operations and status required by each type.
+
+        - The `sys_open` function creates or opens a file based on its name and permissions and records the file descriptor in the array.
+
+        - The `sys_close` function releases resources associated with the specified file descriptor and marks the file descriptor as available for subsequent allocation to other files.
+
+        - The `sys_read` function pre-allocates a kernel buffer to copy data from the file to the kernel space. The `sys_write` function copies the data from user space to the kernel space buffer after calling `VOP_READ` or `VOP_WRITE` to actually perform read/write operations. These operations use the offset `of_offset` in the openfile structure as the starting position of the operation and update the offset after completion. The last two functions record the actual number of bytes read or written.
+
+        - The `sys_lseek` function implements changing the file offset. When the starting position parameter is `SEEK_SET`, the new offset equals the input offset; when the starting position parameter is `SEEK_CUR`, the new offset equals the current offset plus the input offset; when the starting position parameter is `SEEK_END`, the new offset equals the file length plus the input offset.
+
+        - The `sys_dup2` function first checks if `oldfd` and `newfd` are equal
+            -- If the two file descriptors are equal, no operation is performed, and `newfd` is returned directly.
+            -- If `newfd` already points to a valid file table entry, the file descriptor must be closed first, and related resources are released. 
+        The openfile structure corresponding to `oldfd` is copied to the position corresponding to `newfd`. In addition, the reference count in the openfile structure is increased to indicate that there are now two file descriptors pointing to the same file table entry.
+
+All of the above functions, as required, check the introduced elements with kassert to ensure that the elements are legal and do not affect subsequent operations.
+
+FAQ
+1. What significant data structures have you added and what function do they perform?
+
+    I have added the struct `of` (openfile) and struct `ft` (filetable) data structures. 
+
+    For the `of` data structure, I have added an `of_vnode` pointer pointing to the file's vnode, an `of_offset` to record the offset, an `of_permission` to record if the file can be read or written, an `of_count` to track the number of references, and a lock `of_lock` to ensure consistency when multiple processes access the file simultaneously.
+
+    For `ft` data structure, 'ft_of' records an array of Pointers of size OPEN_MAX, and a lock `ft_lock` ensures for maintaining consistency and preventing data corruption in concurrent scenarios. This structure is saved in the `proc` structure, created and initialized in `proc_create_runprogram`, named `p_ft` for ease of subsequent manipulation of this data, allocated the appropriate space for `ft_of`, and set the first three to `stdin`, `stdout`, and `stderr`.
+
+2. What are any significant issues surrounding managing the data structures and state they contain?
+
+    First, due to the presence of multiple processes, concurrency must be taken into account, and accessing or modifying the data structures should be considered as critical sections. The establishment of the aforementioned two locks ensures that only one process can be in the critical section at a time, maintaining data consistency.
+
+    Second, when modifying the data, it is necessary to make appropriate adjustments to auxiliary data such as `of_count`. In particular, when an error occurs and needs to be returned, the partially modified data must be restored, and any allocated memory should be released to avoid memory leaks.
+
+
+3. What data structures are per-process and what structures are shared betIen processes?
+
+    The filetable structure is per-process, assigned to each `proc` data structure in the code, and each process has its own set of `op`.
+
+    When using the sys_dup2 system call, the `of` structure can be shared betIen processes. When a file is copied, the reference count of the shared structure openfile increases.
+
+4. What are the main issues related to transferring data to and from applications?
+
+    Transferring data betIen the kernel and user space can result in potential security risks and data corruption. It is crucial to validate and copy data betIen user space and kernel space carefully to avoid memory leaks, buffer overflows, or exposing sensitive data.
