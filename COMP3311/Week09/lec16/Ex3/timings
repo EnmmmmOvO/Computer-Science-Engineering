@@ -1,0 +1,49 @@
+-- movies that are at least 3 hours long
+
+select title from Movies where runtime/60 >= 3
+
+Average time: ~3ms
+
+-- or --
+select title from Movies where runtime >= 180
+
+Average time: ~2.8ms
+
+
+-- people who have been principals
+
+select name from People
+where  id in (select person from Principals)
+
+Average time: ~185ms
+
+-- or --
+select p.name from People p
+where exists (select * from Principals where person=p.id)
+
+Average time: ~200ms
+
+-- or --
+select n.name
+from People n join Principals p on (n.id=p.person)
+
+Average time: ~65ms
+
+
+
+select title from Movies where origin = 'AL' or origin = 'IS'
+
+Average time: ~4.5ms
+
+-- or --
+(select title from Movies where origin = 'AL')
+union
+(select title from Movies where origin = 'IS')
+
+Average time: ~7ms   --- union is not very efficient in PostgreSQL
+
+-- or --
+select title from Movies where origin in ('AL','IS')
+
+Average time: ~4.5ms
+

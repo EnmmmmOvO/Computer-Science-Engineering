@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <b>[Q11]</b> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 11 <span class='tiny'>(6 marks)</span></h3>
+<p>
+Consider the following spreadsheet used by a lecturer to manage
+marks in her courses:
+</p>
+<center>
+<table cellpadding="5" cellspacing="0" border="1">
+<tr><th>A</th><th>B</th><th>C</th><th>D</th><th>&nbsp;E&nbsp;</th><th>&nbsp;&nbsp;F&nbsp;&nbsp;</th><th>&nbsp;&nbsp;G&nbsp;&nbsp;</th></tr>
+<tr> <td>3312345</td> <td>John Smith</td> <td>3978</td> <td>COMP3123</td> <td>ass1</td> <td>10</td> <td>8</td> </tr>
+<tr> <td>3312345</td> <td>John Smith</td> <td>3978</td> <td>COMP3123</td> <td>ass2</td> <td>20</td> <td>14</td> </tr>
+<tr> <td>3312345</td> <td>John Smith</td> <td>3978</td> <td>COMP3321</td> <td>proj</td> <td>35</td> <td>30</td> </tr>
+<tr> <td>3312345</td> <td>John Smith</td> <td>3978</td> <td>COMP3345</td> <td>lab1</td> <td>5</td> <td>4</td> </tr>
+<tr> <td>3234567</td> <td>Cynthia Wang</td> <td>3648</td> <td>COMP3123</td> <td>ass1</td> <td>10</td> <td>9</td> </tr>
+<tr> <td>3234567</td> <td>Cynthia Wang</td> <td>3648</td> <td>COMP3321</td> <td>proj</td> <td>35</td> <td>34</td> </tr>
+<tr> <td>3234567</td> <td>Cynthia Wang</td> <td>3648</td> <td>COMP3345</td> <td>lab1</td> <td>5</td> <td>3</td> </tr>
+<tr> <td>3234567</td> <td>Cynthia Wang</td> <td>3648</td> <td>COMP3345</td> <td>lab2</td> <td>5</td> <td>5</td> </tr>
+<tr> <td>3255555</td> <td>John Smith</td> <td>3645</td> <td>COMP3345</td> <td>lab1</td> <td>5</td> <td>1</td> </tr>
+<tr> <td>3255555</td> <td>John Smith</td> <td>3645</td> <td>COMP3345</td> <td>ass1</td> <td>8</td> <td>4</td> </tr>
+<tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
+</table>
+</center>
+<p>
+The columns in the spreadsheet represent the following:
+</p>
+<center>
+<table cellpadding="5" cellspacing="0" border="1">
+<tr><td><b>A</b></td><td>Student ID number</td></tr>
+<tr><td><b>B</b></td><td>Student's name</td></tr>
+<tr><td><b>C</b></td><td>Degree being studied by the student</td></tr>
+<tr><td><b>D</b></td><td>Course code</td></tr>
+<tr><td><b>E</b></td><td>Assessment item within the course </td></tr>
+<tr><td><b>F</b></td><td>Maximum possible mark for this item </td></tr>
+<tr><td><b>G</b></td><td>Student's mark for this item </td></tr>
+</table>
+</center>
+<p>
+You may assume that students only ever enrol in one degree.
+</p>
+<p>Exercises:</p>
+<ol type='a'>
+<li class="subq">
+<p class="qtext">
+Based on your understanding of the problem, aided by the values in the spreadsheet,
+identify the functional dependencies in the above table.
+</p>
+<li class="subq">
+<p class="qtext">
+Using the BCNF decomposition algorithm, convert <i>ABCDEFG</i> into a
+BCNF schema.
+<br>
+At each step, you must show the <i>relevant</i> functional dependencies and the primary key for each table.
+</p>
+<li class="subq">
+<p class="qtext">
+Describe briefly, in english, what each of the tables in the final BCNF schema represents.
+</p>
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>q11.txt</tt>
+<li> Submit via: &nbsp; <b><tt>submit q11.txt</tt></b>
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

@@ -1,0 +1,152 @@
+#! /usr/bin/env python3
+
+
+"""
+COMP3311
+23T1
+Assignment 2
+Pokemon Database
+
+Written by: Jinghan Wang z5286124
+Written on: 11/04/2023
+
+My Pokemon
+
+Create your very own Pokemon
+"""
+
+import sys
+import psycopg2
+import helpers
+from random import Random
+
+### Constants
+USAGE = f"Usage: {sys.argv[0]} <Seed>"
+
+### Globals
+db = None
+Seed = None
+rng = None
+
+### Command-line args
+if len(sys.argv) != 2:
+    print(USAGE, file=sys.stderr)
+Seed = int(sys.argv[1])  # read the seed from the command line
+rng = Random(Seed)  # set the seed for the python random number generator
+
+
+# `rng` is a python Random number generator
+# `rng.random()` returns a random float between 0 and 1
+# `rng.randint(a, b)` returns a random integer between a and b (inclusive)
+
+# `SELECT setseed(seed);` sets the postgres random seed to `seed`
+# `SELECT * FROM Table ORDER BY random() LIMIT 5;` gives 5 random rows from the table `Table`
+# `SELECT setseed(seed);` should be used one, before any calls to random(), with the a random number generated
+# by `rng.random()`
+
+def menu(items: list[str]) -> int:
+    """
+    Given a list of strings,
+    print a numbered menu
+    and return the user's selection.
+    """
+    padding = len(str(len(items)))
+    print(f'Select an option from the menu below by entering its number:')
+    for i, item in enumerate(items):
+        print(f"{i + 1:{padding}}) {item}")
+    ret = int(input("> Selection: ")) - 1
+    if not sys.stdin.isatty():
+        print(f"{ret + 1}")
+    print()
+    return ret
+
+def print_move(list):
+    for move in list:
+        print(f'            {move[0]} [{move[1]}]  (Category: {move[2]}, Power: {move[3]}, Accuracy: {move[4]})');
+
+
+def main():
+    cur = db.cursor()
+    # Set Plpgsql Seet number
+    cur.execute("SELECT setseed(%s)", [rng.random()])
+
+    # Get the game which Pokémon should come from
+    cur.execute("select name, id from games order by random() limit 10")
+    result = cur.fetchall()
+    game = result[menu([i[0] for i in result])]
+
+    # Get the Pokémon
+    qry = '''
+    select p.name, (p.id).pokedex_number, (p.id).variation_number, p.species, t1.name, t2.name, dex.regional_id
+    from pokedex dex
+        join pokemon p on dex.national_id = p.id
+        join types t1 on p.first_type = t1.id
+        left join types t2 on p.second_type = t2.id
+    where dex.game = %s
+    order by random()
+    limit 10
+    '''
+    cur.execute(qry, [game[1]])
+    result = cur.fetchall()
+    pokemon = result[menu([i[0] for i in result])]
+
+    # Get the Ability
+    qry = '''
+    select a.name
+    from abilities a join knowable_abilities ka on a.id = ka.knows
+    where ka.known_by = (%s, %s)
+    order by a.id
+    '''
+    cur.execute(qry, (pokemon[1], pokemon[2]))
+    result = cur.fetchall()
+    if len(result) > 0: ability = result[menu([i[0] for i in result])][0]
+    else: ability = 'None'
+
+    # Get the Moves
+    qry = '''
+    select distinct m.name, t.name, m.category, m.power, m.accuracy, m.id
+    from moves m
+        join types t on m.of_type = t.id
+        join learnable_moves lm on m.id = lm.learns
+        join requirements r on r.id = lm.learnt_when
+    where lm.learnt_by = (%s, %s) and lm.learnt_in = %s 
+        and r.assertion like %s
+    order by m.id
+    '''
+    cur.execute(qry, [pokemon[1], pokemon[2], game[1], 'Level:%'])
+    result = cur.fetchall()
+    move_list = []
+    loop = len(result) > 3 and 4 or len(result)
+    for i in range(4):
+        if len(result) == 0: break
+        move_list.append(result.pop(menu([i[0] for i in result])))
+
+    # Print Information
+    print(f'''Here is your new Pokemon (from Pokemon {game[0]}):
+
+    Name: {pokemon[0]}
+    Species: {pokemon[3]}
+    Type: {pokemon[4] + (pokemon[5] is not None and ' + ' + str(pokemon[5]) or '')}
+    Pokedex Number: {pokemon[6]} ({pokemon[1]})
+
+    Ability: {ability}
+
+    Moves:''')
+    for move in move_list:
+        print(f'            {move[0]} [{move[1]}]  (Category: {move[2]}, Power: {move[3]}, Accuracy: {move[4]})');
+
+
+
+if __name__ == '__main__':
+    try:
+        db = psycopg2.connect(dbname="ass2")
+        main()
+    except psycopg2.Error as err:
+        print("DB error: ", err)
+    except Exception as err:
+        print("Internal Error: ", err)
+        raise err
+    finally:
+        if db is not None:
+            db.close()
+    sys.exit(0)

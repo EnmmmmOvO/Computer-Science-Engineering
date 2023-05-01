@@ -1,0 +1,40 @@
+Instagram Data Model
+
+post:
+	photo or video
+	[description]
+	time posted
+	[expires]
+	category
+	owner? ... is a user
+	nlikes
+users: 
+	username
+	real name
+	password
+	[profile pic]
+activity:
+	who did it ... is a user
+	what they did
+	timestamp
+comment:
+	user
+	post
+	text
+message:
+	text
+	timestamp
+group:
+	name
+
+user did activity
+user member-of group
+user follows user
+user views post
+user likes post
+user owns post
+
+user sent-by message received-by user
+user sent-by gmessage received-by group
+
+

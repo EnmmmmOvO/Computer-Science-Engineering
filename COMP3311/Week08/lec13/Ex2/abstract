@@ -1,0 +1,10 @@
+
+R(A, B, C, D)
+
+
+R = ABCD
+
+A -> BCD
+B -> C
+
+But ...

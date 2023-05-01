@@ -1,0 +1,54 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+# define any local helper functions here
+
+### set up some globals
+
+usage = f"Usage: {sys.argv[0]} Country"
+db = None
+
+### process command-line args
+
+if len(sys.argv) < 2:
+  print(usage)
+  exit(1)
+country = sys.argv[1]
+qry1 = '''
+select c.code
+from   Countries c
+where  c.name = %s
+'''
+qry2 = '''
+select m.title, m.year
+from   Movies m
+where  m.origin = %s
+order  by m.year, m.title
+'''
+
+# manipulate database
+
+try:
+  db = psycopg2.connect("dbname=ass2")
+  cur = db.cursor()
+
+  cur.execute(qry1,[country])
+  res = cur.fetchone()
+  if not res:
+    print(f"Unknown country: {country}")
+    exit(1)
+  ccode = res[0]
+
+  cur.execute(qry2,[ccode])
+  for t in cur.fetchall():
+    title,year = t
+    print(f"{title} ({year})")
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

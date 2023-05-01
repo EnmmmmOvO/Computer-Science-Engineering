@@ -1,0 +1,1233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0071)https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week05/index.php?view=qo -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>COMP3311 23T1 - Week 05</title>
+<link href="./tut04_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="./tut04_files/course.css">
+</head>
+<body>
+<div class="container"><script language="JavaScript">
+function changeText(el, newText) {
+  // Safari work around
+  if (el.innerText)
+    el.innerText = newText;
+  else if (el.firstChild && el.firstChild.nodeValue)
+    el.firstChild.nodeValue = newText;
+}
+function toggleVisible(elid) {
+  el1 = document.getElementById(elid);
+  el2 = document.getElementById(elid+"a");
+  if (el1.style.display == "") {
+     el1.style.display = "none";
+     changeText(el2,"show answer");
+  }
+  else {
+     el1.style.display = "";
+     changeText(el2,"hide answer");
+  }
+}
+</script>
+
+<div align="center">
+<table width="100%" border="0">
+<tbody><tr valign="top">
+<td align="left" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">COMP3311 23T1</a></span>
+</td>
+<td align="center" width="50%">
+  <span class="heading">Week 05</span><br>
+  <span class="subheading">Stored Functions in SQL and PLpgSQL</span>
+</td>
+<td align="right" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">Database Systems</a></span>
+</td>
+</tr></tbody></table>
+</div>
+<ol>
+
+<li>
+<p>
+Write a simple PLpgSQL function that returns the square
+of its argument value. It is used as follows:
+</p>
+<pre>mydb=&gt; <b>select sqr(4);</b>
+ sqr 
+-----
+  16
+(1 row)
+
+mydb=&gt; <b>select sqr(1000);</b>
+   sqr 
+---------
+ 1000000
+(1 row)
+</pre>
+<p>
+Could we use this function in any of the following ways?
+</p>
+<pre>select sqr(5.0);
+select(5.0::integer);
+select sqr('5');
+</pre>
+<p>
+If not, how could we write a function to achieve this?
+</p>
+<!--
+</p>
+<pre>
+create or replace function sqr(n integer) returns integer
+as $$
+begin
+    return n * n;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+This function won't square real numbers, even something like:
+</p>
+<pre>
+mydb=> <b>select sqr(3.0);</b>
+ERROR:  Function sqr(numeric) does not exist
+</pre>
+<p>
+The defined function has type <tt>integer&rightarrow;integer</tt>.
+PostgreSQL is looking for a function with type <tt>float&rightarrow;integer</tt> 
+or, more generic <tt>numeric&rightarrow;numeric</tt>.
+<p>
+However, it works if you type-cast it to an integer (second example).
+And PostgreSQL seems reasonable about converting strings of digits
+into appropriate numbers.
+</p>
+<p>
+By declaring the function to use the generic number type
+<code>numeric</code>, it will handle both integers and reals
+correctly:
+</p>
+<pre>
+create or replace function sqr(n numeric) returns numeric
+as $$
+begin
+    return n * n;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li>
+<p>
+Write a PLpgSQL function that <q>spreads</q> the letters
+in some text. It is used as follows:
+</p>
+<pre>mydb=&gt; <b>select spread('My Text');</b>
+     spread
+----------------
+ M y   T e x t
+(1 row)
+</pre>
+<p>
+</p>
+<!--
+</p>
+<p>
+Here's a version that doesn't give a name to the parameter
+and uses "positional notation" (e.g. <tt>$1</tt>) to refer to the parmeter.
+</p>
+<pre>
+create or replace function spread(text) returns text
+as $$
+declare
+    result text := '';
+    i      integer;
+    len    integer;
+begin
+    i := 1;
+    len := length($1);
+    while (i &lt;= len) loop
+        result := result || substr($1, i, 1) || ' ';
+        i := i+1;
+    end loop;
+    return result;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+OR, using named parameters and a <tt>for</tt> loop
+</p>
+<pre>
+create or replace function spread(str text) returns text
+as $$
+declare
+    result text := '';
+    i      integer;
+begin
+    i := 1;
+    for i in 1..length($1) loop
+        result := result || substr(str, i, 1) || ' ';
+    end loop;
+    return result;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+Note that if you omit the initial assignment of empty string to
+<code>result</code>, then the value of <code>result</code> stays
+as <code>NULL</code> throughout the entire function execution,
+and <code>NULL</code> is returned (i.e., string concatenation is
+a  <code>NULL</code>-preserving operation).
+
+-->
+
+
+</li><li>
+<p>
+Write a PLpgSQL function to return a table of the first <i>n</i> positive
+integers.
+</p>
+<p>
+The fuction  has the following signature:
+</p>
+<pre>create or replace function seq(n integer) returns setof integer
+</pre>
+<p>
+and is used as follows:
+</p>
+<pre>mydb=&gt; <b>select * from seq(5);</b>
+ seq
+-----
+  1
+  2
+  3
+  4
+  5
+(5 rows)
+</pre>
+<!--
+</p>
+<pre>
+create or replace
+    function seq(n integer) returns setof integer
+as $$
+declare
+    i integer;
+begin
+    for i in 1 .. n
+    loop
+        return next i;
+    end loop;
+end;
+$$ language plpgsql;
+</pre>
+
+-->
+
+</li><li>
+<p>
+Generalise the previous function so that it returns a table of
+integers, starting from <i>lo</i> up to at most <i>hi</i>, with an
+increment of <i>inc</i>. The function should also be able to count
+down from <i>lo</i> to <i>hi</i> if the value of <i>inc</i> is
+negative. An <i>inc</i> value of 0 should produce an empty table.
+Use the following function header:
+</p>
+<pre>create or replace function seq(lo int, hi int, inc int) returns setof integer
+</pre>
+<p>
+and the function would be used as follows:
+</p>
+<pre>mydb=&gt; select * from seq(2,7,2);
+ val
+-----
+  2
+  4
+  6
+(3 rows)
+</pre>
+<p>
+Some other examples, in a more compact representation:
+</p>
+<pre>seq(1,5,1)   <i>gives</i>   1  2  3  4  5
+seq(5,1,-1)  <i>gives</i>   5  4  3  2  1
+seq(9,2,-3)  <i>gives</i>   9  6  3
+seq(2,9,-1)  <i>gives</i>   empty
+seq(1,5,0)   <i>gives</i>   empty
+</pre>
+<p>
+</p>
+<!--
+</p>
+<pre>
+create or replace function
+    seq(lo int, hi int, inc int) returns setof integer
+as $$
+declare
+    i integer;
+begin
+    i := lo;
+    if (inc > 0) then
+        while (i &lt;= hi)
+        loop
+            return next i;
+            i := i + inc;
+        end loop;
+    elsif (inc &lt; 0) then
+        while (i >= hi)
+        loop
+            return next i;
+            i := i + inc;
+        end loop;
+    end if;
+    return;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li>
+<p>
+Re-implement the <code>seq(int)</code> function from above
+as an <b>SQL function</b>, and making use of the generic
+<code>seq(int,int,int)</code> function defined above.
+</p>
+<!--
+</p>
+<pre>
+create or replace function
+    seq(n int) returns setof integer
+as $$
+select * from seq(1,n,1);
+$$ language sql;
+</pre>
+
+-->
+
+
+</li><li>
+<p>
+Create a factorial function based on
+the above sequence returning functions.
+</p>
+<pre>create function fac(n int) returns integer
+</pre>
+<p>
+Implement it as an <b>SQL function</b> (not a PLpgSQL function).
+The obvious solution to this problem requires a
+<code>product</code> aggregate, analogous to the <code>sum</code>
+aggregate.
+PostgreSQL does not actually have a <code>product</code> aggregate,
+but for the purposes of this question, you can assume that it does,
+and has the following interface:
+</p>
+<pre>product(<i>list of integers</i>) returns integer
+</pre>
+<!--
+</p>
+<pre>
+create function fac(n int) returns integer
+as $$
+select product(seq) from seq(n);
+$$
+language sql;
+</pre>
+<p>Note that the <tt>sum()</tt> aggregate actually returns a
+value of type <tt>bigint</tt>, and so, probably, should <tt>product()</tt>.
+
+
+-->
+
+</li></ol>
+
+<br>
+<div class="note">
+<p>
+Use the <a href="https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week05/beer.dump">old Beers/Bars/Drinkers</a> database
+in answering the following questions.
+A summary schema for this database:
+</p>
+<pre>Beers(<b>name</b>:string, manufacturer:string)
+Bars(<b>name</b>:string, address:string, license#:integer)
+Drinkers(<b>name</b>:string, address:string, phone:string)
+Likes(<b><i>drinker</i></b>:string, <b><i>beer</i></b>:string)
+Sells(<b><i>bar</i></b>:string, <b><i>beer</i></b>:string, price:real)
+Frequents(<b><i>drinker</i></b>:string, <b><i>bar</i></b>:string)
+</pre>
+<p>
+Primary key attributes are in <tt><b>bold</b></tt>. 
+Foreign key attributes are in <tt><b><i>bold italic</i></b></tt>.
+</p>
+<p>
+The examples below assume that the user is connected to a database
+called <code>beer</code> containing an instance of the above schema.
+</p>
+</div>
+
+<ol start="7">
+
+<li>
+<p>
+Write a PLpgSQL function called <tt>hotelsIn()</tt>
+that takes a single argument giving the name of a suburb,
+and returns a text string containing the names of all hotels
+in that suburb, one per line.
+</p>
+<pre>create function hotelsIn(_addr text) returns text
+</pre>
+<p>
+The function is used as follows:
+</p>
+<pre>beer=&gt; <b>select hotelsIn('The Rocks');</b>
+    hotelsin     
+-----------------
+ Australia Hotel+
+ Lord Nelson    +
+ 
+(1 row)
+</pre>
+<p>Can you explain what the <tt>'+'</tt>at the end of each line is?
+And why it says <tt>(1 row)</tt>?
+</p><p>
+Note that the output from functions returning a single
+<code>text</code> string and
+looks better if you turn off <tt>psql</tt>'s output alignment
+(via <code>psql</code>'s <code><b>\a</b></code> command)
+and column headings
+(via <code>psql</code>'s <code><b>\t</b></code> command).
+</p><p>
+Compare the aligned output above to the unaligned output below:
+</p>
+<pre>beer=&gt; <b>\a</b>
+Output format is unaligned.
+beer=&gt; <b>\t</b>
+Showing only tuples.
+beer=&gt; <b>select hotelsIn('The Rocks');</b>
+Australia Hotel
+Lord Nelson
+
+</pre>
+<p>
+From now on, sample outputs for functions returning <code>text</code>
+will assume that we have used <code><b>\a</b></code> and
+<code><b>\t</b></code>.
+</p>
+<!--
+Reminder: this function returns a single string and not a list of tuples.
+</p>
+<pre>
+create or replace function
+    hotelsIn(_addr text) returns text
+as $$
+declare
+    r   record;
+    out text := '';
+begin
+    for r in select * from bars where addr = _addr
+    loop
+        out := out || r.name || e'\n';
+    end loop;
+    return out;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li>
+<p>
+Write a new PLpgSQL function called <tt>hotelsIn()</tt>
+that takes a single argument giving the name of a suburb
+and returns the names of all hotels in that suburb.
+The hotel names should all appear
+on a single line, as in the following examples:
+</p>
+<pre>beer=&gt; <b>select hotelsIn('The Rocks');</b>
+Hotels in The Rocks:  Australia Hotel  Lord Nelson 
+
+beer=&gt; <b>select hotelsIn('Randwick');</b>
+Hotels in Randwick:  Royal Hotel 
+
+beer=&gt; <b>select hotelsIn('Rendwik');</b>
+There are no hotels in Rendwik
+</pre>
+<!--
+<pre>
+create or replace function
+    hotelsIn (_addr text) returns text
+as $$
+declare 
+    howmany integer;
+    pubnames text;
+    p record;
+begin
+    select count(*) into howmany from Bars where addr = _addr;
+    if (howmany = 0) then 
+        return 'There are no hotels in '|| _addr || e'\n'; 
+    end if;
+    pubnames:= 'Hotels in ' || _addr || ':';
+    for p in select * from Bars where addr = _addr
+    loop
+        pubnames := pubnames||'  '||p.name;
+    end loop;
+    pubnames := pubnames||e'\n';
+    return pubnames;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li>
+<p>
+Write a PLpgSQL procedure <code>happyHourPrice</code> that accepts
+the name of a hotel, the name of a beer and the number of dollars
+to deduct from the price, and returns a new price.
+The procedure should check for the following errors:
+</p>
+<ul>
+<li> non-existent hotel (invalid hotel name)
+</li><li> non-existent beer (invalid beer name)
+</li><li> beer not available at the specified hotel
+</li><li> invalid price reduction (e.g. making reduced price negative)
+</li></ul>
+<p>
+Use <code>to_char(price,'$9.99')</code> to format the prices.
+</p>
+<pre>beer=&gt; <b>select happyHourPrice('Oz Hotel','New',0.50);</b>
+There is no hotel called 'Oz Hotel'
+
+beer=&gt; <b>select happyHourPrice('Australia Hotel','Newer',0.50);</b>
+There is no beer called 'Newer'
+
+beer=&gt; <b>select happyHourPrice('Australia Hotel','New',0.50);</b>
+The Australia Hotel does not serve New
+
+beer=&gt; <b>select happyHourPrice('Australia Hotel','Burragorang Bock',4.50);</b>
+Price reduction is too large; Burragorang Bock only costs $ 3.50
+
+beer=&gt; <b>select happyHourPrice('Australia Hotel','Burragorang Bock',1.50);</b>
+Happy hour price for Burragorang Bock at Australia Hotel is $ 2.00
+</pre>
+<p>
+</p>
+<!--
+<p>
+Checking for existence of some tuples
+could be done using either <code>select count(*)</code> followed
+by a check for zero, or by using the <code>FOUND</code> variable (which
+is set after each query).
+This solution combines both approaches to show the range of possiblities.
+<p>
+In general, you could use <code>count(*)</code> whenever you knew that
+you were not interested in collecting any other information from the
+table; you'd try to collect the information and use <code>FOUND</code>
+in all other circumstances.
+</p>
+<pre>
+<span class="comment">-- using positional notation for parameters</span>
+create or replace function
+    happyHourPrice (_hotel text, _beer text, _discount real) returns text
+as $$
+declare 
+    counter integer;
+    std_price real;
+    new_price real;
+begin
+    select count(*) into counter from Bars where name = _hotel;
+    if (counter = 0) then 
+        return 'There is no hotel called '|| _hotel ||e'\n';
+    end if;
+    select * from Beers where name = _beer;  <span class="comment">-- any results vanish</span>
+    if (not found) then
+        return 'There is no beer called '|| _beer ||e'\n';
+    end if;
+    select price into std_price
+    from   Sells s
+    where  s.beer = _beer and s.bar = _hotel;
+    if (not found) then
+        return 'The '|| _hotel || ' does not serve '||_beer;
+    end if;
+    new_price := std_price - _discount;
+    if (new_price &lt; 0) then
+        return 'Price reduction is too large; '
+               || _beer || ' only costs '
+               || to_char(std_price, '$9.99');
+    else    
+        return 'Happy hour price for '
+               || _beer || ' at '|| _hotel ||' is '
+               || to_char(new_price, '$9.99');    
+    end if;
+end;
+$$ language plpgsql;
+</pre>
+
+-->
+
+</li><li>
+<p>
+The <code>hotelsIn</code> function above returns a formatted string
+giving details of the bars in a suburb. If we wanted to return a
+table of records for the bars in a suburb, we could use a view as
+follows:
+</p>
+<pre>beer=&gt; <b>create or replace view HotelsInTheRocks as</b>
+    -&gt; <b>select * from Bars where addr = 'The Rocks';</b>
+CREATE VIEW
+beer=&gt; <b>select * from HotelsInTheRocks;</b>
+      name       |   addr    | license 
+-----------------+-----------+---------
+ Australia Hotel | The Rocks |  123456
+ Lord Nelson     | The Rocks |  123888
+(2 rows)
+</pre>
+<p>
+Unfortunately, we need to specify a suburb in the view definition.
+It would be more useful if we could define a <q>parameterised view</q>
+which we could use to generate a table for any suburb, e.g.
+</p>
+<pre>beer=&gt; <b>select * from HotelsIn('The Rocks');</b>
+      name       |   addr    | license 
+-----------------+-----------+---------
+ Australia Hotel | The Rocks |  123456
+ Lord Nelson     | The Rocks |  123888
+(2 rows)
+beer=&gt; <b>select * from hotelsIn('Coogee');</b>
+       name       |  addr  | license 
+------------------+--------+---------
+ Coogee Bay Hotel | Coogee |  966500
+(1 row)
+</pre>
+<p>
+Such a parameterised view can be implemented via an SQL function,
+defined as:
+</p>
+<pre>create or replace function hotelsIn(text) returns setof Bars
+as $$ ... $$ language sql;
+</pre>
+<p>
+Complete the definition of the SQL function.
+</p>
+<!--
+</p>
+<pre>
+create or replace function
+    hotelsIn(text) returns setof Bars
+as $$ 
+select * from Bars where addr = $1;
+$$ language sql;
+</pre>
+<p>
+
+-->
+
+</li><li>
+<p>
+The function for the previous question can also be implemented in
+PLpgSQL. Give the PLpgSQL definition. It would be used in the same
+way as the above.
+</p>
+<!--
+<pre>
+create or replace function
+    hotelsIn(_addr text) returns setof Bars
+as $$ 
+declare
+    r record;  <font color=gray>-- could also be declared r Bars%rowtype;</font>
+begin
+    for r in select * from Bars where addr = _addr
+    loop
+       return next r;
+    end loop;
+    return;
+end;
+$$ language plpgsql;
+</pre>
+
+-->
+
+</li></ol>
+
+<div class="note">
+<p>
+Use the
+<a href="https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week05/bank/index.html">Bank Database</a>
+in answering the following questions.
+A summary schema for this database:
+</p>
+<pre>Branches(<b>location</b>:text, address:text, assets:real)
+Accounts(<i><b>holder</b></i>:text, <i><b>branch</b></i>:text, balance:real)
+Customers(<b>name</b>:text, address:text)
+Employees(<b>id</b>:integer, name:text, salary:real)
+</pre>
+<p>
+The examples below assume that the user is connected to a database
+called <code>bank</code> containing an instance of the above schema.
+</p>
+</div>
+
+
+<ol start="12">
+
+<li>
+<p>
+For each of the following, write both an SQL and a PLpgSQL
+function to return the result:
+</p>
+
+<ol type="a">
+<li><p>
+salary of a specified employee
+</p>
+<!--
+<pre>
+-- Salary of a specified employee
+--   Allows employee to be determined by name or id
+--    using overloading on the function name
+--   Assume name or id identifies only one employee
+
+create or replace function empSal(text) returns real
+as $$
+select salary from employees where name = $1
+$$ language sql;
+
+create or replace function empSal(integer) returns real
+as $$
+    select salary from employees where id = $1
+$$ language sql;
+
+create or replace function
+    empSal1(_name text) returns real
+as $$
+declare
+    _sal real;
+begin
+    select salary into _sal
+    from employees where name = _name;
+    return _sal;
+end;
+$$ language plpgsql;
+
+create or replace function
+    empSal1(_id integer) returns real
+as $$
+declare
+    _sal real;
+begin
+    select salary into _sal
+    from employees where id = _id;
+    return _sal;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li><p>
+all details of a particular branch
+</p>
+<!--
+<pre>
+-- All details of a particular branch
+--   Example of PLpgSQL function returning a record
+
+create or replace function branchDetails(text) returns Branches
+as $$
+    select * from Branches where location = $1;
+$$ language sql;
+
+
+create or replace function branchDetails1(_bname text) returns Branches
+as $$
+declare
+    _tup Branches;
+begin
+    select * into _tup
+    from Branches where location = _bname;
+    return _tup;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li><p>
+names of all employees earning more than $<i>sal</i>
+</p>
+<!--
+</p>
+<pre>
+-- Names of all employees earning more than $sal
+--   Example of PLpgSQL function returning a set of atomic values
+
+create or replace function empsWithSal(real) returns setof text
+as $$
+    select name from employees where salary > $1;
+$$ language sql;
+
+create type EmpName as ( name text );
+
+create or replace function empsWithSal1(_minSal real) returns setof EmpName
+as $$
+declare
+    _en EmpName;
+begin
+    for _en in select name
+           from employees where salary > _minSal
+    loop
+        return next _en;
+    end loop;
+    return;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+
+</li><li><p>
+all details of highly-paid employees
+</p>
+<!--
+</p>
+<pre>
+-- All details of highly-paid employees 
+--   Example of PLpgSQL function returning a set of atomic values
+
+create or replace function richEmps(real) returns setof Employees
+as $$
+    select * from employees where salary > $1;
+$$ language sql;
+
+create or replace function emps1(_minSal real) returns setof Employees
+as $$
+declare
+    _e Employee;
+begin
+    for _e in select *
+              from employees where salary > _minSal
+    loop
+        return next _e;
+    end loop;
+    return;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+
+-->
+</li></ol>
+
+</li><li>
+<p>
+Write a PLpgSQL function to produce a report giving
+details of branches:
+</p><ul>
+<li> name and address of branch
+</li><li> list of customers who hold accounts at that branch
+</li><li> total amount in accounts held at that branch
+</li></ul>
+Use the following format for each branch:
+<p></p>
+<pre>Branch: Clovelly, Clovelly Rd.
+Customers:  Chuck Ian James
+Total deposits: $   8860.00
+</pre>
+<p>
+</p>
+<!--
+</p>
+<pre>
+create or replace function branchList() returns text
+as $$
+declare
+    a   record;
+    b   record;
+    tot integer;
+    qry text;
+    out text := e'\n';
+begin
+    for b in select * from Branches
+    loop
+        out := out || 'Branch: ' || b.location || ', ';
+        out := out || b.address || e'\n' || 'Customers: ';
+        tot := 0;
+        for a in select * from Accounts where branch=b.location
+        loop
+            out := out || ' ' || a.holder;
+            tot := tot + a.balance;
+        end loop;
+        select sum(balance) into tot
+        from Accounts where branch=b.location;
+        out := out || E'\nTotal deposits: ';
+        out := out || to_char(tot,'$999999.99');
+        out := out || E'\n---\n';
+    end loop;
+    return out;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+It's also possible to implement this more efficiently using just one SQL
+query (rather than nested-loop queries). The more efficient solution
+invloves ordering the Accounts tuples by branch, and keeping track of
+when the current branch changes to a new one.
+
+-->
+
+</li></ol>
+
+<div class="note">
+<p>
+Use the following database schema, which is somehwat similar to the
+schema for Assignment 2.
+The schema is too large to give a complete summary here, but we provide
+some details for some tables:
+</p>
+<pre>Term(<b>id</b>:integer, year:integer, session:('S1','S2','X1','X2'), ...)
+Subject(<b>id</b>:integer, code:text, ..., name:text, ... uoc:integer, ...)
+Course(<b>id</b>:integer, <i>subject</i>:integer, <i>term</i>:integer, <i>lic</i>:integer, ...)
+OrgUnit(<b>id</b>, <i>utype</i>, name, longname, ...)
+OrgUnitType(<b>id</b>, name)
+Person(<b>id</b>:integer, ..., name:text, ...)
+Student(<i><b>id</b></i>:integer, sid:integer, stype:('local','intl'))
+Staff(<i><b>id</b></i>:integer, sid:integer, <i>office</i>:integer, ...)
+StaffRole(<b>id</b>, descript)
+Affiliation(<b><i>staff</i></b>, <b><i>orgunit</i></b>, <i>role</i>, fraction)
+</pre>
+<p>
+Note that there is an example database <a href="https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week05/unsw.dump">unsw.dump</a>
+(2MB)
+that you could load into a newly created database to help with these
+problems, although you should be able to solve them without reference
+to a specific database instance.
+Note that all of the people data in this database is synthetic and
+the various enrolment tables have been cleared to save space.
+</p>
+<p>
+The examples below assume that the user is connected to a database
+called <code>unsw</code> containing an instance of the above schema.
+</p>
+</div>
+
+<ol start="14">
+
+<li>
+<p>
+Write a PLpgSQL function to produce the complete name of an
+organisational unit (aka OrgUnit), given the OrgUnit's internal
+id:
+</p>
+<pre>function unitName(_ouid integer) returns text
+</pre>
+<p>
+This will need to make use of the <tt>OrgUnit</tt> and <tt>OrgUnitType</tt>
+tables.
+The <tt>OrgUnitType</tt> table contains a list of unit types (e.g.
+faculty, school, institute) via <i>(id,name)</i> tuples.
+The <tt>OrgUnit</tt> table has a foreign key to the <tt>OrgUnitType</tt>
+table to indicate what kind of unit it is.
+The <tt<longname< tt=""> attribute contains the useful name of the unit
+(the <tt>name</tt> attribute is a very abbreviated version of the unit's name).
+The <tt>longname</tt> attribute for faculties already contains the words
+"Faculty of". For other kinds of <tt>OrgUnit</tt>, you need to prepend
+the name of its <tt>OrgUnitType</tt>.
+</tt<longname<></p>
+<p>
+The function returns the complete name using the rules:
+</p><ul>
+<li> the university is denoted by UNSW
+</li><li> a faculty is denoted using its base name <small>(not all faculty names start with Faculty)</small>
+</li><li> a school is denoted School of XYZ
+</li><li> a department is denoted Department of XYZ
+</li><li> a centre is denoted Centre for XYZ
+</li><li> an institute is denoted Institute of XYZ
+</li><li> other kinds of OrgUnits are treated as having no name (i.e. return null)
+</li></ul>
+<p>
+Some examples of usage (assuming <tt>\a</tt> and <tt>\t</tt>):
+</p>
+<pre>unsw=&gt; select unitName(0);
+UNSW
+
+unsw=&gt; select unitName(2);
+Faculty of Arts and Social Sciences
+
+unsw=&gt; select unitName(4);
+Faculty of Law
+
+unsw=&gt; select unitName(9);
+Faculty of Engineering
+
+unsw=&gt; select unitName(11);
+Faculty of Science
+
+unsw=&gt; select unitName(36);
+School of Chemistry
+
+unsw=&gt; select unitName(44);
+School of Computer Science and Engineering
+
+unsw=&gt; select unitName(75);
+Centre for Human Geography
+
+unsw=&gt; select unitName(92);
+Department of Korean Studies
+
+unsw=&gt; select unitName(999);
+ERROR:  No such unit: 999
+</pre>
+
+<!--
+</p>
+<pre>
+create or replace function unitName(_ouid integer) returns text
+as $$
+declare
+    _outype text;
+    _ouname text;
+begin
+    -- check whether the orgunit ID is valid
+    select * from OrgUnit where id = _ouid;
+    if (not found) then
+        raise exception 'No such unit: %',_ouid;
+    end if;
+
+    select t.name,u.longname into _outype,_ouname
+    from   OrgUnitType t, OrgUnit u
+    where  u.id = _ouid and u.utype = t.id;
+
+    -- debugging output
+    -- raise notice 'Type:%, Name:%',_outype,_ouname;
+
+    if (_outype = 'UNSW') then
+        return 'UNSW';
+    elsif (_outype = 'Faculty') then
+        return _ouname;
+    elsif (_outype = 'School') then
+        return 'School of '||_ouname;
+    elsif (_outype = 'Department') then
+        return 'Department of '||_ouname;
+    elsif (_outype = 'Centre') then
+        return 'Centre for '||_ouname;
+    elsif (_outype = 'Institute') then
+        return 'Institute of '||_ouname;
+    else
+        return null;
+    end if;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+An alternative, using an SQL <tt>CASE</tt> expression:
+</p>
+<pre>
+create or replace function unitName(_ouid integer) returns text
+as $$
+declare
+    _ouname text;
+begin
+    -- check whether the orgunit ID is valid
+    select * from OrgUnit where id = _ouid;
+    if (not found) then
+        raise exception 'No such unit: %',_ouid;
+    end if;
+
+    select case
+           when t.name = 'UNSW' then 'UNSW'
+           when t.name = 'Faculty' then t.longname
+           when t.name = 'School' then 'School of '||t.longname
+           when t.name = 'Department' then 'Department of '||t.longname
+           when t.name = 'Centre' then 'Centre for '||t.longname
+           when t.name = 'Institute' then 'Institute of '||t.longname
+           else null
+           end into _ouname
+    from   OrgUnitType t, OrgUnit u
+    where  u.id = _ouid and u.utype = t.id;
+    return _ouname;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+If you didn't care about error-checking on the OrgUnit ID, then
+this could be done as an SQL function.
+</p>
+
+-->
+
+</li><li>
+<p>
+In the previous question, you needed to know the internal ID of
+an <tt>OrgUnit</tt>. This is unlikely, so write a function that
+takes part of an <tt>OrgUnit.longname</tt> and returns the ID
+or <tt>NULL</tt> if there is no such unit.
+If there is more than one matching unit, return the ID of the
+first matching  unit.
+Implement this as an SQL function, which allows case-insensitive
+matching:
+</p>
+<pre>create or replace function unitID(partName text) returns integer
+as $$ ... $$ language sql;
+</pre>
+<p>
+Examples of usage:
+</p>
+<pre>unsw=&gt; select unitName(unitID('law'));
+Faculty of Law
+
+unsw=&gt; select unitName(unitID('arts'));
+Faculty of Arts and Social Sciences
+
+unsw=&gt; select unitName(unitID('information'));
+School of Information Management
+
+unsw=&gt; select unitName(unitID('information sys'));
+School of Information Systems
+
+unsw=&gt; select unitName(unitID('chem'));
+Department of Biochemistry
+
+unsw=&gt; select unitName(unitID('computer'));
+School of Computer Science (ADFA)
+
+unsw=&gt; select unitName(unitID('comp%sci%eng'));
+School of Computer Science and Engineering
+
+unsw=&gt; select unitName(unitID('korean'));
+Department of Korean Studies
+</pre>
+<p>
+We use <tt>unitName()</tt> as a way of checking the result
+Note that such a simple text-based search can produce unexpected results.
+</p>
+<!--
+<p>
+A simple solution (and probably the only one possible in plain SQL:
+</p>
+<pre>
+create or replace function unitID(partName text) returns integer
+as $$
+   select id from OrgUnit where longname ilike '%'||partname||'%';
+$$ language sql;
+</pre>
+
+-->
+
+</li><li>
+<p>
+Write a PLpgSQL function which takes the numeric identifier of
+a given OrgUnit and returns the numeric identifier of the parent
+faculty for the specified OrgUnit:
+</p>
+<pre>function facultyOf(_ouid integer) returns integer
+</pre>
+<p>
+Note that a faculty is treated as its own parent. Note also that
+some OrgUnits don't belong to any faculty; such OrgUnits should
+return a null result from the function.
+</p>
+<p>
+Examples of use:
+</p>
+<pre>unsw=&gt; select unitName(facultyof(2));
+Faculty of Arts and Social Sciences
+
+unsw=&gt; select unitName(facultyof(9));
+Faculty of Engineering
+
+unsw=&gt; select unitName(facultyof(36));
+Faculty of Science
+
+unsw=&gt; select unitName(facultyof(44));
+Faculty of Engineering
+
+unsw=&gt; select unitName(facultyof(75));
+Faculty of Science
+
+unsw=&gt; select unitName(facultyof(92));
+Faculty of Arts and Social Sciences
+
+unsw=&gt; select unitName(facultyof(999));
+ERROR:  No such unit: 999
+</pre>
+<!--
+</p>
+<pre>
+create or replace function facultyOf(_ouid integer) returns integer
+as $$
+declare
+    _count integer;
+    _tname text;
+    _parent integer;
+begin
+    select count(*) into _count
+    from orgUnit where id = _ouid;
+    if (_count = 0) then
+        raise exception 'No such unit: %',_ouid;
+    end if;
+
+    select t.name into _tname
+    from OrgUnit u, OrgUnitType t
+    where u.id = _ouid and u.utype = t.id;
+
+    if (_tname is null) then
+        return null;
+    elsif (_tname = 'University') then
+        return null;
+    elsif (_tname = 'Faculty') then
+        return _ouid;
+    else
+        select owner into _parent
+        from UnitGroups where member = _ouid;
+        return facultyOf(_parent);
+    end if;
+end;
+$$ language plpgsql;
+</pre>
+<p>
+An alternative way of checking the existence of the specified
+organisational unit would be:
+</p>
+<pre>
+    select * from OrgUnit where id = _ouid;
+    if (not found) then
+        raise exception 'No such unit: %',_ouid;
+    end if;
+</pre>
+And an alternative iterative, but hackier, solution:
+<pre>
+create or replace function facultyOf(_uid integer) returns text
+as $$
+declare
+    orgu record;
+    facultyID integer := 1;
+begin
+    select * into orgu from orgunit where id = _uid;
+    if (not found) then
+        return "No such unit";
+    end if;
+    while (orgu.utype > facultyID) loop
+        select u.* into orgu
+        from   orgunit u join unitgroups g on g.owner = u.id
+        where  g.member = orgu.id;
+        raise notice 'Parent: %', orgu.name;
+    end loop;
+	if (orgu.utype < facultyID) then
+		return null;
+	end if;
+    return orgu.name;
+end;
+$$ language plpgsql;
+</pre>
+
+-->
+
+
+
+
+</li></ol></div></body></html>

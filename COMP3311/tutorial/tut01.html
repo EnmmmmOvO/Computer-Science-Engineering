@@ -1,0 +1,861 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0071)https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week02/index.php?view=qo -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>COMP3311 23T1 - Week 02 Tutorial</title>
+<link href="./tut01_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="./tut01_files/course.css">
+</head>
+<body>
+<div class="container"><script language="JavaScript">
+function changeText(el, newText) {
+  // Safari work around
+  if (el.innerText)
+    el.innerText = newText;
+  else if (el.firstChild && el.firstChild.nodeValue)
+    el.firstChild.nodeValue = newText;
+}
+function toggleVisible(elid) {
+  el1 = document.getElementById(elid);
+  el2 = document.getElementById(elid+"a");
+  if (el1.style.display == "") {
+     el1.style.display = "none";
+     changeText(el2,"show answer");
+  }
+  else {
+     el1.style.display = "";
+     changeText(el2,"hide answer");
+  }
+}
+</script>
+
+<div align="center">
+<table width="100%" border="0">
+<tbody><tr valign="top">
+<td align="left" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">COMP3311 23T1</a></span>
+</td>
+<td align="center" width="50%">
+  <span class="heading">Week 02 Tutorial</span><br>
+  <span class="subheading">Data Modelling, ER Model,<br>Relational Model</span>
+</td>
+<td align="right" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">Database Systems</a></span>
+</td>
+</tr></tbody></table>
+</div>
+<ol>
+
+<br><li>
+Meet the other members of your tute.
+If you are online turn on your microphone;
+if you don't have a microphone, post on the Chat.
+Say a little bit about yourself
+(e.g what degree you're doing, how much DB experience you have,
+what you hope to get out of this course).
+</li>
+
+<br><li>
+<p>
+In the context of database application development (aka <q>database
+engineering</q>), what are the aims of <b>data modelling</b>?
+</p>
+<!--
+<p>
+Data modelling works from a description of the <i>requirements</i> 
+and aims to build a comprehensive description of the entities involved
+in the application and the relationships among these entities.
+The model constructed should ensure that all of the requirements can
+be met i.e. that all of the relevant data is represented and is
+structured in such a way that all of the operations mentioned in
+the requirements can be carried out.
+</p>
+<p>
+The data model should give enough detail that a database schema
+can be derived from it without significant additional information
+being needed.
+
+-->
+
+<br></li><li>
+<p>
+Describe the similarities and differences between the following similarly-named concepts:
+</p>
+<ol type="a">
+<p></p><li> <b>relationship</b> in the entity-relationship data model
+<!--
+<ul>
+<li> describes an association between <i>n</i> specific entities
+<li> a collection of relationships forms a relationship set
+<li> a relationship can have associated attributes
+</ul>
+
+-->
+<p></p></li><li> <b>relation</b> in the relational data model
+<!--
+<ul>
+<li> describes an association between a collection of attributes
+<li> an instance of a relation is a set of tuples of attribute values
+<li> a relation can be used to model a set of entities
+<li> a relation can also be used to model relationship sets (<i>n</i>-ary
+	relationships with associated attributes)
+<li> every relation has a primary key
+</ul>
+
+-->
+</li></ol>
+
+<br></li><li>
+<p>
+What kind of data, relationships and constraints exist in this scenario?
+</p>
+<ul>
+<li> for each person, we need to record their tax file number (TFN),
+        their real name, and their address
+</li><li> everyone who earns money in Australia has a distinct tax file number
+</li><li> authors write books, and may publish books using a ``pen-name''
+	(a name which appears as the author of the book and is different
+	to their real name)
+</li><li> editors ensure that books are written in a manner that is
+	suitable for publication
+</li><li> every editor works for just one publisher
+</li><li> editors and authors have quite different skills; someone who is
+	an editor cannot be an author, and vice versa
+</li><li> a book may have several authors, just one author, or no authors
+	(published anonymously)
+</li><li> every book has one editor assigned to it, who liaises with the
+	author(s) in getting the book ready for publication
+</li><li> each book has a title, and an edition number (e.g. 1st, 2nd, 3rd)
+</li><li> each published book is assigned a unique 13-digit number (its ISBN);
+	different editions of the same book will have different ISBNs
+</li><li> publishers are companies that publish (market/distribute) books
+</li><li> each publisher is required to have a unique
+	Australian business number (ABN)
+</li><li> a publisher also has a name and address that need to be recorded
+</li><li> a particular edition of a book is published by exactly one publisher
+</li></ul>
+<p></p>
+<!--
+Possible data:
+<ul>
+<li> people: authors, editors; organisations: publishers
+<li> person's name, TFN, address
+<li> books: published, unpublished
+<li> book's title, edition, ISBN, ...
+<li> publisher: ABN, name, address
+<li> etc.
+</ul>
+Possible relationships:
+<ul>
+<li> author <b>writes</b> books <small>(using pen-name)</small>
+<li> book <b>is edited by</b> editor
+<li> etc.
+</ul>
+Possible constraints:
+<ul>
+<li> every person has <b>exactly one, unique</b> TFN
+<li> every published work has <b>exactly one, unique</b> ISBN
+<li> editors and authors must be distinct sets
+<li> editor works for &le; 1 publisher
+<li> etc.
+</ul>
+
+-->
+
+<br></li><li>
+<p>
+Consider some typical operations in the myUNSW system ...
+</p>
+<ul>
+<li> student enrols in a lab class
+</li><li> student enrols in a course
+</li><li> system prints a student transcript
+</li></ul>
+<p>
+For each of these operations:
+</p>
+<ol type="a"> 
+<li> identify what data items are required
+</li><li> consider relationships between these data items
+</li><li> consider constraints on the data and relationships
+</li></ol>
+<p></p>
+<!--
+<p><b>Operation:</b> student enrols in a class.
+<p>
+Possible data:
+<ul>
+<li> class information (day, time, location, quota, ...)
+<li> room information (name, building, capacity, ...)
+<li> course information (code, title, ...)
+<li> etc.
+</ul>
+Possible relationships:
+<ul>
+<li> class enrolment  <small>(for classes in this course)</small>
+<li> course enrolment <small>(for course containing class)</small>
+<li> etc.
+</ul>
+Possible constraints:
+<ul>
+<li> cannot enrol in more than one class for single course
+<li> must be enrolled course before enrolling in classes
+<li> etc.
+</ul>
+<p><b>Operation:</b> student enrols in a course.
+<p>
+Possible data:
+<ul>
+<li> course information (code, title, syllabus, pre-reqs, ...)
+<li> course offering information (quota, lic, ...)
+<li> etc.
+</ul>
+Possible relationships:
+<ul>
+<li> student enrolment <small>(in previous/current courses)</small>
+<li> etc.
+</ul>
+Possible constraints:
+<ul>
+<li> cannot enrol in a full course
+<li> cannot enrol if don't have pre-reqs
+<li> cannot enrol in more than 24UC per semester
+<li> etc.
+</ul>
+<p><b>Operation:</b> system prints a student transcript.
+<p>
+Possible data:
+<ul>
+<li> student information (name, id, ...)
+<li> course information (code, title, UOC, ...)
+<li> session information (year, code, dates, ...)
+<li> etc.
+</ul>
+Possible relationships:
+<ul>
+<li> student enrolment <small>(previous/current courses, marks/grades)</small>
+<li> course offering (course, session, ...)
+<li> etc.
+</ul>
+Possible constraints:
+<ul>
+<li> none?
+</ul>
+
+-->
+
+<br></li><li>
+<p>
+Researchers work on different research projects, and the connection
+between them can be modelled by a <tt>WorksOn</tt> relationship.
+Consider the following two different ER diagrams to represent this
+situation.
+</p><p></p><center><img src="./tut01_files/workson.png"></center><p>
+Describe the different semantics suggested by each of these diagrams.
+</p>
+<!--
+ER models for Researchers-WorksOn-Projects relationship.
+<ol type='a'>
+<p><li> the <tt>Time</tt> attribute is attached to the <tt>WorksOn</tt>
+	relationship, which models the association between a researcher
+	and a project that they work on ... thus, we are modelling the
+	time that each researcher spends on each project that they are
+	involved with
+<p><li> the <tt>Time</tt> attribute is attached to the <tt>Project</tt>
+	entity, and so must be a measure of time associated with the
+	project (e.g. the total time allocated to the project)
+</ol>
+<p>
+In both cases, the thick line from <tt>Project</tt> to <tt>WorksOn</tt>
+indicates that every project must have at least one person working on it.
+On the other hand, the thin line from <tt>Researcher</tt> to <tt>WorksOn</tt>
+suggests that not every researcher needs to be working on a project.
+
+-->
+
+<br></li><li>
+<p>
+Draw an ER diagram for the following application from
+the manufacturing industry:
+</p>
+<ul>
+<li> Each supplier has a unique name.
+</li><li> More than one supplier can be located in the same city. 
+</li><li> Each part has a unique part number. 
+</li><li> Each part has a colour. 
+</li><li> A supplier can supply more than one part. 
+</li><li> A part can be supplied by more than one supplier. 
+</li><li> A supplier can supply a fixed quantity of each part.
+</li></ul>
+<!--
+<p>
+ER diagram for Supplier-Part scenario.
+</p>
+<center><img src="Pics/supplier-part.png"></center>
+
+-->
+
+<br></li><li>
+<p>
+The following two ER diagrams give alternative design choices
+for associating a person with their favourite types of food.
+Explain when you might choose to use the second rather than the
+first:
+</p>
+<center><img src="./tut01_files/liked-cuisines.png"></center>
+<!--
+<p>
+If the only information you needed on each cuisine was its name,
+either version would be satisfactory.
+However, if additional information was needed on each cuisine
+(e.g. country of origin or classic dish or heat-rating), then
+the second version would be essential, as it is the only one
+in which this additional information can be associated with the
+cuisine.
+</p>
+
+-->
+
+<br></li><li>
+<p>
+<small>[Based on RG 2.2]</small>
+Consider a relationship <tt>Teaches</tt> between teachers and courses.
+For each situation described below, give an ER diagram that accurately
+models that situation:
+</p><ol type="a">
+<p></p><li> Teachers may teach the same course in several semesters,
+	and each must be recorded
+<p></p></li><li> Teachers may teach the same course in several semesters,
+	but only the current offering needs to be recorded
+	(assume this in the following parts)
+<p></p></li><li> Every teacher must teach some course
+<p></p></li><li> Every teacher teaches <em>exactly</em> one course
+<p></p></li><li> Every teacher teaches <em>exactly</em> one course,
+	and every course must be taught by some teacher
+<p></p></li><li> A course may be taught jointly by a team of teachers
+</li></ol>
+<p>
+You may assume that the only attribute of interest for teachers is
+their staff number while for courses it is the course code (e.g. COMP3311).
+You may introduce any new attributes, entities and relationships that
+you think are necessary.
+</p>
+<!--
+ER diagrams for Teachers-Teaches-Courses relationship.
+<ol type=a>
+<p><li> Teachers may teach the same course in several semesters,
+	and each must be recorded <p>
+	<img src="Pics/teaches1.png">
+	<p>
+	<small>
+	Note: this solution follows the idea used by some textbooks
+	that relationships must be uniquely identified by the
+	participating entities. The more normal view is that
+	relationships are uniquely identified by the combination
+	of participating entities and attributes, in which case
+	the solution to the next part would be vaild here.
+	</small>
+<p><li> Teachers may teach the same course in several semesters,
+	but only the current offering needs to be recorded
+	(assume this in the following parts) <p>
+	<img src="Pics/teaches2.png">
+<p><li> Every teacher must teach some course <p>
+	<img src="Pics/teaches3.png">
+<p><li> Every teacher teaches <em>exactly</em> one course <p>
+	<img src="Pics/teaches4.png">
+<p><li> Every teacher teaches <em>exactly</em> one course,
+	and every course must be taught by some teacher <p>
+	<img src="Pics/teaches5.png">
+<p><li> A course may be taught jointly by a team of teachers <p>
+	<img src="Pics/teaches6.png">
+</ol>
+</p>
+
+-->
+
+<br></li><li>
+<p>
+Assume there is a <tt>Person</tt> entity type.
+Each person has a home address.
+More than one person can live at the same home address. 
+</p><ol type="a">
+<p></p><li>
+Create two, different ER diagrams to depict <tt>Person</tt>s
+and their addresses, one with <tt>Address</tt> as an attribute,
+the other with <tt>Address</tt> as an entity.
+<p></p></li><li> Why would we choose one rather than the other?
+<p></p></li><li>
+Assume that we have a <tt>ElectricCompany</tt> entity type.
+Only one of these companies supplies power to each home address. 
+Add that information to each ER diagram. 
+</li></ol> 
+<p></p>
+<!--
+ER diagrams for Person-Address-ElectricCompany scenario.
+<ol type=a>
+<p><li> Address as attribute <p>
+        <img src="Pics/person-address1.png">       
+<p><li> Address as entity <p>
+        <img src="Pics/person-address2.png">   
+<p>
+In the first example, a person was forced to be associated with exactly
+one address. In this example, we indicate this constraint via the arrow
+from <tt>LivesAt</tt> to <tt>Address</tt> and the heavy line from
+<tt>Person</tt> to <tt>LivesAt</tt>.
+<p><li>If the address is an attribute then it is not possible to relate
+electric companies directly to a home address, instead they can only be
+related to persons, and through them indirectly related to addresses. This
+does not quite capture the information that we wish to model. We wish to
+relate electric companies directly to home addresses, so we would model the
+latter as an entity rather than as an attribute. This additional information 
+demands that we favour using an entity for modelling home addresses:
+<p>
+        <img src="Pics/person-address3.png">   
+<p>
+The arrow from <tt>Address</tt> to <tt>ElectricCompany</tt> indicates that
+each home is supplied by at most one electric company.
+</ol>
+</p>
+
+-->
+
+<br></li><li>
+<p>
+<small>[Based on GUW 2.1.3]</small>
+Give an ER design for a database recording information about
+teams, players, and their fans, including:
+</p><ol type="a">
+<p></p><li> For each team, its name, its players, its captain
+	(one of its players) and the colours of its uniform.
+<p></p></li><li> For each player, their name and team.
+<p></p></li><li> For each fan, their name, favourite teams, favourite players,
+	and favourite colour.
+</li></ol>
+<p></p>
+<p></p>
+<!--
+ER diagram for Teams-Players-Fans.
+<p>
+<img src="Pics/teamer.png">
+</p>
+
+-->
+
+<br></li><li>
+<p>
+A trucking company called <q>Truckers</q> is responsible for picking up
+shipments from the warehouses of a retail chain
+called <q>Maze Brothers</q> and delivering the shipments to individual
+retail store locations of <q>Maze Brothers</q>.  Currently there are 6
+warehouse locations and 45 <q>Maze Brothers</q> retail stores. A truck may
+carry several shipments during a single trip, which is identified by a
+Trip#, and delivers those shipments to multiple stores. Each shipment
+is identified by a Shipment# and includes data on shipment volume,
+weight, destination, etc. Trucks have different capacities for both
+the volumes they can hold and the weights they can carry. The <q>Truckers</q>
+company currently has 150 trucks, and a truck makes 3 to 4 trips each
+week. A database - to be used by both <q>Truckers</q> and <q>Maze Brothers</q> -
+is being designed to keep track of truck usage and deliveries and
+to help in scheduling trucks to provide timely deliveries to the stores.
+</p><p>
+Design an ER model for the above application.
+State all assumptions.
+</p>
+<!--
+ER design for trucking company.
+<p>
+<img src="Pics/trucker.png">
+</p>
+
+-->
+
+<br></li><li>
+<p>
+Give an ER design for a University administration database that
+records information about faculties, schools, lecturers, students,
+courses, classes, buildings, rooms, marks.
+The model needs to include:
+</p><ol type="a">
+<p></p><li> for each faculty, its name, its schools and its dean
+<p></p></li><li> for each school, its name, the location of its school office,
+	its head and its academic staff
+<p></p></li><li> for each lecturer, their names, bithdate, position, staff number,
+	school, office, the courses they have convened, and the classes
+	they have run
+<p></p></li><li> for each student, their names, birthdate, student number, degree
+	enrolled in, courses studied, and marks for each course
+<p></p></li><li> for each course, its code, its name, the session it was offered,
+	its lecturer(s), its students, its classes
+<p></p></li><li> for each class, what kind of class (lecture, tutorial, lab class,
+	...), its day and time (starting and finishing), who teaches it,
+	which students attend it, where it's held
+<p></p></li><li> for each building, its name and map reference
+<p></p></li><li> for each room, its name, its capacity, type of room (office,
+	lecture theatre, tutorial room, laboratory, ...) and the building
+	where it is located
+</li></ol>
+<p>
+An assumption: staff and student numbers are unique over the union of
+the sets of staff and student numbers (i.e. each person has a unique
+identifying number within the University).
+</p><p>
+Another assumption: the lecturer who <q>convenes</q> a course would be
+called <q>lecturer-in-charge</q> at UNSW; lecturers typically teach
+classes in the courses they convene; they may also teach classes in
+other courses; a given class is only taught by one lecturer.
+</p><p>
+State all other assumptions.
+</p>
+<!--
+ER design for University database, which uses the additional assumptions:
+<ul>
+<li> every faculty has one dean; every school has one head
+<li> every course has one convener; every class has one teacher
+<li> every student must be studying one or more courses
+<li> not all courses necessarily have classes (e.g. reading courses)
+<li> every class is scheduled in one classroom and is associated with one course
+<li> every class has one teacher
+</ul>
+<p>
+<div align='center'>
+<img src='Pics/univer.png'>
+</div>
+Assumptions:
+<ul>
+<li> each person (staff or student) has an identifying number that
+	uniquely identifies them
+<li> each student undertakes only one degree at the University (at
+	any one time)
+<li> every faculty has one dean; every school has one head
+<li> every course has one convener; every class has one teacher
+<li> every student must be studying/attending one or more courses/classes
+<li> every class is scheduled one classroom and is associated with one course
+</ul>
+Some possible variations:
+<ul>
+<li> degrees could be modelled as an entity  (which might specify
+	such information as title, years of study, ...); in this case,
+	there would be a relationship between a student and a degree,
+	rather than the degree being an attribute of the student class;
+	note that this would also allow us to model the scenario where
+	a student takes more than one degree
+</ul>
+The design does not capture constraints such as:
+<ul>
+<li> students only attend classes for courses they are enrolled in
+<li> a lecturer can only be dean of a faculty containing his school
+</ul>
+
+-->
+
+<br></li><li>
+<p>
+Give an ER design to model the following scenario ...
+</p><ul>
+<li> for each person, we need to record their tax file number (TFN),
+        their real name, and their address
+</li><li> everyone who earns money in Australia has a distinct tax file number
+</li><li> authors write books, and may publish books using a ``pen-name''
+	(a name which appears as the author of the book and is different
+	to their real name)
+</li><li> editors ensure that books are written in a manner that is
+	suitable for publication
+</li><li> every editor works for just one publisher
+</li><li> editors and authors have quite different skills; someone who is
+	an editor cannot be an author, and vice versa
+</li><li> a book may have several authors, just one author, or no authors
+	(published anonymously)
+</li><li> every book has one editor assigned to it, who liaises with the
+	author(s) in getting the book ready for publication
+</li><li> each book has a title, and an edition number (e.g. 1st, 2nd, 3rd)
+</li><li> each published book is assigned a unique 13-digit number (its ISBN);
+	different editions of the same book will have different ISBNs
+</li><li> publishers are companies that publish (market/distribute) books
+</li><li> each publisher is required to have a unique
+	Australian business number (ABN)
+</li><li> a publisher also has a name and address that need to be recorded
+</li><li> a particular edition of a book is published by exactly one publisher
+</li></ul>
+<p>
+State all assumptions used in developing your data model.
+</p>
+<!--
+ER design for book publishing scenario:
+<p>
+<img src='Pics/books.png'>
+<p>Some of the assumptions made in developing this model:</p>
+<ul>
+<li> authors use only one pen-name for their entire career <br>
+<small>(if they used different pen-names for different books, <br>
+the pen-name attribute would move to the Writes relationship)</small>
+<li> the only Books recorded are those which are edited and published
+<li> both ISBN and (Title,Edition) are candidate keys for Books
+<li> a particular edition is published by one Publisher
+</ul>
+
+-->
+
+<br></li><li>
+<p>
+Give an ER design to model the following scenario ...
+</p><ul>
+<li> a <em>driver</em> has an employee id, a name and a birthday
+</li><li> a <em>bus</em> has a make, model, registration number and capacity <br>
+        <small>(e.g. a Volvo 425D bus which can carry 60 passengers, with registration MO-3235)</small>
+</li><li> a <em>bus</em> may also have features
+        <small>(e.g. air-conditioned, disabled access, video screens, etc.)</small>
+</li><li> a <em>bus-stop</em> (normally abbreviated to simply <em>stop</em>) is
+        a defined place where a bus may stop to pick up or set down passengers
+</li><li> each stop has a name, which is displayed on the timetable
+        <small>(e.g. ``Central Station'')</small>
+</li><li> each <em>stop</em> also has a location (street address)
+        <small>(e.g. ``North side of Eddy Avenue'')</small>
+</li><li> a <em>route</em> describes a sequence of one or more stops that a bus will follow
+</li><li> each <em>route</em> has a number
+        <small>(e.g. route 372, from Coogee to Circular Quay)</small>
+</li><li> each <em>route</em> has a direction: ``inbound'' or ``outbound'' <br>
+        <small>(e.g. 372 Coogee to Circular Quay is ``inbound'',
+                372 Circular Quay to Coogee is ``outbound'')</small>
+</li><li> for each stop on a route, we note how long it should take to reach
+        that stop from the first stop
+</li><li> the time-to-reach the first stop on a route is zero
+</li><li> stops may be used on several routes; some stops may not (currently) be used on any route
+</li><li> a <em>schedule</em> specifies an instance of a route
+        <small>(e.g. the 372 departing Circular Quay at 10:05am)</small>
+</li><li> schedules are used to produce the timetables displayed on bus-stops
+</li><li> a <em>service</em> denotes a specific bus running on a specific
+        schedule on a particular day with a particular driver
+</li><li> services are used internally by the bus company to keep track of
+        bus/driver allocations
+</li><li> the number of minutes that each bus service arrives late at its
+        final stop needs to be recorded
+</li></ul>
+<p>
+State all assumptions used in developing your data model.
+</p>
+<!--
+<img src="Pics/busses.png">
+<p>Some of the assumptions made in developing this model:</p>
+<ul>
+<li> every route must have some stops on it; the same stop may be used by several routes
+<li> Info Sys people would probably suggest making <b>Service</b> into an entity <br>
+(they don't seem to like <i>n</i>-way relationships where <i>n</i> &gt; 2)
+<li> we had to introduce a service id to make <b>ScheduledService</b> into an entity <br>
+<small>(we could have made it a weak entity tied to <b>Route</b> with key (number,direction,departureTime))</small>
+<li> we don't allow drivers to change part-way through a service
+</ul>
+
+-->
+
+<br></li><li>
+<p>
+Describe each of the following core components of the relational
+model:
+</p>
+<ol type="a">
+<li>attribute </li>
+<li>domain</li>
+<li>relation schema</li>
+<li>relational schema</li>
+<li>tuple</li>
+<li>relation</li>
+<li>key</li>
+<li>foreign key</li>
+</ol>
+<!--
+<ol type='a'>
+<li><p>
+An <i>attribute</i> is a single atomic data item that
+forms part of a relation.
+In the "table view" of relations, an attribute would
+be a column.
+</p></li>
+<li><p>
+A <i>domain</i> is a set of allowed values, typically associated
+with an attribute.
+Values are atomic and belong to a single data type (e.g.
+number, string, date). A given domain may have additional
+constraints defined on the data type (e.g. a person's age must
+be a positive integer and will be less than 150 ... although 
+in this particular example, the upper bound is fuzzy).
+</p></li>
+<li><p>
+A <i>relation schema</i> gives a name for the relation,
+names and domains for each attribute in the relation,
+and constraints on individual attributes and on the
+relation as a whole.
+For simplicty, and especially when talking about the
+relational model in the abstract, we might omit the
+domains and constraints and asssume that they can be
+inferred from the attribute names.
+</p>
+<p>E.g. full relation schema (expressed in an invented notation):</p>
+<pre>
+Student(id:integer/key, name:string, degree:string, year:integer>1900)
+</pre>
+<p>compared to an abstract relation schema</p>
+<pre>
+Student(<u>id</u>, name, degree, year)
+</pre>
+<p>Note that a common convention is to underline the key attributes.</p>
+</li>
+<li><p>
+A <i>relational schema</i> is a collection of relation schemas,
+along with additional constraints that define properties
+involving multiple relations (e.g. all
+banks must have at least one employee). Foreign key
+constraints also fit into this category of constraints.
+</p></li>
+<li><p>
+A <i>tuple</i> is a collection of attribute values.
+In the SQL version of the relational model, some of the
+attribute  values may be NULL;
+in the pure relational model, every attribute is required to
+have a defined value.
+All non-NULL values must belong to the
+domain corresponding to that attribute.
+They must also satisfy any other constraints
+defined in the schema.
+</p></li>
+<li><p>
+A <i>relation</i> is a set of tuples based on a relational schema,
+where all tuples in the set ...
+</p>
+<ul>
+<li> have the same structure as defined in the
+	relational schema
+<li> satisfy all of the constraints defined
+	in the relational schema.
+</ul>
+</li>
+<li><p>
+A <i>key</i> is a set of attributes (often just a single attribute)
+that contains a distinct value for every tuple in the relation.
+Common single attribute keys are identifiers such
+as StudentID, TaxFileNumber, SocialSecurityNumber, etc.
+which are invented specifically for the purpose of
+distinguishing tuples.
+A multi-attribute key might be the combination of student
+and course in an enrolment table (i.e. you can only be
+enrolled in a given course once at a particular point in time)
+</p></li>
+<li><p>
+A <i>foreign key</i> is a set of attributes
+(often just a single attribute) in
+one relation that contains the value of key attribute(s)
+in another relation.
+This is the relational model's mechanism by which one table
+can reference another.
+We say that the foreign key in table T references the
+corresponding primary key in table R.
+For a given tuple in T, the values of foreign key attributes
+must correspond to a primary key value that exists in the
+table R or be all NULL; this property is called <q>referential integrity</q>.
+</p></li>
+</ol>
+
+-->
+
+<br></li><li>
+<p>
+Why are duplicate tuples not allowed in relations?
+</p>
+<!--
+<p>
+Relations are technically defined as sets,
+so there cannot be duplicates.
+They are not really "not allowed"; more like it
+does not make sense to talk about duplicate values in a set.
+</p>
+
+-->
+
+<br></li><li>
+<p>
+Consider the following simple relational schema:
+</p>
+<pre>R(<u>a1</u>, a2, a3, a4)
+S(<u>b1</u>, <u>b2</u>, b3)
+</pre>
+<p>
+which of the following tuples are not legal in this schema?
+Explain why the iillegal tuples are invalid.
+</p>
+<pre>R(1, a, b, c)  R(2, a, b, c)  R(1, x, y, z)
+
+R(3, x, NULL, y)  R(NULL, x, y, z)
+
+S(1, 2, x)  S(1, NULL, y)  S(2, 1, z)
+</pre>
+<!--
+<ul>
+<li><tt>R(1, a, b, c)</tt> is legal </li>
+<li><tt>R(2, a, b, c)</tt> is legal; duplicate non-key attribute values are allowed <l/li>
+<li><tt>R(1, x, y, z)</tt> is not legal if <tt>R(1, a, b, c)</tt> exists; duplicate key value </li>
+<li><tt>R(3, x, NULL, y)</tt> is legal; non-key attribute values may be <tt>MULL</tt> </li>
+<li><tt>R(NULL, x, y, z)</tt> is not legal; key attribute values cannot be <tt>NULL</tt> (entity integrity) </li>
+<li><tt>S(1, 2, x)</tt> is legal </li>
+<li><tt>S(1, NULL, y)</tt> is not legal; key attribute values cannot be <tt>NULL</tt> (entity integrity) </li>
+<li><tt>S(2, 1, z)</tt> is legal; has a different key to <tt>S(1, 2, x)</tt> </li>
+</ul>
+
+-->
+
+<br></li><li>
+<p>
+Consider the following relations which form a tiny part of the schema
+for the MyUNSW database:
+</p>
+<pre>Person(zID, zPass, familyName, givenName, dateOfBirth, countryOfBirth, ...)
+Student(zID, degreeCode, WAM, ...)
+Staff(zID, office, phone, position, ...)
+Course(cID, code, term, title, UOC, convenor)
+Room(rID, code, name, building, capacity)
+Enrolment(course, student, mark, grade)
+</pre>
+<p>
+Identify all of the primary keys and foreign keys, and suggest 
+suitable domains for each attribute.
+You can introduce new relations if you think would likely be
+used to represent objects not in the current tables.
+Discuss which attributes could have NULL values, and the
+circumstances under which this might occur.
+</p>
+<!--
+<ul>
+<li><tt>Person.zID</tt> ... primary key, 7-digit number (e.g. 5012345)</li>
+<li><tt>Person.zPass</tt> ... encrypted string</li>
+<li><tt>Person.familyName</tt> ... text string, typically &lt; 50 chars</li>
+<li><tt>Person.givenName</tt> ... text string, typically &lt; 50 chars</li>
+<li><tt>Person.dateOfBirth</tt> ... date (e.g. 12-Jan-1990)</li>
+<li><tt>Person.countryOfBirth</tt> ... valid country name, or maybe a foreign key referencing a <tt>Country</tt> table</li>
+<li><tt>Student.zID</tt> ... primary key, foreign key to <tt>Person.zID</tt>; same domain (7-digit nuber)</li>
+<li><tt>Student.degreeCode</tt> ... 4-digit number (e.g. 3707, 3778)</li>
+<li><tt>Student.WAM</tt> ... floating point number in range 0..100</li>
+<li><tt>Staff.zID</tt> ... primary key, foreign key to <tt>Person.zID</tt>; same domain (7-digit nuber)</li>
+<li><tt>Staff.office</tt> ... foreign key to <tt>Room.rID</tt></li>
+<li><tt>Staff.phone</tt> ... string looking like 9385-xxxx</li>
+<li><tt>Staff.position</tt> ... string (e.g. Professor), or foreign key to a <tt>Position</tt> table</li>
+<li><tt>Course.cID</tt> ... primary key, integer, maybe internally generated</li>
+<li><tt>Course.code</tt> ... 8-char string (e.g. COMP3311)</li>
+<li><tt>Course.term</tt> ... 4-char string (e.g. 20T3), or foreign key to a <tt>Term</tt> table</li>
+<li><tt>Course.title</tt> ... text string</li>
+<li><tt>Course.UOC</tt> ... integer (3,6,12,18)</li>
+<li><tt>Course.convenor</tt> ... foreign key to <tt>Staff.zID</tt></li>
+<li><tt>Room.rID</tt> ... primary key, integer, maybe internally generated</li>
+<li><tt>Room.code</tt> ... short sting (e.g. G03)</li>
+<li><tt>Room.name</tt> ... text string (e.g. Ainsworth Theatre)</li>
+<li><tt>Room.building</tt> ... text string (e.g. K17), or foreign key to <tt>Building</tt> relation</li>
+<li><tt>Room.capacity</tt> ... integer (between 0 and 1500)</li>
+<li><tt>Enrolment.course</tt> ... foreign key to <tt>Course.cID</tt>, part of primary key</li>
+<li><tt>Enrolment.student</tt> ... foreign key to <tt>Student.zID</tt>, part of primary key</li>
+<li><tt>Enrolment.mark</tt> ... floating point number in range 0..100</li>
+<li><tt>Enrolment.grade</tt> ... two-char string (e.g. HD,DN,CR,PS,FL,WD,LE,...)</li>
+</p>
+
+-->
+
+</li></ol>
+
+</div>
+
+</body></html>

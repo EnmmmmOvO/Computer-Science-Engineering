@@ -1,0 +1,19 @@
+# mapping employee subclass hierarchy
+
+create table Employees (
+	empID integer primary key,
+	name  text not null,
+	address text
+);
+
+create table Permanents (
+	empID integer references Employees(empID),
+	salary float not null,
+	primary key (empID)
+);
+
+create table Casuals (
+	empID integer references Employees(empID),
+	pay_rate float not null,
+	primary key (empID)
+);

@@ -1,0 +1,56 @@
+All timings run on d2 after buffers filled
+Note that count(*) was used to reduce the amount of output,
+  while requiring the query to completely evaluate
+
+
+select count(*) from Movies where substring(title,1,1) = 'D';
+
+Average time: ~6ms
+
+select count(*) from Movies where title like 'D%';
+
+Average time: ~1ms
+
+select count(*) from Movies where title ilike 'd%';
+
+Average time: ~23ms
+
+select count(*) from Movies where title ~ '^D.*';
+
+Average time: ~2ms
+
+select count(*) from Movies where title ~ '^D';
+
+Average time: ~1.5ms
+
+select count(*) from Movies where title ~* '^d.*';
+
+Average time: ~11ms
+
+
+select count(*) from Movies where title = 'District 9';
+
+Average time: ~3ms
+Average time: ~0.3ms  (if we add an index on Movies.title)
+
+select count(*) from Movies where id = 111113;
+
+Average time: ~0.3ms
+
+
+select max(id) from Movies;
+
+Average time: ~0.3ms
+
+select max(title) from Movies;
+
+Average time: ~4ms
+
+
+select count(*)
+from   Movies m join Principals p on (m.id = p.movie)
+       join People n on (n.id = p.person)
+where  p.ord = 1;
+
+Average time: ~45ms ... but higly variable ~45ms .. 80ms
+

@@ -1,0 +1,38 @@
+create table Students (
+	zid integer,
+	name text,
+	address text,
+	primary key (zid)
+);
+
+create table Schools (
+	name text,
+	location text,
+	primary key (name)
+);
+
+create table Courses (
+	code char(8),  -- e.g. 'COMP3311'
+	term char(4),  -- e.g. '23T1'
+	title text unique not null,
+	offerer text not null,
+	foreign key (offerer) references Schools(name),
+	primary key (code,term)
+);
+
+create table Enrolments (
+	student integer references Students(zid),
+	course_code char(8) references Courses(code),
+	course_term char(4) references Courses(term),
+ 	mark integer check (mark between 0 and 100),
+	grade char(2) check (grade in ('HD','DN','CR','PS','FL')),
+	primary key (student,course_code,course_term)
+);
+
+--- ALTERNATIVE
+
+-- create table Offered_by (
+-- 	code char(8) references Courses(code),
+-- 	term char(4) references Courses(term),
+-- 	school text references Schools(name),
+-- );

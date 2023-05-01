@@ -1,0 +1,29 @@
+
+# Query	                                         Freq
+1 select * from Students where id = zID           70%
+2 select * from Students where name = Name        10%
+3 select * from Students where name like '%str%'  15%
+4 select * from Students where age > Age           5%
+
+suggest an index definition that might help each query type
+indicate whether creating such an index might be justified
+
+
+Since q1 involves a unique attribute and since it is run
+most of the time, an index in Students.id is essential
+(since it's a primary key, PostreSQL will add one by default)
+
+For q2, and index would definitely help, but since the
+query is not run so frequently, it may not be worth the
+space and time overheads incurred for maintaining the index
+
+Since both of the above queries involve equality tests,
+you could use either a B-tree of a hash-based index
+
+Since q3 uses a pattern-based test, an index won't help.
+
+Since q4 is a range query, only a B-tree index would be
+useful (hash-based indexes don't work for order-based
+queries). But even then, given that this is an infrequent
+query, it's probably not worth the overheads of maintaining
+an index.

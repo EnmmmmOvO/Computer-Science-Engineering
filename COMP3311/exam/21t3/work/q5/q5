@@ -1,0 +1,51 @@
+#!/usr/bin/python3
+# COMP3311 21T3 exam ... property finder
+
+import sys
+import psycopg2
+import re
+
+# define any local helper functions here
+
+### set up some globals
+
+usage = f"Usage: {sys.argv[0]} type maxPrice #beds #baths #cars\n"\
+f"type is one of Apartment, House, Townhouse\n"\
+"maxPrice is upper bound; #x = exact match; 0 means don't care"
+
+types = ["Apartment", "House", "Townhouse"]
+db = None
+
+### process command-line args
+
+argc = len(sys.argv)
+if argc < 6:
+  print(usage)
+  exit(1)
+ptype = sys.argv[1]
+if not ptype in types:
+  print(usage)
+  exit(1)
+digits = re.compile("^\d+$")
+for arg in sys.argv[2:5]:
+  if not digits.match(arg):
+    print(usage)
+    exit(1)
+
+maxPrice = int(sys.argv[2])
+nbeds = int(sys.argv[3])
+nbaths = int(sys.argv[4])
+ncars = int(sys.argv[5])
+
+# manipulate database
+
+try:
+
+  ... your Python code goes here ...
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

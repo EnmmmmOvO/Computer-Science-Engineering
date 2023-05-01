@@ -1,0 +1,876 @@
+<html>
+<head>
+<title>COMP3311 Week 9 Tuesday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 9 Tuesday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 09 Tuesday</heading></a>
+<li class="i"> <a href="#s2">DB Application Performance</a>
+<li class="i"> <a href="#s8">PostgreSQL Query Costs</a>
+<li class="i"> <a href="#s9">Exercise: Comparing Query Costs</a>
+<li class="i"> <a href="#s10">Indexes</a>
+<li class="i"> <a href="#s12">Exercise: Indexes and Query Types</a>
+<li class="i"> <a href="#s13">Query Tuning</a>
+<li class="i"> <a href="#s15">Exercise: More Query Costs</a>
+<li class="i"> <a href="#s17">EXPLAIN Examples</a>
+<li class="i"> <a href="#s22">Transactions, Concurrency</a>
+<li class="i"> <a href="#s24">Transactions</a>
+<li class="i"> <a href="#s25">Example Transaction</a>
+<li class="i"> <a href="#s28">Transaction Concepts</a>
+<li class="i"> <a href="#s30">Transaction Consistency</a>
+<li class="i"> <a href="#s32">Serial Schedules</a>
+<li class="i"> <a href="#s33">Concurrent Schedules</a>
+<li class="i"> <a href="#s34">Serializability</a>
+<li class="i"> <a href="#s35">Conflict Serializability</a>
+<li class="i"> <a href="#s39">Exercise: Precedence Graphs</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [0/39]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 09 Tuesday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> DBMS Architecture, Transactions, Concurrency
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Assignment 2 due by 21:00 THIS Friday (Nov 11)
+</ul>
+<h4>Things to note ...</h4>
+<ul>
+<li> Help Session on Wed 9 Nov, 11.30-1.30 on Zoom
+<li> Exam on Fri 25 Nov, two sessions: morning, afternoon
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [1/39]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; DB Application Performance</div></td><td align='right'></td></tr></table>
+<p>
+In order to make DB <font color='#0000BB'>applications</font> efficient, it is useful to know:
+<ul>
+<li> what operations on the data does the application require
+<p>
+<small>
+(which queries, updates, inserts and how frequently is each one performed)
+</small>
+<li> how these operations might be implemented in the DBMS
+<p>
+<small>
+(data structures and algorithms for select, project, join, sort, ...)
+</small>
+<li> how much each implementation will cost
+<p>
+<small>
+(in terms of the amount of data transferred between memory and disk)
+</small>
+</ul>
+and then, "encourage" DBMS to use the most efficient methods
+<p>
+Achieve by using indexes and avoiding certain SQL query structures
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [2/39]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; DB Application Performance <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Application programmer choices that affect query cost:
+<ul>
+<li> how queries are expressed
+<ul>
+<li> generally join is faster than subquery
+<li> especially if subquery is correlated
+<li> filter first, then join <tiny>(avoids large intermediate tables)</tiny>
+<li> avoid applying functions in where/group-by clasues
+</ul>
+<li> creating <font color='#0000BB'>indexes</font> on tables
+<ul>
+<li> index will speed-up filtering based on indexed attributes
+<li> indexes generally only effective for equality, gt/lt
+<li> mainly useful if filtering much more frequent than update
+</ul>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [3/39]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; DB Application Performance <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Whatever you do as a DB application programmer
+<ul>
+<li> the DBMS will transform your query
+<li> attempt to make it execute as efficiently as possible
+</ul>
+Transformation is carried out by <font color='#0000BB'>query optimiser</font>
+<ul>
+<li> which assesses possible query execution approaches
+<li> evaluates likely cost of each approach, chooses cheapest
+</ul>
+You have no control over the optimisation process
+<ul>
+<li> but choices you make can block certain options
+<li> limiting the query optimiser's chance to improve
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [4/39]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; DB Application Performance <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: query to find sales people earning more than $50K
+<p><pre><small>
+select name from Employee
+where  salary &gt; 50000 and
+       empid in (select empid from Worksin
+                 where  dept = 'Sales')
+</small></pre><p>
+A query evaluator might use the strategy
+<p><pre><small>
+SalesEmps = (select empid from WorksIn where dept='Sales')
+foreach e in Employee {
+    if (e.empid in SalesEmps && e.salary &gt; 50000)
+        add e to result set
+}
+</small></pre><p>
+Needs to examine <i>all</i> employees, even if not in Sales
+<p>
+This is not a good expression of the query.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [5/39]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; DB Application Performance <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+A different expression of the same query:
+<p><pre><small>
+select name
+from   Employee join WorksIn using (empid)
+where  Employee.salary &gt; 5000 and
+       WorksIn.dept = 'Sales'
+</small></pre><p>
+Query evaluator might use the strategy
+<p><pre><small>
+SalesEmps = (select * from WorksIn where dept='Sales')
+foreach e in (Employee join SalesEmps) {
+    if (e.salary &gt; 50000)
+        add e to result set
+}
+</small></pre><p>
+Only examines Sales employees, and uses a simpler test
+<p>
+This is a good expression of the query.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [6/39]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; DB Application Performance <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+A very poor expression of the query <small>(correlated subquery)</small>:
+<p><pre><small>
+select name from Employee e
+where  salary &gt; 50000 and
+       'Sales' in (select dept from Worksin where empid=e.id)
+</small></pre><p>
+A query evaluator would be forced to use the strategy:
+<p><pre><small>
+foreach e in Employee {
+    Depts = (select dept from WorksIn where empid=e.empid)
+    if ('Sales' in Depts && e.salary &gt; 50000)
+        add e to result set
+}
+</small></pre><p>
+Needs to run a query for <i>every</i> employee ...
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [7/39]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; PostgreSQL Query Costs</div></td><td align='right'></td></tr></table>
+<p>
+PostgreSQL provides the <large><font color="#008800"><b><code>explain</code></b></font></large> statement to
+<ul>
+<li> give a representation of the query execution plan
+<li> with information that may help to tune query performance
+</ul>
+Usage:
+<p><pre>
+EXPLAIN [ANALYZE] <i>Query</i>
+</pre><p>
+Without <large><code>ANALYZE</code></large>, <large><code>EXPLAIN</code></large> shows plan with estimated costs.
+<p>
+With <large><code>ANALYZE</code></large>, <large><code>EXPLAIN</code></large> executes query and prints real costs.
+<p>
+<small>
+Note that runtimes may show considerable variation due to buffering.
+<p>
+If simply want to know the runtime is ok, maybe <large><code>\timing</code></large> is good enough
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [8/39]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Comparing Query Costs</div></td><td align='right'></td></tr></table>
+<p>
+Measure the time costs of the following queries:
+<p><pre style="font-size:90%">
+select count(*) from Movies where substring(title,1,1) = 'D';
+select count(*) from Movies where title like 'D%';
+select count(*) from Movies where title ilike 'd%';
+select count(*) from Movies where title ~ '^D.*';
+select count(*) from Movies where title ~* '^d.*';
+
+select count(*) from Movies where title = 'District 9';
+select count(*) from Movies where id = 111113;
+
+select max(id) from Movies;
+select max(title) from Movies;
+
+select count(*)
+from   Movies m join Principals p on (m.id = p.movie)
+       join People n on (n.id = p.person)
+where  p.ord = 1;
+</program90>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [9/39]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Indexes</div></td><td align='right'></td></tr></table>
+<p>
+Indexes provide efficient content-based access to tuples.
+<p>
+Can build indexes on any (combination of) attributes.
+<p>
+Definining indexes:
+<p><pre>
+CREATE INDEX <i>name</i> ON <i>table</i> ( <i>attr<sub>1</sub></i>, <i>attr<sub>2</sub></i>, ... )
+</pre><p>
+<i>attr<sub>i</sub></i>&nbsp; can be an arbitrary expression (e.g. <large><code>upper(name)</code></large>).
+<p>
+<large><code>CREATE INDEX</code></large>&nbsp; also allows us to specify
+<ul>
+<li> that the index is on <large><code>UNIQUE</code></large> values
+<li> an access method (<large><code>USING</code></large> btree, hash, ...)
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [10/39]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Indexes <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Indexes can significantly improve query costs.
+<p>
+Considerations in applying indexes:
+<ul>
+<li> is an attribute used in frequent/expensive queries? <br>
+	&nbsp; <small>(note that some kinds of queries can be answered from index alone)</small>
+<li> should we create an index on a collection of attributes? <br>
+	&nbsp; <small>(yes, if the collection is used in a frequent/expensive query)</small>
+<li> is the table containing attribute frequently updated?
+<li> should we use B-tree or Hash index?
+<p><pre><small>
+<span class='comment'>-- use hashing for (unique) attributes in equality tests, e.g.</span>
+select * from Employee where <font color="#CC0000">id</font> = 12345
+<span class='comment'>-- use B-tree for attributes in range tests, e.g.</span>
+select * from Employee where <font color="#CC0000">age</font> &gt; 60
+</small></pre><p>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [11/39]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Indexes and Query Types</div></td><td align='right'></td></tr></table>
+<p>
+Consider a table <large><code>Students(<b>id</b>,name,age,...)</code></large>
+<p>
+If we had the following mix of queries
+<p>
+<table cellpadding="8">
+<tr><td><b>Query</b></td><td><b>Freq</b></td></tr>
+<tr>
+ <td><large><code>select * from Students where id = <i>zID</i></code></large></td>
+ <td>70%</td>
+</tr>
+<tr>
+ <td><large><code>select * from Students where name = <i>Name</i></code></large></td>
+ <td>10%</td>
+</tr>
+<tr>
+ <td><large><code>select * from Students where name like '%<i>str</i>%'</code></large></td>
+ <td>15%</td>
+</tr>
+<tr>
+ <td><large><code>select * from Students where age > <i>Age</i></code></large></td>
+ <td>5%</td>
+</tr>
+</table>
+<p>
+<ul>
+<li> suggest an index definition that might help each query type
+<li> indicate whether creating such an index might be justified
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [12/39]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Query Tuning</div></td><td align='right'></td></tr></table>
+<p>
+Sometimes, a query can be re-phrased to affect performance:
+<ul>
+<li> by helping the optimiser to make use of indexes
+<li> by avoiding unnecessary/expensive operations
+</ul>
+Examples which <i>may</i> prevent optimiser from using indexes:
+<p><pre>
+select name from Employee where <font color="#CC0000">salary</font>/365 &gt; 100
+       <span class='comment'>-- fix by re-phrasing condition to (salary &gt; 36500)</span>
+select name from Employee where <font color="#CC0000">name</font> like '%ith%'
+select name from Employee where <font color="#CC0000">birthday</font> is null
+       <span class='comment'>-- above two are difficult to "fix"</span>
+select name from Employee
+where  dept in (select id from Dept where ...)
+       <span class='comment'>-- fix by using Employee join Dept on (e.dept=d.id)</span>
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [13/39]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Query Tuning <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Other tricks in query tuning <small>(effectiveness is DBMS-dependent)</small>
+<ul>
+<li> <large><code>select distinct</code></large> typically requires a sort ...<br>
+	 <small>is the <large><code>distinct</code></large> really necessary? (at this stage in the query?)</small>
+<li> if multiple join conditions are available ... <br>
+	<small>choose join attributes that are indexed, avoid joins on strings</small>
+<p><pre><small>
+select ... Employee join Customer on (s.<font color="#0000EE">name</font> = p.<font color="#0000EE">name</font>)
+<span class='comment'>vs</span>
+select ... Employee join Customer on (s.<font color="#CC0000">ssn</font> = p.<font color="#CC0000">ssn</font>)
+</small></pre><p>
+<li> sometimes <large><code>or</code></large> prevents index from being used ... <br>
+	<small>replace the <large><code>or</code></large> condition by a union of non-<large><code>or</code></large> clauses</small>
+<p><pre><small>
+select name from Employee where Dept=1 or Dept=2
+<span class='comment'>vs</span>
+(select name from Employee where <font color="#CC0000">Dept</font>=1)
+union
+(select name from Employee where <font color="#CC0000">Dept</font>=2)
+</small></pre><p>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [14/39]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: More Query Costs</div></td><td align='right'></td></tr></table>
+<p>
+Check whether the optimisations mentioned above actually work
+<p><pre style="font-size:90%">
+<span class='comment'>-- movies longer than 3 hours</span>
+
+select title from Movies where runtime/60 > 3
+<span class='comment'>-- or --</span>
+select title from Movies where runtime > 180
+
+<span class='comment'>-- people who were a principal in some movie</span>
+
+select name from People
+where  id in (select person from Principals)
+<span class='comment'>-- or --</span>
+select p.name from People p
+where exists (select * from Principals where person=p.id)
+<span class='comment'>-- or --</span>
+select n.name
+from People n join Principals p on (n.id=p.person)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [15/39]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: More Query Costs <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Check whether the optimisations mentioned above actually work
+<p><pre style="font-size:90%">
+<span class='comment'>-- movies made in Albania or Iceland</span>
+
+select title from Movies where origin = 'AL' or origin = 'IS'
+<span class='comment'>-- or --</span>
+(select title from Movies where origin = 'AL')
+union
+(select title from Movies where origin = 'IS')
+<span class='comment'>-- or --</span>
+select title from Movies where origin in ('AL','IS')
+</pre><p>
+<p>
+See how the above queries are affected by adding an index on &nbsp;<large><code>Movies.origin</code></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [16/39]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; EXPLAIN Examples</div></td><td align='right'></td></tr></table>
+<p>
+Note that PostgreSQL builds a query evaluation tree, rather than a linear plan, e.g.
+<p><div align='center'>
+<img alt="[Diagram:Pics/dbms/pg-plan.png]" src="Pics/dbms/pg-plan.png">
+</div><p>
+<large><code>EXPLAIN</code></large> effectively shows a pre-order traversal of the plan tree
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [17/39]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; EXPLAIN Examples <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: Select on indexed attribute
+<p><pre style="font-size:90%">
+db=# <font color="#008800">explain select * from Students where id=100250;</font>
+                            QUERY PLAN
+-----------------------------------------------------------------
+ Index Scan using student_pkey on student
+                  (cost=0.00..5.94 rows=1 width=17)
+   Index Cond: (id = 100250)
+
+db=# <font color="#008800">explain analyze select * from Students where id=100250;</font>
+                            QUERY PLAN
+-----------------------------------------------------------------
+ Index Scan using student_pkey on student
+                  (cost=0.00..5.94 rows=1 width=17)
+                  (actual time=3.209..3.212 rows=1 loops=1)
+   Index Cond: (id = 100250)
+ Total runtime: 3.252 ms
+
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [18/39]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; EXPLAIN Examples <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: Select on non-indexed attribute
+<p><pre style="font-size:90%">
+db=# <font color="#008800">explain select * from Students where stype='local';</font>
+                        QUERY PLAN
+----------------------------------------------------------
+ Seq Scan on student  (cost=0.00..70.33 rows=18 width=17)
+   Filter: ((stype)::text = 'local'::text)
+
+db=# <font color="#008800">explain analyze select * from Students</font>
+db-#                          <font color="#008800">where stype='local';</font>
+                         QUERY PLAN
+---------------------------------------------------------------
+ Seq Scan on student  (cost=0.00..70.33 rows=18 width=17)
+             (actual time=0.061..7.784 rows=2512 loops=1)
+   Filter: ((stype)::text = 'local'::text)
+ Total runtime: 7.554 ms
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [19/39]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; EXPLAIN Examples <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: Join on a primary key (indexed) attribute
+<p><pre style="font-size:90%">
+db=# <font color="#008800">explain</font>
+db-# <font color="#008800">select s.sid,p.name</font>
+db-# <font color="#008800">from Students s join People p on s.id=p.id;</font>
+                        QUERY PLAN
+-----------------------------------------------------------
+ Hash Join  (cost=70.33..305.86 rows=3626 width=52)
+   Hash Cond: ("outer".id = "inner".id)
+   -> Seq Scan on person p
+               (cost=0.00..153.01 rows=3701 width=52)
+   -> Hash  (cost=61.26..61.26 rows=3626 width=8)
+       -> Seq Scan on student s
+                   (cost=0.00..61.26 rows=3626 width=8)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [20/39]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; EXPLAIN Examples <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: Join on a non-indexed attribute
+<p><pre>
+db=# <font color="#008800">explain</font>
+db-# <font color="#008800">select s1.code, s2.code</font>
+db-# <font color="#008800">from Subjects s1 join Subjects s2 on s1.offerer=s2.offerer;</font>
+                        QUERY PLAN
+----------------------------------------------------------------
+ Merge Join  (cost=2744.12..18397.14 rows=1100342 width=18)
+   Merge Cond: (s1.offerer = s2.offerer)
+   ->  Sort  (cost=1372.06..1398.33 rows=10509 width=13)
+         Sort Key: s1.offerer
+         ->  Seq Scan on subjects s1
+                      (cost=0.00..670.09 rows=10509 width=13)
+   ->  Sort  (cost=1372.06..1398.33 rows=10509 width=13)
+         Sort Key: s2.offerer
+         ->  Seq Scan on subjects s2
+                      (cost=0.00..670.09 rows=10509 width=13)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [21/39]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s23"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transactions, Concurrency</div></td><td align='right'></td></tr></table>
+<p>
+DBMSs provide valuable information resources in an environment that is:
+<ul>
+<li> <font color='#0000BB'>shared</font> - concurrent access by multiple users
+<li> <font color='#0000BB'>unstable</font> - potential for hardware/software failure
+</ul>
+Each user should see the system as:
+<ul>
+<li> unshared - their work is not inadvertantly affected by others
+<li> stable - the data survives in the face of system failures
+</ul>
+Ultimate goal: data integrity is maintained at all times.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [22/39]</div> <DIV class='slideCl1    ' id="s23"  >
+<div class='navCl1'><a href="#s22"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s24"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transactions, Concurrency <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Transaction processing
+<ul>
+<li> techniques for managing "logical units of work"
+	which may require multiple DB operations
+</ul>
+Concurrency control
+<ul>
+<li> techniques for ensuring that multiple concurrent
+	transactions do not interfere with each other
+</ul>
+Recovery mechanisms
+<ul>
+<li> techniques to restore information to a consistent
+	state, even after major hardware shutdowns/failures
+</ul>
+<br>
+In COMP3311, we consider only transactions and concurrency
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [23/39]</div> <DIV class='slideCl1    ' id="s24"  >
+<div class='navCl1'><a href="#s23"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s25"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transactions</div></td><td align='right'></td></tr></table>
+<p>
+A <font color='#0000BB'>transaction</font> is
+<ul>
+<li> an atomic "unit of work" in an application
+<li> which may require multiple database changes
+</ul>
+Transactions happen in a multi-user, unreliable environment.
+<p>
+To maintain integrity of data, transactions must be:
+<ul>
+<li> <font color='#0000BB'>A</font>tomic - either fully completed or completely rolled-back
+<li> <font color='#0000BB'>C</font>onsistent - map DB between consistent states
+<li> <font color='#0000BB'>I</font>solated - transactions do not interfere with each other
+<li> <font color='#0000BB'>D</font>urable - persistent, restorable after system failures
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [24/39]</div> <DIV class='slideCl1    ' id="s25"  >
+<div class='navCl1'><a href="#s24"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s26"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example Transaction</div></td><td align='right'></td></tr></table>
+<p>
+Bank funds transfer
+<ul>
+<li> move <i>N</i> dollars from account <i>X</i>&nbsp; to account <i>Y</i>
+<li> <large><code>Accounts(id,name,<font color="#0000EE">balance</font>,heldAt, ...)</code></large>
+<li> <large><code>Branches(id,name,address,<font color="#0000EE">assets</font>, ...)</code></large>
+<li> maintain <large><code>Branches.assets</code></large> as sum of balances via triggers
+<li> transfer implemented by function which
+<ul>
+<li> has three parameters: amount, source acct, dest acct
+<li> checks validity of supplied accounts
+<li> checks sufficient available funds
+<li> returns a unique transaction ID on success
+</ul>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [25/39]</div> <DIV class='slideCl1    ' id="s26"  >
+<div class='navCl1'><a href="#s25"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s27"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example Transaction <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example function to implement bank transfer ...
+<p><pre style="font-size:90%">
+create or replace function
+   transfer(N integer, Src text, Dest text)
+   returns integer
+declare
+   sID integer; dID integer; avail integer;
+begin
+   <font color="#CC0000">select</font> id,balance into sID,avail
+   from   Accounts where name=Src;
+   if (sID is null) then
+      raise exception 'Invalid source account %',Src;
+   end if;
+   <font color="#CC0000">select</font> id into dID
+   from Accounts where name=Dest;
+   if (dID is null) then
+      raise exception 'Invalid dest account %',Dest;
+   end if;
+...
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [26/39]</div> <DIV class='slideCl1    ' id="s27"  >
+<div class='navCl1'><a href="#s26"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s28"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example Transaction <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example function to implement bank transfer <tiny>(cont)</tiny>...
+<p><pre style="font-size:90%">
+...
+   if (avail < N) then
+      raise exception 'Insufficient funds in %',Src;
+   end if;
+   <span class='comment'>-- total funds in system = NNNN</span>
+   <font color="#CC0000">update</font> Accounts set balance = balance-N
+   where  id = sID;
+   <span class='comment'>-- funds temporarily "lost" from system</span>
+   <font color="#CC0000">update</font> Accounts set balance = balance+N
+   where  id = dID;
+   <span class='comment'>-- funds restored to system; total funds = NNNN</span>
+   return nextval('tx_id_seq');
+end;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [27/39]</div> <DIV class='slideCl1    ' id="s28"  >
+<div class='navCl1'><a href="#s27"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s29"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transaction Concepts</div></td><td align='right'></td></tr></table>
+<p>
+A transaction must always terminate, either:
+<ul>
+<li> successfully (<large><code>COMMIT</code></large>), with all changes preserved
+<li> unsuccessfully (<large><code>ABORT</code></large>), with database unchanged
+</ul>
+<br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/xact/tx-states1.png]" src="Pics/xact/tx-states1.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [28/39]</div> <DIV class='slideCl1    ' id="s29"  >
+<div class='navCl1'><a href="#s28"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s30"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transaction Concepts <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+To describe transaction effects, we consider:
+<ul>
+<li> <large><code>READ</code></large> - transfer data from permanent storage to memory
+<li> <large><code>WRITE</code></large> - transfer data from memory to permanent storage
+<li> <large><code>ABORT</code></large> - terminate transaction, unsuccessfully
+<li> <large><code>COMMIT</code></large> - terminate transaction, successfully
+</ul>
+Normally abbreviated to <large><code>R(X)</code></large>, <large><code>W(X)</code></large>, <large><code>A</code></large>, <large><code>C</code></large>
+<p>
+<ul>
+<li> <large><code>SELECT</code></large> produces <large><code>READ</code></large> operations on the database.
+<li> <large><code>INSERT</code></large> produces <large><code>WRITE</code></large> operations. 
+<li> <large><code>UPDATE</code></large>, <large><code>DELETE</code></large> produce both <large><code>READ</code></large> + <large><code>WRITE</code></large> operations.
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [29/39]</div> <DIV class='slideCl1    ' id="s30"  >
+<div class='navCl1'><a href="#s29"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s31"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transaction Consistency</div></td><td align='right'></td></tr></table>
+<p>
+Transactions typically have intermediate states
+that are invalid.
+<p>However, states <font color='#0000BB'>before</font> and <font color='#0000BB'>after</font> transaction
+must be valid.
+<p><br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/xact/tx-exec1.png]" src="Pics/xact/tx-exec1.png">
+</div><p>
+<p><br><br>
+Valid = consistent = satisfying all specified constraints on the data
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [30/39]</div> <DIV class='slideCl1    ' id="s31"  >
+<div class='navCl1'><a href="#s30"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s32"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transaction Consistency <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Transaction descriptions can be abstracted
+<ul>
+<li> consider only <font color='#0000BB'>R</font>ead and <font color='#0000BB'>W</font>rite operations on shared data
+<li> e.g. T1: R(X) W(X) R(Y) W(Y), &nbsp; T2: R(X) R(Y) W(X) W(Y)
+</ul>
+A <font color='#0000BB'>schedule</font> defines ...
+<ul>
+<li> a specific execution of one or more transactions
+<li> typically concurrent, with interleaved operations
+</ul>
+Abribtrary interleaving of operations causes <font color='#0000BB'>anomalies</font>, so that ...
+<li> two consistency-preserving transactions
+<li> produce a final state which is not consistent
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [31/39]</div> <DIV class='slideCl1    ' id="s32"  >
+<div class='navCl1'><a href="#s31"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s33"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Serial Schedules</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Serial</font> execution:
+	&nbsp; <large><code>T1</code></large> then <large><code>T2</code></large> &nbsp; or &nbsp; <large><code>T2</code></large> then <large><code>T1</code></large>
+<p><pre>
+T1: R(X) W(X) R(Y) W(Y)
+T2:                     R(X) W(X)
+</pre><p>
+or
+<p><pre>
+T1:           R(X) W(X) R(Y) W(Y)
+T2: R(X) W(X)
+</pre><p>
+Serial execution guarantees a consistent final state if
+<ul>
+<li> the initial state of the database is consistent
+<li> <large><code>T1</code></large> and <large><code>T2</code></large> are consistency-preserving
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [32/39]</div> <DIV class='slideCl1    ' id="s33"  >
+<div class='navCl1'><a href="#s32"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s34"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Concurrent Schedules</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Concurrent</font> schedules interleave <large><code>T1</code></large>,<large><code>T2</code></large>,... operations
+<p>
+Some concurrent schedules are ok, e.g.
+<p><pre>
+T1: R(X) W(X)      R(Y)      W(Y)
+T2:           R(X)      W(X)
+</pre><p>
+Other concurrent schedules cause anomalies, e.g.
+<p><pre>
+T1: R(X)      W(X)      R(Y) W(Y)
+T2:      R(X)      W(X)
+</pre><p>
+Want the system to ensure that only valid schedules occur.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [33/39]</div> <DIV class='slideCl1    ' id="s34"  >
+<div class='navCl1'><a href="#s33"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s35"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Serializability</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Serializable</font> schedule:
+<ul>
+<li> concurrent schedule for <i>T<sub>1</sub> ..T<sub>n</sub></i> with final state <i>S</i>
+<li> <i>S</i> is also a final state of a
+	 serial schedule for <i>T<sub>1</sub> ..T<sub>n</sub></i>
+</ul>
+<p>
+Abstracting this needs a notion of <font color='#0000BB'>schedule equivalence</font>.
+<p>
+Two common formulations of <font color='#0000BB'>serializability</font>:
+<ul>
+<li> <font color='#0000BB'>conflict serializibility</font>
+	&nbsp; <small>(read/write operations occur in the "right" order)</small>
+
+<li> <font color='#0000BB'>view serializibility</font>
+	&nbsp; <small>(read operations <i>see</i> the correct version of data)</small>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [34/39]</div> <DIV class='slideCl1    ' id="s35"  >
+<div class='navCl1'><a href="#s34"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s36"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Conflict Serializability</div></td><td align='right'></td></tr></table>
+<p>
+Consider two transactions <i>T<sub>1</sub></i> and <i>T<sub>2</sub></i>
+acting on data item <i>X</i>.
+<p>
+Possible orders for read/write operations by  <i>T<sub>1</sub></i> and <i>T<sub>2</sub></i>:
+<p>
+<div class='center'>
+<table border='0' cellpadding='4'>
+<tr valign=top>
+<td><nobr><b><i>T<sub>1</sub></i> first</b></td>
+<td></td><td> &nbsp; </td>
+<td></td><td><b><i>T<sub>2</sub></i> first</b></td>
+<td></td><td> &nbsp; </td>
+<td></td><td>Equiv?</td>
+</tr>
+<tr valign=top>
+<td><nobr><i>R<sub>1</sub>(X) R<sub>2</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td><i>R<sub>2</sub>(X) R<sub>1</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td>yes</td>
+</tr>
+<tr valign=top>
+<td><nobr><i>R<sub>1</sub>(X) W<sub>2</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td><i>W<sub>2</sub>(X) R<sub>1</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td>no</td>
+</tr>
+<tr valign=top>
+<td><nobr><i>W<sub>1</sub>(X) R<sub>2</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td><i>R<sub>2</sub>(X) W<sub>1</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td>no</td>
+</tr>
+<tr valign=top>
+<td><nobr><i>W<sub>1</sub>(X) W<sub>2</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td><i>W<sub>2</sub>(X) W<sub>1</sub>(X)</i></td>
+<td></td><td> &nbsp; </td>
+<td></td><td>no</td>
+</tr>
+</table>
+</div>
+<p>
+<small>
+If <i>T<sub>1</sub></i> and <i>T<sub>2</sub></i> act on different data items,
+result is always equivalent.
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [35/39]</div> <DIV class='slideCl1    ' id="s36"  >
+<div class='navCl1'><a href="#s35"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s37"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Conflict Serializability <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Two transactions have a potential <font color='#0000BB'>conflict</font> if
+<ul>
+<li> they perform operations on the same data item
+<li> at least one of the operations is a write operation
+</ul>
+In such cases, the order of operations affects the result.
+<p>
+If no conflict, can swap order without affecting the result.
+<p>
+If we can transform a schedule
+<ul>
+<li> by swapping the order of non-conflicting operations
+<li> such that the result is a serial schedule
+</ul>
+then we say that the schedule is <font color='#0000BB'>conflict serializible</font>.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [36/39]</div> <DIV class='slideCl1    ' id="s37"  >
+<div class='navCl1'><a href="#s36"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s38"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Conflict Serializability <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: transform a concurrent schedule to serial schedule
+<p><pre>
+T1: R(A) W(A)      R(B)      W(B)
+T2:           R(A)      W(A)      R(B) W(B)
+<font color="#CC0000">swap</font>
+T1: R(A) W(A) <font color="#008800">R(B)</font>           W(B)
+T2:                <font color="#008800">R(A)</font> W(A)      R(B) W(B)
+<font color="#CC0000">swap</font>
+T1: R(A) W(A) R(B)      <font color="#008800">W(B)</font>
+T2:                R(A)      <font color="#008800">W(A)</font> R(B) W(B)
+<font color="#CC0000">swap</font>
+T1: R(A) W(A) R(B) <font color="#008800">W(B)</font>
+T2:                     <font color="#008800">R(A)</font> W(A) R(B) W(B)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [37/39]</div> <DIV class='slideCl1    ' id="s38"  >
+<div class='navCl1'><a href="#s37"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s39"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Conflict Serializability <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Checking for conflict-serializability:
+<ul>
+<li> show that ordering in concurrent schedule
+<li> cannot be achieved in any serial schedule
+</ul>
+Method for doing this:
+<ul>
+<li> build a <font color='#0000BB'>precedence-graph</font>
+<li> nodes represent transactions
+<li> arcs represent order of action on shared data
+<li> arc from <i>T<sub>1</sub>&rarr;T<sub>2</sub></i> means
+	<i>T<sub>1</sub></i> acts on <i>X</i> before <i>T<sub>2</sub></i>
+<li> cycles indicate <i>not</i> conflict-serializable.
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [38/39]</div> <DIV class='slideCl1    ' id="s39"  >
+<div class='navCl1'><a href="#s38"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Precedence Graphs</div></td><td align='right'></td></tr></table>
+<p>
+Build the procedence graph for the following schedule:
+<p><br>
+<p><pre>
+T1: R(X)      W(X)      R(Y) W(Y)
+T2:      R(X)      W(X)
+</pre><p>
+<br>
+Is it conflict serializable?
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 9 Tuesday Lecture &#9826; [39/39]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 8 Nov 2022</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

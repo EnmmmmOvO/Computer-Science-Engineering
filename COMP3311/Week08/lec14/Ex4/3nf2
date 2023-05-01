@@ -1,0 +1,20 @@
+3NF Decomposition
+
+R = PWANSMC
+
+Fc = {P->A, S->M, S->C, PW->S, PW->N}
+
+key = PW
+
+decomposition:
+
+	PA
+	SM
+	SC
+	PWS
+	PWN
+
+BCNF
+	PA
+	SMC
+	PWSN

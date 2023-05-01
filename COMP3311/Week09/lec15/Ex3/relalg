@@ -1,0 +1,17 @@
+Course(id,subject,...)
+Subject(id,code,title,...)
+Enrolment(student,course,mark,grade)
+
+Project[id,code](
+   GroupSelect[size>100] (
+      GroupBy[s.id,s.code] (
+         Subject Join[s.id=c.subject]
+         (Course Join[c.id=e.course] Enrolment)
+)  )  )
+
+Each step includes implicit projection
+
+Tmp1(sid,stu)       = Course Join[c.id=e.course] Enrolment
+Tmp2(sid,code,stu)  = Subject Join[s.id=c.subject] Tmp1
+Tmp3(sid,code,nstu) = GroupBy[sid,code](Tmp2)
+Result(sid,code)    = Sel[nstu>100](Tmp3)

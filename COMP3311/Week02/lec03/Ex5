@@ -1,0 +1,19 @@
+# mapping 1:n relationship
+
+create table Branches (
+	banchNo     integer,
+	address     text not null,
+	assets      float not null,
+	primary key (branchNo)
+);
+
+create table Customers (
+	custNo      integer,
+	name        text not null,
+	address     text not null,
+	branchNo    integer not null,
+	joined      date,
+	primary key (custNo),
+	foreign key (branchNo)
+		references Branches(branchNo)
+);

@@ -1,0 +1,6717 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.3
+-- Dumped by pg_dump version 12.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: albums; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.albums (
+    id integer NOT NULL,
+    title text NOT NULL,
+    year integer NOT NULL,
+    made_by integer NOT NULL,
+    genre text NOT NULL,
+    CONSTRAINT albums_year_check CHECK ((year >= 1980))
+);
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.groups (
+    id integer NOT NULL,
+    name text NOT NULL,
+    formed date NOT NULL,
+    disbanded date
+);
+
+
+--
+-- Name: memberof; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.memberof (
+    in_group integer NOT NULL,
+    performer integer NOT NULL
+);
+
+
+--
+-- Name: performers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.performers (
+    id integer NOT NULL,
+    name text NOT NULL,
+    birthday date
+);
+
+
+--
+-- Name: playson; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.playson (
+    performer integer NOT NULL,
+    song integer NOT NULL,
+    instrument text NOT NULL
+);
+
+
+--
+-- Name: songs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.songs (
+    id integer NOT NULL,
+    title text NOT NULL,
+    length integer NOT NULL,
+    on_album integer NOT NULL,
+    trackno integer NOT NULL,
+    CONSTRAINT songs_length_check CHECK ((length > 0)),
+    CONSTRAINT songs_trackno_check CHECK ((trackno > 0))
+);
+
+
+--
+-- Data for Name: albums; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.albums (id, title, year, made_by, genre) FROM stdin;
+1	What is Summer	2003	1	pop
+2	What is the Horizon	2006	1	country
+3	Gimme the Ocean	2014	1	pop
+4	Shock this World	2016	1	pop
+5	What about the Bed	2012	2	metal
+6	Running from the Sun	2014	2	rock
+7	Escape from White	2015	2	metal
+8	Gimme Plague	2016	2	rock
+9	Shock White	2008	3	metal
+10	Beyond Khatmandu	2009	3	hip-hop
+11	Maybe the Bed	2010	3	pop
+12	What happened to Plague	2011	3	rock
+13	Feel Dancing	2012	3	rock
+14	Up to the Clouds	2013	3	pop
+15	Waiting for the Ocean	2014	3	post-rock
+16	Where is Plague	2015	3	metal
+17	Fast Train to Destruction	2016	3	pop
+18	Roll with the Bed	2018	3	country
+19	Take Plague	2007	4	rock
+20	Roll with this City	2008	4	hip-hop
+21	View to the Farm	2009	4	rock
+22	Gimme Midnight	2010	4	rock
+23	Ode to Triumph	2011	4	metal
+24	Master of Life	2013	4	rock
+25	Rock the Clouds	2014	4	hip-hop
+26	Touch the Ocean	2017	4	rock
+27	Where is Life	2018	4	post-rock
+28	Touch Tokyo	2019	4	pop
+29	Where is the Torpedoes	2020	4	country
+30	Waiting for Home	2010	5	rock
+31	Up to Triumph	2011	5	rock
+32	What happened to Night	2012	5	hip-hop
+33	Rocking Pandemic	2012	6	hip-hop
+34	Feel Plague	2013	6	blues
+35	Beyond Destruction	2014	6	country
+36	What happened to the Universe	2016	6	metal
+37	Roll with Fire	2017	6	country
+38	Ode to Life	2003	7	hip-hop
+39	Where is this World	2005	7	country
+40	What about Defeat	2007	7	blues
+41	Destroy Fire	2006	8	rock
+42	Dreams of Vision	2008	8	blues
+43	Pump up Fear	2010	8	rock
+44	Force the Clouds	2011	8	post-rock
+45	Gimme Fear	2013	8	rock
+46	Why not Haze	2018	8	rock
+47	Feel Solace	2004	9	rock
+48	Force the Sun	2008	9	post-rock
+49	Take the Sea	2010	9	post-rock
+50	View to the Dance Floor	2013	9	rock
+51	Bad for Life	2014	9	rock
+52	Where is Night	2017	9	hip-hop
+53	Over the Heat	2019	9	rock
+54	On the Road to the Torpedoes	2009	10	rock
+55	Run with the Sun	2010	10	rock
+56	Why not the Dance Floor	2011	10	country
+57	Fly to Love	2012	10	pop
+58	Rock Night	2013	10	blues
+59	Touch the Ocean	2014	10	post-rock
+60	Bad for Khatmandu	2015	10	pop
+61	Shock the Sky	2016	10	pop
+62	Fast Train to Vision	2017	10	country
+63	Escape from Night	2019	10	post-rock
+64	Kill for Khatmandu	2006	11	pop
+65	Pump up Home	2009	11	rock
+66	Rock the Heat	2010	11	blues
+67	Ode to Summer	2012	11	pop
+68	What happened to Summer	2013	11	country
+69	Pump up this World	2014	11	hip-hop
+70	On the Road to Vision	2019	11	rock
+71	View to the Sky	2003	12	rock
+72	What about the Universe	2005	12	country
+73	Jump on Tokyo	2007	12	hip-hop
+74	Get out of Plague	2008	12	country
+75	Where is Night	2009	12	rock
+76	Roll with the Moon	2012	12	rock
+77	Dreams of Fear	2014	12	rock
+78	Roll with Solace	2017	12	rock
+79	Force Solace	2019	12	rock
+80	Take Summer	2012	13	post-rock
+81	Why the Bed	2014	13	hip-hop
+82	Where is the Nights	2015	13	metal
+83	Feel Solace	2016	13	rock
+84	Running from the Nights	2017	13	pop
+85	Up to the Sea	2018	13	pop
+86	Where is the Ocean	2019	13	pop
+87	Beyond Night	2002	14	hip-hop
+88	Ode to Night	2004	14	blues
+89	View to Home	2010	14	hip-hop
+90	View to the Sun	2011	14	hip-hop
+91	Bad for Tokyo	2014	14	rock
+92	What happened to the Sky	2016	14	rock
+93	Gimme the Sea	2017	14	pop
+94	What is Destruction	2004	15	rock
+95	Bad for the Moon	2007	15	rock
+96	Beyond Love	2009	15	blues
+97	On the Road to the Ocean	2008	16	rock
+98	Why Solace	2009	16	rock
+99	Ode to Home	2010	16	hip-hop
+100	Destroy the Sky	2011	16	hip-hop
+101	Pump up this City	2013	16	pop
+102	Roll with Midnight	2014	16	metal
+103	On the Road to the Ocean	2016	16	blues
+104	Destroy Night	2017	16	hip-hop
+105	Rock Vision	2020	16	rock
+106	Up to Solace	2003	17	rock
+107	Escape from the Universe	2004	17	rock
+108	Fast Train to Defeat	2004	18	blues
+109	Rocking Fear	2005	18	post-rock
+110	Touch Vision	2003	19	rock
+111	Where is Life	2004	19	hip-hop
+112	Take Blue	2005	19	pop
+113	Force this City	2005	20	rock
+114	What is the Nights	2007	20	metal
+115	Why Blue	2011	20	rock
+116	Pump up the Sea	2012	20	post-rock
+117	Over Haze	2014	20	rock
+118	Up to the Nights	2006	21	country
+119	What is Midnight	2007	21	pop
+120	Run with Blue	2008	21	rock
+121	Maybe the Nights	2003	22	blues
+122	Why the Dance Floor	2006	22	post-rock
+123	Up to this Night	2008	22	blues
+124	Fly to the Sea	2009	23	rock
+125	Rocking the Farm	2010	23	post-rock
+126	Why Pandemic	2011	23	rock
+127	Bring the Sea	2014	23	rock
+128	Waiting for Defeat	2015	23	hip-hop
+129	What about Home	2016	23	hip-hop
+130	Bad for Pandemic	2019	23	country
+131	What is Destruction	2001	24	metal
+132	What happened to Night	2004	24	blues
+133	Fly to Summer	2008	24	rock
+134	Fly to Pandemic	2014	24	metal
+135	Bad for Home	2016	24	pop
+136	Force Home	2017	24	rock
+137	Where is Midnight	2009	25	rock
+138	Waiting for Plague	2018	25	country
+139	Why Home	2004	26	country
+140	Over Triumph	2005	26	country
+141	Why Haze	2008	26	post-rock
+142	Beyond the Dance Floor	2010	26	country
+143	Feel Plague	2011	26	rock
+144	Get out of Triumph	2007	27	pop
+145	Gimme the Nights	2008	27	rock
+146	Feel New York	2010	27	pop
+147	Jump on Summer	2013	27	rock
+148	Ode to Triumph	2009	28	post-rock
+149	Destroy Night	2010	28	rock
+150	Take this World	2002	29	rock
+151	Where is the Farm	2005	29	rock
+152	Escape from New York	2008	29	rock
+153	Force the Bed	2009	29	rock
+154	Bad for the Torpedoes	2010	29	pop
+155	Fly to Fire	2012	29	pop
+156	Kill for Death	2014	29	rock
+157	Escape from Triumph	2015	29	rock
+158	Bad for White	2017	29	pop
+159	Where is the Clouds	2020	29	rock
+160	Why not Destruction	2002	30	hip-hop
+161	Where is the Nights	2003	30	rock
+162	Bring Defeat	2004	30	pop
+163	Dreams of New York	2008	30	hip-hop
+164	Escape from Love	2011	30	rock
+165	Up to Solace	2008	31	rock
+166	Master of Summer	2009	31	rock
+167	Bad for Midnight	2010	32	rock
+168	View to Destruction	2013	32	metal
+169	Gimme Haze	2015	32	hip-hop
+170	Roll with the Heat	2018	32	country
+171	Beyond New York	2019	32	metal
+172	Pump up the Ocean	2001	33	post-rock
+173	Get out of Blue	2002	33	country
+174	Take the Moon	2006	33	pop
+175	Waiting for Haze	2008	33	hip-hop
+176	Fast Train to the Farm	2010	33	hip-hop
+177	What about this City	2011	33	country
+178	What about Death	2003	34	country
+179	Escape from this World	2004	34	country
+180	Where is the Sea	2005	34	hip-hop
+181	Destroy Triumph	2007	34	blues
+182	What about Vision	2008	34	rock
+183	Over the Bed	2010	34	blues
+184	Beyond Blue	2004	35	country
+185	Jump on the Torpedoes	2005	35	rock
+186	Where is the Dance Floor	2011	35	metal
+187	Bring the Bed	2015	35	pop
+188	Escape from the Horizon	2016	35	hip-hop
+189	Shock the Torpedoes	2001	36	metal
+190	Why Pandemic	2002	36	metal
+191	View to Pandemic	2003	36	rock
+192	Rocking Night	2006	36	pop
+193	Force the Sun	2007	36	rock
+194	Take Pandemic	2012	36	rock
+195	Run with the Sky	2013	36	rock
+196	Shock Blue	2015	36	metal
+197	Jump on the Nights	2017	36	metal
+198	Up to Defeat	2011	37	post-rock
+199	Where is Defeat	2012	37	blues
+200	Running from this Night	2013	37	rock
+201	Bad for this Night	2003	38	pop
+202	Escape from Plague	2004	38	rock
+203	Ode to Defeat	2005	38	rock
+204	Waiting for the Dance Floor	2008	38	rock
+205	Kill for Solace	2012	38	rock
+206	Feel White	2016	38	rock
+207	Feel this Night	2017	38	rock
+208	Why not the Ocean	2009	39	country
+209	Pump up Defeat	2011	39	rock
+210	Why Midnight	2012	39	pop
+211	Waiting for the Clouds	2018	39	country
+214	Rock Vision	2008	41	rock
+215	Over Plague	2009	41	rock
+216	Bad for Triumph	2002	42	hip-hop
+217	Get out of this Night	2004	42	rock
+218	Up to Vision	2005	42	country
+219	Force Vision	2009	43	metal
+220	Ode to Haze	2011	43	rock
+221	Waiting for Vision	2012	43	blues
+222	Escape from the Universe	2013	43	rock
+223	Destroy Destruction	2003	44	rock
+224	View to Plague	2006	44	hip-hop
+225	Up to Plague	2015	44	metal
+226	Waiting for Fear	2017	44	rock
+227	Running from the Bed	2018	44	rock
+228	What happened to Khatmandu	2009	45	rock
+229	Over the Clouds	2011	45	rock
+230	Beyond the Clouds	2012	45	rock
+231	Kill for this World	2006	46	rock
+232	Pump up the Sea	2009	46	metal
+233	Take the Bed	2011	46	post-rock
+234	Shock Fear	2012	48	blues
+235	Maybe Love	2012	49	rock
+236	On the Road to the Sky	2014	49	blues
+237	Feel White	2018	49	rock
+238	Rocking Blue	2005	50	hip-hop
+239	Shock Midnight	2006	50	rock
+240	On the Road to Vision	2007	50	rock
+241	What about Destruction	2008	50	rock
+242	Feel Vision	2011	50	country
+243	Bad for Triumph	2014	50	pop
+244	Where is this World	2016	50	pop
+245	Bad for the Sea	2019	50	rock
+246	Over the Nights	2020	50	rock
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.groups (id, name, formed, disbanded) FROM stdin;
+1	Grand Horde	2002-09-19	\N
+2	We lost the Empire	2008-03-28	\N
+3	Roaring Boy	2007-03-08	2020-05-12
+4	Nine Inch Horde	2007-09-27	\N
+5	Roaring Gang	2010-12-27	2012-10-02
+6	Nine Inch Sky	2008-03-06	2017-11-18
+7	We lost the Nails	2002-10-27	2008-06-26
+8	We lost the Sky	2006-11-14	\N
+9	After the Sea	2003-12-02	\N
+10	Massive Mountains	2006-10-26	\N
+11	We lost the Bricks	2006-03-21	\N
+12	Black Eyed Boy	2003-10-10	2019-10-08
+13	Blue Floyd	2010-03-07	2020-03-04
+14	Roaring Funk	2002-01-05	2017-04-01
+15	Black Mountains	2002-05-23	2012-02-20
+16	We lost the Effect	2006-02-13	\N
+17	Nine Inch Peas	2003-07-08	2004-05-05
+18	Velvet Sky	2004-02-01	2005-01-04
+19	Bring me the Joe	2003-09-03	2005-08-03
+20	The Horde	2001-01-16	2014-05-11
+21	Nine Inch Funk	2006-02-17	2008-04-17
+22	Roaring Floyd	2003-02-17	2008-01-02
+23	Bring me the Sea	2008-12-11	\N
+24	Velvet Oysters	2001-03-01	2019-04-15
+25	Crying Gang	2006-03-21	\N
+26	Blue Mountains	2004-09-12	2013-05-13
+27	Massive Knights	2001-12-16	2016-07-19
+28	Roaring Sea	2009-07-24	2010-08-05
+29	Liquid Bricks	2000-06-16	\N
+30	All of the Sea	2001-04-17	2014-09-15
+31	All of the Floyd	2008-04-25	2009-01-04
+32	Grand Forties	2008-04-11	\N
+33	Grand Floyd	2000-07-22	2012-12-27
+34	Grand Ocean	2003-07-26	2010-01-06
+35	Poor Funk	2004-06-01	2016-11-13
+36	Black Eyed Nails	2001-10-08	2020-07-01
+37	Poor Oysters	2010-01-16	2013-10-15
+38	Black Vanilla	2003-10-14	2017-03-21
+39	We lost the Feelings	2009-01-07	2018-11-15
+40	After the Sky	2007-03-22	2015-08-15
+41	Roaring Empire	2008-12-17	2009-10-02
+42	Nine Inch Sea	2001-07-05	2006-05-04
+43	Nine Inch Stones	2009-03-11	2015-08-14
+44	Nine Inch Gang	2000-04-11	\N
+45	Raging Knights	2004-02-21	2012-03-20
+46	Pink Oysters	2002-11-14	2011-03-17
+47	Crying Feelings	2007-01-21	2016-12-11
+48	Poor Knights	2003-01-20	2012-07-05
+49	Raging Horde	2010-08-25	\N
+50	Roaring Buffalo	2002-09-21	\N
+\.
+
+
+--
+-- Data for Name: memberof; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.memberof (in_group, performer) FROM stdin;
+1	1
+1	2
+1	3
+1	4
+1	5
+2	6
+2	7
+2	8
+2	9
+2	10
+3	11
+3	12
+3	13
+3	14
+3	15
+4	16
+4	9
+4	17
+4	6
+4	18
+5	19
+5	20
+5	21
+5	6
+5	22
+5	23
+6	3
+6	24
+6	25
+6	26
+7	27
+7	28
+7	29
+7	11
+7	30
+8	31
+8	32
+8	33
+8	34
+8	35
+8	36
+9	37
+9	38
+9	23
+9	39
+10	40
+10	41
+10	42
+10	43
+10	16
+10	3
+11	44
+11	23
+11	45
+11	46
+12	47
+12	25
+12	37
+12	48
+12	24
+13	49
+13	50
+13	51
+13	52
+13	53
+14	53
+14	54
+14	55
+14	56
+14	57
+14	58
+15	59
+15	60
+15	61
+15	62
+15	37
+15	63
+16	64
+16	65
+16	66
+16	67
+17	68
+17	69
+17	70
+17	25
+17	49
+17	71
+18	72
+18	64
+18	73
+18	74
+18	75
+19	76
+19	53
+19	77
+19	20
+19	42
+19	78
+20	10
+20	79
+20	80
+20	81
+20	3
+21	42
+21	82
+21	41
+21	83
+22	76
+22	34
+22	84
+22	85
+23	86
+23	56
+23	87
+23	72
+23	66
+24	88
+24	21
+24	89
+24	90
+25	45
+25	91
+25	92
+25	48
+26	80
+26	91
+26	93
+26	94
+26	95
+26	96
+27	89
+27	20
+27	97
+27	98
+28	99
+28	100
+28	101
+28	102
+28	103
+28	104
+29	105
+29	106
+29	107
+29	22
+29	108
+29	19
+30	109
+30	110
+30	111
+30	112
+31	113
+31	114
+31	115
+31	116
+31	117
+32	59
+32	118
+32	119
+32	73
+33	120
+33	121
+33	122
+33	123
+33	65
+33	124
+34	125
+34	126
+34	127
+34	128
+34	35
+35	129
+35	120
+35	130
+35	131
+35	132
+36	133
+36	134
+36	135
+36	136
+37	137
+37	21
+37	138
+37	76
+38	139
+38	140
+38	141
+38	142
+39	136
+39	143
+39	144
+39	12
+40	145
+40	65
+40	146
+40	74
+41	137
+41	147
+41	148
+41	149
+41	150
+42	151
+42	152
+42	153
+42	110
+43	154
+43	155
+43	156
+43	56
+44	157
+44	112
+44	158
+44	159
+45	160
+45	161
+45	162
+45	163
+45	164
+45	165
+46	166
+46	167
+46	10
+46	168
+47	169
+47	170
+47	171
+47	172
+47	173
+47	174
+48	69
+48	175
+48	143
+49	176
+49	177
+49	178
+49	179
+49	180
+49	40
+50	181
+50	143
+50	182
+50	183
+\.
+
+
+--
+-- Data for Name: performers; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.performers (id, name, birthday) FROM stdin;
+1	John Black	1982-04-06
+2	Tom Phelps	1981-11-06
+3	Angus Serious	1980-10-17
+4	Jet Wheeler	1977-05-23
+5	Ozzy Smith	1979-11-10
+6	Katy Gock	1977-10-10
+7	John Butler	1981-11-11
+8	Ozzy Berry	1983-06-03
+9	Bernie Phelps	1980-04-07
+10	Sapphire Wheeler	1975-06-28
+11	Jet Gock	1983-09-28
+12	Tommy Blackmore	1981-02-02
+13	Jimmy Carey	1980-05-18
+14	Dizzy Plant	1982-11-04
+15	Dave Bonham	1976-07-12
+16	Danny Jones	1985-06-15
+17	Slim Strummer	1980-06-28
+18	Bernie Strummer	1976-01-13
+19	Sapphire Malone	1979-11-10
+20	Mick Smith	1983-06-10
+21	Ozzy Martin	1978-03-26
+22	Bernie Jones	1984-04-02
+23	Ian Bloom	1978-09-01
+24	Mick Smith	1975-09-21
+25	Mick White	1976-01-02
+26	Tommy Lee Plant	1982-04-17
+27	Robert Yahoo	1976-05-20
+28	Ace Player	1975-02-03
+29	Joan Phelps	1982-05-05
+30	Eric Dharma	1977-10-28
+31	Ace Martin	1983-07-12
+32	Eric Player	1980-01-12
+33	Joan James	1985-10-22
+34	Sam Plant	1975-12-05
+35	Dizzy Plant	1975-06-21
+36	Pete Carey	1978-05-23
+37	Danny Wheeler	1984-06-23
+38	Maynard Osbourne	1979-11-20
+39	Richie Emmanuel	1975-06-13
+40	Sam Strummer	1975-03-25
+41	Ian James	1984-07-20
+42	John Carey	1984-08-05
+43	Tommy Dunstan	1984-07-25
+44	Dizzy Bloom	1979-08-12
+45	John Morris	1984-12-10
+46	Dave Blackmore	1982-10-23
+47	Ozzy Wheeler	1981-11-23
+48	Tiny Blackmore	1978-08-11
+49	Dizzy Ward	1980-06-27
+50	Ozzy Jones	1981-03-09
+51	Fat Boy Blackmore	1979-04-27
+52	Sapphire Strummer	1983-02-07
+53	Jimmy Dharma	1977-10-08
+54	Martin Ward	1981-01-09
+55	Prince Dunstan	1983-01-06
+56	Angus Young	1985-10-01
+57	Eric Smith	1979-08-26
+58	Ozzy Phelps	1979-03-04
+59	Robert Smith	1976-03-08
+60	Bernie Storm	1985-01-28
+61	Buck Morris	1977-06-05
+62	Bobby Blackmore	1983-01-27
+63	Weasel Osbourne	1981-01-15
+64	Dave Player	1975-07-24
+65	Steve Smith	1981-03-03
+66	Dave Plant	1979-01-10
+67	Richie Bonham	1975-01-19
+68	Ace Jaeger	1976-05-18
+69	Fat Boy Smith	1980-01-11
+70	Fat Boy Blackmore	1985-09-04
+71	John Morris	1984-08-12
+72	Dave Jones	1982-03-22
+73	Maynard Phelps	1984-08-06
+74	Weasel Player	1975-02-09
+75	Jimmy Osbourne	1981-11-16
+76	Bernie Jaeger	1978-10-06
+77	Fat Boy Jones	1979-12-12
+78	Elton Smith	1985-02-28
+79	Meg Black	1980-10-15
+80	Buck Young	1980-06-05
+81	Mick Berry	1975-11-16
+82	Jimmy Carey	1975-10-27
+83	Tommy Lee James	1980-10-07
+84	Steve Ward	1983-12-17
+85	Ricky Malone	1983-01-07
+86	Ozzy Gock	1977-09-07
+87	Bobby Storm	1983-10-02
+88	Ozzy Smith	1985-08-11
+89	Tiny Malone	1982-07-11
+90	Dave Blackmore	1980-12-13
+91	Robert Smith	1984-09-06
+92	Fat Boy Dunstan	1981-07-01
+93	Joan Yahoo	1976-07-28
+94	Robert Martin	1976-12-06
+95	Dave Morris	1978-12-08
+96	Tommy Page	1985-05-01
+97	Ozzy Page	1977-08-25
+98	Ian Yahoo	1975-06-17
+99	Joan Blackmore	1984-10-07
+100	Joan Smith	1980-10-19
+101	Tommy Lee Jaeger	1981-06-08
+102	Ozzy Martin	1983-09-17
+103	Mick Jones	1983-10-09
+104	Sapphire James	1980-08-21
+105	Robert Storm	1984-05-11
+106	Joan Blackmore	1979-02-11
+107	Richie Osbourne	1982-04-24
+108	Meg Wheeler	1978-12-16
+109	Sapphire Young	1985-07-16
+110	Dave Jones	1975-11-07
+111	Robert Smith	1982-01-13
+112	Dizzy Page	1983-12-22
+113	Ricky Slammer	1979-11-07
+114	Katy Bonham	1977-09-20
+115	Katy Wheeler	1978-06-06
+116	Dave Strummer	1982-04-09
+117	Meg Smith	1976-07-24
+118	Maynard Dunstan	1975-12-17
+119	Dizzy Smith	1975-03-12
+120	Prince Jones	1983-05-10
+121	Steve Malone	1980-09-22
+122	Steve Page	1985-01-23
+123	Dave Morris	1983-04-21
+124	Angus Martin	1984-08-26
+125	Pete Morris	1977-10-14
+126	Danny Smith	1980-11-07
+127	Jimmy Black	1984-10-04
+128	Ian Wheeler	1978-05-23
+129	Dave Slammer	1980-07-08
+130	Richie Page	1975-01-05
+131	Meg Jaeger	1985-04-14
+132	Maynard Wheeler	1978-11-17
+133	Weasel Dunstan	1985-01-01
+134	Prince Wheeler	1981-09-03
+135	Mick Malone	1984-11-10
+136	Elton Carey	1976-12-21
+137	Tom Smith	1978-10-06
+138	Steve Osbourne	1983-09-27
+139	Mick Berry	1977-02-17
+140	Dave Yahoo	1980-05-21
+141	Dave Phelps	1980-02-01
+142	Sam Ward	1984-06-19
+143	Ian James	1979-02-19
+144	Steve Dharma	1981-06-17
+145	Dizzy Martin	1982-02-20
+146	Eric Morris	1983-06-13
+147	John Black	1979-08-19
+148	Tiny Page	1975-09-03
+149	Ozzy Berry	1984-06-15
+150	Tiny Smith	1985-09-07
+151	Slim Ward	1980-05-27
+152	Prince Morris	1983-06-08
+153	Eric Butler	1979-10-11
+154	Jet Dunstan	1975-10-01
+155	Buck Berry	1977-05-13
+156	Ozzy Malone	1985-09-10
+157	Weasel Plant	1975-05-15
+158	Dave James	1976-07-18
+159	Elton Carey	1985-06-22
+160	Slim Page	1977-07-11
+161	Angus Bonham	1981-11-12
+162	Fat Boy Yahoo	1982-12-22
+163	Tommy Blackmore	1977-01-12
+164	Ace Berry	1980-04-07
+165	Tom Jaeger	1985-09-12
+166	Ace Player	1978-12-02
+167	Tommy Storm	1983-06-15
+168	Steve Berry	1982-10-05
+169	Jet Serious	1980-10-03
+170	Sapphire Martin	1984-12-06
+171	Katy Phelps	1981-12-26
+172	Katy Player	1978-08-27
+173	Katy Carey	1983-06-17
+174	Pete Yahoo	1982-05-12
+175	Danny Butler	1980-04-26
+176	Danny Strummer	1982-04-19
+177	Buck Emmanuel	1985-06-22
+178	Tom Page	1979-05-15
+179	Robert Dunstan	1975-06-05
+180	Slim Serious	1977-05-15
+181	Eric Page	1985-07-11
+182	Katy Young	1983-05-14
+183	Ozzy Serious	1983-03-25
+\.
+
+
+--
+-- Data for Name: playson; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.playson (performer, song, instrument) FROM stdin;
+4	1	acoustic guitar
+4	1	saxophone
+3	2	vocals
+5	2	drums
+3	4	rythm guitar
+5	4	vocals
+2	5	vocals
+3	5	rythm guitar
+4	6	vocals
+4	8	vocals
+1	9	lead guitar
+3	9	vocals
+4	9	vocals
+4	10	guitars
+5	10	guitars
+5	10	lead guitar
+1	12	vocals
+4	12	vocals
+1	13	vocals
+1	15	acoustic guitar
+1	15	keyboard
+1	15	vocals
+5	16	rythm guitar
+5	16	bass
+1	17	lead guitar
+5	17	vocals
+1	18	vocals
+1	19	lead guitar
+3	19	vocals
+3	20	vocals
+3	21	vocals
+5	21	vocals
+1	22	vocals
+1	24	vocals
+3	24	vocals
+1	25	vocals
+4	26	acoustic guitar
+4	27	vocals
+1	28	vocals
+3	28	vocals
+3	29	vocals
+4	29	vocals
+1	30	guitars
+6	31	vocals
+10	31	vocals
+6	32	drums
+8	34	flute
+6	35	vocals
+7	35	drums
+8	37	mandolin
+6	38	vocals
+10	38	vocals
+7	39	drums
+6	41	drums
+6	41	saxophone
+8	41	saxophone
+7	42	bass
+9	42	banjo
+6	44	vocals
+10	44	guitars
+6	45	vocals
+7	45	vocals
+8	46	vocals
+9	46	banjo
+6	47	vocals
+8	47	guitars
+7	49	vocals
+6	50	guitars
+6	50	drums
+6	50	vocals
+7	50	vocals
+6	51	bass
+6	51	drums
+7	51	drums
+7	51	saxophone
+7	51	vocals
+7	52	vocals
+10	52	vocals
+8	53	lead guitar
+10	53	guitars
+10	53	vocals
+6	54	vocals
+7	54	bass
+9	54	vocals
+10	54	saxophone
+10	54	rythm guitar
+7	55	drums
+8	55	vocals
+6	56	percussion
+10	56	synthesizer
+10	56	guitars
+7	57	guitars
+10	57	vocals
+6	58	percussion
+6	58	guitars
+6	58	vocals
+7	59	saxophone
+7	59	guitars
+8	59	vocals
+10	59	vocals
+6	61	drums
+8	61	saxophone
+7	62	drums
+10	62	guitars
+10	62	drums
+9	63	banjo
+8	64	percussion
+9	64	banjo
+9	64	vocals
+6	65	percussion
+6	65	saxophone
+6	65	vocals
+8	66	vocals
+9	66	banjo
+10	68	vocals
+7	69	percussion
+11	70	vocals
+15	70	guitars
+11	71	vocals
+15	71	vocals
+15	74	vocals
+15	76	vocals
+12	79	mandolin
+12	79	tambourine
+12	79	vocals
+15	79	vocals
+12	80	vocals
+14	80	vocals
+15	81	tambourine
+14	82	guitars
+15	82	vocals
+13	83	rythm guitar
+15	84	vocals
+12	86	rythm guitar
+13	86	rythm guitar
+15	87	vocals
+15	89	saxophone
+15	89	vocals
+11	90	guitars
+15	90	vocals
+12	92	vocals
+11	93	violin
+11	93	vocals
+15	93	vocals
+14	96	flute
+14	96	vocals
+14	97	vocals
+15	97	vocals
+11	98	vocals
+12	98	vocals
+15	98	vocals
+11	99	vocals
+14	99	vocals
+14	100	banjo
+12	101	vocals
+15	103	vocals
+12	104	vocals
+15	104	vocals
+15	105	vocals
+12	106	rythm guitar
+12	106	vocals
+13	106	vocals
+14	106	vocals
+13	107	vocals
+14	107	banjo
+14	107	vocals
+15	107	lead guitar
+12	108	vocals
+14	108	vocals
+14	109	vocals
+13	110	guitars
+12	111	flute
+12	111	banjo
+12	111	vocals
+15	112	vocals
+13	113	vocals
+14	113	banjo
+15	113	vocals
+13	115	keyboard
+13	115	vocals
+11	117	vocals
+14	117	vocals
+15	117	vocals
+12	118	vocals
+13	119	guitars
+12	121	vocals
+15	122	percussion
+12	123	vocals
+12	125	vocals
+14	125	vocals
+11	126	vocals
+14	126	keyboard
+11	127	guitars
+15	127	vocals
+12	128	vocals
+13	128	keyboard
+13	128	acoustic guitar
+14	128	vocals
+15	128	percussion
+11	129	vocals
+12	129	vocals
+13	129	guitars
+15	129	vocals
+11	132	violin
+12	133	vocals
+11	134	drums
+11	134	vocals
+12	134	flute
+12	134	vocals
+15	134	vocals
+13	135	vocals
+15	135	vocals
+14	136	vocals
+15	137	vocals
+14	138	vocals
+15	138	guitars
+15	138	tambourine
+15	139	vocals
+12	140	vocals
+15	140	saxophone
+13	141	vocals
+11	142	vocals
+13	142	banjo
+15	142	tambourine
+15	142	vocals
+11	143	drums
+12	143	vocals
+14	143	vocals
+9	144	banjo
+18	144	vocals
+17	146	vocals
+6	146	bass
+6	146	percussion
+18	146	bass
+17	147	synthesizer
+18	147	vocals
+9	148	vocals
+18	148	vocals
+6	149	vocals
+9	150	banjo
+9	150	vocals
+6	150	guitars
+6	151	vocals
+18	151	keyboard
+18	151	drums
+6	153	guitars
+16	154	vocals
+17	154	vocals
+6	154	bass
+18	154	vocals
+17	155	vocals
+16	157	vocals
+17	157	vocals
+18	157	vocals
+16	158	saxophone
+16	158	vocals
+9	158	vocals
+17	158	synthesizer
+9	159	banjo
+17	161	synthesizer
+18	161	vocals
+17	162	vocals
+16	163	banjo
+16	163	violin
+6	163	synthesizer
+17	164	synthesizer
+17	164	vocals
+17	165	vocals
+18	165	vocals
+17	166	synthesizer
+17	166	vocals
+9	168	vocals
+9	169	vocals
+9	170	vocals
+16	172	vocals
+17	172	synthesizer
+17	172	vocals
+16	175	vocals
+9	175	banjo
+9	175	vocals
+16	176	vocals
+9	176	vocals
+17	176	vocals
+6	176	bass
+6	176	saxophone
+18	178	violin
+18	178	bass
+9	179	banjo
+17	180	vocals
+6	180	drums
+6	180	synthesizer
+9	181	vocals
+17	181	vocals
+18	181	rythm guitar
+17	182	vocals
+6	182	vocals
+9	185	vocals
+17	186	synthesizer
+6	187	guitars
+9	188	vocals
+6	189	synthesizer
+17	190	synthesizer
+17	190	vocals
+6	190	guitars
+6	190	percussion
+17	191	synthesizer
+9	192	vocals
+9	193	banjo
+9	193	vocals
+6	193	drums
+6	193	guitars
+6	193	vocals
+6	194	guitars
+17	195	vocals
+18	196	vocals
+16	197	vocals
+9	197	banjo
+18	197	violin
+18	197	bass
+16	198	guitars
+9	198	vocals
+16	199	vocals
+16	200	vocals
+9	200	banjo
+17	200	vocals
+18	200	guitars
+16	203	vocals
+9	203	banjo
+9	203	vocals
+16	204	vocals
+9	204	banjo
+17	204	synthesizer
+6	204	vocals
+17	205	synthesizer
+16	206	vocals
+6	206	vocals
+16	207	vocals
+6	207	vocals
+6	208	vocals
+9	209	vocals
+17	209	synthesizer
+6	209	saxophone
+6	209	bass
+6	209	vocals
+6	210	bass
+6	210	guitars
+6	210	vocals
+17	212	synthesizer
+6	212	guitars
+17	216	synthesizer
+6	216	drums
+6	216	saxophone
+6	216	vocals
+18	216	rythm guitar
+17	217	synthesizer
+17	220	vocals
+6	220	vocals
+17	221	synthesizer
+18	221	vocals
+9	222	vocals
+9	224	vocals
+18	224	vocals
+16	225	banjo
+16	225	drums
+17	225	synthesizer
+18	225	violin
+18	225	drums
+19	226	tambourine
+19	226	percussion
+19	226	vocals
+20	226	flute
+6	226	synthesizer
+6	226	saxophone
+6	227	vocals
+23	227	vocals
+20	230	vocals
+23	230	synthesizer
+6	233	vocals
+19	234	tambourine
+19	234	vocals
+21	234	vocals
+6	234	vocals
+23	234	synthesizer
+20	235	vocals
+21	235	vocals
+23	235	vocals
+21	236	vocals
+19	237	percussion
+21	237	drums
+21	237	guitars
+21	237	vocals
+22	237	lead guitar
+22	237	drums
+23	237	vocals
+22	238	vocals
+23	238	vocals
+23	239	flute
+21	240	drums
+21	240	banjo
+22	240	drums
+22	240	vocals
+19	241	vocals
+21	241	rythm guitar
+21	241	lead guitar
+23	241	vocals
+21	244	lead guitar
+22	244	vocals
+22	245	flute
+22	245	vocals
+23	245	vocals
+22	246	vocals
+19	247	vocals
+6	247	vocals
+20	248	vocals
+19	249	vocals
+19	250	percussion
+19	250	tambourine
+20	251	guitars
+20	251	vocals
+23	251	vocals
+23	252	vocals
+23	253	vocals
+19	254	lead guitar
+19	254	vocals
+19	255	vocals
+22	256	vocals
+25	257	vocals
+22	257	vocals
+3	258	rythm guitar
+24	258	bass
+3	259	vocals
+22	259	vocals
+25	260	vocals
+22	260	vocals
+3	261	vocals
+22	261	vocals
+23	261	vocals
+3	262	vocals
+22	262	vocals
+23	262	vocals
+3	263	rythm guitar
+25	263	rythm guitar
+23	263	vocals
+25	264	banjo
+25	264	vocals
+23	265	vocals
+3	266	rythm guitar
+25	266	vocals
+22	266	vocals
+3	269	rythm guitar
+3	269	vocals
+22	269	vocals
+3	271	rythm guitar
+25	271	banjo
+25	271	tambourine
+22	271	banjo
+22	271	lead guitar
+22	271	vocals
+25	272	vocals
+26	273	guitars
+22	273	banjo
+26	274	bass
+26	274	guitars
+23	274	guitars
+3	275	vocals
+26	276	saxophone
+22	276	tambourine
+3	277	vocals
+25	277	vocals
+22	277	lead guitar
+3	278	vocals
+22	278	flute
+22	278	banjo
+25	279	banjo
+25	279	vocals
+22	279	lead guitar
+22	279	vocals
+23	279	rythm guitar
+23	279	synthesizer
+3	280	rythm guitar
+25	280	vocals
+22	280	vocals
+25	281	vocals
+3	282	rythm guitar
+24	282	vocals
+25	282	vocals
+24	283	vocals
+25	283	vocals
+22	283	vocals
+25	284	vocals
+3	285	vocals
+24	285	bass
+22	285	vocals
+22	286	vocals
+3	287	vocals
+24	287	lead guitar
+3	288	vocals
+25	288	vocals
+25	289	banjo
+22	289	drums
+22	289	lead guitar
+24	290	vocals
+24	292	drums
+22	292	vocals
+24	295	flute
+25	295	vocals
+24	296	vocals
+25	296	vocals
+26	296	mandolin
+26	296	vocals
+22	296	vocals
+3	297	vocals
+24	297	vocals
+25	297	rythm guitar
+26	297	drums
+3	298	vocals
+3	299	vocals
+25	299	saxophone
+3	300	rythm guitar
+27	304	vocals
+11	304	vocals
+11	305	drums
+29	307	vocals
+27	308	vocals
+27	309	vocals
+29	310	acoustic guitar
+11	310	drums
+11	310	guitars
+11	310	vocals
+27	312	vocals
+27	314	vocals
+23	314	vocals
+29	315	vocals
+29	316	guitars
+11	316	vocals
+27	317	vocals
+29	317	vocals
+30	317	drums
+30	317	rythm guitar
+27	318	vocals
+28	318	vocals
+29	318	drums
+11	318	guitars
+28	319	guitars
+11	319	vocals
+27	320	tambourine
+27	320	guitars
+29	320	vocals
+27	321	vocals
+28	321	vocals
+29	321	vocals
+11	321	violin
+27	322	keyboard
+11	322	vocals
+30	322	rythm guitar
+30	322	violin
+30	322	vocals
+27	323	vocals
+11	323	violin
+11	323	drums
+27	324	acoustic guitar
+11	325	drums
+11	325	guitars
+23	325	vocals
+29	326	vocals
+30	326	rythm guitar
+30	326	drums
+23	326	vocals
+27	327	vocals
+11	327	drums
+32	329	rythm guitar
+32	329	tambourine
+32	330	flute
+33	330	vocals
+35	330	vocals
+31	331	vocals
+33	331	guitars
+34	331	mandolin
+34	331	bass
+34	331	vocals
+35	331	rythm guitar
+31	332	vocals
+33	332	guitars
+34	333	vocals
+31	334	guitars
+32	334	vocals
+34	334	rythm guitar
+34	334	drums
+35	334	vocals
+32	335	vocals
+35	335	vocals
+33	336	guitars
+34	336	vocals
+31	337	tambourine
+31	337	vocals
+32	337	vocals
+34	337	vocals
+35	337	vocals
+32	338	vocals
+32	339	guitars
+32	339	violin
+32	339	vocals
+33	339	vocals
+31	340	vocals
+31	341	vocals
+36	341	violin
+31	344	vocals
+33	344	guitars
+35	344	guitars
+35	344	vocals
+34	345	rythm guitar
+33	346	vocals
+31	347	guitars
+31	347	flute
+33	347	guitars
+35	347	rythm guitar
+35	347	guitars
+31	348	guitars
+33	348	vocals
+31	349	vocals
+33	350	vocals
+34	351	vocals
+36	351	vocals
+33	352	guitars
+33	352	vocals
+31	354	vocals
+35	354	percussion
+35	354	rythm guitar
+31	355	acoustic guitar
+32	355	tambourine
+31	356	flute
+31	357	vocals
+33	357	vocals
+33	358	vocals
+35	358	vocals
+31	364	vocals
+32	365	rythm guitar
+32	365	lead guitar
+32	365	vocals
+33	365	guitars
+33	366	guitars
+36	366	saxophone
+33	367	guitars
+35	367	rythm guitar
+32	368	tambourine
+32	368	lead guitar
+35	368	guitars
+33	369	vocals
+34	369	tambourine
+34	369	vocals
+35	369	vocals
+36	369	saxophone
+36	369	vocals
+31	370	vocals
+32	370	guitars
+36	370	vocals
+31	371	violin
+32	371	tambourine
+31	373	vocals
+31	375	flute
+31	375	vocals
+36	375	vocals
+36	376	saxophone
+35	377	rythm guitar
+35	378	vocals
+39	379	vocals
+36	379	violin
+36	379	saxophone
+39	380	vocals
+37	381	vocals
+23	381	vocals
+37	382	vocals
+23	382	vocals
+23	383	violin
+37	385	vocals
+35	385	vocals
+35	386	vocals
+36	386	guitars
+36	386	violin
+36	386	vocals
+37	387	violin
+35	387	vocals
+36	387	vocals
+38	388	bass
+38	388	mandolin
+38	388	vocals
+23	388	vocals
+23	390	vocals
+39	391	rythm guitar
+37	392	rythm guitar
+37	392	guitars
+23	392	synthesizer
+39	392	vocals
+38	394	guitars
+38	394	vocals
+23	394	vocals
+39	394	bass
+39	394	synthesizer
+39	394	vocals
+36	394	violin
+39	395	vocals
+36	395	violin
+38	396	rythm guitar
+38	396	vocals
+23	396	flute
+23	397	vocals
+39	397	percussion
+39	397	vocals
+23	398	keyboard
+36	398	guitars
+36	399	saxophone
+36	399	guitars
+38	400	tambourine
+38	400	percussion
+39	400	saxophone
+36	400	saxophone
+38	401	vocals
+36	401	vocals
+35	402	vocals
+37	403	violin
+37	403	guitars
+23	403	acoustic guitar
+36	403	saxophone
+36	403	guitars
+36	403	vocals
+38	404	vocals
+37	406	vocals
+39	407	guitars
+37	408	vocals
+36	408	saxophone
+38	409	vocals
+35	409	vocals
+38	410	vocals
+39	410	bass
+35	410	vocals
+37	411	vocals
+38	412	acoustic guitar
+39	412	flute
+38	413	acoustic guitar
+39	413	percussion
+39	413	vocals
+35	413	vocals
+38	414	acoustic guitar
+36	415	vocals
+23	416	vocals
+35	416	vocals
+37	417	vocals
+23	417	vocals
+36	417	vocals
+37	418	vocals
+38	418	tambourine
+36	418	vocals
+37	419	violin
+35	419	guitars
+36	419	vocals
+37	420	guitars
+35	420	vocals
+35	421	percussion
+37	422	vocals
+38	422	lead guitar
+23	422	vocals
+35	422	rythm guitar
+41	423	synthesizer
+43	423	vocals
+43	424	vocals
+41	425	percussion
+43	426	drums
+3	427	rythm guitar
+3	429	vocals
+42	430	vocals
+41	431	vocals
+3	431	vocals
+42	433	vocals
+16	433	vocals
+3	433	vocals
+40	434	vocals
+42	435	vocals
+3	435	rythm guitar
+40	436	tambourine
+40	436	saxophone
+3	436	rythm guitar
+41	437	vocals
+40	438	guitars
+43	439	vocals
+16	439	vocals
+40	440	vocals
+3	440	rythm guitar
+40	441	lead guitar
+40	441	bass
+16	444	vocals
+3	444	vocals
+40	446	vocals
+3	446	rythm guitar
+3	446	vocals
+43	447	drums
+3	447	rythm guitar
+16	448	mandolin
+16	448	saxophone
+40	449	vocals
+42	449	banjo
+43	449	vocals
+3	449	rythm guitar
+16	450	acoustic guitar
+16	450	flute
+16	450	vocals
+16	453	guitars
+16	453	vocals
+40	455	saxophone
+40	455	acoustic guitar
+43	455	drums
+3	456	vocals
+43	457	drums
+43	457	vocals
+40	458	drums
+40	458	bass
+3	458	vocals
+3	460	rythm guitar
+43	461	vocals
+16	461	guitars
+16	461	drums
+16	463	vocals
+3	463	vocals
+43	464	vocals
+16	466	vocals
+43	467	drums
+43	469	vocals
+3	469	vocals
+41	470	rythm guitar
+3	471	vocals
+42	472	vocals
+41	473	drums
+43	473	vocals
+3	473	vocals
+41	474	vocals
+42	474	flute
+43	474	vocals
+41	476	vocals
+42	476	banjo
+42	476	vocals
+43	476	drums
+42	477	banjo
+41	478	vocals
+43	478	vocals
+16	479	vocals
+16	480	vocals
+41	482	drums
+42	482	vocals
+43	482	vocals
+43	483	vocals
+43	484	vocals
+40	485	vocals
+40	486	keyboard
+40	486	vocals
+41	486	tambourine
+41	488	vocals
+41	489	vocals
+43	489	drums
+43	491	vocals
+41	492	vocals
+40	493	vocals
+42	495	banjo
+42	495	flute
+40	496	mandolin
+40	496	keyboard
+40	496	vocals
+42	496	banjo
+43	496	drums
+16	496	vocals
+3	496	vocals
+41	497	vocals
+16	498	vocals
+40	499	vocals
+42	499	vocals
+43	499	vocals
+16	499	vocals
+3	499	rythm guitar
+43	500	vocals
+41	501	keyboard
+3	501	vocals
+43	502	drums
+16	503	vocals
+3	503	rythm guitar
+23	504	mandolin
+23	504	flute
+23	504	vocals
+3	504	rythm guitar
+3	504	vocals
+23	505	vocals
+46	505	violin
+46	505	guitars
+3	505	vocals
+23	506	guitars
+23	507	vocals
+46	507	bass
+3	507	rythm guitar
+44	508	vocals
+3	508	rythm guitar
+45	509	tambourine
+23	510	vocals
+46	510	bass
+3	510	rythm guitar
+45	511	vocals
+46	512	vocals
+3	513	rythm guitar
+44	514	vocals
+46	514	drums
+3	516	vocals
+46	517	vocals
+16	517	guitars
+16	517	acoustic guitar
+3	517	vocals
+23	518	acoustic guitar
+23	518	vocals
+46	518	rythm guitar
+46	518	drums
+23	519	vocals
+46	520	flute
+46	520	bass
+23	521	vocals
+46	521	vocals
+23	523	vocals
+3	523	vocals
+23	524	vocals
+46	524	guitars
+3	524	rythm guitar
+16	525	vocals
+45	527	vocals
+46	527	vocals
+16	527	vocals
+45	528	drums
+16	528	vocals
+3	528	vocals
+23	529	guitars
+45	529	vocals
+3	529	vocals
+44	530	vocals
+46	530	vocals
+16	531	tambourine
+16	531	vocals
+44	532	vocals
+23	532	vocals
+46	533	vocals
+16	533	vocals
+3	534	rythm guitar
+3	534	vocals
+45	535	vocals
+3	536	rythm guitar
+3	538	rythm guitar
+44	539	vocals
+23	539	vocals
+16	539	vocals
+44	540	vocals
+23	540	guitars
+44	541	vocals
+23	541	vocals
+45	541	drums
+16	541	keyboard
+16	541	acoustic guitar
+3	541	vocals
+45	542	acoustic guitar
+16	542	banjo
+16	542	vocals
+3	542	vocals
+23	543	vocals
+3	544	rythm guitar
+44	545	vocals
+3	547	vocals
+44	548	acoustic guitar
+3	548	vocals
+44	549	vocals
+45	549	vocals
+45	550	acoustic guitar
+44	551	vocals
+45	551	vocals
+3	552	rythm guitar
+3	552	vocals
+3	554	vocals
+46	556	vocals
+3	556	vocals
+44	557	acoustic guitar
+44	557	percussion
+46	557	violin
+46	557	guitars
+16	557	vocals
+44	558	vocals
+16	558	vocals
+23	559	guitars
+23	559	vocals
+3	559	vocals
+44	560	tambourine
+46	560	guitars
+46	560	vocals
+16	561	vocals
+3	561	vocals
+46	562	vocals
+16	562	mandolin
+16	562	flute
+16	563	vocals
+3	563	rythm guitar
+44	564	vocals
+16	564	violin
+16	564	vocals
+46	565	vocals
+3	566	rythm guitar
+3	566	vocals
+24	567	vocals
+48	569	vocals
+25	570	saxophone
+25	570	rythm guitar
+25	571	rythm guitar
+25	571	vocals
+48	571	vocals
+48	572	vocals
+24	574	banjo
+24	574	vocals
+24	575	lead guitar
+25	576	vocals
+24	576	lead guitar
+24	576	vocals
+48	578	bass
+47	579	vocals
+24	579	lead guitar
+24	579	vocals
+3	579	rythm guitar
+48	580	guitars
+48	580	violin
+24	580	vocals
+37	581	vocals
+24	584	vocals
+25	586	vocals
+24	586	vocals
+3	586	vocals
+37	587	violin
+37	587	guitars
+48	587	vocals
+24	587	vocals
+24	588	saxophone
+24	588	flute
+25	589	tambourine
+25	589	vocals
+48	589	vocals
+24	589	drums
+47	590	vocals
+25	590	vocals
+25	591	vocals
+25	592	vocals
+24	592	flute
+3	592	vocals
+48	593	violin
+48	593	vocals
+24	593	vocals
+3	593	vocals
+48	594	vocals
+3	594	rythm guitar
+37	595	guitars
+48	595	banjo
+48	595	guitars
+48	595	vocals
+24	595	mandolin
+48	596	vocals
+37	597	vocals
+48	597	vocals
+25	598	saxophone
+25	598	vocals
+3	598	vocals
+25	599	rythm guitar
+48	600	vocals
+47	601	keyboard
+37	602	bass
+37	602	violin
+37	603	rythm guitar
+24	603	lead guitar
+25	604	saxophone
+25	604	vocals
+24	604	vocals
+25	605	vocals
+37	605	vocals
+47	607	vocals
+25	607	vocals
+37	608	vocals
+24	608	bass
+24	608	vocals
+25	609	vocals
+24	609	vocals
+47	610	violin
+37	611	vocals
+47	612	guitars
+37	612	vocals
+48	613	vocals
+25	614	tambourine
+25	614	saxophone
+25	614	vocals
+24	614	vocals
+3	614	rythm guitar
+47	616	tambourine
+47	616	keyboard
+48	616	vocals
+24	617	banjo
+24	617	bass
+3	617	vocals
+47	618	vocals
+37	618	vocals
+24	618	bass
+3	618	vocals
+47	619	guitars
+37	619	violin
+3	619	vocals
+47	620	vocals
+24	620	vocals
+3	620	vocals
+48	621	violin
+48	621	vocals
+3	621	vocals
+47	622	banjo
+47	622	violin
+24	623	flute
+48	624	vocals
+25	625	tambourine
+3	625	rythm guitar
+47	626	guitars
+47	626	violin
+47	626	vocals
+48	626	vocals
+47	627	acoustic guitar
+3	627	rythm guitar
+24	628	vocals
+47	630	acoustic guitar
+47	631	vocals
+48	631	vocals
+24	632	drums
+47	633	synthesizer
+47	633	mandolin
+48	634	banjo
+48	634	vocals
+24	634	vocals
+47	635	banjo
+47	635	mandolin
+25	635	vocals
+24	635	vocals
+3	635	rythm guitar
+47	636	vocals
+24	636	vocals
+3	636	rythm guitar
+37	637	violin
+48	637	rythm guitar
+48	637	violin
+3	637	vocals
+24	638	banjo
+24	638	vocals
+3	638	vocals
+25	639	vocals
+24	639	bass
+3	639	vocals
+24	641	banjo
+24	641	saxophone
+3	642	vocals
+25	643	tambourine
+25	643	banjo
+3	643	rythm guitar
+25	646	banjo
+37	647	vocals
+25	648	tambourine
+25	648	rythm guitar
+48	648	rythm guitar
+3	648	rythm guitar
+37	649	vocals
+37	650	guitars
+37	650	vocals
+49	651	vocals
+50	651	vocals
+52	651	saxophone
+52	651	vocals
+53	651	violin
+53	651	rythm guitar
+50	652	vocals
+52	652	percussion
+53	652	vocals
+3	652	vocals
+52	653	bass
+53	653	rythm guitar
+50	654	tambourine
+52	654	vocals
+53	654	vocals
+49	655	bass
+50	655	bass
+52	655	rythm guitar
+52	655	saxophone
+52	655	vocals
+51	656	vocals
+53	656	vocals
+3	656	vocals
+3	657	vocals
+49	658	vocals
+49	659	vocals
+52	659	vocals
+52	660	vocals
+53	660	violin
+49	663	lead guitar
+52	663	mandolin
+50	664	vocals
+3	664	vocals
+3	665	vocals
+49	666	vocals
+49	667	guitars
+51	668	keyboard
+53	669	vocals
+49	670	vocals
+50	670	guitars
+50	670	percussion
+51	670	keyboard
+53	670	rythm guitar
+53	670	vocals
+50	672	rythm guitar
+3	674	vocals
+49	675	drums
+51	675	vocals
+53	675	vocals
+50	676	lead guitar
+52	677	vocals
+49	679	vocals
+52	680	vocals
+3	681	rythm guitar
+50	683	vocals
+53	683	violin
+53	683	rythm guitar
+52	684	vocals
+50	685	bass
+50	686	rythm guitar
+53	689	rythm guitar
+53	689	violin
+53	689	vocals
+3	690	rythm guitar
+50	692	guitars
+50	692	bass
+53	692	rythm guitar
+3	692	vocals
+50	693	vocals
+3	693	rythm guitar
+53	694	rythm guitar
+53	694	violin
+49	695	vocals
+51	695	vocals
+53	695	vocals
+49	696	vocals
+53	696	rythm guitar
+49	697	drums
+50	697	flute
+50	697	vocals
+51	697	vocals
+3	697	rythm guitar
+49	698	mandolin
+51	698	banjo
+51	698	keyboard
+3	698	rythm guitar
+50	699	vocals
+51	699	vocals
+53	699	vocals
+49	700	bass
+49	700	flute
+49	700	vocals
+51	701	vocals
+53	702	vocals
+50	703	vocals
+3	703	vocals
+50	704	rythm guitar
+50	704	guitars
+51	704	mandolin
+53	704	vocals
+58	706	vocals
+56	707	vocals
+53	708	violin
+58	708	vocals
+56	710	vocals
+58	710	vocals
+53	712	vocals
+53	713	vocals
+57	715	guitars
+57	715	tambourine
+56	716	vocals
+57	717	bass
+57	717	guitars
+53	720	vocals
+54	720	synthesizer
+55	720	rythm guitar
+55	720	guitars
+56	720	vocals
+54	721	vocals
+57	722	banjo
+57	722	guitars
+54	723	synthesizer
+55	723	vocals
+56	723	vocals
+53	724	violin
+53	724	rythm guitar
+53	725	vocals
+54	725	vocals
+55	725	flute
+56	725	vocals
+53	726	vocals
+54	727	mandolin
+54	727	drums
+57	727	banjo
+57	727	bass
+58	727	guitars
+55	730	vocals
+56	730	vocals
+58	730	vocals
+57	731	bass
+53	732	vocals
+54	733	vocals
+56	733	vocals
+54	734	vocals
+57	736	vocals
+54	737	vocals
+56	737	vocals
+56	738	vocals
+57	738	banjo
+57	738	vocals
+54	741	tambourine
+54	743	tambourine
+54	743	guitars
+54	743	vocals
+54	745	vocals
+57	751	vocals
+57	752	guitars
+57	753	banjo
+54	754	flute
+55	754	vocals
+54	755	tambourine
+54	755	guitars
+56	755	vocals
+58	755	lead guitar
+54	756	vocals
+57	756	banjo
+57	756	vocals
+53	757	vocals
+57	757	vocals
+58	757	lead guitar
+58	758	vocals
+54	759	vocals
+55	759	rythm guitar
+54	760	vocals
+55	760	vocals
+57	760	tambourine
+57	760	keyboard
+58	761	guitars
+53	762	vocals
+55	762	vocals
+57	762	guitars
+58	762	vocals
+56	763	vocals
+57	763	keyboard
+53	764	rythm guitar
+54	764	tambourine
+57	764	acoustic guitar
+57	764	vocals
+57	765	guitars
+60	766	vocals
+37	766	vocals
+63	766	drums
+63	766	mandolin
+60	767	keyboard
+63	767	vocals
+63	768	tambourine
+37	769	vocals
+59	772	vocals
+60	772	keyboard
+37	772	guitars
+37	772	rythm guitar
+37	772	vocals
+59	773	vocals
+61	774	rythm guitar
+63	774	tambourine
+63	774	vocals
+61	775	guitars
+59	776	vocals
+37	776	vocals
+60	777	vocals
+59	778	guitars
+60	778	violin
+62	778	vocals
+37	778	vocals
+59	779	mandolin
+60	779	vocals
+61	779	guitars
+62	779	keyboard
+62	779	drums
+63	779	vocals
+62	780	vocals
+63	780	vocals
+62	781	bass
+37	781	guitars
+60	782	banjo
+60	782	violin
+60	782	vocals
+61	782	vocals
+62	782	vocals
+37	782	vocals
+63	782	vocals
+60	783	banjo
+60	783	violin
+37	783	vocals
+60	784	keyboard
+62	784	vocals
+63	785	vocals
+60	786	vocals
+63	786	vocals
+62	787	vocals
+60	788	vocals
+37	788	violin
+61	789	vocals
+59	790	vocals
+62	790	percussion
+62	790	synthesizer
+62	790	vocals
+37	791	violin
+37	791	bass
+61	792	keyboard
+37	792	bass
+37	792	guitars
+63	792	vocals
+62	793	vocals
+63	794	violin
+63	794	acoustic guitar
+59	795	guitars
+59	795	saxophone
+59	795	vocals
+61	796	guitars
+64	797	banjo
+37	797	rythm guitar
+37	797	violin
+63	798	vocals
+63	799	vocals
+64	801	vocals
+65	802	vocals
+37	802	vocals
+67	806	guitars
+66	808	saxophone
+64	810	vocals
+66	810	vocals
+67	811	bass
+67	811	guitars
+63	811	vocals
+67	813	guitars
+67	813	bass
+64	814	drums
+66	815	vocals
+64	818	banjo
+64	818	vocals
+63	818	vocals
+64	820	vocals
+64	821	drums
+64	821	vocals
+64	822	vocals
+66	822	vocals
+37	822	vocals
+63	822	vocals
+64	823	vocals
+65	823	vocals
+66	823	flute
+66	823	saxophone
+37	823	vocals
+65	826	vocals
+37	826	guitars
+63	826	mandolin
+63	826	drums
+64	827	guitars
+63	827	acoustic guitar
+63	827	percussion
+66	828	vocals
+64	829	rythm guitar
+65	829	vocals
+37	829	vocals
+63	829	tambourine
+63	829	guitars
+37	830	vocals
+64	831	bass
+64	831	vocals
+65	831	vocals
+67	831	vocals
+66	832	vocals
+67	832	vocals
+63	832	flute
+66	833	saxophone
+66	833	flute
+66	833	vocals
+67	833	vocals
+63	834	vocals
+65	836	vocals
+66	837	lead guitar
+63	837	vocals
+66	838	vocals
+37	839	guitars
+37	839	rythm guitar
+63	839	rythm guitar
+64	840	vocals
+37	840	vocals
+66	841	rythm guitar
+64	842	vocals
+66	842	vocals
+37	842	rythm guitar
+64	844	vocals
+37	844	vocals
+63	844	flute
+64	845	guitars
+63	845	vocals
+64	846	bass
+37	846	vocals
+64	847	drums
+65	847	vocals
+37	847	guitars
+64	848	drums
+65	848	vocals
+67	848	guitars
+66	849	lead guitar
+66	849	rythm guitar
+37	850	vocals
+67	851	bass
+63	851	vocals
+64	852	banjo
+65	852	vocals
+37	852	vocals
+65	853	vocals
+66	853	vocals
+67	853	vocals
+66	854	saxophone
+67	854	vocals
+66	855	vocals
+65	856	vocals
+67	856	violin
+66	858	rythm guitar
+66	858	saxophone
+37	858	rythm guitar
+67	859	bass
+65	860	vocals
+37	860	vocals
+63	861	percussion
+64	862	banjo
+64	862	guitars
+66	862	saxophone
+66	862	rythm guitar
+37	862	vocals
+63	862	tambourine
+63	862	acoustic guitar
+63	862	vocals
+67	863	vocals
+65	864	vocals
+37	864	guitars
+64	865	rythm guitar
+67	865	violin
+63	865	vocals
+64	866	vocals
+69	870	rythm guitar
+69	870	bass
+70	871	percussion
+69	872	vocals
+68	874	drums
+69	874	flute
+70	874	mandolin
+49	874	rythm guitar
+68	875	vocals
+25	875	tambourine
+25	875	saxophone
+71	875	vocals
+25	876	rythm guitar
+49	876	acoustic guitar
+71	876	bass
+70	877	guitars
+49	877	lead guitar
+71	877	banjo
+71	877	lead guitar
+68	878	percussion
+70	878	mandolin
+70	878	vocals
+25	879	vocals
+69	881	guitars
+69	881	violin
+69	882	vocals
+70	882	lead guitar
+70	882	drums
+70	882	vocals
+71	882	banjo
+71	882	percussion
+69	883	vocals
+70	884	vocals
+49	884	banjo
+68	885	synthesizer
+68	885	tambourine
+69	885	percussion
+70	885	vocals
+25	885	saxophone
+49	885	vocals
+69	886	vocals
+70	887	vocals
+25	887	vocals
+25	888	vocals
+70	889	mandolin
+49	889	vocals
+73	890	lead guitar
+73	890	synthesizer
+73	890	vocals
+64	891	vocals
+72	892	vocals
+64	892	drums
+71	892	vocals
+74	893	vocals
+64	894	vocals
+73	894	vocals
+73	896	vocals
+71	896	vocals
+74	897	tambourine
+74	897	mandolin
+72	898	vocals
+74	898	vocals
+64	899	vocals
+72	900	guitars
+74	900	vocals
+72	901	guitars
+72	901	lead guitar
+75	902	mandolin
+72	903	vocals
+71	903	vocals
+73	905	vocals
+74	905	mandolin
+74	905	vocals
+75	905	vocals
+71	905	vocals
+64	906	guitars
+64	906	vocals
+74	906	vocals
+72	907	vocals
+74	907	tambourine
+74	907	vocals
+75	907	mandolin
+71	908	percussion
+77	909	vocals
+20	909	vocals
+42	909	vocals
+76	911	vocals
+53	911	vocals
+78	911	guitars
+78	911	lead guitar
+76	912	vocals
+53	912	rythm guitar
+42	912	vocals
+77	913	vocals
+20	913	vocals
+53	914	violin
+20	915	flute
+42	915	vocals
+78	915	guitars
+77	916	vocals
+76	917	acoustic guitar
+76	917	vocals
+20	917	flute
+53	918	vocals
+77	918	vocals
+42	918	vocals
+77	919	banjo
+77	919	flute
+77	919	vocals
+76	920	guitars
+76	920	mandolin
+76	920	vocals
+77	920	guitars
+20	920	synthesizer
+20	920	guitars
+20	920	vocals
+78	920	lead guitar
+77	921	vocals
+42	921	flute
+78	921	guitars
+77	922	vocals
+42	922	banjo
+76	923	vocals
+42	923	banjo
+42	923	flute
+76	924	vocals
+20	924	flute
+20	924	banjo
+78	924	vocals
+76	925	drums
+76	925	lead guitar
+77	925	acoustic guitar
+77	925	vocals
+76	927	guitars
+53	927	vocals
+77	927	vocals
+20	927	banjo
+42	927	flute
+78	927	lead guitar
+78	927	guitars
+53	928	vocals
+20	928	vocals
+76	929	vocals
+77	929	drums
+77	929	keyboard
+77	929	vocals
+20	929	synthesizer
+78	929	guitars
+78	929	lead guitar
+76	931	drums
+76	931	vocals
+20	931	vocals
+42	931	vocals
+77	932	banjo
+42	932	vocals
+78	932	lead guitar
+78	932	vocals
+76	933	synthesizer
+78	933	guitars
+78	933	lead guitar
+10	934	vocals
+81	934	violin
+80	935	banjo
+10	936	vocals
+81	936	vocals
+10	937	synthesizer
+81	937	bass
+3	937	vocals
+80	938	vocals
+3	938	rythm guitar
+81	939	vocals
+80	941	acoustic guitar
+3	941	vocals
+81	943	vocals
+80	944	vocals
+79	945	vocals
+81	945	banjo
+81	945	rythm guitar
+80	946	saxophone
+81	946	vocals
+79	948	vocals
+10	949	saxophone
+10	949	vocals
+78	949	lead guitar
+79	950	vocals
+3	950	rythm guitar
+3	951	vocals
+78	951	vocals
+10	952	vocals
+10	953	vocals
+10	955	mandolin
+79	955	vocals
+79	956	vocals
+10	957	vocals
+10	960	vocals
+79	960	synthesizer
+3	960	rythm guitar
+80	961	vocals
+3	961	vocals
+10	962	vocals
+80	962	vocals
+10	963	vocals
+10	965	vocals
+3	965	vocals
+10	966	synthesizer
+80	966	guitars
+80	967	vocals
+10	968	vocals
+80	968	vocals
+81	968	violin
+3	968	rythm guitar
+80	969	vocals
+80	970	drums
+3	970	vocals
+10	971	vocals
+81	971	vocals
+80	973	acoustic guitar
+3	973	vocals
+80	974	vocals
+3	974	vocals
+10	975	acoustic guitar
+81	975	rythm guitar
+3	975	vocals
+82	976	synthesizer
+82	976	mandolin
+41	976	vocals
+42	977	vocals
+41	977	vocals
+82	979	vocals
+3	979	vocals
+42	980	flute
+83	982	rythm guitar
+41	983	guitars
+41	983	synthesizer
+83	985	vocals
+82	986	vocals
+3	986	rythm guitar
+42	987	vocals
+82	987	vocals
+3	987	vocals
+78	987	lead guitar
+78	987	guitars
+82	988	keyboard
+82	988	mandolin
+3	988	rythm guitar
+3	989	vocals
+3	990	rythm guitar
+78	990	vocals
+82	991	vocals
+3	991	vocals
+42	992	vocals
+83	992	rythm guitar
+3	992	rythm guitar
+3	993	vocals
+82	994	vocals
+82	996	vocals
+41	996	vocals
+83	997	vocals
+3	997	vocals
+83	998	rythm guitar
+83	998	vocals
+84	1000	vocals
+85	1000	acoustic guitar
+85	1000	synthesizer
+84	1001	tambourine
+78	1001	vocals
+84	1004	vocals
+34	1005	vocals
+85	1005	vocals
+34	1006	vocals
+85	1006	lead guitar
+85	1006	keyboard
+85	1006	vocals
+78	1006	guitars
+3	1007	vocals
+78	1007	vocals
+85	1008	vocals
+3	1008	vocals
+34	1009	mandolin
+85	1009	flute
+3	1010	vocals
+78	1010	vocals
+34	1013	drums
+78	1013	lead guitar
+78	1013	vocals
+84	1014	mandolin
+84	1014	saxophone
+3	1014	rythm guitar
+76	1015	guitars
+76	1015	acoustic guitar
+85	1015	keyboard
+76	1016	vocals
+34	1016	mandolin
+34	1016	drums
+85	1016	vocals
+76	1017	keyboard
+76	1017	flute
+84	1017	vocals
+78	1017	vocals
+34	1019	vocals
+78	1019	vocals
+84	1020	vocals
+87	1021	mandolin
+66	1021	vocals
+56	1022	vocals
+78	1022	vocals
+87	1023	vocals
+72	1023	tambourine
+66	1023	vocals
+78	1023	lead guitar
+66	1024	vocals
+78	1024	guitars
+86	1025	vocals
+87	1026	vocals
+78	1026	vocals
+66	1027	vocals
+72	1028	vocals
+56	1029	vocals
+87	1029	guitars
+87	1029	vocals
+66	1029	flute
+86	1030	vocals
+56	1031	vocals
+66	1031	lead guitar
+86	1032	vocals
+56	1032	vocals
+66	1032	lead guitar
+66	1032	saxophone
+66	1033	vocals
+87	1034	guitars
+72	1034	guitars
+66	1034	flute
+66	1034	lead guitar
+86	1035	vocals
+87	1036	vocals
+66	1036	vocals
+86	1037	mandolin
+56	1037	vocals
+72	1038	bass
+78	1038	guitars
+78	1038	lead guitar
+86	1039	vocals
+78	1039	guitars
+86	1040	vocals
+56	1041	vocals
+72	1041	guitars
+72	1041	vocals
+56	1042	vocals
+66	1042	vocals
+78	1043	guitars
+86	1044	keyboard
+66	1044	vocals
+66	1045	vocals
+78	1045	guitars
+72	1046	vocals
+78	1046	lead guitar
+66	1047	vocals
+86	1048	vocals
+78	1048	guitars
+87	1049	mandolin
+72	1050	vocals
+72	1051	lead guitar
+66	1051	vocals
+72	1053	vocals
+87	1054	guitars
+87	1054	synthesizer
+66	1054	vocals
+78	1054	vocals
+72	1056	vocals
+66	1056	vocals
+78	1056	vocals
+87	1057	drums
+87	1057	guitars
+87	1057	vocals
+86	1058	vocals
+66	1058	vocals
+78	1058	guitars
+87	1059	vocals
+72	1060	vocals
+78	1060	vocals
+66	1061	vocals
+78	1061	lead guitar
+78	1061	guitars
+78	1061	vocals
+66	1062	rythm guitar
+87	1064	saxophone
+66	1064	rythm guitar
+87	1065	guitars
+56	1066	vocals
+87	1066	acoustic guitar
+72	1066	vocals
+66	1066	vocals
+72	1068	tambourine
+56	1069	vocals
+87	1069	guitars
+66	1069	vocals
+56	1070	vocals
+87	1071	keyboard
+87	1071	flute
+72	1071	guitars
+66	1071	vocals
+66	1072	lead guitar
+72	1073	drums
+72	1073	lead guitar
+88	1076	guitars
+88	1076	vocals
+66	1077	rythm guitar
+66	1077	lead guitar
+78	1077	vocals
+21	1079	bass
+21	1079	guitars
+66	1079	vocals
+78	1079	vocals
+88	1080	vocals
+90	1080	acoustic guitar
+90	1081	vocals
+78	1081	vocals
+88	1082	violin
+66	1082	lead guitar
+66	1082	saxophone
+88	1083	violin
+88	1083	guitars
+78	1084	vocals
+78	1085	vocals
+89	1087	vocals
+90	1087	guitars
+88	1088	violin
+88	1088	banjo
+90	1088	acoustic guitar
+89	1089	vocals
+88	1090	vocals
+89	1090	tambourine
+89	1090	vocals
+21	1091	vocals
+88	1092	banjo
+21	1092	guitars
+21	1092	lead guitar
+78	1092	vocals
+88	1093	guitars
+88	1093	vocals
+66	1093	vocals
+21	1094	vocals
+89	1094	guitars
+89	1094	tambourine
+66	1094	lead guitar
+66	1096	vocals
+88	1097	guitars
+89	1097	guitars
+78	1097	vocals
+88	1098	vocals
+89	1098	vocals
+66	1098	rythm guitar
+90	1099	vocals
+88	1100	guitars
+21	1100	vocals
+89	1100	drums
+89	1100	tambourine
+90	1100	bass
+78	1100	guitars
+78	1100	vocals
+89	1101	guitars
+66	1101	vocals
+78	1101	guitars
+78	1101	vocals
+89	1102	vocals
+90	1102	guitars
+21	1103	vocals
+88	1104	vocals
+78	1104	vocals
+21	1105	vocals
+89	1105	tambourine
+89	1105	drums
+88	1106	banjo
+88	1106	guitars
+90	1106	guitars
+78	1106	vocals
+88	1107	violin
+88	1107	banjo
+88	1107	vocals
+90	1107	guitars
+88	1109	violin
+21	1109	bass
+89	1109	vocals
+78	1109	vocals
+88	1110	vocals
+21	1111	banjo
+21	1111	rythm guitar
+21	1111	vocals
+90	1111	vocals
+78	1111	lead guitar
+78	1111	vocals
+89	1112	vocals
+90	1113	vocals
+21	1114	drums
+21	1114	rythm guitar
+66	1116	vocals
+78	1118	vocals
+21	1120	vocals
+21	1122	vocals
+21	1123	lead guitar
+21	1123	banjo
+78	1124	vocals
+78	1125	vocals
+66	1126	saxophone
+91	1127	bass
+91	1127	acoustic guitar
+91	1127	vocals
+45	1129	vocals
+45	1130	vocals
+91	1131	vocals
+45	1132	vocals
+91	1133	vocals
+45	1136	guitars
+45	1136	saxophone
+91	1138	vocals
+66	1138	lead guitar
+78	1139	vocals
+92	1140	tambourine
+92	1141	bass
+92	1142	keyboard
+48	1142	rythm guitar
+78	1142	vocals
+92	1143	tambourine
+48	1143	vocals
+78	1143	guitars
+94	1144	vocals
+80	1145	vocals
+91	1145	vocals
+94	1145	vocals
+91	1146	guitars
+91	1146	violin
+94	1146	vocals
+96	1146	guitars
+91	1147	vocals
+94	1148	flute
+94	1148	drums
+95	1148	vocals
+96	1148	vocals
+94	1149	vocals
+95	1149	vocals
+96	1149	guitars
+91	1150	vocals
+94	1150	vocals
+80	1151	acoustic guitar
+96	1151	guitars
+80	1152	lead guitar
+80	1152	vocals
+94	1152	rythm guitar
+93	1153	vocals
+94	1153	vocals
+96	1153	guitars
+80	1155	acoustic guitar
+93	1155	lead guitar
+95	1155	vocals
+96	1155	guitars
+96	1155	vocals
+94	1156	rythm guitar
+96	1156	vocals
+80	1158	vocals
+94	1158	vocals
+95	1158	vocals
+91	1159	vocals
+93	1159	vocals
+94	1159	vocals
+95	1159	vocals
+80	1160	mandolin
+80	1160	saxophone
+91	1160	flute
+95	1160	vocals
+80	1161	vocals
+91	1161	flute
+94	1161	bass
+80	1162	lead guitar
+91	1162	vocals
+96	1162	vocals
+80	1163	drums
+91	1163	vocals
+94	1163	vocals
+96	1163	vocals
+93	1164	vocals
+93	1165	lead guitar
+96	1165	vocals
+94	1166	lead guitar
+94	1166	flute
+94	1166	vocals
+91	1167	synthesizer
+93	1168	keyboard
+93	1168	synthesizer
+80	1169	vocals
+93	1169	synthesizer
+93	1171	guitars
+93	1171	vocals
+94	1171	tambourine
+94	1171	synthesizer
+96	1171	guitars
+95	1172	flute
+91	1173	violin
+91	1173	bass
+80	1174	vocals
+91	1174	mandolin
+93	1174	banjo
+93	1174	guitars
+94	1174	flute
+96	1174	vocals
+91	1175	vocals
+93	1175	banjo
+94	1175	vocals
+95	1175	vocals
+96	1176	vocals
+80	1178	vocals
+93	1178	tambourine
+94	1178	drums
+94	1178	vocals
+96	1178	vocals
+80	1179	vocals
+91	1180	vocals
+95	1180	synthesizer
+95	1180	vocals
+96	1180	vocals
+20	1182	vocals
+89	1183	drums
+89	1183	guitars
+97	1183	guitars
+97	1183	flute
+96	1183	guitars
+98	1184	vocals
+96	1184	vocals
+89	1185	vocals
+97	1185	rythm guitar
+97	1186	vocals
+20	1187	flute
+97	1187	vocals
+95	1187	vocals
+95	1188	flute
+95	1188	bass
+96	1188	guitars
+89	1189	drums
+96	1189	guitars
+89	1190	tambourine
+89	1190	guitars
+20	1190	vocals
+97	1190	drums
+97	1190	keyboard
+89	1191	vocals
+98	1192	vocals
+96	1192	vocals
+89	1193	tambourine
+20	1193	vocals
+20	1194	vocals
+96	1194	guitars
+96	1197	vocals
+89	1198	tambourine
+96	1199	vocals
+20	1201	synthesizer
+97	1201	vocals
+96	1201	guitars
+89	1202	guitars
+89	1202	tambourine
+96	1203	vocals
+96	1205	vocals
+20	1208	banjo
+20	1208	vocals
+89	1209	vocals
+20	1209	vocals
+96	1209	guitars
+96	1210	vocals
+96	1212	vocals
+98	1213	vocals
+95	1213	bass
+98	1214	vocals
+98	1215	vocals
+96	1215	guitars
+96	1215	vocals
+95	1216	bass
+89	1217	drums
+95	1217	vocals
+96	1217	vocals
+99	1219	vocals
+102	1219	vocals
+103	1219	vocals
+99	1220	vocals
+102	1220	vocals
+99	1222	saxophone
+99	1222	vocals
+101	1222	vocals
+99	1223	vocals
+101	1223	vocals
+103	1223	vocals
+100	1224	vocals
+99	1225	vocals
+100	1225	saxophone
+100	1225	lead guitar
+102	1226	vocals
+103	1226	violin
+103	1226	synthesizer
+99	1227	saxophone
+99	1228	saxophone
+101	1228	keyboard
+101	1228	vocals
+102	1228	vocals
+103	1228	vocals
+103	1229	lead guitar
+101	1230	saxophone
+103	1230	vocals
+101	1231	acoustic guitar
+101	1231	drums
+102	1231	vocals
+103	1231	vocals
+103	1232	vocals
+101	1234	vocals
+103	1234	lead guitar
+103	1234	vocals
+101	1235	flute
+102	1235	vocals
+102	1236	vocals
+103	1236	synthesizer
+103	1236	vocals
+101	1237	vocals
+102	1237	vocals
+105	1238	vocals
+108	1239	percussion
+108	1242	guitars
+105	1243	saxophone
+108	1244	vocals
+106	1245	vocals
+22	1246	banjo
+19	1246	vocals
+106	1247	vocals
+105	1248	vocals
+22	1248	vocals
+19	1249	vocals
+105	1250	guitars
+19	1250	tambourine
+106	1252	vocals
+22	1254	lead guitar
+22	1254	flute
+22	1254	vocals
+22	1257	banjo
+22	1257	drums
+106	1258	vocals
+22	1258	vocals
+108	1258	vocals
+107	1259	guitars
+22	1259	flute
+22	1259	drums
+107	1260	vocals
+107	1261	vocals
+108	1261	vocals
+19	1261	vocals
+107	1262	vocals
+19	1262	tambourine
+107	1264	vocals
+22	1264	vocals
+108	1264	vocals
+107	1265	vocals
+22	1266	tambourine
+108	1266	guitars
+19	1266	vocals
+105	1267	vocals
+106	1267	vocals
+107	1267	saxophone
+107	1267	tambourine
+22	1267	vocals
+108	1267	vocals
+105	1268	synthesizer
+19	1268	percussion
+107	1269	saxophone
+107	1269	guitars
+22	1269	tambourine
+105	1270	guitars
+107	1270	acoustic guitar
+19	1270	tambourine
+19	1270	lead guitar
+105	1271	synthesizer
+105	1271	drums
+22	1273	vocals
+108	1273	saxophone
+105	1274	vocals
+22	1274	vocals
+105	1275	synthesizer
+105	1275	percussion
+106	1275	vocals
+19	1275	lead guitar
+19	1275	vocals
+106	1276	lead guitar
+106	1277	mandolin
+106	1277	guitars
+107	1278	saxophone
+107	1278	vocals
+19	1278	percussion
+19	1278	vocals
+105	1279	vocals
+22	1279	drums
+19	1279	lead guitar
+107	1280	guitars
+105	1282	flute
+107	1282	vocals
+22	1282	lead guitar
+19	1282	lead guitar
+19	1282	tambourine
+106	1283	vocals
+107	1283	saxophone
+107	1284	vocals
+108	1285	vocals
+19	1285	vocals
+105	1288	vocals
+105	1290	vocals
+19	1291	tambourine
+19	1291	percussion
+105	1292	vocals
+19	1292	vocals
+19	1293	vocals
+105	1294	percussion
+105	1294	flute
+105	1295	drums
+108	1295	vocals
+106	1297	violin
+107	1297	vocals
+105	1298	vocals
+106	1298	tambourine
+107	1298	vocals
+105	1300	guitars
+105	1300	percussion
+105	1300	vocals
+105	1302	flute
+105	1302	guitars
+106	1302	vocals
+107	1302	tambourine
+107	1303	guitars
+106	1304	tambourine
+107	1306	saxophone
+19	1306	vocals
+105	1307	saxophone
+105	1307	banjo
+107	1307	acoustic guitar
+19	1307	vocals
+19	1308	lead guitar
+107	1309	vocals
+105	1310	vocals
+107	1310	vocals
+19	1313	lead guitar
+19	1313	tambourine
+107	1314	tambourine
+22	1314	vocals
+105	1315	drums
+19	1315	vocals
+105	1316	saxophone
+105	1317	vocals
+107	1317	vocals
+22	1317	drums
+22	1317	banjo
+107	1318	bass
+107	1318	acoustic guitar
+19	1318	vocals
+109	1321	vocals
+110	1321	rythm guitar
+108	1321	vocals
+19	1321	percussion
+110	1322	vocals
+111	1322	saxophone
+19	1322	percussion
+109	1323	synthesizer
+112	1323	bass
+112	1323	vocals
+111	1324	violin
+112	1324	vocals
+19	1324	percussion
+112	1325	guitars
+112	1325	bass
+112	1325	vocals
+108	1325	guitars
+19	1325	lead guitar
+109	1326	banjo
+112	1326	vocals
+108	1326	vocals
+111	1328	synthesizer
+111	1328	vocals
+112	1329	vocals
+111	1330	violin
+109	1331	vocals
+111	1331	vocals
+109	1332	violin
+111	1333	banjo
+111	1333	synthesizer
+109	1334	bass
+112	1334	vocals
+111	1335	rythm guitar
+110	1336	vocals
+111	1336	vocals
+19	1337	vocals
+109	1338	guitars
+109	1338	vocals
+111	1338	vocals
+108	1338	percussion
+108	1338	vocals
+19	1338	percussion
+109	1340	mandolin
+109	1340	guitars
+109	1340	vocals
+109	1341	banjo
+109	1341	synthesizer
+109	1341	vocals
+110	1341	vocals
+108	1341	vocals
+109	1344	vocals
+110	1344	vocals
+108	1344	vocals
+19	1344	vocals
+112	1345	vocals
+109	1346	vocals
+110	1346	bass
+19	1347	vocals
+109	1348	vocals
+110	1348	percussion
+110	1348	vocals
+112	1348	vocals
+108	1349	saxophone
+108	1349	vocals
+19	1349	vocals
+109	1350	synthesizer
+109	1350	violin
+110	1350	flute
+112	1350	drums
+109	1352	vocals
+19	1352	vocals
+109	1353	bass
+110	1353	violin
+110	1353	banjo
+111	1353	saxophone
+112	1353	vocals
+108	1353	percussion
+108	1353	guitars
+19	1353	lead guitar
+111	1354	vocals
+112	1354	flute
+108	1355	vocals
+110	1356	percussion
+110	1356	synthesizer
+111	1356	vocals
+109	1358	guitars
+110	1358	synthesizer
+110	1358	flute
+109	1359	bass
+109	1359	vocals
+115	1360	vocals
+117	1364	vocals
+115	1365	vocals
+117	1366	vocals
+19	1366	lead guitar
+19	1366	tambourine
+113	1368	vocals
+115	1368	vocals
+113	1369	vocals
+116	1369	banjo
+19	1369	vocals
+113	1370	tambourine
+113	1371	vocals
+114	1371	vocals
+19	1371	tambourine
+19	1371	percussion
+114	1372	vocals
+115	1372	guitars
+115	1372	lead guitar
+114	1373	vocals
+19	1373	vocals
+115	1375	lead guitar
+113	1376	vocals
+117	1378	vocals
+19	1378	vocals
+19	1379	vocals
+59	1380	vocals
+118	1380	saxophone
+19	1380	vocals
+19	1381	percussion
+118	1384	percussion
+117	1385	vocals
+59	1386	mandolin
+59	1386	guitars
+59	1386	vocals
+118	1386	acoustic guitar
+118	1386	vocals
+118	1388	guitars
+59	1389	keyboard
+59	1389	drums
+119	1389	vocals
+73	1389	vocals
+59	1391	guitars
+59	1391	saxophone
+119	1393	vocals
+59	1394	vocals
+73	1394	vocals
+59	1395	vocals
+118	1395	drums
+118	1396	saxophone
+119	1396	drums
+73	1396	vocals
+118	1397	tambourine
+119	1398	percussion
+59	1399	keyboard
+73	1399	vocals
+118	1400	banjo
+118	1400	vocals
+59	1401	vocals
+73	1401	vocals
+118	1402	tambourine
+73	1403	acoustic guitar
+73	1404	vocals
+117	1404	vocals
+19	1404	vocals
+59	1406	lead guitar
+59	1406	mandolin
+117	1406	banjo
+73	1408	vocals
+59	1409	flute
+118	1409	acoustic guitar
+118	1410	vocals
+119	1410	vocals
+118	1411	banjo
+59	1412	keyboard
+59	1412	bass
+73	1412	vocals
+119	1413	vocals
+119	1414	tambourine
+118	1415	acoustic guitar
+118	1415	guitars
+59	1417	vocals
+73	1417	vocals
+19	1417	percussion
+118	1418	tambourine
+73	1418	vocals
+59	1419	vocals
+119	1419	tambourine
+119	1419	vocals
+19	1419	percussion
+122	1420	bass
+124	1420	vocals
+122	1421	vocals
+123	1421	vocals
+65	1421	vocals
+122	1422	vocals
+65	1422	vocals
+122	1423	percussion
+122	1423	synthesizer
+65	1423	vocals
+121	1425	vocals
+123	1425	rythm guitar
+123	1425	synthesizer
+65	1425	vocals
+122	1426	bass
+124	1426	vocals
+121	1427	vocals
+122	1427	vocals
+123	1427	vocals
+124	1427	tambourine
+122	1428	keyboard
+122	1428	percussion
+123	1429	lead guitar
+123	1429	guitars
+122	1431	vocals
+124	1431	vocals
+124	1432	vocals
+121	1433	lead guitar
+120	1434	vocals
+121	1434	acoustic guitar
+121	1434	drums
+124	1435	vocals
+121	1436	vocals
+120	1438	vocals
+121	1438	vocals
+120	1439	vocals
+122	1439	vocals
+120	1440	vocals
+65	1440	vocals
+65	1441	vocals
+121	1443	vocals
+122	1443	keyboard
+122	1443	percussion
+65	1443	vocals
+120	1445	vocals
+122	1445	vocals
+65	1446	vocals
+121	1449	vocals
+123	1449	vocals
+121	1450	guitars
+121	1450	acoustic guitar
+123	1450	vocals
+124	1450	mandolin
+121	1452	vocals
+65	1452	vocals
+124	1452	vocals
+122	1453	percussion
+122	1453	banjo
+123	1453	vocals
+124	1453	vocals
+122	1454	banjo
+122	1454	bass
+122	1455	banjo
+122	1455	bass
+123	1456	vocals
+121	1457	vocals
+123	1457	vocals
+122	1458	vocals
+123	1458	rythm guitar
+123	1458	synthesizer
+121	1460	vocals
+122	1460	percussion
+126	1468	vocals
+127	1468	vocals
+35	1469	vocals
+125	1470	vocals
+128	1470	vocals
+35	1470	guitars
+35	1470	percussion
+128	1471	drums
+128	1471	mandolin
+35	1472	rythm guitar
+124	1472	tambourine
+128	1473	mandolin
+128	1473	drums
+128	1473	vocals
+35	1473	vocals
+125	1474	vocals
+128	1475	vocals
+35	1475	guitars
+35	1475	percussion
+124	1475	mandolin
+124	1475	tambourine
+128	1477	vocals
+128	1478	drums
+128	1478	mandolin
+128	1478	vocals
+128	1480	mandolin
+35	1480	guitars
+35	1483	guitars
+35	1483	rythm guitar
+127	1484	drums
+127	1484	percussion
+127	1484	vocals
+127	1485	percussion
+127	1485	guitars
+35	1485	vocals
+126	1486	vocals
+127	1486	vocals
+35	1486	rythm guitar
+127	1487	rythm guitar
+127	1487	guitars
+124	1488	vocals
+125	1489	vocals
+126	1489	vocals
+127	1490	mandolin
+127	1494	vocals
+128	1494	vocals
+35	1495	rythm guitar
+124	1495	mandolin
+128	1496	drums
+35	1496	vocals
+127	1497	vocals
+128	1497	vocals
+35	1497	percussion
+35	1497	rythm guitar
+35	1497	vocals
+127	1498	vocals
+128	1498	drums
+128	1498	mandolin
+35	1498	rythm guitar
+35	1498	guitars
+128	1499	vocals
+127	1500	drums
+127	1500	synthesizer
+127	1501	drums
+127	1501	bass
+127	1501	vocals
+127	1503	vocals
+128	1503	vocals
+35	1503	rythm guitar
+124	1504	vocals
+127	1505	rythm guitar
+127	1505	percussion
+127	1506	drums
+127	1506	synthesizer
+127	1507	rythm guitar
+127	1507	mandolin
+128	1507	vocals
+126	1508	vocals
+128	1508	vocals
+35	1508	guitars
+35	1508	vocals
+35	1509	vocals
+35	1510	rythm guitar
+35	1510	percussion
+128	1511	mandolin
+127	1512	vocals
+124	1512	vocals
+127	1513	mandolin
+128	1513	drums
+128	1513	mandolin
+35	1513	rythm guitar
+35	1514	vocals
+125	1517	vocals
+124	1519	tambourine
+124	1519	mandolin
+128	1520	vocals
+129	1521	mandolin
+129	1521	acoustic guitar
+132	1521	vocals
+120	1523	vocals
+131	1523	vocals
+132	1523	vocals
+124	1523	mandolin
+132	1525	keyboard
+124	1525	tambourine
+124	1525	vocals
+129	1527	drums
+120	1527	rythm guitar
+132	1527	lead guitar
+132	1527	keyboard
+129	1528	vocals
+132	1528	guitars
+124	1528	vocals
+131	1529	vocals
+124	1529	vocals
+132	1530	keyboard
+132	1530	bass
+129	1531	vocals
+124	1531	tambourine
+124	1531	vocals
+129	1533	vocals
+124	1534	mandolin
+124	1534	vocals
+129	1536	vocals
+120	1536	percussion
+130	1536	vocals
+124	1536	vocals
+130	1537	vocals
+130	1539	vocals
+129	1541	vocals
+124	1541	tambourine
+120	1542	vocals
+129	1543	mandolin
+120	1543	vocals
+130	1543	guitars
+132	1543	vocals
+132	1544	vocals
+120	1545	drums
+120	1545	percussion
+120	1547	lead guitar
+132	1547	vocals
+129	1548	mandolin
+132	1548	tambourine
+124	1548	tambourine
+124	1548	vocals
+130	1549	saxophone
+130	1549	acoustic guitar
+132	1549	vocals
+124	1549	vocals
+120	1550	saxophone
+120	1551	vocals
+132	1551	tambourine
+132	1551	mandolin
+129	1552	acoustic guitar
+130	1552	vocals
+124	1552	vocals
+130	1553	vocals
+129	1554	mandolin
+129	1554	vocals
+132	1554	mandolin
+130	1555	vocals
+129	1556	vocals
+129	1559	mandolin
+129	1559	acoustic guitar
+129	1559	vocals
+132	1560	lead guitar
+132	1562	vocals
+129	1563	drums
+129	1563	acoustic guitar
+132	1563	vocals
+131	1566	vocals
+124	1567	tambourine
+124	1567	mandolin
+129	1568	drums
+130	1568	vocals
+130	1569	guitars
+130	1569	percussion
+132	1569	vocals
+124	1569	mandolin
+124	1570	tambourine
+129	1571	vocals
+130	1571	vocals
+132	1571	mandolin
+131	1572	vocals
+124	1573	vocals
+129	1574	vocals
+129	1575	vocals
+130	1575	vocals
+131	1575	vocals
+132	1575	keyboard
+132	1575	guitars
+124	1575	vocals
+124	1576	vocals
+136	1577	lead guitar
+132	1577	guitars
+132	1577	mandolin
+136	1578	banjo
+136	1578	bass
+132	1578	mandolin
+133	1579	flute
+124	1579	vocals
+133	1580	flute
+132	1580	guitars
+132	1580	keyboard
+132	1580	vocals
+132	1581	keyboard
+132	1581	bass
+124	1581	vocals
+135	1582	vocals
+132	1583	vocals
+133	1584	flute
+135	1585	vocals
+136	1586	violin
+132	1587	vocals
+134	1589	guitars
+134	1589	vocals
+136	1589	vocals
+136	1590	banjo
+136	1590	lead guitar
+136	1592	vocals
+134	1593	percussion
+136	1595	violin
+136	1595	rythm guitar
+134	1596	vocals
+134	1598	percussion
+135	1598	vocals
+136	1598	bass
+136	1598	vocals
+134	1600	banjo
+134	1600	percussion
+136	1601	vocals
+132	1601	synthesizer
+132	1601	tambourine
+133	1602	vocals
+133	1603	vocals
+134	1603	drums
+136	1603	vocals
+135	1605	vocals
+132	1606	lead guitar
+132	1606	tambourine
+133	1607	vocals
+135	1607	vocals
+134	1608	vocals
+135	1608	vocals
+132	1608	vocals
+136	1609	violin
+136	1609	banjo
+133	1610	vocals
+134	1610	vocals
+135	1610	keyboard
+135	1610	percussion
+136	1610	violin
+136	1610	rythm guitar
+135	1611	vocals
+133	1612	vocals
+132	1613	vocals
+135	1614	percussion
+135	1614	vocals
+132	1614	vocals
+136	1615	saxophone
+136	1615	lead guitar
+133	1616	vocals
+136	1616	bass
+132	1617	vocals
+134	1618	guitars
+134	1618	banjo
+135	1619	vocals
+136	1619	vocals
+132	1621	vocals
+133	1623	flute
+132	1623	mandolin
+133	1624	flute
+134	1624	guitars
+124	1624	tambourine
+124	1624	vocals
+134	1625	guitars
+132	1625	tambourine
+132	1625	vocals
+124	1625	vocals
+134	1626	guitars
+135	1626	vocals
+136	1627	banjo
+136	1627	vocals
+124	1627	tambourine
+124	1627	mandolin
+134	1628	vocals
+136	1628	vocals
+132	1628	synthesizer
+124	1628	mandolin
+136	1629	vocals
+134	1630	vocals
+124	1630	mandolin
+136	1632	vocals
+135	1633	percussion
+135	1633	vocals
+136	1634	vocals
+132	1634	mandolin
+135	1635	mandolin
+136	1635	banjo
+132	1635	keyboard
+135	1636	lead guitar
+135	1636	mandolin
+135	1636	vocals
+136	1636	vocals
+124	1636	vocals
+132	1638	guitars
+136	1639	banjo
+136	1640	vocals
+124	1641	mandolin
+124	1641	tambourine
+132	1642	vocals
+124	1642	vocals
+135	1643	vocals
+132	1643	bass
+136	1644	bass
+136	1645	vocals
+132	1645	mandolin
+132	1645	keyboard
+135	1647	keyboard
+135	1647	vocals
+136	1647	vocals
+136	1648	vocals
+136	1649	saxophone
+132	1649	vocals
+124	1649	vocals
+135	1650	vocals
+136	1650	bass
+134	1651	vocals
+132	1651	vocals
+124	1651	vocals
+134	1652	percussion
+134	1652	banjo
+135	1652	percussion
+135	1652	vocals
+135	1653	percussion
+135	1653	vocals
+134	1654	saxophone
+134	1654	vocals
+135	1654	flute
+132	1654	vocals
+133	1655	vocals
+134	1655	vocals
+136	1655	lead guitar
+136	1655	vocals
+132	1656	bass
+132	1656	keyboard
+132	1657	vocals
+21	1658	vocals
+132	1658	mandolin
+124	1658	mandolin
+124	1658	vocals
+21	1659	vocals
+138	1659	vocals
+21	1660	guitars
+21	1660	bass
+21	1660	vocals
+76	1660	guitars
+132	1660	mandolin
+124	1660	tambourine
+138	1661	guitars
+138	1661	percussion
+76	1661	bass
+132	1661	tambourine
+124	1661	mandolin
+124	1661	vocals
+76	1662	vocals
+132	1662	keyboard
+132	1662	bass
+21	1663	vocals
+21	1664	vocals
+137	1666	vocals
+21	1666	drums
+21	1666	guitars
+137	1668	vocals
+138	1668	flute
+138	1668	guitars
+132	1668	tambourine
+132	1668	keyboard
+76	1671	acoustic guitar
+21	1672	vocals
+132	1672	vocals
+137	1673	vocals
+76	1674	lead guitar
+76	1674	guitars
+76	1674	vocals
+138	1675	vocals
+137	1676	vocals
+76	1676	vocals
+137	1677	rythm guitar
+137	1677	vocals
+21	1677	guitars
+21	1677	banjo
+138	1677	vocals
+141	1679	vocals
+142	1679	lead guitar
+132	1680	vocals
+140	1681	vocals
+140	1682	vocals
+142	1682	vocals
+132	1683	vocals
+124	1683	vocals
+141	1684	vocals
+124	1684	tambourine
+124	1684	mandolin
+124	1685	mandolin
+124	1685	vocals
+142	1688	vocals
+124	1688	mandolin
+140	1689	mandolin
+141	1691	rythm guitar
+141	1692	guitars
+141	1692	saxophone
+132	1692	lead guitar
+132	1692	guitars
+132	1692	vocals
+124	1692	mandolin
+132	1693	tambourine
+124	1693	mandolin
+124	1693	tambourine
+124	1694	tambourine
+140	1695	vocals
+141	1695	mandolin
+132	1695	guitars
+124	1695	vocals
+140	1696	vocals
+132	1697	synthesizer
+124	1697	tambourine
+124	1697	mandolin
+124	1697	vocals
+141	1699	vocals
+132	1699	vocals
+140	1700	acoustic guitar
+141	1700	vocals
+132	1700	vocals
+124	1700	vocals
+140	1702	vocals
+142	1702	vocals
+132	1702	vocals
+124	1702	tambourine
+124	1704	tambourine
+124	1704	mandolin
+140	1705	vocals
+142	1705	vocals
+141	1706	vocals
+132	1706	guitars
+132	1706	synthesizer
+140	1707	rythm guitar
+141	1707	vocals
+139	1708	vocals
+139	1709	vocals
+141	1709	vocals
+140	1710	mandolin
+124	1710	tambourine
+124	1710	mandolin
+142	1714	vocals
+140	1715	vocals
+141	1715	synthesizer
+141	1715	mandolin
+141	1716	lead guitar
+142	1716	vocals
+140	1717	acoustic guitar
+140	1718	vocals
+132	1718	mandolin
+124	1718	vocals
+140	1719	rythm guitar
+140	1719	vocals
+140	1720	vocals
+142	1720	rythm guitar
+142	1721	tambourine
+139	1722	percussion
+140	1722	mandolin
+140	1722	vocals
+142	1722	drums
+132	1722	vocals
+139	1723	percussion
+132	1723	synthesizer
+140	1724	vocals
+142	1724	rythm guitar
+142	1724	tambourine
+142	1724	vocals
+132	1724	bass
+132	1724	vocals
+142	1726	vocals
+124	1726	vocals
+139	1727	vocals
+142	1727	lead guitar
+132	1727	mandolin
+139	1728	percussion
+141	1728	bass
+141	1728	vocals
+124	1728	vocals
+140	1730	mandolin
+139	1731	percussion
+124	1732	vocals
+139	1733	vocals
+124	1733	vocals
+142	1734	vocals
+140	1736	rythm guitar
+140	1736	mandolin
+140	1736	vocals
+139	1738	vocals
+142	1739	guitars
+142	1739	acoustic guitar
+142	1739	vocals
+124	1739	vocals
+141	1741	saxophone
+132	1741	mandolin
+124	1741	vocals
+142	1744	tambourine
+142	1744	vocals
+141	1745	synthesizer
+141	1745	guitars
+141	1745	vocals
+140	1746	rythm guitar
+140	1746	acoustic guitar
+141	1746	vocals
+143	1748	vocals
+132	1749	vocals
+143	1750	percussion
+143	1750	guitars
+136	1755	banjo
+143	1756	guitars
+143	1756	keyboard
+132	1757	keyboard
+132	1757	bass
+124	1757	tambourine
+124	1759	vocals
+132	1760	mandolin
+124	1761	vocals
+132	1762	vocals
+144	1763	mandolin
+144	1764	vocals
+144	1765	vocals
+132	1765	vocals
+132	1766	mandolin
+124	1766	vocals
+132	1767	vocals
+136	1768	vocals
+143	1768	mandolin
+143	1768	percussion
+143	1768	vocals
+132	1768	tambourine
+132	1768	guitars
+124	1768	vocals
+144	1769	banjo
+144	1769	flute
+143	1770	vocals
+132	1770	lead guitar
+132	1770	vocals
+136	1771	vocals
+143	1771	vocals
+132	1772	synthesizer
+124	1772	vocals
+144	1773	vocals
+132	1773	lead guitar
+132	1773	keyboard
+143	1774	vocals
+124	1774	tambourine
+143	1775	vocals
+144	1775	vocals
+144	1776	vocals
+132	1777	vocals
+124	1777	vocals
+124	1778	vocals
+143	1779	percussion
+143	1779	guitars
+132	1780	vocals
+124	1781	tambourine
+132	1782	vocals
+147	1802	vocals
+148	1802	synthesizer
+148	1802	guitars
+149	1802	drums
+147	1803	vocals
+137	1804	vocals
+148	1805	vocals
+147	1806	vocals
+149	1806	vocals
+148	1807	vocals
+149	1808	vocals
+124	1808	vocals
+110	1809	guitars
+151	1810	vocals
+153	1810	saxophone
+152	1811	vocals
+110	1812	vocals
+151	1813	vocals
+110	1814	vocals
+152	1815	vocals
+150	1815	vocals
+151	1816	guitars
+152	1816	vocals
+150	1816	drums
+153	1817	saxophone
+150	1817	mandolin
+110	1818	vocals
+151	1820	drums
+153	1821	vocals
+151	1822	drums
+110	1822	vocals
+151	1823	mandolin
+151	1823	guitars
+153	1823	saxophone
+124	1823	tambourine
+151	1824	mandolin
+151	1824	guitars
+151	1824	vocals
+153	1824	vocals
+151	1825	vocals
+152	1826	vocals
+153	1826	saxophone
+151	1827	mandolin
+151	1827	guitars
+153	1827	saxophone
+110	1828	vocals
+110	1829	vocals
+153	1830	vocals
+153	1831	saxophone
+110	1832	vocals
+124	1832	vocals
+151	1833	mandolin
+151	1833	guitars
+150	1833	vocals
+124	1834	tambourine
+124	1834	vocals
+151	1835	vocals
+153	1835	vocals
+151	1836	vocals
+156	1837	vocals
+56	1840	vocals
+154	1841	vocals
+124	1841	mandolin
+124	1841	tambourine
+154	1842	vocals
+124	1842	vocals
+154	1843	vocals
+56	1843	vocals
+124	1843	vocals
+156	1845	mandolin
+56	1845	vocals
+124	1846	mandolin
+154	1847	vocals
+156	1847	mandolin
+154	1848	vocals
+156	1848	vocals
+154	1849	vocals
+155	1849	vocals
+156	1849	vocals
+124	1849	vocals
+155	1851	vocals
+150	1851	violin
+124	1851	vocals
+154	1852	vocals
+150	1852	synthesizer
+124	1852	vocals
+155	1853	guitars
+124	1853	mandolin
+124	1853	tambourine
+155	1855	vocals
+155	1856	vocals
+124	1856	vocals
+150	1857	drums
+156	1858	guitars
+156	1858	mandolin
+156	1858	vocals
+156	1859	drums
+155	1862	vocals
+156	1862	vocals
+150	1862	mandolin
+124	1862	mandolin
+124	1862	tambourine
+124	1862	vocals
+112	1864	drums
+157	1865	vocals
+158	1866	saxophone
+158	1866	acoustic guitar
+150	1866	vocals
+124	1867	vocals
+157	1869	vocals
+150	1869	vocals
+124	1869	vocals
+150	1870	vocals
+124	1870	tambourine
+112	1871	vocals
+158	1871	vocals
+112	1873	drums
+112	1873	vocals
+158	1874	vocals
+150	1874	vocals
+150	1875	guitars
+150	1875	flute
+157	1877	vocals
+157	1878	guitars
+112	1878	vocals
+158	1878	vocals
+150	1878	vocals
+158	1880	vocals
+112	1881	vocals
+158	1881	violin
+159	1883	vocals
+157	1884	lead guitar
+157	1885	guitars
+159	1885	tambourine
+159	1885	synthesizer
+157	1886	acoustic guitar
+157	1886	vocals
+159	1886	vocals
+150	1886	flute
+157	1887	vocals
+157	1888	drums
+150	1888	vocals
+159	1889	drums
+159	1889	vocals
+124	1889	vocals
+157	1890	vocals
+124	1890	vocals
+124	1891	vocals
+112	1892	synthesizer
+124	1892	vocals
+159	1893	acoustic guitar
+158	1894	guitars
+158	1894	vocals
+159	1895	vocals
+158	1896	banjo
+158	1896	violin
+158	1897	percussion
+112	1899	vocals
+159	1899	synthesizer
+159	1899	guitars
+112	1900	vocals
+158	1900	saxophone
+159	1900	vocals
+157	1902	tambourine
+158	1902	flute
+159	1902	vocals
+124	1902	vocals
+157	1903	drums
+157	1903	guitars
+150	1903	guitars
+124	1903	mandolin
+160	1904	vocals
+161	1904	vocals
+165	1904	mandolin
+165	1904	guitars
+161	1905	vocals
+164	1906	mandolin
+165	1906	vocals
+163	1907	vocals
+164	1907	guitars
+164	1907	flute
+163	1908	vocals
+165	1908	vocals
+161	1909	guitars
+164	1911	vocals
+161	1912	vocals
+164	1912	vocals
+165	1912	vocals
+161	1913	vocals
+165	1913	vocals
+161	1914	guitars
+164	1914	mandolin
+165	1914	vocals
+162	1915	vocals
+160	1916	vocals
+162	1916	vocals
+162	1917	vocals
+164	1917	vocals
+160	1918	vocals
+163	1918	percussion
+163	1918	drums
+163	1918	vocals
+160	1919	vocals
+163	1920	vocals
+164	1920	vocals
+160	1921	vocals
+161	1921	vocals
+163	1921	vocals
+162	1922	vocals
+161	1923	vocals
+164	1923	acoustic guitar
+164	1923	flute
+160	1926	vocals
+164	1926	flute
+164	1926	saxophone
+163	1927	vocals
+160	1929	vocals
+163	1929	vocals
+161	1931	guitars
+161	1931	keyboard
+161	1931	vocals
+165	1931	guitars
+160	1932	vocals
+161	1932	keyboard
+163	1933	guitars
+163	1933	acoustic guitar
+164	1933	guitars
+165	1933	vocals
+160	1934	vocals
+161	1935	vocals
+164	1935	vocals
+166	1936	banjo
+164	1936	vocals
+166	1937	banjo
+167	1937	vocals
+168	1937	vocals
+165	1937	tambourine
+165	1937	vocals
+167	1938	vocals
+10	1938	vocals
+10	1939	vocals
+164	1939	vocals
+10	1940	vocals
+165	1940	vocals
+167	1941	guitars
+165	1941	vocals
+165	1943	tambourine
+165	1943	keyboard
+166	1944	vocals
+164	1944	bass
+168	1945	vocals
+167	1947	flute
+10	1947	vocals
+166	1948	banjo
+167	1948	saxophone
+167	1948	vocals
+10	1949	vocals
+164	1949	acoustic guitar
+164	1949	guitars
+164	1950	bass
+164	1950	vocals
+166	1951	banjo
+166	1951	vocals
+165	1951	vocals
+166	1952	vocals
+167	1952	flute
+10	1952	lead guitar
+164	1952	acoustic guitar
+164	1952	guitars
+164	1952	vocals
+165	1952	vocals
+168	1953	vocals
+164	1953	vocals
+167	1954	vocals
+165	1954	vocals
+167	1955	vocals
+168	1956	vocals
+168	1957	vocals
+167	1958	vocals
+10	1959	bass
+10	1959	mandolin
+10	1959	vocals
+164	1959	saxophone
+164	1959	vocals
+168	1960	vocals
+10	1961	guitars
+168	1961	vocals
+164	1961	vocals
+165	1961	mandolin
+165	1961	tambourine
+166	1962	banjo
+167	1962	vocals
+164	1962	flute
+164	1962	vocals
+175	1964	rythm guitar
+175	1965	vocals
+174	1965	flute
+175	1966	guitars
+69	1967	guitars
+69	1967	vocals
+69	1968	vocals
+174	1968	vocals
+69	1971	guitars
+69	1971	keyboard
+69	1972	vocals
+175	1972	vocals
+174	1972	flute
+179	1973	vocals
+180	1973	mandolin
+180	1973	vocals
+178	1974	vocals
+178	1975	banjo
+179	1978	vocals
+180	1978	vocals
+179	1979	guitars
+180	1983	mandolin
+180	1983	guitars
+178	1984	rythm guitar
+178	1986	vocals
+176	1987	flute
+176	1987	violin
+180	1987	vocals
+176	1989	vocals
+180	1989	percussion
+180	1989	lead guitar
+180	1989	vocals
+180	1992	mandolin
+176	1993	vocals
+179	1993	percussion
+179	1993	guitars
+179	1993	vocals
+180	1993	keyboard
+180	1993	mandolin
+180	1993	vocals
+178	1994	flute
+177	1995	guitars
+180	1995	vocals
+176	1996	flute
+176	1996	vocals
+179	1996	vocals
+180	1996	vocals
+178	1997	rythm guitar
+177	1999	vocals
+177	2000	tambourine
+176	2001	vocals
+177	2001	guitars
+177	2001	tambourine
+178	2001	rythm guitar
+179	2001	percussion
+179	2001	guitars
+143	2002	keyboard
+182	2002	rythm guitar
+183	2002	tambourine
+143	2003	vocals
+40	2003	vocals
+180	2004	vocals
+40	2004	bass
+180	2005	vocals
+40	2005	acoustic guitar
+40	2005	lead guitar
+180	2006	violin
+40	2006	vocals
+40	2008	vocals
+181	2009	guitars
+181	2009	vocals
+181	2010	drums
+183	2012	vocals
+181	2015	guitars
+181	2015	bass
+181	2015	vocals
+183	2015	vocals
+183	2016	guitars
+183	2016	saxophone
+183	2017	vocals
+181	2018	guitars
+181	2018	vocals
+143	2019	vocals
+182	2019	lead guitar
+182	2019	flute
+182	2019	vocals
+40	2019	vocals
+181	2020	violin
+180	2020	mandolin
+143	2021	mandolin
+181	2022	guitars
+181	2022	vocals
+181	2023	percussion
+181	2023	keyboard
+180	2023	percussion
+181	2024	guitars
+181	2024	keyboard
+182	2024	vocals
+183	2024	vocals
+180	2025	vocals
+182	2026	vocals
+180	2026	vocals
+181	2027	violin
+181	2027	vocals
+180	2027	vocals
+183	2028	saxophone
+183	2028	mandolin
+181	2029	flute
+183	2030	saxophone
+180	2030	lead guitar
+143	2032	guitars
+143	2032	keyboard
+143	2032	vocals
+180	2032	vocals
+182	2035	guitars
+183	2035	vocals
+180	2035	mandolin
+180	2035	bass
+180	2036	vocals
+181	2038	flute
+181	2038	vocals
+40	2038	acoustic guitar
+40	2038	vocals
+181	2039	drums
+181	2039	guitars
+181	2039	vocals
+182	2039	vocals
+183	2039	vocals
+40	2040	vocals
+181	2041	vocals
+40	2041	vocals
+183	2043	saxophone
+183	2044	vocals
+182	2045	vocals
+183	2045	vocals
+181	2046	vocals
+183	2047	vocals
+182	2048	percussion
+181	2049	vocals
+183	2049	vocals
+143	2050	vocals
+182	2050	flute
+40	2050	vocals
+182	2051	guitars
+182	2051	flute
+183	2051	vocals
+40	2051	keyboard
+40	2051	synthesizer
+183	2052	tambourine
+182	2053	vocals
+40	2053	guitars
+180	2055	percussion
+180	2055	violin
+181	2056	guitars
+181	2056	percussion
+181	2056	vocals
+183	2056	bass
+183	2056	vocals
+181	2057	vocals
+181	2058	rythm guitar
+181	2058	vocals
+143	2058	vocals
+180	2058	guitars
+180	2058	lead guitar
+143	2059	percussion
+143	2059	vocals
+183	2059	guitars
+181	2060	vocals
+143	2060	vocals
+181	2062	bass
+181	2062	vocals
+183	2062	saxophone
+181	2063	vocals
+182	2063	drums
+182	2063	lead guitar
+183	2063	tambourine
+40	2063	violin
+182	2064	vocals
+40	2064	vocals
+181	2065	vocals
+40	2065	mandolin
+40	2065	guitars
+40	2066	mandolin
+40	2066	synthesizer
+\.
+
+
+--
+-- Data for Name: songs; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.songs (id, title, length, on_album, trackno) FROM stdin;
+1	Feel the Sea	307	1	1
+2	Pump up Plague	258	1	2
+3	Rock Defeat	283	1	3
+4	Shock the Sea	263	1	4
+5	Why not the Dance Floor	233	1	5
+6	Get out of Triumph	326	1	6
+7	What is Dancing	226	2	1
+8	Take Khatmandu	373	2	2
+9	Dreams of the Ocean	593	2	3
+10	Shock the Universe	235	2	4
+11	Why Khatmandu	576	2	5
+12	Why not Night	514	2	6
+13	Running from Midnight	310	3	1
+14	Dreams of the Torpedoes	350	3	2
+15	Why not Solace	391	3	3
+16	Up to White	334	3	4
+17	Waiting for the Sun	325	3	5
+18	Master of Fear	338	3	6
+19	Where is the Bed	273	3	7
+20	Rock Destruction	519	3	8
+21	Fast Train to Home	223	3	9
+22	Beyond Night	347	3	10
+23	Destroy the Ocean	296	4	1
+24	Fast Train to this City	380	4	2
+25	Running from Solace	215	4	3
+26	Rock Night	360	4	4
+27	Gimme the Bed	236	4	5
+28	Dreams of this City	126	4	6
+29	Running from Fire	769	4	7
+30	Fast Train to Plague	402	4	8
+31	Rocking Triumph	369	5	1
+32	Ode to Triumph	119	5	2
+33	Ode to Midnight	214	5	3
+34	Kill for the Bed	281	5	4
+35	Gimme Midnight	392	5	5
+36	Ode to Vision	302	5	6
+37	Running from the Sky	284	5	7
+38	Over Tokyo	713	5	8
+39	What happened to Haze	222	5	9
+40	Escape from Plague	202	5	10
+41	On the Road to Khatmandu	541	5	11
+42	Master of the Dance Floor	343	6	1
+43	Maybe the Sea	284	6	2
+44	What happened to the Horizon	538	6	3
+45	Fast Train to Defeat	249	6	4
+46	What about Tokyo	309	6	5
+47	Kill for the Sun	370	6	6
+48	Up to Destruction	264	6	7
+49	What is White	343	6	8
+50	Feel Blue	219	6	9
+51	Pump up Blue	341	6	10
+52	Bring Fire	271	7	1
+53	Beyond this Night	561	7	2
+54	Why not the Horizon	248	7	3
+55	Rocking White	715	7	4
+56	Fly to the Clouds	489	7	5
+57	Running from New York	257	7	6
+58	Dreams of Midnight	351	7	7
+59	Over Blue	329	7	8
+60	Destroy Haze	315	7	9
+61	What about the Horizon	498	7	10
+62	Rocking the Ocean	543	7	11
+63	Bad for Plague	600	8	1
+64	Why this Night	282	8	2
+65	Bad for this World	152	8	3
+66	Pump up the Horizon	228	8	4
+67	What is White	288	8	5
+68	Destroy Home	354	8	6
+69	Master of this World	356	8	7
+70	Rocking New York	474	9	1
+71	Kill for Triumph	777	9	2
+72	Escape from Fire	359	9	3
+73	Bring this City	360	9	4
+74	Fast Train to the Sky	246	9	5
+75	Fast Train to Vision	244	9	6
+76	Escape from Vision	255	9	7
+77	Why the Bed	222	9	8
+78	What about Khatmandu	348	9	9
+79	Running from Love	380	10	1
+80	What is Love	232	10	2
+81	Get out of the Nights	468	10	3
+82	Gimme the Dance Floor	217	10	4
+83	Jump on Tokyo	229	10	5
+84	Up to Death	345	10	6
+85	Running from Triumph	307	10	7
+86	Roll with Destruction	288	10	8
+87	Fly to Fire	228	11	1
+88	What is the Horizon	314	11	2
+89	Dreams of Life	357	11	3
+90	Maybe Summer	270	11	4
+91	Master of Defeat	352	11	5
+92	On the Road to the Moon	397	12	1
+93	Rocking this World	414	12	2
+94	Gimme Pandemic	224	12	3
+95	What happened to Triumph	357	12	4
+96	Roll with Khatmandu	343	12	5
+97	Jump on the Heat	368	12	6
+98	Up to Dancing	205	12	7
+99	Why the Sea	136	12	8
+100	Roll with the Horizon	285	13	1
+101	Bring Summer	382	13	2
+102	Over the Horizon	227	13	3
+103	Jump on the Sun	361	13	4
+104	Ode to Triumph	746	13	5
+105	Feel Plague	213	13	6
+106	Up to White	188	14	1
+107	Where is the Sea	375	14	2
+108	Master of the Dance Floor	221	14	3
+109	Shock the Farm	386	14	4
+110	Run with the Ocean	247	14	5
+111	Feel White	598	14	6
+112	Take the Clouds	398	14	7
+113	Maybe the Ocean	214	14	8
+114	Take the Horizon	515	14	9
+115	Master of Khatmandu	268	14	10
+116	Maybe Haze	340	15	1
+117	Where is Fire	400	15	2
+118	Dreams of Plague	384	15	3
+119	Shock Triumph	312	15	4
+120	Bring White	250	15	5
+121	Touch the Sea	312	16	1
+122	Up to the Universe	626	16	2
+123	On the Road to the Sky	219	16	3
+124	Where is Defeat	387	16	4
+125	Bad for Death	320	16	5
+126	Why Dancing	711	17	1
+127	Jump on Fear	293	17	2
+128	Touch the Horizon	652	17	3
+129	Rocking Destruction	388	17	4
+130	Why not Life	266	17	5
+131	Waiting for Summer	784	17	6
+132	Beyond Home	300	17	7
+133	Fly to the Heat	390	18	1
+134	Bring Summer	613	18	2
+135	Maybe the Bed	629	18	3
+136	Maybe Plague	294	18	4
+137	What is the Ocean	716	18	5
+138	Bad for Fire	518	18	6
+139	Fast Train to Midnight	221	18	7
+140	Waiting for the Heat	324	18	8
+141	Kill for the Sky	313	18	9
+142	Kill for Life	200	18	10
+143	Gimme the Sun	273	18	11
+144	Fly to Death	184	19	1
+145	Fast Train to Midnight	255	19	2
+146	What about the Sea	144	19	3
+147	Feel the Farm	77	19	4
+148	Jump on Fire	351	19	5
+149	Rocking the Farm	246	19	6
+150	Maybe Haze	397	19	7
+151	Escape from Haze	299	19	8
+152	Get out of the Torpedoes	315	19	9
+153	Over Love	711	19	10
+154	View to this Night	323	19	11
+155	Waiting for Haze	488	20	1
+156	Run with Summer	378	20	2
+157	What is Home	767	20	3
+158	Take the Sea	395	20	4
+159	Take Vision	257	20	5
+160	Ode to Blue	386	21	1
+161	Destroy Midnight	384	21	2
+162	Take Haze	218	21	3
+163	Where is Destruction	369	21	4
+164	Ode to Plague	289	21	5
+165	What about Home	203	22	1
+166	Fast Train to Fire	239	22	2
+167	Kill for the Clouds	335	22	3
+168	View to Pandemic	201	22	4
+169	Take Khatmandu	589	22	5
+170	What is the Ocean	377	22	6
+171	Kill for this World	794	22	7
+172	Fly to Defeat	245	23	1
+173	Kill for Night	295	23	2
+174	Beyond Haze	525	23	3
+175	Run with Midnight	274	23	4
+176	Destroy Fire	447	23	5
+177	Touch Triumph	626	23	6
+178	Dreams of Death	311	23	7
+179	On the Road to Summer	244	23	8
+180	Escape from Haze	472	24	1
+181	Why the Sky	707	24	2
+182	Get out of Haze	632	24	3
+183	Up to Solace	292	24	4
+184	Maybe the Ocean	390	24	5
+185	Bad for the Sea	333	25	1
+186	Fly to Death	354	25	2
+187	Kill for Solace	312	25	3
+188	What is the Bed	289	25	4
+189	Rocking this World	340	25	5
+190	Dreams of Defeat	384	25	6
+191	Beyond the Sea	488	25	7
+192	Fast Train to the Sea	390	25	8
+193	Why Midnight	252	25	9
+194	Where is the Dance Floor	269	25	10
+195	Dreams of Life	120	25	11
+196	Gimme Khatmandu	398	26	1
+197	Destroy Tokyo	368	26	2
+198	Why not Midnight	384	26	3
+199	Get out of White	353	26	4
+200	On the Road to the Farm	325	26	5
+201	Master of the Universe	219	26	6
+202	Run with the Torpedoes	177	26	7
+203	On the Road to Midnight	250	26	8
+204	Kill for White	391	27	1
+205	Jump on the Clouds	411	27	2
+206	What happened to Dancing	243	27	3
+207	Get out of the Torpedoes	232	27	4
+208	Where is Home	310	27	5
+209	Beyond the Dance Floor	261	27	6
+210	Force the Torpedoes	67	27	7
+211	Gimme the Sky	391	27	8
+212	Over Plague	203	27	9
+213	What happened to the Sea	244	28	1
+214	Take the Horizon	366	28	2
+215	Gimme Dancing	335	28	3
+216	Jump on Death	393	28	4
+217	Touch White	321	28	5
+218	Get out of this Night	353	28	6
+219	Why not the Ocean	140	28	7
+220	Fly to Plague	199	29	1
+221	Why not the Heat	338	29	2
+222	Bring Night	385	29	3
+223	Destroy Tokyo	499	29	4
+224	Over Solace	444	29	5
+225	Ode to the Sun	222	29	6
+226	Dreams of Defeat	301	30	1
+227	Fast Train to Tokyo	580	30	2
+228	Kill for Summer	71	30	3
+229	Feel Life	314	30	4
+230	Take the Clouds	363	30	5
+231	Up to Haze	115	30	6
+232	Fast Train to the Heat	288	30	7
+233	Fly to this World	277	30	8
+234	Beyond White	340	30	9
+235	Feel Khatmandu	88	30	10
+236	Escape from the Horizon	209	31	1
+237	Pump up Haze	200	31	2
+238	Master of this World	493	31	3
+239	Maybe Pandemic	223	31	4
+240	Kill for Fire	442	31	5
+241	Over Solace	87	31	6
+242	Why the Torpedoes	290	31	7
+243	Why not Khatmandu	284	31	8
+244	What happened to New York	236	31	9
+245	What about the Moon	295	31	10
+246	Touch the Torpedoes	73	31	11
+247	Beyond the Dance Floor	373	32	1
+248	Get out of Plague	666	32	2
+249	Run with the Heat	708	32	3
+250	Ode to this City	235	32	4
+251	Master of Haze	313	32	5
+252	Bring the Ocean	613	32	6
+253	Where is Dancing	739	32	7
+254	Why Destruction	380	32	8
+255	Where is Fear	232	32	9
+256	What happened to Vision	301	33	1
+257	Shock Fire	397	33	2
+258	Escape from the Nights	736	33	3
+259	Over Love	227	33	4
+260	Why White	228	33	5
+261	Beyond Dancing	308	34	1
+262	Run with Life	257	34	2
+263	What happened to Destruction	388	34	3
+264	Ode to Midnight	278	34	4
+265	Escape from Solace	332	34	5
+266	What is the Moon	362	34	6
+267	On the Road to this World	234	34	7
+268	Fast Train to this City	392	34	8
+269	Beyond the Sun	265	34	9
+270	Dreams of this Night	202	34	10
+271	Why not Defeat	271	35	1
+272	Dreams of this World	222	35	2
+273	Why not the Universe	115	35	3
+274	Destroy this World	247	35	4
+275	Running from Defeat	214	35	5
+276	Where is Blue	305	35	6
+277	Bad for Love	325	35	7
+278	What is Haze	382	35	8
+279	Rock this City	359	35	9
+280	What happened to the Bed	398	35	10
+281	Why not the Torpedoes	216	35	11
+282	Gimme the Bed	524	36	1
+283	Beyond this World	392	36	2
+284	Dreams of this World	262	36	3
+285	Bad for the Sky	250	36	4
+286	Ode to Solace	207	36	5
+287	Rocking the Clouds	263	36	6
+288	Get out of this City	202	36	7
+289	Run with Solace	297	36	8
+290	Where is the Sun	247	36	9
+291	Waiting for the Bed	434	36	10
+292	Feel the Ocean	451	36	11
+293	Shock the Nights	408	36	12
+294	Rock the Sky	287	37	1
+295	Waiting for Plague	289	37	2
+296	Destroy the Farm	725	37	3
+297	Bring Defeat	242	37	4
+298	Touch the Sea	721	37	5
+299	On the Road to this Night	439	37	6
+300	Feel the Horizon	270	37	7
+301	Running from the Dance Floor	384	37	8
+302	What happened to Midnight	327	38	1
+303	Where is Summer	229	38	2
+304	View to Dancing	205	38	3
+305	Take the Farm	259	38	4
+306	What about New York	235	38	5
+307	On the Road to this City	293	38	6
+308	What happened to Fire	364	38	7
+309	Up to Tokyo	708	38	8
+310	Bad for New York	327	38	9
+311	Maybe this Night	298	38	10
+312	Gimme the Sky	731	38	11
+313	Over the Ocean	229	39	1
+314	Dreams of Death	320	39	2
+315	On the Road to Home	643	39	3
+316	What about Fire	281	39	4
+317	Force Vision	325	39	5
+318	Force White	250	39	6
+319	Shock Midnight	221	39	7
+320	What is this Night	314	39	8
+321	Why the Sea	151	39	9
+322	Gimme Fire	217	39	10
+323	Touch Defeat	387	40	1
+324	Kill for the Heat	363	40	2
+325	What happened to Midnight	210	40	3
+326	Up to this Night	280	40	4
+327	Kill for Defeat	698	40	5
+328	On the Road to Night	410	40	6
+329	Over Dancing	270	41	1
+330	Beyond the Bed	282	41	2
+331	Shock Plague	360	41	3
+332	Fly to the Universe	208	41	4
+333	Roll with the Sky	234	41	5
+334	Up to the Sea	642	41	6
+335	Maybe the Sun	211	41	7
+336	Touch Defeat	299	41	8
+337	Rocking Triumph	225	41	9
+338	Gimme the Heat	678	42	1
+339	Take the Universe	221	42	2
+340	Bring the Sun	262	42	3
+341	Beyond the Dance Floor	246	42	4
+342	Why this World	274	42	5
+343	Where is this City	740	42	6
+344	What is Home	255	42	7
+345	Why not the Bed	214	43	1
+346	Beyond Destruction	352	43	2
+347	Gimme Love	732	43	3
+348	Rock the Bed	160	43	4
+349	Running from Blue	400	43	5
+350	What about Destruction	246	43	6
+351	Destroy Fire	311	43	7
+352	Take the Bed	364	43	8
+353	View to the Ocean	352	43	9
+354	Pump up this World	448	44	1
+355	Destroy Dancing	375	44	2
+356	Destroy Khatmandu	215	44	3
+357	On the Road to Khatmandu	396	44	4
+358	Running from Plague	223	44	5
+359	Jump on the Torpedoes	183	44	6
+360	Beyond Home	318	44	7
+361	Master of the Moon	467	44	8
+362	Kill for New York	214	44	9
+363	Feel Plague	212	45	1
+364	Jump on Night	647	45	2
+365	Feel Destruction	311	45	3
+366	Pump up the Universe	310	45	4
+367	Master of Plague	279	45	5
+368	Rocking Pandemic	227	45	6
+369	Fly to Fear	232	45	7
+370	Bring Blue	181	46	1
+371	Touch the Sun	378	46	2
+372	What happened to the Sky	207	46	3
+373	Run with Triumph	328	46	4
+374	Waiting for Death	269	46	5
+375	Run with the Clouds	723	46	6
+376	Ode to Pandemic	241	47	1
+377	Roll with Plague	265	47	2
+378	Feel the Moon	292	47	3
+379	Run with Dancing	221	47	4
+380	Shock Destruction	268	47	5
+381	Dreams of the Bed	205	48	1
+382	Where is the Farm	279	48	2
+383	Rocking the Torpedoes	363	48	3
+384	Fly to New York	294	48	4
+385	Master of Life	243	48	5
+386	On the Road to the Horizon	215	48	6
+387	Rock Blue	402	48	7
+388	Bad for the Ocean	232	49	1
+389	Take the Sky	348	49	2
+390	Where is the Dance Floor	252	49	3
+391	Up to the Sun	62	49	4
+392	Maybe the Sun	272	49	5
+393	Why not this Night	261	49	6
+394	Kill for Destruction	114	50	1
+395	Kill for the Horizon	345	50	2
+396	Jump on Home	209	50	3
+397	Where is Love	294	50	4
+398	Beyond the Sun	399	50	5
+399	What happened to the Sea	156	50	6
+400	Roll with Midnight	247	50	7
+401	Waiting for this Night	307	51	1
+402	Touch the Bed	409	51	2
+403	Over Plague	557	51	3
+404	Master of the Clouds	246	51	4
+405	Where is New York	742	51	5
+406	What happened to the Sky	322	51	6
+407	Take the Nights	288	52	1
+408	Rocking Summer	356	52	2
+409	Take Khatmandu	365	52	3
+410	Touch the Nights	223	52	4
+411	Kill for Haze	287	52	5
+412	What is Haze	740	52	6
+413	Bring the Ocean	325	52	7
+414	Rocking Defeat	379	52	8
+415	Shock Fire	534	53	1
+416	Shock the Heat	395	53	2
+417	On the Road to Midnight	372	53	3
+418	Running from the Farm	655	53	4
+419	Fast Train to Love	233	53	5
+420	Fly to Defeat	305	53	6
+421	Get out of Love	68	53	7
+422	Escape from Death	369	53	9
+423	Running from Khatmandu	324	54	1
+424	Shock this Night	587	54	2
+425	Up to Defeat	358	54	3
+426	Take Tokyo	757	54	4
+427	Ode to Summer	778	54	5
+428	Get out of the Nights	494	54	6
+429	Up to Home	262	54	7
+430	Bad for Defeat	254	55	1
+431	Where is Triumph	226	55	2
+432	What happened to Life	609	55	3
+433	Fly to the Dance Floor	440	55	4
+434	Kill for the Torpedoes	307	55	5
+435	Pump up the Sky	209	55	6
+436	Take the Sun	265	55	7
+437	Dreams of the Ocean	302	55	8
+438	Over the Sky	287	56	1
+439	What is Solace	362	56	2
+440	Fly to the Dance Floor	417	56	3
+441	Maybe Fire	766	56	4
+442	Running from the Sun	280	56	5
+443	Touch Pandemic	67	56	6
+444	Bring Vision	399	56	7
+445	Running from this World	248	56	8
+446	Take Summer	240	56	9
+447	Over Solace	354	57	1
+448	Waiting for the Dance Floor	309	57	2
+449	Shock Pandemic	378	57	3
+450	Get out of the Ocean	65	57	4
+451	Maybe the Torpedoes	613	57	5
+452	Kill for Blue	308	57	6
+453	Dreams of Summer	113	57	7
+454	Force Pandemic	216	57	8
+455	View to Plague	241	57	9
+456	Rock the Sea	313	57	10
+457	Why Fear	289	58	1
+458	Run with New York	157	58	2
+459	Over Blue	287	58	3
+460	Over Triumph	750	58	4
+461	Force the Nights	540	58	5
+462	Waiting for Fear	261	58	6
+463	Up to the Sun	289	58	7
+464	What is White	229	58	8
+465	Rock Pandemic	264	58	9
+466	Feel the Nights	309	58	10
+467	Running from New York	330	59	1
+468	Take Tokyo	296	59	2
+469	What about Night	390	59	3
+470	Up to the Heat	273	59	4
+471	Take Death	388	59	5
+472	Jump on Destruction	453	60	1
+473	Running from the Sea	242	60	2
+474	Bad for Blue	337	60	3
+475	What about the Ocean	267	60	4
+476	Waiting for Night	202	60	5
+477	Waiting for Khatmandu	203	60	6
+478	Beyond Khatmandu	371	60	7
+479	Maybe Solace	583	61	1
+480	Bad for Defeat	395	61	2
+481	Run with New York	340	61	3
+482	Rock Fire	395	61	4
+483	Rocking this Night	329	61	5
+484	Over Dancing	78	61	6
+485	Maybe the Nights	309	62	1
+486	Fast Train to the Moon	369	62	2
+487	Kill for Home	337	62	3
+488	Ode to Khatmandu	162	62	4
+489	Escape from Fire	84	62	5
+490	Dreams of the Sky	272	62	6
+491	Pump up Plague	321	62	7
+492	Fast Train to Plague	518	62	8
+493	Gimme Khatmandu	61	62	9
+494	Gimme the Moon	271	62	10
+495	Waiting for the Heat	392	63	1
+496	Running from the Clouds	261	63	2
+497	Feel the Torpedoes	244	63	3
+498	Fast Train to this City	257	63	4
+499	On the Road to Night	799	63	5
+500	Beyond the Ocean	311	63	6
+501	Where is the Sky	274	63	7
+502	Dreams of Solace	112	63	8
+503	Where is Defeat	477	63	9
+504	Run with Defeat	200	64	1
+505	View to Death	354	64	2
+506	Why not Tokyo	355	64	3
+507	Ode to Destruction	230	64	4
+508	Rocking Solace	294	64	5
+509	Shock Love	744	64	6
+510	Maybe the Universe	765	64	7
+511	View to the Sun	397	64	8
+512	Beyond the Farm	113	64	9
+513	Force this Night	785	64	10
+514	Roll with Destruction	474	64	11
+515	Running from Defeat	529	64	12
+516	Up to the Horizon	237	65	1
+517	Force Vision	307	65	2
+518	Bad for Defeat	324	65	3
+519	Fast Train to the Moon	164	65	4
+520	Why not White	323	65	5
+521	Dreams of Fear	563	65	6
+522	Waiting for Khatmandu	481	65	7
+523	Up to Life	273	66	1
+524	Pump up Khatmandu	330	66	2
+525	Waiting for this Night	227	66	3
+526	Get out of Fear	315	66	4
+527	Kill for the Sun	217	66	5
+528	On the Road to the Moon	250	66	6
+529	Gimme Home	236	67	1
+530	Running from Pandemic	301	67	2
+531	Beyond the Sky	336	67	3
+532	What happened to Solace	344	67	4
+533	Where is Pandemic	303	67	5
+534	Maybe Triumph	388	67	6
+535	Rocking the Farm	119	67	7
+536	View to the Moon	334	68	1
+537	On the Road to Fire	483	68	2
+538	What is the Sun	202	68	3
+539	Pump up the Bed	234	68	4
+540	Rock Solace	452	68	5
+541	Fly to Dancing	311	68	6
+542	Roll with Life	335	68	7
+543	Shock Vision	537	68	8
+544	Kill for Death	338	69	1
+545	On the Road to Death	216	69	2
+546	Bad for the Torpedoes	230	69	3
+547	Up to Plague	368	69	4
+548	Running from Love	710	69	5
+549	On the Road to Khatmandu	381	69	6
+550	Maybe Tokyo	232	69	7
+551	Kill for White	338	69	8
+552	Shock Blue	87	69	9
+553	Where is the Nights	264	69	10
+554	On the Road to Triumph	211	69	11
+555	Where is Fire	298	69	12
+556	Ode to Defeat	359	70	1
+557	Ode to Khatmandu	361	70	2
+558	Ode to Tokyo	268	70	3
+559	View to Night	377	70	4
+560	What about the Bed	459	70	5
+561	Bad for the Moon	184	70	6
+562	Jump on White	400	70	7
+563	What about the Nights	222	70	8
+564	Where is this City	100	70	9
+565	Bad for Triumph	289	70	10
+566	Feel Fear	375	70	11
+567	Ode to Triumph	769	71	1
+568	Bring this Night	764	71	2
+569	View to the Farm	736	71	3
+570	Shock this World	215	71	4
+571	Fast Train to this World	254	71	5
+572	Feel the Heat	81	71	6
+573	Where is the Torpedoes	275	71	7
+574	What is this City	301	71	8
+575	What about Vision	226	71	9
+576	Jump on Defeat	598	71	10
+577	What is the Heat	363	71	11
+578	Bad for the Farm	309	72	1
+579	Gimme Death	246	72	2
+580	What about Death	241	72	3
+581	Running from Plague	239	72	4
+582	Fast Train to Dancing	357	72	5
+583	View to Midnight	266	72	6
+584	Roll with White	210	72	7
+585	Waiting for the Sun	365	72	8
+586	Dreams of Home	416	72	9
+587	Escape from Life	296	72	10
+588	Where is Vision	332	72	11
+589	Why not the Horizon	198	73	1
+590	Bad for the Horizon	304	73	2
+591	Running from Khatmandu	201	73	3
+592	Over Tokyo	552	73	4
+593	Bring New York	227	73	5
+594	View to the Sun	315	73	6
+595	Over the Dance Floor	207	73	7
+596	Where is the Sky	787	73	8
+597	Destroy the Farm	228	73	9
+598	Touch the Sky	400	73	10
+599	Force Night	254	73	11
+600	Roll with Night	221	73	12
+601	Shock the Torpedoes	142	74	1
+602	Rocking Death	445	74	2
+603	Rock the Ocean	768	74	3
+604	Bad for Blue	266	74	4
+605	Ode to Plague	209	74	5
+606	Fly to Death	179	74	6
+607	Rock the Sky	215	74	7
+608	Shock Khatmandu	68	74	8
+609	Escape from the Universe	264	74	9
+610	Where is the Nights	347	74	10
+611	What is Triumph	392	74	11
+612	Kill for Destruction	259	74	12
+613	Over the Nights	243	75	1
+614	Kill for the Sun	319	75	2
+615	Jump on the Ocean	571	75	3
+616	Why not the Ocean	322	75	4
+617	Take the Dance Floor	440	75	5
+618	Gimme this City	232	75	6
+619	On the Road to Vision	336	75	7
+620	Bad for Blue	758	76	1
+621	Shock Death	334	76	2
+622	Roll with Pandemic	250	76	3
+623	Fly to White	208	76	4
+624	Rock Fire	363	76	5
+625	Ode to Life	533	76	6
+626	Fly to the Nights	270	76	7
+627	Beyond this City	256	76	8
+628	Take Night	276	76	9
+629	Up to the Farm	263	77	1
+630	Ode to Night	211	77	2
+631	Bring Blue	366	77	3
+632	Rocking Pandemic	276	77	4
+633	Force Destruction	399	77	5
+634	Over Khatmandu	275	77	6
+635	Destroy the Moon	384	78	1
+636	Over Life	343	78	2
+637	Fly to this City	400	78	3
+638	Force Tokyo	286	78	4
+639	Where is Defeat	502	78	5
+640	Get out of the Moon	307	78	6
+641	Gimme Khatmandu	231	78	7
+642	Feel White	348	79	1
+643	Jump on Home	242	79	2
+644	Destroy the Horizon	490	79	3
+645	What happened to Love	655	79	4
+646	Gimme Fire	304	79	5
+647	Where is Death	298	79	6
+648	Rock the Sky	373	79	7
+649	Gimme Summer	222	79	8
+650	Force Khatmandu	241	79	9
+651	Rock the Nights	375	80	1
+652	Ode to the Heat	289	80	2
+653	Destroy Summer	401	80	3
+654	Running from the Farm	337	80	4
+655	What about Fire	234	80	5
+656	View to the Moon	87	80	6
+657	Up to the Sea	278	80	7
+658	Dreams of this City	153	80	8
+659	Master of Love	273	81	1
+660	Escape from Life	148	81	2
+661	Where is New York	376	81	3
+662	Bad for Destruction	595	81	4
+663	What happened to Plague	242	81	5
+664	Escape from Vision	235	82	1
+665	What is the Torpedoes	229	82	2
+666	Shock the Farm	233	82	3
+667	Beyond Midnight	342	82	4
+668	Where is Solace	763	82	5
+669	Why the Farm	279	82	6
+670	On the Road to Haze	357	82	7
+671	Over Khatmandu	228	82	8
+672	On the Road to the Moon	380	82	9
+673	Over the Nights	245	82	10
+674	On the Road to Death	264	82	11
+675	Touch Destruction	145	82	12
+676	View to New York	142	83	1
+677	Shock Life	591	83	2
+678	Fly to Night	443	83	3
+679	Escape from Fear	347	83	4
+680	Over Fear	107	83	5
+681	Rock Plague	219	83	6
+682	Waiting for Life	750	84	1
+683	Bad for the Heat	655	84	2
+684	Why not the Bed	82	84	3
+685	Where is the Dance Floor	264	84	4
+686	Feel Fear	258	84	5
+687	Shock Plague	519	84	6
+688	Fly to Summer	343	84	7
+689	Rock Defeat	110	84	8
+690	View to Khatmandu	347	84	9
+691	Fast Train to Defeat	62	84	10
+692	What happened to the Clouds	585	84	11
+693	Feel the Farm	115	84	12
+694	Run with Solace	460	85	1
+695	What is Pandemic	800	85	2
+696	Fast Train to Haze	222	85	3
+697	Running from Home	728	85	4
+698	Rocking the Bed	394	85	5
+699	Maybe Home	282	85	6
+700	Take Tokyo	400	86	1
+701	Take Midnight	282	86	2
+702	Fly to the Ocean	505	86	3
+703	Over Vision	357	86	4
+704	What is Fire	258	86	5
+705	Pump up the Nights	385	87	1
+706	Where is the Horizon	325	87	2
+707	Force Destruction	767	87	3
+708	Feel Destruction	253	87	4
+709	What is Summer	275	87	5
+710	Over Solace	372	87	6
+711	Master of the Heat	324	88	1
+712	Jump on Life	212	88	2
+713	What happened to Love	215	88	3
+714	Where is Summer	669	88	4
+715	Rocking the Dance Floor	290	88	5
+716	What about Midnight	403	88	6
+717	Gimme the Farm	180	88	7
+718	Rock Tokyo	300	88	8
+719	What is Fear	238	88	9
+720	Dreams of Summer	290	89	1
+721	What about Triumph	202	89	2
+722	Escape from the Sun	387	89	3
+723	Where is Midnight	140	89	4
+724	Get out of Night	299	89	5
+725	What is Love	303	89	6
+726	Ode to this World	275	89	7
+727	Rock the Dance Floor	315	89	8
+728	Beyond Vision	213	89	9
+729	Rocking Fear	436	89	10
+730	Jump on Plague	759	89	11
+731	What is the Ocean	356	89	12
+732	Pump up Midnight	388	90	1
+733	What happened to Midnight	331	90	2
+734	On the Road to Khatmandu	353	90	3
+735	Escape from Midnight	199	90	4
+736	Up to Death	293	90	5
+737	Fast Train to Solace	534	90	6
+738	Running from the Dance Floor	279	91	1
+739	Fly to Fear	214	91	2
+740	Rocking the Sky	381	91	3
+741	Why not the Clouds	245	91	4
+742	Take Triumph	556	91	5
+743	Touch Tokyo	377	91	6
+744	Get out of Vision	326	91	7
+745	Why not Solace	688	91	8
+746	Touch Fear	544	91	9
+747	Pump up Death	361	91	10
+748	Beyond New York	303	92	1
+749	Run with Vision	757	92	2
+750	Rocking the Bed	83	92	3
+751	Run with Life	433	92	4
+752	On the Road to New York	364	92	5
+753	Escape from New York	239	92	6
+754	What is Night	275	93	1
+755	Over New York	275	93	2
+756	Up to the Nights	63	93	3
+757	Where is Vision	733	93	4
+758	Running from Summer	221	93	5
+759	Get out of Haze	436	93	6
+760	Touch Dancing	83	93	7
+761	Take the Horizon	277	93	8
+762	Why the Dance Floor	231	93	9
+763	Destroy the Sun	230	93	10
+764	Rocking this City	635	93	11
+765	Escape from Blue	689	93	12
+766	Why Dancing	355	94	1
+767	Running from Summer	360	94	2
+768	Why not Defeat	293	94	3
+769	Kill for Night	224	94	4
+770	Where is the Sky	450	94	5
+771	On the Road to Death	509	94	6
+772	What is Khatmandu	232	94	7
+773	Ode to the Sea	205	94	8
+774	Force Vision	344	94	9
+775	Waiting for New York	307	94	10
+776	Why not Destruction	375	94	11
+777	Run with Love	334	94	12
+778	Ode to Fire	442	95	1
+779	Run with Solace	211	95	2
+780	Where is Tokyo	241	95	3
+781	Take Fear	594	95	4
+782	Waiting for the Heat	256	95	5
+783	Take the Bed	359	95	6
+784	View to Tokyo	352	95	7
+785	Feel the Farm	250	95	8
+786	Force the Ocean	302	95	9
+787	Fly to Blue	256	95	10
+788	Jump on the Universe	250	95	11
+789	View to New York	761	96	1
+790	Get out of Midnight	163	96	2
+791	Shock the Farm	216	96	3
+792	Fly to the Dance Floor	366	96	4
+793	Get out of Defeat	357	96	5
+794	Rock Triumph	327	96	6
+795	Fast Train to Home	89	96	7
+796	Kill for Plague	96	96	8
+797	Destroy Love	558	97	1
+798	Roll with the Farm	263	97	2
+799	Where is the Nights	397	97	3
+800	Master of Life	178	97	4
+801	Beyond Love	269	97	5
+802	View to this City	352	97	6
+803	Escape from Home	215	98	1
+804	Over Plague	242	98	2
+805	What is Fear	326	98	3
+806	Shock the Ocean	236	98	4
+807	Roll with Life	388	98	5
+808	Shock Death	248	98	6
+809	Bring Solace	383	99	1
+810	Running from Solace	252	99	2
+811	Ode to the Moon	357	99	3
+812	Pump up Night	195	99	4
+813	Over Solace	368	99	5
+814	Beyond the Ocean	283	99	6
+815	View to the Universe	106	99	7
+816	Rock the Sea	751	99	8
+817	Fly to Haze	371	99	9
+818	Bad for the Nights	406	99	10
+819	Rock Death	299	99	11
+820	Touch the Sun	214	99	12
+821	Maybe the Dance Floor	273	100	1
+822	What happened to this Night	663	100	2
+823	Dreams of Plague	383	100	3
+824	Shock Dancing	728	100	4
+825	Bring Triumph	516	100	5
+826	Bad for the Universe	292	100	6
+827	Dreams of the Heat	399	100	7
+828	Over the Torpedoes	701	100	8
+829	Master of the Dance Floor	410	101	1
+830	Where is this Night	148	101	2
+831	Waiting for the Clouds	286	101	3
+832	What happened to Dancing	353	101	4
+833	Fly to Night	238	101	5
+834	Why Love	405	101	6
+835	Maybe White	605	101	7
+836	Gimme the Heat	529	102	1
+837	Gimme Haze	632	102	2
+838	Beyond Midnight	233	102	3
+839	Bring the Torpedoes	311	102	4
+840	Kill for the Sun	332	102	5
+841	Where is Love	347	102	6
+842	Rock Pandemic	389	102	7
+843	Bad for Blue	286	102	8
+844	Dreams of Love	662	102	9
+845	Master of Midnight	220	102	10
+846	Rock this World	351	102	11
+847	On the Road to the Clouds	396	102	12
+848	Bad for Plague	740	103	1
+849	Why not the Ocean	341	103	2
+850	Dreams of Fire	394	103	3
+851	Destroy the Sky	103	103	4
+852	Master of Dancing	346	103	5
+853	Bring the Horizon	732	104	1
+854	Feel Khatmandu	493	104	2
+855	Waiting for this Night	226	104	3
+856	Why not New York	252	104	4
+857	Fly to New York	84	104	5
+858	Waiting for Summer	303	104	6
+859	Jump on Haze	325	104	7
+860	Where is Life	288	104	8
+861	Waiting for Haze	122	104	9
+862	Why not Haze	230	104	10
+863	Where is Triumph	353	105	1
+864	Pump up Life	396	105	2
+865	Rock Fire	257	105	3
+866	Touch Destruction	672	105	4
+867	Master of the Heat	227	105	5
+868	Rock Fear	390	105	6
+869	Gimme Fire	599	106	1
+870	Ode to the Nights	219	106	2
+871	Fly to Khatmandu	507	106	3
+872	On the Road to Defeat	289	106	4
+873	Rock Pandemic	384	106	5
+874	Beyond the Sea	277	106	6
+875	Get out of Death	332	106	7
+876	Waiting for Defeat	719	106	8
+877	Pump up Love	369	106	9
+878	Fly to Vision	310	106	10
+879	Maybe Home	521	107	1
+880	Beyond White	296	107	2
+881	Running from the Dance Floor	613	107	3
+882	Where is the Bed	271	107	4
+883	Run with Life	542	107	5
+884	Over Tokyo	393	107	6
+885	Running from Destruction	464	107	7
+886	Roll with this City	565	107	8
+887	Destroy the Bed	722	107	9
+888	Master of the Horizon	257	107	10
+889	Fast Train to White	373	107	11
+890	Where is Life	254	108	1
+891	Up to the Moon	493	108	2
+892	Ode to Haze	131	108	3
+893	Bring New York	277	108	4
+894	Shock Pandemic	561	108	5
+895	Beyond this World	611	108	6
+896	Maybe the Moon	240	108	7
+897	Where is the Ocean	370	108	8
+898	Dreams of the Moon	280	108	9
+899	Fast Train to New York	676	108	10
+900	Feel the Horizon	365	108	11
+901	Master of Life	329	108	12
+902	Ode to the Ocean	692	109	1
+903	Run with Tokyo	277	109	2
+904	Escape from Plague	215	109	3
+905	Where is Plague	346	109	4
+906	Force the Farm	606	109	5
+907	Up to the Sky	99	109	6
+908	Bad for the Torpedoes	336	109	7
+909	Escape from this City	592	110	1
+910	On the Road to Night	112	110	2
+911	Where is the Farm	232	110	3
+912	Dreams of Dancing	392	110	4
+913	Force Fear	326	110	5
+914	On the Road to Khatmandu	76	110	6
+915	Why not Tokyo	242	110	7
+916	Up to this City	158	111	1
+917	What happened to the Sea	247	111	2
+918	Bring White	90	111	3
+919	View to Summer	628	111	4
+920	Shock Triumph	262	111	5
+921	View to the Sun	287	111	6
+922	Master of Summer	260	111	7
+923	Why not the Horizon	611	112	1
+924	On the Road to Summer	187	112	2
+925	Roll with Dancing	102	112	3
+926	Force Dancing	235	112	4
+927	On the Road to the Bed	716	112	5
+928	Maybe Destruction	217	112	6
+929	Beyond this World	77	112	7
+930	Over Blue	306	112	8
+931	Escape from Khatmandu	302	112	9
+932	Fly to Home	266	112	10
+933	On the Road to the Ocean	253	112	11
+934	Pump up the Sun	89	113	1
+935	Touch Dancing	627	113	2
+936	Running from the Bed	704	113	3
+937	Why the Sun	263	113	4
+938	Fast Train to New York	218	113	5
+939	Kill for New York	682	113	6
+940	Shock Triumph	219	113	7
+941	Why Home	563	113	8
+942	What about this Night	110	113	9
+943	Fast Train to Blue	154	113	10
+944	Fast Train to the Moon	270	114	1
+945	Force the Sky	260	114	2
+946	Roll with the Moon	382	114	3
+947	Pump up Plague	335	114	4
+948	Rock the Ocean	633	114	5
+949	What happened to the Heat	563	115	1
+950	Bad for Summer	329	115	2
+951	What about Tokyo	290	115	3
+952	Bring Plague	624	115	4
+953	Get out of the Heat	295	115	5
+954	Waiting for the Horizon	218	115	6
+955	Gimme this World	260	115	7
+956	Ode to White	618	115	8
+957	View to the Moon	162	115	9
+958	Feel the Clouds	395	115	10
+959	Get out of Plague	313	115	11
+960	What about Love	288	115	12
+961	Waiting for this Night	391	116	1
+962	What about the Dance Floor	196	116	2
+963	Where is Dancing	229	116	3
+964	On the Road to the Bed	670	116	4
+965	Over the Sky	669	116	5
+966	Why White	658	116	6
+967	Rock Solace	200	116	7
+968	Get out of the Dance Floor	254	116	8
+969	Kill for the Horizon	462	117	1
+970	Bring the Heat	302	117	2
+971	Touch the Nights	435	117	3
+972	Why Solace	148	117	4
+973	Pump up Summer	236	117	5
+974	Pump up Destruction	370	117	6
+975	Take this City	155	117	7
+976	Where is New York	608	118	1
+977	Why Fear	311	118	2
+978	Where is Life	531	118	3
+979	Where is the Torpedoes	180	118	4
+980	Where is the Dance Floor	181	118	5
+981	Roll with Destruction	312	118	6
+982	On the Road to Defeat	233	118	7
+983	Master of the Sea	253	118	8
+984	Master of this City	457	118	9
+985	Shock this World	769	118	10
+986	Rocking Fear	317	119	1
+987	Waiting for the Universe	190	119	2
+988	Running from the Universe	323	119	3
+989	Where is Life	506	119	4
+990	Master of the Horizon	536	119	5
+991	Bring Life	791	119	6
+992	Fly to New York	280	120	1
+993	Over Solace	237	120	2
+994	Kill for the Bed	305	120	3
+995	Maybe the Torpedoes	242	120	4
+996	Master of Pandemic	312	120	5
+997	Dreams of Haze	521	120	6
+998	Touch the Nights	335	120	7
+999	Take White	768	121	1
+1000	Force the Sky	387	121	2
+1001	Where is Love	260	121	3
+1002	Take Blue	324	121	4
+1003	Where is Tokyo	381	121	5
+1004	Why the Nights	77	121	6
+1005	Get out of Triumph	245	122	1
+1006	Beyond Dancing	279	122	2
+1007	Force the Farm	690	122	3
+1008	Jump on Fire	172	122	4
+1009	Get out of Defeat	673	122	5
+1010	View to the Sun	728	122	6
+1011	What about Love	394	122	7
+1012	Master of Destruction	553	122	8
+1013	Fast Train to Home	222	122	9
+1014	Fly to this Night	296	123	1
+1015	Master of the Sea	191	123	2
+1016	Where is Dancing	315	123	3
+1017	What happened to this Night	307	123	4
+1018	Kill for Plague	378	123	5
+1019	Force the Heat	104	123	6
+1020	Shock Tokyo	358	123	7
+1021	What happened to Life	77	124	1
+1022	Gimme Plague	688	124	2
+1023	What about Night	217	124	3
+1024	Master of the Dance Floor	611	124	4
+1025	Dreams of Tokyo	228	124	5
+1026	Get out of the Torpedoes	204	124	6
+1027	Gimme the Ocean	328	124	7
+1028	Feel Summer	319	124	8
+1029	Ode to Summer	725	124	9
+1030	Touch New York	182	125	1
+1031	Run with the Horizon	102	125	2
+1032	Where is Death	246	125	3
+1033	Feel the Nights	385	125	4
+1034	Jump on the Nights	289	125	5
+1035	Pump up Vision	219	125	6
+1036	On the Road to the Sky	328	126	1
+1037	Pump up White	260	126	2
+1038	Why Haze	338	126	3
+1039	Pump up the Horizon	250	126	4
+1040	Escape from Tokyo	296	126	5
+1041	Feel Solace	321	126	6
+1042	Bad for Dancing	133	127	1
+1043	Pump up Pandemic	273	127	2
+1044	What happened to Summer	715	127	3
+1045	Ode to the Torpedoes	208	127	4
+1046	Take Plague	359	127	5
+1047	Up to New York	87	127	6
+1048	Fast Train to the Farm	717	127	7
+1049	Gimme the Clouds	791	127	8
+1050	Bad for this City	204	128	1
+1051	Why not the Torpedoes	167	128	2
+1052	Master of Fire	357	128	3
+1053	Pump up the Dance Floor	372	128	4
+1054	Dreams of Blue	103	128	5
+1055	Pump up Destruction	390	128	6
+1056	Fly to Night	285	128	7
+1057	Bring the Clouds	277	129	1
+1058	Waiting for Love	220	129	2
+1059	Where is the Bed	280	129	3
+1060	Fly to the Sun	229	129	4
+1061	Ode to Solace	293	129	5
+1062	Get out of Death	385	129	6
+1063	Get out of the Ocean	590	129	7
+1064	Gimme the Moon	398	129	8
+1065	Why not Fear	345	130	1
+1066	Jump on Night	398	130	2
+1067	Waiting for this City	676	130	3
+1068	Get out of Love	275	130	4
+1069	Feel the Sun	744	130	5
+1070	Fast Train to Fire	339	130	6
+1071	Feel this World	760	130	7
+1072	Touch Triumph	311	130	8
+1073	On the Road to the Heat	745	130	9
+1074	Waiting for the Sun	232	131	1
+1075	Kill for Fear	436	131	2
+1076	Rocking the Sky	207	131	3
+1077	Roll with Summer	346	131	4
+1078	Touch Night	198	131	5
+1079	Feel Midnight	137	131	6
+1080	Rocking the Torpedoes	308	131	7
+1081	Dreams of Night	163	131	8
+1082	Gimme the Ocean	572	131	9
+1083	Bad for Vision	322	132	1
+1084	Over Blue	236	132	2
+1085	Fly to Home	237	132	3
+1086	Why not Summer	501	132	4
+1087	View to the Farm	787	132	5
+1088	Up to White	321	132	6
+1089	Jump on the Nights	278	133	1
+1090	Up to Dancing	325	133	2
+1091	Where is Pandemic	676	133	3
+1092	Fast Train to Dancing	375	133	4
+1093	Dreams of the Sun	356	133	5
+1094	Rock White	274	133	6
+1095	Up to Triumph	250	133	7
+1096	Roll with Fire	255	133	8
+1097	Why the Moon	383	133	9
+1098	Beyond the Clouds	128	133	10
+1099	Waiting for Home	230	134	1
+1100	View to the Dance Floor	66	134	2
+1101	What happened to White	331	134	3
+1102	Escape from Tokyo	301	134	4
+1103	Kill for the Bed	273	134	5
+1104	Escape from Vision	359	134	6
+1105	Waiting for the Sun	245	134	7
+1106	What about the Heat	566	134	8
+1107	Jump on the Sea	115	134	9
+1108	Touch the Farm	442	134	10
+1109	Ode to the Ocean	582	134	11
+1110	Master of this Night	601	135	1
+1111	Over this Night	647	135	2
+1112	What happened to Destruction	745	135	3
+1113	Rocking the Moon	673	135	4
+1114	Over Solace	381	135	5
+1115	What is Solace	739	136	1
+1116	Fly to Triumph	392	136	2
+1117	Run with Fire	594	136	3
+1118	Fly to Khatmandu	228	136	4
+1119	Destroy White	706	136	5
+1120	View to the Heat	616	136	6
+1121	Where is Midnight	125	136	7
+1122	Up to the Sun	275	136	8
+1123	Where is Vision	284	136	9
+1124	Master of the Sky	236	136	10
+1125	Feel the Dance Floor	220	136	11
+1126	Fly to Solace	349	136	12
+1127	Fly to the Sea	302	137	1
+1128	Feel the Heat	209	137	2
+1129	Beyond Midnight	330	137	3
+1130	Rock Fire	750	137	4
+1131	Running from Haze	746	137	5
+1132	Why not Khatmandu	205	137	6
+1133	What is the Sun	204	137	7
+1134	Rock the Heat	239	137	8
+1135	What about the Bed	223	137	9
+1136	Rock Night	390	137	10
+1137	Waiting for the Horizon	96	137	11
+1138	Bad for Triumph	211	137	12
+1139	Rocking Haze	240	138	1
+1140	Shock the Nights	259	138	2
+1141	Get out of the Universe	73	138	3
+1142	View to Love	272	138	4
+1143	Take Tokyo	619	138	5
+1144	Where is Pandemic	146	139	1
+1145	View to the Sun	394	139	2
+1146	Roll with Death	220	139	3
+1147	Beyond the Farm	204	139	4
+1148	Jump on the Torpedoes	272	139	5
+1149	Shock Pandemic	429	139	6
+1150	Bad for Fear	246	139	7
+1151	Kill for Fear	664	139	8
+1152	Why Tokyo	107	140	1
+1153	Take the Clouds	86	140	2
+1154	Touch Plague	649	140	3
+1155	Kill for the Dance Floor	365	140	4
+1156	On the Road to Midnight	304	140	5
+1157	Ode to White	334	140	6
+1158	Beyond Dancing	178	140	7
+1159	Why not Home	325	140	8
+1160	Force the Universe	313	141	1
+1161	Rock the Dance Floor	345	141	2
+1162	What happened to the Dance Floor	250	141	3
+1163	Why the Clouds	331	141	4
+1164	Jump on Death	237	141	5
+1165	Touch the Universe	209	141	6
+1166	What is Triumph	225	142	1
+1167	Rock the Bed	238	142	2
+1168	Rock Night	514	142	3
+1169	Bad for Solace	220	142	4
+1170	Kill for the Clouds	620	142	5
+1171	Pump up this World	554	143	1
+1172	Dreams of Summer	222	143	2
+1173	Roll with Khatmandu	278	143	3
+1174	Run with the Sun	257	143	4
+1175	Master of this Night	216	143	5
+1176	Force Life	239	143	6
+1177	What happened to the Moon	375	143	7
+1178	Jump on Blue	391	143	8
+1179	Fast Train to Haze	234	143	9
+1180	Ode to this World	378	143	10
+1181	Beyond Solace	268	144	1
+1182	On the Road to the Farm	322	144	2
+1183	Kill for Midnight	61	144	3
+1184	Get out of the Torpedoes	362	144	4
+1185	What happened to the Sky	79	144	5
+1186	Master of the Heat	332	144	6
+1187	Bring Death	259	144	7
+1188	Run with Death	341	144	8
+1189	Get out of the Moon	206	144	9
+1190	What is the Farm	229	144	10
+1191	Take Home	201	144	11
+1192	Get out of Life	228	145	1
+1193	Get out of the Moon	88	145	2
+1194	Running from Night	679	145	3
+1195	Why Life	584	145	4
+1196	Waiting for the Sky	160	145	5
+1197	Rocking this World	325	145	6
+1198	Rocking the Ocean	378	145	7
+1199	Get out of the Farm	308	145	8
+1200	Destroy the Horizon	212	145	9
+1201	Why Death	288	145	10
+1202	Over Fire	252	146	1
+1203	Kill for the Moon	315	146	2
+1204	Dreams of Dancing	222	146	3
+1205	Force Midnight	346	146	4
+1206	Why not Plague	317	146	5
+1207	Bring the Bed	204	146	6
+1208	Pump up the Sea	587	146	7
+1209	Fast Train to Pandemic	256	146	8
+1210	Kill for Home	209	146	9
+1211	On the Road to Destruction	717	146	10
+1212	Roll with Night	236	146	11
+1213	Run with this City	359	147	1
+1214	Bring Triumph	309	147	2
+1215	Kill for Vision	207	147	3
+1216	Up to Vision	326	147	4
+1217	Get out of Home	794	147	5
+1218	Pump up the Torpedoes	342	147	6
+1219	Touch Midnight	346	148	1
+1220	Feel the Torpedoes	207	148	2
+1221	Waiting for the Heat	234	148	3
+1222	Why not Summer	87	148	4
+1223	Run with Destruction	253	148	5
+1224	Roll with Destruction	148	148	6
+1225	Ode to Dancing	127	148	7
+1226	Dreams of Defeat	234	148	8
+1227	Beyond Fear	255	148	9
+1228	View to Pandemic	314	148	10
+1229	Bad for Life	350	149	1
+1230	Fast Train to the Moon	641	149	2
+1231	Running from the Clouds	240	149	3
+1232	Why not the Sea	468	149	4
+1233	Run with Life	221	149	5
+1234	Beyond Destruction	532	149	6
+1235	On the Road to Fire	342	149	7
+1236	Get out of the Nights	200	149	8
+1237	Why the Sea	257	149	9
+1238	Bad for Midnight	192	150	1
+1239	Destroy the Ocean	228	150	2
+1240	Touch New York	287	150	3
+1241	Escape from the Sea	306	150	4
+1242	Run with White	789	150	5
+1243	Run with Triumph	359	150	6
+1244	Rocking the Moon	265	150	7
+1245	Take the Sea	330	151	1
+1246	Roll with the Ocean	775	151	2
+1247	Why Destruction	158	151	3
+1248	Force the Bed	238	151	4
+1249	Why not Midnight	363	151	5
+1250	Ode to Life	239	151	6
+1251	Fly to Night	249	151	7
+1252	Destroy the Sun	99	151	8
+1253	What about the Ocean	278	152	1
+1254	Beyond Triumph	291	152	2
+1255	Bad for this City	474	152	3
+1256	Kill for Defeat	672	152	4
+1257	Over Plague	245	152	5
+1258	What is Love	245	153	1
+1259	Take the Sky	612	153	2
+1260	Rocking the Ocean	334	153	3
+1261	Bad for Night	320	153	4
+1262	Bring the Sun	297	153	5
+1263	Up to Dancing	257	153	6
+1264	Maybe Night	349	153	7
+1265	On the Road to Love	210	153	8
+1266	Bad for Khatmandu	365	153	9
+1267	On the Road to Plague	408	153	10
+1268	Jump on Solace	120	153	11
+1269	Where is the Torpedoes	353	154	1
+1270	Feel Fire	224	154	2
+1271	What about Night	154	154	3
+1272	Feel the Heat	567	154	4
+1273	Jump on the Ocean	183	154	5
+1274	Up to Vision	261	154	6
+1275	Gimme Tokyo	581	154	7
+1276	Rocking this World	254	155	1
+1277	Destroy the Sea	210	155	2
+1278	Take New York	682	155	3
+1279	Force Summer	131	155	4
+1280	Kill for White	212	155	5
+1281	Maybe New York	282	155	6
+1282	Bring this City	283	155	7
+1283	Waiting for Vision	245	155	8
+1284	Why not Night	400	155	9
+1285	Waiting for the Sun	367	156	1
+1286	Jump on Fear	214	156	2
+1287	What about New York	360	156	3
+1288	Fly to Haze	384	156	4
+1289	Up to the Torpedoes	765	156	5
+1290	Shock Night	282	156	6
+1291	Fast Train to Summer	260	156	7
+1292	Running from Love	142	156	8
+1293	Feel the Clouds	286	156	9
+1294	Jump on the Horizon	261	156	10
+1295	Force Tokyo	296	156	11
+1296	On the Road to Defeat	394	157	1
+1297	What happened to Triumph	213	157	2
+1298	Destroy this City	202	157	3
+1299	Over the Dance Floor	271	157	4
+1300	Waiting for the Horizon	234	157	5
+1301	Force Life	359	157	6
+1302	View to the Sun	238	158	1
+1303	Pump up the Sky	434	158	2
+1304	Run with Death	233	158	3
+1305	Where is the Sea	338	158	4
+1306	Dreams of Life	98	158	5
+1307	Touch Night	113	158	6
+1308	Get out of Summer	307	158	7
+1309	Jump on the Torpedoes	786	158	8
+1310	Why not the Dance Floor	389	158	9
+1311	Why not the Sun	70	158	10
+1312	Destroy Dancing	380	158	11
+1313	Force the Horizon	610	159	1
+1314	Take the Sun	356	159	2
+1315	Run with Triumph	217	159	3
+1316	Why not Dancing	352	159	4
+1317	Up to Defeat	292	159	5
+1318	Pump up Haze	382	159	6
+1319	Running from Defeat	298	159	7
+1320	Escape from the Sea	93	159	8
+1321	Where is Plague	562	160	1
+1322	Gimme Love	731	160	2
+1323	Bad for this World	235	160	3
+1324	Up to the Sea	390	160	4
+1325	Fast Train to the Sky	239	160	5
+1326	What happened to the Ocean	242	160	6
+1327	Dreams of Fear	729	160	7
+1328	Get out of the Universe	586	161	1
+1329	What about the Farm	333	161	2
+1330	What happened to the Torpedoes	221	161	3
+1331	Take Night	220	161	4
+1332	What happened to this Night	262	161	5
+1333	What happened to the Heat	153	161	6
+1334	On the Road to New York	323	161	7
+1335	Why not Death	521	162	1
+1336	On the Road to the Nights	288	162	2
+1337	Dreams of New York	781	162	3
+1338	Fly to Night	243	162	4
+1339	Bring the Moon	433	162	5
+1340	Rocking the Clouds	649	162	6
+1341	Destroy Vision	310	162	7
+1342	Fast Train to Destruction	388	162	8
+1343	Roll with Life	394	163	1
+1344	Jump on the Heat	578	163	2
+1345	Force the Ocean	327	163	3
+1346	Ode to Destruction	212	163	4
+1347	Shock the Heat	230	163	5
+1348	Escape from the Sky	215	163	6
+1349	Over Defeat	261	163	7
+1350	Get out of the Ocean	216	163	8
+1351	Rocking Khatmandu	602	164	1
+1352	Fly to Home	110	164	2
+1353	Where is the Moon	229	164	3
+1354	Shock Destruction	293	164	4
+1355	Bring the Clouds	289	164	5
+1356	Maybe Dancing	313	164	6
+1357	Fly to this City	409	164	7
+1358	Where is Pandemic	210	164	8
+1359	Jump on Triumph	412	164	9
+1360	Fly to the Farm	167	165	1
+1361	Destroy the Nights	702	165	2
+1362	Bad for the Dance Floor	397	165	3
+1363	Where is Death	256	165	4
+1364	Why Dancing	324	165	5
+1365	Run with Plague	204	165	6
+1366	Jump on Triumph	356	165	7
+1367	Rocking Khatmandu	660	165	8
+1368	Up to Fire	81	166	1
+1369	Take Haze	144	166	2
+1370	Where is the Farm	338	166	3
+1371	Bring the Sea	261	166	4
+1372	Force Death	751	166	5
+1373	Gimme Dancing	390	166	6
+1374	On the Road to the Horizon	216	166	7
+1375	Rock New York	240	166	8
+1376	Fast Train to this Night	285	166	9
+1377	Why not Defeat	213	166	10
+1378	Get out of Midnight	319	166	11
+1379	Dreams of Vision	96	167	1
+1380	Kill for the Nights	297	167	2
+1381	Kill for Home	652	167	3
+1382	Destroy the Farm	263	167	4
+1383	On the Road to Home	420	167	5
+1384	Run with this City	473	167	6
+1385	Run with Khatmandu	363	167	7
+1386	Destroy Tokyo	357	167	8
+1387	Run with the Sea	607	168	1
+1388	Beyond Tokyo	306	168	2
+1389	Take New York	333	168	3
+1390	Rocking Defeat	263	168	4
+1391	Running from Plague	236	168	5
+1392	On the Road to Home	365	169	1
+1393	Rock Destruction	685	169	2
+1394	Jump on Blue	660	169	3
+1395	Rocking the Dance Floor	538	169	4
+1396	View to Fear	90	169	5
+1397	Ode to Dancing	295	169	6
+1398	Rock Home	289	169	7
+1399	Where is New York	660	169	8
+1400	Kill for the Dance Floor	366	169	9
+1401	Why Defeat	204	169	10
+1402	Rocking New York	297	169	11
+1403	Pump up the Ocean	207	170	1
+1404	Take Haze	560	170	2
+1405	Where is the Heat	605	170	3
+1406	View to Haze	355	170	4
+1407	Fly to the Torpedoes	695	170	5
+1408	Kill for the Horizon	280	171	1
+1409	Shock Khatmandu	689	171	2
+1410	Destroy Vision	784	171	3
+1411	Run with Vision	97	171	4
+1412	Jump on the Horizon	352	171	5
+1413	Get out of this City	363	171	6
+1414	Gimme this City	709	171	7
+1415	Pump up this World	340	171	8
+1416	Master of Plague	262	171	9
+1417	Over the Bed	355	171	10
+1418	Running from Life	649	171	11
+1419	Touch the Farm	362	171	12
+1420	Get out of Vision	639	172	1
+1421	Up to the Sky	352	172	2
+1422	Jump on New York	520	172	3
+1423	Fly to Vision	242	172	4
+1424	Where is Pandemic	362	172	5
+1425	Master of the Bed	365	172	6
+1426	On the Road to the Sky	538	172	7
+1427	Running from the Dance Floor	317	172	8
+1428	Take Dancing	359	172	9
+1429	Where is the Sun	387	172	10
+1430	Why the Sea	240	173	1
+1431	Destroy Plague	342	173	2
+1432	Escape from Summer	260	173	3
+1433	Bad for White	393	173	4
+1434	Jump on Dancing	105	173	5
+1435	Jump on the Clouds	229	174	1
+1436	Take Summer	280	174	2
+1437	Bad for Haze	256	174	3
+1438	What is the Horizon	286	174	4
+1439	View to the Sun	322	174	5
+1440	Up to Pandemic	260	174	6
+1441	Ode to the Moon	393	174	7
+1442	Jump on this Night	368	174	8
+1443	Get out of Dancing	702	174	9
+1444	Jump on Tokyo	275	174	10
+1445	Fast Train to the Heat	302	174	12
+1446	Roll with the Moon	114	175	1
+1447	Up to this World	448	175	2
+1448	Run with the Ocean	356	175	3
+1449	Up to the Sea	148	175	4
+1450	Bad for the Dance Floor	509	175	5
+1451	Jump on Love	133	175	6
+1452	Escape from the Bed	98	175	7
+1453	Bring the Sea	375	175	8
+1454	Fly to the Moon	290	175	9
+1455	Get out of the Nights	739	176	1
+1456	Escape from Love	429	176	2
+1457	Where is Khatmandu	493	176	3
+1458	What about Summer	280	176	4
+1459	On the Road to the Moon	202	176	5
+1460	Force Haze	537	176	6
+1461	Get out of this City	365	176	7
+1462	Beyond this City	233	177	1
+1463	Run with Dancing	340	177	2
+1464	View to Haze	353	177	3
+1465	Where is the Clouds	194	177	4
+1466	Run with Summer	346	177	5
+1467	Up to the Moon	244	177	6
+1468	Feel Life	252	178	1
+1469	Over Dancing	233	178	2
+1470	On the Road to the Torpedoes	491	178	3
+1471	Waiting for Haze	286	178	4
+1472	Escape from Pandemic	382	178	5
+1473	What is the Farm	535	178	6
+1474	What about the Sun	674	178	7
+1475	Touch Solace	721	178	8
+1476	Take the Heat	288	179	1
+1477	Jump on the Bed	388	179	2
+1478	Escape from the Universe	489	179	3
+1479	Why not this World	230	179	4
+1480	Kill for Pandemic	224	179	5
+1481	Maybe Plague	310	179	6
+1482	Escape from Night	174	179	7
+1483	Master of Pandemic	234	179	8
+1484	Fast Train to Pandemic	356	179	9
+1485	What happened to Death	336	179	10
+1486	Gimme Defeat	323	179	11
+1487	Maybe Night	342	180	1
+1488	Fly to Tokyo	336	180	2
+1489	Fly to the Sun	206	180	3
+1490	Bad for Defeat	356	180	4
+1491	What is Dancing	369	180	5
+1492	Where is Haze	295	180	6
+1493	Roll with the Heat	396	181	1
+1494	Escape from Plague	234	181	2
+1495	On the Road to this Night	271	181	3
+1496	Over the Farm	105	181	4
+1497	Beyond the Torpedoes	213	181	5
+1498	Maybe the Ocean	309	182	1
+1499	View to the Heat	330	182	2
+1500	Running from Destruction	125	182	3
+1501	Gimme Pandemic	533	182	4
+1502	Bring the Dance Floor	221	182	5
+1503	Escape from the Heat	489	182	6
+1504	Feel Dancing	251	182	7
+1505	Feel the Moon	493	182	8
+1506	On the Road to Fear	264	182	9
+1507	Jump on this World	178	182	10
+1508	Ode to Life	430	182	11
+1509	Why not the Bed	204	182	12
+1510	Take Vision	264	183	1
+1511	Over the Sea	352	183	2
+1512	What about New York	253	183	3
+1513	Running from the Nights	574	183	4
+1514	Take Death	356	183	5
+1515	Rocking the Sky	182	183	6
+1516	What happened to Khatmandu	514	183	7
+1517	Shock Plague	355	183	8
+1518	Feel Haze	323	183	9
+1519	What is Pandemic	264	183	10
+1520	Jump on Fire	380	183	11
+1521	Fast Train to this City	83	184	1
+1522	Ode to Fire	210	184	2
+1523	Escape from Triumph	128	184	3
+1524	Bad for Blue	473	184	4
+1525	Waiting for Night	217	184	5
+1526	Escape from the Sky	281	184	6
+1527	Take Defeat	267	184	7
+1528	View to this Night	358	184	8
+1529	Bad for Destruction	286	184	9
+1530	Running from Defeat	206	184	10
+1531	Destroy Tokyo	212	184	11
+1532	Dreams of the Universe	683	185	1
+1533	Maybe Khatmandu	387	185	2
+1534	Bring New York	295	185	3
+1535	Beyond the Universe	351	185	4
+1536	Where is the Bed	106	185	5
+1537	Force Fear	242	185	6
+1538	Escape from Home	431	185	7
+1539	Master of the Bed	386	185	8
+1540	Gimme Midnight	338	185	9
+1541	View to Solace	318	185	10
+1542	On the Road to Tokyo	205	185	11
+1543	Running from Fire	301	186	1
+1544	Run with Blue	259	186	2
+1545	Up to Haze	357	186	3
+1546	Waiting for this World	395	186	4
+1547	Up to the Dance Floor	211	186	5
+1548	Where is Night	360	186	6
+1549	Bring the Ocean	253	186	7
+1550	Feel Midnight	183	186	8
+1551	On the Road to Defeat	228	186	9
+1552	Take the Heat	262	186	10
+1553	Where is Defeat	395	187	1
+1554	Feel the Sea	357	187	2
+1555	Rock Plague	251	187	3
+1556	Up to Fire	300	187	4
+1557	Where is Dancing	378	187	5
+1558	Pump up the Universe	441	187	6
+1559	Bring Pandemic	136	187	7
+1560	Get out of Defeat	306	187	8
+1561	Up to this City	312	187	9
+1562	Destroy the Clouds	342	187	10
+1563	Feel Home	373	187	11
+1564	On the Road to Defeat	434	188	1
+1565	Why the Dance Floor	428	188	2
+1566	Running from the Universe	169	188	3
+1567	Rock Plague	133	188	4
+1568	Roll with Defeat	356	188	5
+1569	Fly to this City	232	188	6
+1570	Roll with the Bed	591	188	7
+1571	Jump on Home	281	188	8
+1572	Run with the Torpedoes	392	188	9
+1573	Master of the Nights	204	188	10
+1574	Pump up the Farm	177	188	11
+1575	Bring the Sky	221	188	12
+1576	Feel the Universe	354	189	1
+1577	Why not the Universe	344	189	2
+1578	Bad for this City	212	189	3
+1579	Touch the Sun	381	189	4
+1580	Master of Life	641	189	5
+1581	Fast Train to the Heat	328	189	6
+1582	Fast Train to the Nights	221	189	7
+1583	Dreams of the Sky	369	189	8
+1584	Why the Sky	367	189	9
+1585	Master of Solace	347	189	10
+1586	Shock Pandemic	373	190	1
+1587	Beyond Dancing	225	190	2
+1588	On the Road to Pandemic	105	190	3
+1589	What happened to Tokyo	216	190	4
+1590	Gimme Pandemic	358	190	5
+1591	Rocking Khatmandu	363	190	6
+1592	Why this World	507	190	7
+1593	Up to the Moon	94	190	8
+1594	Feel Haze	257	190	9
+1595	What happened to Love	379	190	10
+1596	Rock this World	399	190	11
+1597	Up to the Moon	748	191	1
+1598	Fly to Death	307	191	2
+1599	Roll with Dancing	204	191	3
+1600	Get out of Fire	184	191	4
+1601	Why the Torpedoes	646	191	5
+1602	Maybe Dancing	334	192	1
+1603	Why the Sun	216	192	2
+1604	Bad for New York	339	192	3
+1605	Shock the Torpedoes	379	192	4
+1606	Rocking Dancing	230	192	5
+1607	Rock Tokyo	72	192	6
+1608	What is Midnight	736	192	7
+1609	Maybe Blue	619	192	8
+1610	Feel Triumph	351	192	9
+1611	Waiting for Fire	224	192	10
+1612	Pump up White	313	192	11
+1613	Dreams of Defeat	267	193	1
+1614	Kill for the Clouds	299	193	2
+1615	Take the Heat	594	193	3
+1616	Maybe the Moon	233	193	4
+1617	Take the Sea	269	193	5
+1618	Bring Vision	176	193	6
+1619	What happened to Defeat	275	193	7
+1620	Force Blue	262	193	8
+1621	Kill for Night	393	193	9
+1622	Kill for Home	217	193	10
+1623	Rock this Night	775	193	11
+1624	Rock this World	633	194	1
+1625	Feel Fire	311	194	2
+1626	Why not Haze	282	194	3
+1627	Why not New York	364	194	4
+1628	Run with Fear	276	194	5
+1629	Where is this World	525	194	6
+1630	Force the Sea	234	194	7
+1631	Get out of Destruction	532	195	1
+1632	Fly to Life	341	195	2
+1633	Run with the Bed	391	195	3
+1634	Gimme the Heat	245	195	4
+1635	Fly to this City	685	195	5
+1636	Where is the Moon	332	195	6
+1637	Take Love	353	195	7
+1638	Fast Train to this World	315	195	8
+1639	Master of Defeat	243	195	9
+1640	Kill for the Torpedoes	363	195	10
+1641	Escape from Night	391	195	11
+1642	Bring this Night	452	195	12
+1643	Escape from the Moon	387	196	1
+1644	Why not New York	238	196	2
+1645	Kill for Life	243	196	3
+1646	Escape from Defeat	104	196	4
+1647	Rocking Tokyo	192	196	5
+1648	Beyond Home	316	196	6
+1649	Dreams of Triumph	280	196	7
+1650	Running from Triumph	353	196	8
+1651	Touch this Night	344	197	1
+1652	What is the Sun	376	197	2
+1653	Pump up the Torpedoes	333	197	3
+1654	What happened to Plague	137	197	4
+1655	Running from the Sea	475	197	5
+1656	Kill for Pandemic	368	197	6
+1657	Destroy the Sun	399	198	1
+1658	Waiting for Life	523	198	2
+1659	On the Road to Midnight	233	198	3
+1660	Maybe New York	273	198	4
+1661	Feel New York	292	198	5
+1662	Fly to Khatmandu	710	198	6
+1663	Maybe the Torpedoes	233	199	1
+1664	What about Love	248	199	2
+1665	Fly to Solace	228	199	3
+1666	Force Death	263	199	4
+1667	Fast Train to Destruction	269	199	5
+1668	Maybe Solace	216	199	6
+1669	Bad for Solace	75	199	7
+1670	Rock Blue	552	200	1
+1671	Touch Night	168	200	2
+1672	Maybe Blue	319	200	3
+1673	Waiting for the Sea	234	200	4
+1674	Why Midnight	667	200	5
+1675	Take Khatmandu	330	200	6
+1676	Where is Love	226	200	7
+1677	Get out of this World	576	200	8
+1678	Jump on White	278	201	1
+1679	Kill for Death	297	201	2
+1680	Touch Pandemic	240	201	3
+1681	Maybe the Sky	296	201	4
+1682	What happened to White	212	201	5
+1683	Pump up Pandemic	285	201	6
+1684	View to Midnight	117	201	7
+1685	Why not White	396	201	8
+1686	Gimme the Torpedoes	109	201	9
+1687	Bring the Moon	243	201	10
+1688	Where is this Night	349	201	11
+1689	Destroy Dancing	291	202	1
+1690	Jump on the Farm	277	202	2
+1691	Get out of this Night	317	202	3
+1692	Run with the Sea	261	202	4
+1693	What is Love	349	202	5
+1694	View to the Sky	275	202	6
+1695	Up to Destruction	352	202	7
+1696	What about Night	623	202	8
+1697	Touch Fire	198	202	9
+1698	What about the Heat	299	202	10
+1699	Force Destruction	291	202	11
+1700	Fly to the Dance Floor	448	202	12
+1701	Ode to Love	369	203	1
+1702	Feel the Sun	259	203	2
+1703	Jump on Night	223	203	3
+1704	Bad for Solace	301	203	4
+1705	Why not the Sun	215	203	5
+1706	Dreams of the Universe	209	203	6
+1707	What about this Night	343	203	7
+1708	What is Tokyo	249	204	1
+1709	Rock Home	323	204	2
+1710	Why the Sky	168	204	3
+1711	Roll with Blue	305	204	4
+1712	Beyond Summer	322	204	5
+1713	Bad for Vision	788	204	6
+1714	Up to the Sea	279	204	7
+1715	Over Home	410	204	8
+1716	Up to the Nights	212	204	9
+1717	Take Midnight	344	204	10
+1718	Where is Summer	338	204	11
+1719	Fast Train to Fire	310	205	1
+1720	Kill for Vision	259	205	2
+1721	Force Summer	265	205	3
+1722	Ode to this Night	62	205	4
+1723	Gimme Khatmandu	408	205	5
+1724	Escape from Midnight	677	205	6
+1725	Beyond the Sky	716	205	7
+1726	Ode to this World	157	205	8
+1727	On the Road to White	328	205	9
+1728	Bring Defeat	275	205	10
+1729	Fast Train to Love	384	206	1
+1730	Bring Summer	227	206	2
+1731	Up to White	373	206	3
+1732	Get out of Love	240	206	4
+1733	What happened to the Nights	351	206	5
+1734	Bad for the Torpedoes	381	206	6
+1735	Kill for this Night	720	206	7
+1736	Why not the Ocean	325	206	8
+1737	Rock the Dance Floor	255	206	9
+1738	Waiting for Blue	171	206	10
+1739	What is Midnight	304	206	11
+1740	Destroy the Dance Floor	504	206	12
+1741	Up to Blue	730	207	1
+1742	Run with Death	362	207	2
+1743	Destroy the Clouds	382	207	3
+1744	Get out of the Heat	368	207	4
+1745	Rock Blue	349	207	5
+1746	Fast Train to the Horizon	328	207	6
+1747	Dreams of the Ocean	345	207	7
+1748	Escape from the Farm	209	208	1
+1749	Dreams of Tokyo	329	208	2
+1750	Escape from Pandemic	233	208	3
+1751	Bring this City	250	208	4
+1752	Why Pandemic	294	208	5
+1753	Get out of the Sun	516	208	6
+1754	What happened to Dancing	709	208	7
+1755	Why not Life	264	208	8
+1756	Running from the Universe	345	208	9
+1757	Pump up the Moon	179	208	10
+1758	Ode to Plague	591	209	1
+1759	Run with the Nights	291	209	2
+1760	Bring the Sky	217	209	3
+1761	Destroy Summer	356	209	4
+1762	Rocking White	604	209	5
+1763	Where is Death	222	209	6
+1764	What about Plague	300	209	7
+1765	Running from Vision	356	210	1
+1766	View to Death	397	210	2
+1767	Where is Summer	344	210	3
+1768	Roll with Triumph	299	210	4
+1769	View to Dancing	388	210	5
+1770	Kill for Midnight	239	210	6
+1771	Shock Tokyo	237	210	7
+1772	What happened to Summer	314	210	8
+1773	Rock Fear	252	210	9
+1774	Bring Midnight	446	210	10
+1775	Beyond the Clouds	322	210	11
+1776	Where is this World	272	210	12
+1777	Force Khatmandu	303	211	1
+1778	Force Solace	236	211	2
+1779	Waiting for the Ocean	321	211	3
+1780	Roll with Night	318	211	4
+1781	Bad for Plague	237	211	5
+1782	Running from Plague	259	211	6
+1783	Gimme Triumph	359	211	7
+1799	Where is the Nights	235	214	1
+1800	What about Destruction	244	214	2
+1801	Why not Fear	380	214	3
+1802	Ode to Midnight	150	214	4
+1803	View to the Horizon	389	214	5
+1804	Shock New York	289	215	1
+1805	Take Tokyo	595	215	2
+1806	Rocking the Sun	225	215	3
+1807	Waiting for this Night	226	215	4
+1808	Beyond Triumph	398	215	5
+1809	Master of the Sky	209	216	1
+1810	What is the Bed	344	216	2
+1811	Why the Sea	370	216	3
+1812	Up to the Dance Floor	363	216	4
+1813	On the Road to Solace	200	216	5
+1814	What is Death	339	216	6
+1815	Destroy White	308	216	7
+1816	Waiting for Pandemic	319	216	8
+1817	Run with Khatmandu	728	216	9
+1818	What is the Clouds	379	216	10
+1819	Fly to the Clouds	103	217	1
+1820	Shock Love	735	217	2
+1821	Bad for Plague	233	217	3
+1822	On the Road to Haze	317	217	4
+1823	Escape from the Ocean	233	217	5
+1824	Ode to Defeat	348	217	6
+1825	Destroy Life	276	217	7
+1826	Waiting for the Moon	210	217	8
+1827	Master of the Dance Floor	346	217	9
+1828	Over Destruction	125	217	10
+1829	Maybe Death	328	217	11
+1830	Why not Midnight	291	217	12
+1831	Run with the Horizon	245	218	1
+1832	What happened to the Sky	616	218	2
+1833	Pump up Khatmandu	372	218	3
+1834	Over Summer	202	218	4
+1835	Rock Home	356	218	5
+1836	What is Pandemic	352	218	6
+1837	Over White	333	219	1
+1838	Run with Solace	319	219	2
+1839	View to Defeat	115	219	3
+1840	Jump on Khatmandu	295	219	4
+1841	Where is the Heat	375	219	5
+1842	On the Road to the Dance Floor	701	219	6
+1843	Maybe Home	398	219	7
+1844	Fast Train to the Clouds	611	219	8
+1845	Roll with the Sky	755	219	9
+1846	Why not Home	449	219	10
+1847	Touch this Night	268	219	11
+1848	Where is White	303	219	12
+1849	Bad for the Universe	385	220	1
+1850	Escape from the Moon	171	220	2
+1851	Bad for Death	315	220	3
+1852	Shock Love	225	220	4
+1853	Where is Plague	200	220	5
+1854	Fly to Khatmandu	410	221	1
+1855	Maybe the Moon	288	221	2
+1856	Gimme Pandemic	341	221	3
+1857	Maybe Summer	374	221	4
+1858	Take the Moon	81	221	5
+1859	Why the Universe	382	222	1
+1860	Roll with the Clouds	386	222	2
+1861	Jump on Blue	240	222	3
+1862	What is the Torpedoes	310	222	4
+1863	Take Vision	649	222	5
+1864	Force New York	207	223	1
+1865	Running from Solace	334	223	2
+1866	Force Love	223	223	3
+1867	Take the Moon	366	223	4
+1868	Escape from the Heat	383	223	5
+1869	Where is White	389	223	6
+1870	View to Home	339	223	7
+1871	Maybe this World	788	223	8
+1872	Maybe the Torpedoes	358	224	1
+1873	Touch Home	326	224	2
+1874	What is Vision	315	224	3
+1875	Escape from Solace	361	224	4
+1876	What is the Sky	335	224	5
+1877	Beyond the Nights	528	224	6
+1878	Why the Farm	570	224	7
+1879	Take the Universe	508	224	8
+1880	Feel Summer	385	224	9
+1881	Up to the Horizon	368	224	10
+1882	Pump up New York	568	224	11
+1883	Running from Life	254	225	1
+1884	Maybe Death	242	225	2
+1885	Kill for the Dance Floor	355	225	3
+1886	Roll with Death	144	225	4
+1887	Why White	359	225	5
+1888	Kill for the Sea	331	225	6
+1889	Roll with Khatmandu	331	225	7
+1890	Bring Midnight	673	225	8
+1891	Jump on Vision	400	225	9
+1892	Fast Train to Love	357	226	1
+1893	Over Midnight	759	226	2
+1894	Maybe the Heat	329	226	3
+1895	Touch the Horizon	222	226	4
+1896	Pump up Summer	723	226	5
+1897	Waiting for the Clouds	391	226	6
+1898	Rock Triumph	458	226	7
+1899	Waiting for the Farm	378	227	1
+1900	Jump on this World	309	227	2
+1901	Over Plague	617	227	3
+1902	Why not Plague	227	227	4
+1903	View to this Night	446	227	5
+1904	Jump on the Bed	285	228	1
+1905	Feel this Night	373	228	2
+1906	What about the Ocean	169	228	3
+1907	Get out of Home	336	228	4
+1908	Feel the Bed	484	228	5
+1909	Why not the Heat	417	228	6
+1910	Maybe Pandemic	338	228	7
+1911	Escape from the Nights	280	228	8
+1912	Take Triumph	79	228	9
+1913	Force the Sun	238	228	10
+1914	What about the Heat	340	228	11
+1915	Where is Home	685	229	1
+1916	Shock the Dance Floor	347	229	2
+1917	Escape from Solace	285	229	3
+1918	What about this World	215	229	4
+1919	Waiting for Love	237	229	5
+1920	Jump on Life	285	229	6
+1921	Over White	204	229	7
+1922	Get out of Love	395	229	8
+1923	Running from Defeat	312	229	9
+1924	Rocking Blue	686	229	10
+1925	Destroy Dancing	226	229	11
+1926	Why not Love	241	229	12
+1927	Gimme the Clouds	602	230	1
+1928	On the Road to Fear	549	230	2
+1929	Shock Destruction	215	230	3
+1930	View to the Moon	351	230	4
+1931	What is the Dance Floor	222	230	5
+1932	What happened to the Nights	495	230	6
+1933	Touch Destruction	287	230	7
+1934	Force Solace	688	230	8
+1935	Running from Vision	262	230	9
+1936	Shock Life	275	231	1
+1937	Gimme Khatmandu	272	231	2
+1938	Feel the Sun	382	231	3
+1939	Where is Tokyo	305	231	4
+1940	Get out of the Dance Floor	254	231	5
+1941	Master of Plague	390	231	6
+1942	Ode to Life	362	231	7
+1943	Rock the Sea	208	231	8
+1944	View to the Bed	304	231	9
+1945	What about the Bed	563	231	10
+1946	Fly to Defeat	253	231	11
+1947	Dreams of this World	697	232	1
+1948	What about Solace	773	232	2
+1949	View to Love	261	232	3
+1950	Feel Death	333	232	4
+1951	Escape from Dancing	202	232	5
+1952	Jump on Defeat	232	233	1
+1953	Force Solace	120	233	2
+1954	Up to Fire	341	233	3
+1955	Kill for the Farm	613	233	4
+1956	Touch the Sea	105	233	5
+1957	Escape from Khatmandu	257	233	6
+1958	Running from the Bed	282	233	7
+1959	View to the Universe	718	233	8
+1960	Run with the Sky	233	233	9
+1961	Destroy Khatmandu	726	233	10
+1962	What is the Horizon	283	233	11
+1963	Dreams of Haze	319	234	1
+1964	Ode to the Dance Floor	678	234	2
+1965	Waiting for the Horizon	213	234	3
+1966	Bad for the Universe	482	234	4
+1967	Run with Summer	79	234	5
+1968	Where is the Torpedoes	397	234	6
+1969	Bad for the Moon	266	234	7
+1970	Beyond this Night	200	234	8
+1971	Why not the Farm	575	234	9
+1972	Shock the Sky	264	234	10
+1973	Bad for this City	205	235	1
+1974	Feel Summer	260	235	2
+1975	Fly to Khatmandu	260	235	3
+1976	Bring this City	499	235	4
+1977	Get out of the Moon	446	235	5
+1978	Rock the Clouds	759	235	6
+1979	Ode to this City	346	235	7
+1980	Rocking the Ocean	400	235	8
+1981	Dreams of the Horizon	93	235	9
+1982	Maybe Fire	397	235	10
+1983	Rock Defeat	235	235	11
+1984	Up to the Sea	289	235	12
+1985	Where is Dancing	412	236	1
+1986	Roll with Destruction	326	236	2
+1987	Maybe Summer	324	236	3
+1988	View to the Horizon	255	236	4
+1989	Force Fear	200	236	5
+1990	What is the Ocean	378	236	6
+1991	Shock Tokyo	386	236	7
+1992	Master of Defeat	363	236	8
+1993	Gimme this Night	363	237	1
+1994	Fast Train to Life	394	237	2
+1995	Maybe Night	200	237	3
+1996	Ode to the Clouds	255	237	4
+1997	Over Haze	72	237	5
+1998	Roll with this Night	271	237	6
+1999	Rocking the Nights	173	237	7
+2000	Bring Triumph	173	237	8
+2001	Kill for Triumph	217	237	9
+2002	Rocking this City	734	238	1
+2003	On the Road to the Dance Floor	249	238	2
+2004	Take the Ocean	643	238	3
+2005	Bring the Torpedoes	538	238	4
+2006	Master of the Sun	365	238	5
+2007	Get out of Tokyo	300	238	6
+2008	Rocking the Moon	322	239	1
+2009	Take Life	389	239	2
+2010	Fly to the Dance Floor	487	239	3
+2011	View to this Night	480	239	4
+2012	On the Road to the Universe	622	239	5
+2013	Pump up Haze	342	239	6
+2014	Bad for Vision	330	239	7
+2015	Where is this City	305	239	8
+2016	Jump on the Clouds	203	239	9
+2017	Waiting for this City	340	239	10
+2018	Roll with Life	298	240	1
+2019	Force this World	301	240	2
+2020	Where is the Moon	399	240	3
+2021	Why not Plague	284	240	4
+2022	Over the Horizon	289	240	5
+2023	What happened to the Sun	347	241	1
+2024	Up to the Heat	687	241	2
+2025	Kill for Destruction	312	241	3
+2026	Get out of the Nights	286	241	4
+2027	Running from the Clouds	221	241	5
+2028	What is Love	283	241	6
+2029	What happened to the Sky	400	241	7
+2030	Fly to Pandemic	274	242	1
+2031	Maybe the Bed	690	242	2
+2032	Rock Fear	272	242	3
+2033	Force Triumph	503	242	4
+2034	View to the Bed	658	242	5
+2035	Fly to the Nights	387	242	6
+2036	Rock the Heat	119	242	7
+2037	Rock Blue	413	242	8
+2038	On the Road to Solace	160	243	1
+2039	Get out of the Horizon	235	243	2
+2040	Jump on the Horizon	348	243	3
+2041	Running from the Universe	304	243	4
+2042	Fast Train to Blue	206	243	5
+2043	What is the Sun	215	243	6
+2044	Force Fear	394	243	7
+2045	Dreams of Life	333	243	8
+2046	Touch the Heat	268	243	9
+2047	What about Love	308	244	1
+2048	Rock the Heat	285	244	2
+2049	Where is Defeat	196	244	3
+2050	Jump on the Universe	304	244	4
+2051	Ode to the Clouds	222	244	5
+2052	Fast Train to the Torpedoes	204	244	6
+2053	Ode to Pandemic	281	244	7
+2054	What is the Bed	311	244	8
+2055	Where is Midnight	356	244	9
+2056	On the Road to this World	398	244	10
+2057	Dreams of the Farm	104	245	1
+2058	What about the Sea	344	245	2
+2059	Rocking Khatmandu	274	245	3
+2060	Waiting for Fire	476	245	4
+2061	Feel the Bed	231	245	5
+2062	Where is the Ocean	347	245	6
+2063	Ode to the Farm	497	246	1
+2064	Where is Destruction	597	246	3
+2065	Where is Fear	274	246	4
+2066	Where is the Universe	346	246	5
+\.
+
+
+--
+-- Name: albums albums_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.albums
+    ADD CONSTRAINT albums_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: memberof memberof_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberof
+    ADD CONSTRAINT memberof_pkey PRIMARY KEY (in_group, performer);
+
+
+--
+-- Name: performers performers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.performers
+    ADD CONSTRAINT performers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playson playson_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.playson
+    ADD CONSTRAINT playson_pkey PRIMARY KEY (performer, song, instrument);
+
+
+--
+-- Name: songs songs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.songs
+    ADD CONSTRAINT songs_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: albums albums_made_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.albums
+    ADD CONSTRAINT albums_made_by_fkey FOREIGN KEY (made_by) REFERENCES public.groups(id);
+
+
+--
+-- Name: memberof memberof_in_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberof
+    ADD CONSTRAINT memberof_in_group_fkey FOREIGN KEY (in_group) REFERENCES public.groups(id);
+
+
+--
+-- Name: memberof memberof_performer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.memberof
+    ADD CONSTRAINT memberof_performer_fkey FOREIGN KEY (performer) REFERENCES public.performers(id);
+
+
+--
+-- Name: playson playson_performer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.playson
+    ADD CONSTRAINT playson_performer_fkey FOREIGN KEY (performer) REFERENCES public.performers(id);
+
+
+--
+-- Name: playson playson_song_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.playson
+    ADD CONSTRAINT playson_song_fkey FOREIGN KEY (song) REFERENCES public.songs(id);
+
+
+--
+-- Name: songs songs_on_album_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.songs
+    ADD CONSTRAINT songs_on_album_fkey FOREIGN KEY (on_album) REFERENCES public.albums(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

@@ -1,0 +1,18 @@
+3NF Decomposition
+
+R = ABCDEFGH
+Fc = { ABH->C, A->D, C->E, F->A, E->F, BGH->E }
+key = BGH  (or BF or ...)
+
+decomposition:
+
+	ABHC
+	AD
+	CE
+	AF
+	EF
+	BEGH
+
+at least one of these includes the key (BGH) => done
+
+if key was BF then we'd need an extra table  BF

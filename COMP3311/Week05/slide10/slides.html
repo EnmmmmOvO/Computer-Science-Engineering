@@ -1,0 +1,445 @@
+<html>
+<head>
+<title>COMP3311 Week 5 Thursday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 5 Thursday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 05 Thursday</heading></a>
+<li class="i"> <a href="#s2">Assignment FAQs</a>
+<li class="i"> <a href="#s3">Keep in mind for Assignment 2</a>
+<li class="i"> <a href="#s4">Programming with Databases</a>
+<li class="i"> <a href="#s8">Python in 10 mins</a>
+<li class="i"> <a href="#s13">Command-line Args</a>
+<li class="i"> <a href="#s14">Executable Scripts</a>
+<li class="i"> <a href="#s15">Psycopg2</a>
+<li class="i"> <a href="#s17">Connecting to Databases</a>
+<li class="i"> <a href="#s18">Operations on <large><code>cursor</code></large>s</a>
+<li class="i"> <a href="#s19">Aside: SQL Injection</a>
+<li class="i"> <a href="#s20">Example: connecting to a database</a>
+<li class="i"> <a href="#s21">Exercise: Queries on Uni database</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [0/22]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 05 Thursday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lectures ...</h4>
+<ul>
+<li> PL&harr;DB interface, &nbsp; Python/psycopg2
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Assignment 1 due before <font color="#CC0000">tomorrow 11:59pm</font> <br>
+    <span class="smaller">(170 submissions so far; 390 more to go)</span>
+<li> Check your assignment on &nbsp;<large><code>vxdb2</code></large>&nbsp; before submitting
+<li> Make sure it loads with <font color='#0000BB'>no ERRORs</font> using the commands:
+<p><pre style="font-size:90%">
+dropdb ass1;  createdb ass1;  psql ass1 -f ass1.dump
+psql ass1 -f ass1.sql &nbsp;&nbsp; <span class='comment'># your submission</span>
+</pre><p>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [1/22]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment FAQs</div></td><td align='right'></td></tr></table>
+<p>
+You can define as many views and functions as you like
+<ul>
+<li> but must preserve the Q1 ... Q12 interfaces
+</ul>
+Don't assume that names are unique
+<ul>
+<li> <large><code>Beers.name</code></large>&nbsp; is not unique in the current database
+<li> <large><code>Breweries.name</code></large>&nbsp; is not unique in real life
+<li> <large><code>Ingredients.name</code></large>&nbsp; is most likely unique
+</ul>
+<font color='#0000BB'>Do not</font> include the &nbsp;<large><code>Locations</code></large>&nbsp; constraint in &nbsp;<large><code>ass1.sql</code></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [2/22]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Keep in mind for Assignment 2</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+If 100's of people are finishing the assignment last minute ...
+<ul>
+<li> we get bombarded with 100's of emails, forum posts, etc.
+	<p> <small>(it takes much longer to get your question answered)</small> </p>
+<li> <large><code>db2</code></large>&nbsp; has 100's of PG servers running simultaneously
+	<p> <small>(it runs s-l-o-w; queries take much longer to run)</small> </p>
+</ul>
+<br><br>
+Also, beware that &nbsp;<large><code>/localstorage</code></large>&nbsp; is not backed up ... put only your DB there
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [3/22]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Programming with Databases</div></td><td align='right'></td></tr></table>
+<p>
+Programming Language / DBMS archtecture:
+<br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/pldb/dbpl-arch.png]" src="Pics/pldb/dbpl-arch.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [4/22]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Programming with Databases <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Consider this (imaginary) PL/DBMS access method:
+<p><pre>
+<span class='comment'>--  establish connection to DBMS</span>
+db = dbAccess("DB");
+query = "select a,b from R,S where ... ";
+<span class='comment'>--  invoke query and get handle to result set</span>
+results = dbQuery(db, query);
+<span class='comment'>--  for each tuple in result set</span>
+while (tuple = dbNext(results)) {
+    <span class='comment'>--  process next tuple</span>
+    process(tuple['a'], tuple['b']);
+}
+</pre><p>
+<br>
+Estimated costs: &nbsp;<large><code>dbAccess</code></large> = 500ms, &nbsp;<large><code>dbQuery</code></large> = 200ms, &nbsp;<large><code>dbNext</code></large> < 1ms
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [5/22]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Programming with Databases <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example: find info about all marks for all students
+<p><pre>
+query1 = "select id,name from Student order by id";
+res1 = dbQuery(db, query1);
+while (tuple1 = dbNext(res1)) {
+    query2 = "select course,mark from Marks"
+             + " where student = " + tuple1['id'];
+    res2 = dbQuery(db,query2);
+    while (tuple2 = dbNext(res2)) {
+        <span class='comment'>--  process student/course/mark info</span>
+    }
+}
+</pre><p>
+E.g. 10000 students, each with 8 marks, &rArr; run 10001 queries
+<p>
+Cost = 10001 queries + 80000 tuple fetches
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [6/22]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Programming with Databases <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Should be implemented as:
+<p><pre>
+query = "select id,name,course,mark"
+        + " from Student s join Marks m "
+        + " on (s.id=m.student)"
+        + " order by s.id"
+results = dbQuery(db, query);
+while (tuple = dbNext(results)) {
+    <span class='comment'>--  process student/course/mark info</span>
+}
+</pre><p>
+<br>
+We invoke 1 query, and transfer same number of tuples.
+<p>
+Cost = 1 query + 80000 tuple fetches
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [7/22]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Python in 10 mins</div></td><td align='right'></td></tr></table>
+<p>
+Python identifiers and constants similar to C
+<p><pre>
+12  3.141  'abc'  "it's fun"  "one line\n"
+</pre><p>
+Data structures
+<ul>
+<li> list: &nbsp;&nbsp;<large><code>a = [5,4,3,2,1]</code></large>, &nbsp;<large><code>a[0] == 5</code></large>, &nbsp;<large><code>a[4] == 1</code></large>
+<li> tuple: &nbsp;&nbsp;<large><code>t = (5, "abc", 2.17)</code></large>, &nbsp;<large><code>t[1] == "abc"</code></large>, &nbsp;<large><code>x,y,z = t</code></large>
+<li> dictionary: &nbsp;&nbsp;<large><code>d = { "adam":65, "john":50 }</code></large>, &nbsp;<large><code>d["john"] == 50</code></large>
+</ul>
+Operators
+<p><pre>
+and  or  not  +  -  /  *  **  ==  <  >  <=  
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [8/22]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Python in 10 mins <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Keywords
+<p><pre>
+None  def  if  elif  else  for  in  while   try  except
+</pre><p>
+Assignment is <large><code>=</code></large>, like C.
+<p>
+Variables are defined/typed by first assignment
+<p>
+The <large><code>print</code></large> function can print multiple objects
+<p><pre>
+<font color="#008800">print(</font> <i>obj<sub>1</sub></i>, <i>obj<sub>1</sub></i>, ... <font color="#008800">, sep=' ', end='\n', ...)</font>
+</pre><p>
+Python can convert most objects to a string representation
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [9/22]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Python in 10 mins <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+E.g. iteration over a list:
+<p><pre>
+sum = 0
+for x in [1,2,3,4,5,6,7]:
+   sum = sum + x
+print sum
+</pre><p>
+E.g. defining a function:
+<p><pre>
+def fac(n):
+  f = 1
+  i = 1
+  while i <= n:
+    f = f * i
+    i = i + 1
+  return f
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [10/22]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Python in 10 mins <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Python has an object oriented flavour:
+<p><pre>
+<i>Object<font color="#008800">.</font>Method<font color="#008800">(</font>args<font color="#008800">)</font></i>   or   <i>Module<font color="#008800">.</font>Method<font color="#008800">(</font>args<font color="#008800">)</font></i>
+</pre><p>
+<p>
+Some functions are global, e.g.
+<p><pre>
+len([6,4,7,5])  &rarr;  4
+len("abcdefg")  &rarr;  7
+print('Hello, world')
+</pre><p>
+<p>
+Some functions need to be <large><font color="#008800"><b><code>import</code></b></font></large>ed from a module
+<p><pre>
+import sys
+import psycopg2
+</pre><p>
+Python scripts are just a sequence of statements
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [11/22]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Python in 10 mins <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Python uses indentation to group statements
+<p><pre>
+a = <i>someValue</i>
+if a > 5:
+   print("greater than 5")
+else:
+   print("at most 5")
+i = 0
+while i < a:
+   print(i)
+   i = i + 1
+</pre><p>
+and <large><font color="#008800"><b><code>:</code></b></font></large> introduces a new statement group
+<p>
+Does not require semi-colon to complete/separate statements
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [12/22]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Command-line Args</div></td><td align='right'></td></tr></table>
+<p>
+In C, we have &nbsp;<large><code>main(int argc, char *argv[])</code></large>
+<p>
+In Python, we have &nbsp;<large><code>sys.argv</code></large> &nbsp; <small>(a Python list of strings)</small>
+<p>
+To access command-line args
+<p><pre>
+import sys
+
+argc = len(sys.argv)
+
+<span class='comment'># access via index</span>
+print(sys.argv[0])
+
+<span class='comment'># access via iteration</span>
+for arg in sys.argv:
+   print(arg)
+<p><pre>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [13/22]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Executable Scripts</div></td><td align='right'></td></tr></table>
+<p>
+Can always run script &nbsp;<large><code>s.py</code></large>&nbsp; as
+<p><pre>
+$ python3 s.py <i>args...</i>
+</pre><p>
+To make &nbsp;<large><code>s.py</code></large>&nbsp; like an executable command
+<p><pre>
+#!/usr/bin/python3
+
+<i>code for script</i>
+</pre><p>
+And then 
+<p><pre>
+$ chmod 755 s.py
+$ ./s.py <i>args...</i>
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [14/22]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Psycopg2</div></td><td align='right'></td></tr></table>
+<p>
+<large><code>Psycopg2</code></large> is a library for Python &harr; PostgreSQL interaction.
+<p>
+Where <large><code>psycopg2</code></large> fits in the PL/DB architecture
+<p><br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/pldb/pypsy-arch.png]" src="Pics/pldb/pypsy-arch.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [15/22]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Psycopg2 <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Summary of Psycopg2 functions:
+<ul>
+<li> <large><font color="#008800"><b><code>conn = psycopg2.connect(</code></b></font></large><i>DB_connection_string</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<li> <large><font color="#008800"><b><code>conn.close()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>conn.commit()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>cur = conn.cursor()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>cur.execute(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<li> <large><font color="#008800"><b><code>cur.mogrify(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<li> <large><font color="#008800"><b><code>list = cur.fetchall()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>tup = cur.fetchone()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>list = cur.fetchmany(</code></b></font></large><i>nTuples</i><large><font color="#008800"><b><code>)</code></b></font></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [16/22]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Connecting to Databases</div></td><td align='right'></td></tr></table>
+<p>
+<large><font color="#008800"><b><code>conn = psycopg2.connect("dbname=</code></b></font></large><i>dbName</i><large><font color="#008800"><b><code>")</code></b></font></large>
+<ul>
+<li> attempts to connect to database called <i>dbName</i>
+<li> if succesful, <large><code>conn</code></large> holds a handle for db access
+<li> if unsuccesful, <large><code>conn</code></large> has the value <large><code>None</code></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [17/22]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Operations on <large><code>cursor</code></large>s</div></td><td align='right'></td></tr></table>
+<p>
+<large><font color="#008800"><b><code>cur.execute(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<ul>
+<li> if supplied, insert values into the SQL statement
+<li> then execute the modified SQL statement
+</ul>
+Examples:
+<p><pre style="font-size:90%">
+<span class='comment'># run a fixed query</span>
+cur.execute("select * from R where x = 1");
+
+<span class='comment'># run a query with values inserted</span>
+cur.execute("select * from R where x = %s", (1,))
+cur.execute("select * from R where x = %s", [1])
+
+<span class='comment'># run a query stored in a variable</span>
+query = "select * from Students where name ilike %s"
+pattern = "%mith%"
+cur.execute(query, [pattern])
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [18/22]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Aside: SQL Injection</div></td><td align='right'></td></tr></table>
+<p>
+If using values from an external source
+<ul>
+<li> be careful how they're inserted into an SQL query
+</ul>
+The following are dangerous
+<p><pre>
+qry = f"select * from R where x = {<font color="#CC0000">value</font>}"
+qry = "select * from R where x = " + <font color="#CC0000">value</font>
+qry = "select * from R where x = '%s'" % <font color="#CC0000">value</font>
+</pre><p>
+Need to use something like the following:
+<p><pre>
+qry = "select * from R where x = %s"
+cur.execute(qry, [value])
+<span class='comment'>or even</span>
+qry = "select * from R where x = %(val)s"
+cur.execute(qry, {'val':<font color="#CC0000">value</font>})
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [19/22]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example: connecting to a database</div></td><td align='right'></td></tr></table>
+<p>
+Simple script that connects and then closes connection
+<p><pre>
+import psycopg2
+
+try:
+   conn = psycopg2.connect("dbname=mydb")
+   print(conn)  <span class='comment'># state of connection after opening</span>
+   conn.close()
+   print(conn)  <span class='comment'># state of connection after closing</span>
+except Exception as e:
+   print("Unable to connect to the database")
+</pre><p>
+which, if <large><code>mydb</code></large> is accessible, produces output:
+<p><pre style="font-size:80%">
+$ <b>python3 ex1.py</b>
+&lt;connection object at 0xf67186ec; dsn: 'dbname=mydb', closed: 0&gt;
+&lt;connection object at 0xf67186ec; dsn: 'dbname=mydb', closed: 1&gt;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [20/22]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Queries on Uni database</div></td><td align='right'></td></tr></table>
+<p>
+Consider  the &nbsp;<large><code>uni</code></large>&nbsp; database
+<ul>
+<li> 43 tables, e.g. &nbsp;<large><code>Students</code></large>, &nbsp;<large><code>Courses</code></large>
+<li> ~5000 students, ~2600 course, ~67K enrolments
+</ul>
+Some of the tables ...
+<p><pre style="font-size:90%">
+People(id, family, given, fullname, birthday, <i>origin</i>)
+
+Students(id)
+
+Subjects(id, code, name, longname, uoc, <i>offeredby</i>, ...)
+
+Courses(id, <i>subject</i>, <i>term</i>, homepage)
+
+Terms(id, year, ttype, code, name, starting, ending)
+
+Orgunits(id, <i>utype</i>, name, longname, unswid)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [21/22]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Queries on Uni database <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Write Python/psycopg2 scripts to
+<ol>
+<li> get a list of subject codes+names <br><br>
+<li> get a list of subjects whose codes match a pattern <br><br>
+<li> display info about a subject given by a code <br><br>
+<li> get a list of students whose name matches a pattern <br><br>
+<li> display a transcript for a student, given a zID
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 5 Thursday Lecture &#9826; [22/22]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 16 Mar 2023</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

@@ -1,0 +1,517 @@
+<html>
+<head>
+<title>COMP3311 Week 4 Tuesday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 4 Tuesday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 04 Tuesday</heading></a>
+<li class="i"> <a href="#s3">Views (recap)</a>
+<li class="i"> <a href="#s6">Example Database: Beers/Bars/Drinkers</a>
+<li class="i"> <a href="#s7">Exercise: More Queries on Simple Beer DB</a>
+<li class="i"> <a href="#s8">More on SQL Patterns</a>
+<li class="i"> <a href="#s9">SQL as a Programming Language</a>
+<li class="i"> <a href="#s10">SQL as a Programming Language</a>
+<li class="i"> <a href="#s11">What's wrong with SQL?</a>
+<li class="i"> <a href="#s13">Database Programming</a>
+<li class="i"> <a href="#s15">PostgreSQL Stored Procedures</a>
+<li class="i"> <a href="#s16">SQL functions</a>
+<li class="i"> <a href="#s18">Exercise: SQL function</a>
+<li class="i"> <a href="#s19">PLpgSQL</a>
+<li class="i"> <a href="#s20">Exercise: A PLpgSQL function</a>
+<li class="i"> <a href="#s21">Exercise: Another PLpgSQL function</a>
+<li class="i"> <a href="#s22">PLpgSQL functions using queries</a>
+<li class="i"> <a href="#s23">PLpgSQL functions returning sets</a>
+<li class="i"> <a href="#s24">Exercise: The <large><code>iota</code></large> function</a>
+<li class="i"> <a href="#s25">Exercise: The <large><code>favBeers</code></large> function</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [0/25]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 04 Tuesday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> more SQL Query Language
+<li> Stored Procedures
+<li> PLpgSQL Procedural language
+</ul>
+<br>
+Before asking questions on the forum ...
+<ul>
+<li> if you don't attend lectures, please watch the lecture videos
+<li> if you want to work on stuff next yet covered in lectures<br>
+	watch the relevant content videos (under Slides and Videos)
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [1/25]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 04 Tuesday</heading> <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz 3 due before Friday midnight <span class="smaller">(involves PLpgSQL)</span>
+<li> Set up your PostgreSQL server <br>
+        <span class="smaller">(520 students have logged in to vxdb2 and have /localstorage)</span><br>
+</ul>
+<br>
+Will run a consultation session on Teams from 12-2 on Wednesday.
+<p><br>
+Reminder: this weekend is census weekend ... stay enrolled and pay
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [2/25]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Views (recap)</div></td><td align='right'></td></tr></table>
+<p>
+Views are defined as
+<p><pre style="font-size:90%">
+<font color="#008800">create [or replace] view</font> <i>ViewName</i> <font color="#008800">(</font> <i>AttributeNames</i> <font color="#008800">)</font>
+<font color="#008800">as</font>
+<font color="#008800">select</font> <i>ResultValues (one per attribute)</i> <font color="#008800">from</font> ... <font color="#008800">;</font>
+</pre><p>
+Things to note:
+<ul>
+<li> <large><code>AttributeNames</code></large> are <i>outputs</i> 
+<li> inherit their type from corresponding <large><code>select</code></large> expression
+<li> each view has an associated tuple type (like a table does)
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [3/25]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Views (recap) <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example view definition:
+<p><pre>
+create table R (x integer, y text, z char(3));
+create view RR(a, b) as select x,y from R;
+</pre><p>
+The view <large><code>RR</code></large> has type <large><code>(integer,text)</code></large>
+<p>
+You cannot redefine it as e.g.
+<p><pre>
+create view RR(a, b) as select y,z from R;
+</pre><p>
+This has type <large><code>(text,char(3))</code></large>, incompatible with the original type.
+<p>
+To change the number/types of view attributes:
+<p><pre>
+drop view RR;
+create view RR(a, b) as select y,z from R;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [4/25]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Views (recap) <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+View definitions in <large><code>ass1.sql</code></large> template:
+<p><pre>
+create or replace view Q1(beer, "sold in", alcohol)
+as select null, null, null;
+</pre><p>
+defines a view with type <large><code>(text,text,text)</code></large>
+<p>
+When you define your query, it must have the same attribute types.
+<p>
+Similarly
+<p><pre>
+create or replace view Q2(beer, style, abv, reason)
+as select null, null, null::ABVvalue, null;
+</pre><p>
+has type <large><code>(text,text,ABVvalue,text)</code></large>, and so must the query.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [5/25]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example Database: Beers/Bars/Drinkers</div></td><td align='right'></td></tr></table>
+<p>
+Consider the following ER model:
+<p>
+<div align="center">
+<p><div align='center'>
+<img alt="[Diagram:Pics/exercises/beer1.png]" src="Pics/exercises/beer1.png">
+</div><p>
+</div>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [6/25]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: More Queries on Simple Beer DB</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+<ol start="16">
+<li> Which bar is most popular? <small>(Most drinkers)</small>
+<li> Which bar is most expensive? <br>
+    <small>(Maximum average price)</small>
+<li> Price of cheapest beer at each bar?
+<li> Name of cheapest beer at each bar?
+<li> Which beers are sold at all bars?
+<li> How many drinkers are in each suburb?
+<li> How many bars in suburbs where drinkers live? <br>
+    <small>(Must include suburbs with no bars)</small>
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [7/25]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; More on SQL Patterns</div></td><td align='right'></td></tr></table>
+<p>
+Answering queries like: Which X's are RelatedTo all Y's
+<p>
+<p><pre>
+AllYs = select Y from Ys
+for each X {
+   YsRelatedToX = select Y from R where X
+   if YsRelatedToX == AllYs
+      X is added to the results
+}
+</pre><p>
+In SQL, you can't compare sets directly, so
+<p><pre>
+not exists (
+   (select Y from Ys)
+   except
+   (select Y from R where X)
+)
+</pre><p>
+
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [8/25]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL as a Programming Language</div></td><td align='right'></td></tr></table>
+<p>
+SQL is a powerful language for manipulating relational data.
+<p>
+But it is <font color='#0000BB'>not</font> a powerful <font color='#0000BB'>programming language</font>.
+<p>
+At some point in developing complete database applications
+<ul>
+<li> we need to implement user interactions
+<li> we need to control sequences of database operations
+<li> we need to manipulate query results in complex ways
+</ul>
+and SQL cannot do any of these.
+<p>
+SQL cannot even do something as simple as factorial!
+<p>
+<small>
+Ok ... so PostgreSQL added a factorial operator ... but it's non-standard.
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [9/25]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL as a Programming Language</div></td><td align='right'></td></tr></table>
+<p>
+SQL is a powerful language for manipulating relational data.
+<p>
+But it is <font color='#0000BB'>not</font> a powerful <font color='#0000BB'>programming language</font>.
+<p>
+At some point in developing complete database applications
+<ul>
+<li> we need to implement user interactions
+<li> we need to control sequences of database operations
+<li> we need to manipulate query results in complex ways
+</ul>
+and SQL cannot do any of these.
+<p>
+SQL cannot even do something as simple as factorial!
+<p>
+<small>
+Ok ... so PostgreSQL added a factorial operator ... but it's non-standard.
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [10/25]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; What's wrong with SQL?</div></td><td align='right'></td></tr></table>
+<p>
+Consider the problem of withdrawal from a bank account:
+<p>
+<i>If a bank customer attempts to withdraw more funds than
+they have in their account, then indicate "Insufficient Funds",
+otherwise update the account</i>
+<p>
+An attempt to implement this in SQL:
+<p><pre><small>
+select 'Insufficient Funds'
+from   Accounts
+where  acctNo = <i>AcctNum</i> and balance &lt; <i>Amount</i>;
+update Accounts
+set    balance = balance - <i>Amount</i>
+where  acctNo = <i>AcctNum</i> and balance >= <i>Amount</i>;
+select 'New balance: '||balance
+from   Accounts
+where  acctNo = <i>AcctNum</i>;
+</small></pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [11/25]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; What's wrong with SQL? <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Two possible evaluation scenarios:
+<ul>
+<li> displays "Insufficient Funds", <large><code>UPDATE</code></large> has no effect, displays unchanged balance
+<li> <large><code>UPDATE</code></large> occurs as required, displays changed balance
+</ul>
+Some problems:
+<ul>
+<li> SQL doesn't allow parameterisation (e.g. <i>AcctNum</i>)
+<li> always attempts <large><code>UPDATE</code></large>, even when it knows it's invalid
+<li> need to evaluate <large><code>(balance &lt; </code></large><i>Amount</i><large><code>)</code></large> test twice
+<li> always displays balance, even when not changed
+</ul>
+To accurately express the "business logic",
+we need facilities like conditional execution and parameter passing.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [12/25]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Database Programming</div></td><td align='right'></td></tr></table>
+<p>
+Database programming requires a combination of
+<ul>
+<li> manipulation of data in DB &nbsp; <small>(via SQL)</small>
+<li> conventional programming &nbsp; <small>(via procedural code)</small>
+</ul>
+This combination is realised in a number of ways:
+<ul>
+<li> passing SQL commands via a "call-level" interface <br>
+<small><font color="#999999">(prog lang is decoupled from DBMS; most flexible; e.g. Java/JDBC, JDBCython/psycopg2)</font></small>
+<li> embedding SQL into augmented programming languages <br>
+<small><font color="#999999">(requires pre-processor for language; typically DBMS-specific; e.g. SQL/C)</font></small>
+<li> special-purpose programming languages in the DBMS <br>
+<small><font color="#999999">(closely integrated with DBMS; enable extensibility; e.g. PL/SQL, PLpgSQL)</font></small>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [13/25]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Database Programming <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Combining <font color="#CC0000">SQL</font> and <font color="#008800">procedural</font> code solves the "withdrawal" problem:
+<p><pre><small>
+<font color="#008800">create function
+    withdraw(<font color="#0000EE">acctNum</font> text, <font color="#0000EE">amount</font> integer) returns text
+declare bal integer;
+begin
+    set bal = (<font color="#CC0000">select balance
+               from   Accounts
+               where  acctNo = <font color="#0000EE">acctNum</font></font>);
+    if (bal &lt; <font color="#0000EE">amount</font>) then
+        return 'Insufficient Funds';
+    else
+        <font color="#CC0000">update Accounts
+        set    balance = balance - <font color="#0000EE">amount</font>
+        where  acctNo = <font color="#0000EE">acctNum</font></font>;
+        set bal = (<font color="#CC0000">select balance
+                   from   Accounts
+                   where  acctNo = <font color="#0000EE">acctNum</font></font>);
+        return 'New Balance: ' || bal;
+    end if
+end;</font>
+</small></pre><p>
+<small>(This example is actually a stored procedure, using SQL/PSM syntax)</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [14/25]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; PostgreSQL Stored Procedures</div></td><td align='right'></td></tr></table>
+<p>
+PostgreSQL syntax for defining stored <font color='#0000BB'>functions</font>:
+<p><pre>
+<font color="#0000EE">create or replace function</font>
+   <i>funcName</i><font color="#0000EE">(</font><i>arg<sub>1</sub></i>, <i>arg<sub>2</sub></i>, ....<font color="#0000EE">)</font> <font color="#0000EE">returns</font> <i>retType</i>
+<font color="#0000EE">as $$</font>
+<i>String containing function definition</i>
+<font color="#0000EE">$$ language</font> <i>funcDefLanguage</i><font color="#0000EE">;</font>
+</pre><p>
+Notes:
+<ul>
+<li> <i>arg<sub>i</sub></i> &nbsp; consists of &nbsp; <i>name</i> <i>type</i>
+<li> <large><code>$$</code></large> ... <large><code>$$</code></large> are just another type of <font color='#0000BB'>string quote</font> &nbsp;(c.f. <large><code>'</code></large>...<large><code>'</code></large>)
+<li> function definition languages: SQL, PLpgSQL, Python, ...
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [15/25]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL functions</div></td><td align='right'></td></tr></table>
+<p>
+The body of a PostgreSQL function can be an SQL query
+<p><pre>
+create or replace function
+   maxPriceAt(text) returns numeric(4,2)
+as $$
+select max(price)::numeric(4,2)
+from   Sells where bar = <font color="#CC0000">$1</font>;
+$$ language sql;
+</pre><p>
+which can be used as, e.g.
+<p><pre>
+select * from maxPriceAt('Royal Hotel');
+select maxPriceAt('Coogee Bay Hotel');
+select name, maxPriceAt(name) from  Bars;
+</pre><p>
+But still provides no procedural programming capability
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [16/25]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL functions <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Value returned by an SQL function ...
+<ul>
+<li> is the first value from the &nbsp;<large><code>select</code></large>&nbsp; statement
+<li> can be a tuple if function returns a tuple type
+</ul>
+Parameters can be named
+<p><pre>
+create or replace function
+   maxPriceAt(<font color="#CC0000">_bar</font> text) returns numeric(4,2)
+as $$
+select max(price)::numeric(4,2)
+from   Sells where bar = <font color="#CC0000">_bar</font>;
+$$ language sql;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [17/25]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: SQL function</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Write an SQL function to find the most expensive beer that a drinker likes
+<p><pre>
+create or replace function
+   priciest(_drinker text) returns text
+as $$
+...
+$$ language sql;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [18/25]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; PLpgSQL</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+PLpgSQL is PostgreSQL's stored procedure language
+<p>
+Allows you to write functions that combine
+<ul>
+<li> SQL queries
+<li> local data structures
+<li> procedural programming &nbsp; <span class="smaller">(sequence, selection, iteration)</span>
+</ul>
+PLpgSQL syntax is slightly old-fashioned &nbsp; <span class="smaller">(keywords, not {...} )</span>
+<p>
+Loosely based on Oracle's PL/SQL
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [19/25]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: A PLpgSQL function</div></td><td align='right'></td></tr></table>
+<p>
+An iterative factorial function in PLpgSQL
+<p><pre>
+create or replace function
+   ifac(n integer) returns integer
+as $$
+declare
+   i   integer;       <span class='comment'>--uninitialised variable</span>
+   fac integer := 1;  <span class='comment'>-- initialised variable</span>
+begin
+   for i in 2..n loop
+      fac = fac * i;
+   end loop;
+   return fac;
+end;
+$$ language plpgsql;
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [20/25]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Another PLpgSQL function</div></td><td align='right'></td></tr></table>
+<p>
+A recursive factorial function in PLpgSQL
+<p><pre>
+create or replace function
+   rfac(n integer) returns integer
+as $$
+begin
+   if (n < 2) then
+      return 1;
+   else
+      return n * rfac(n-1);
+   end if;
+end;
+$$ language plpgsql;
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [21/25]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s23"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; PLpgSQL functions using queries</div></td><td align='right'></td></tr></table>
+<p>
+PLpgSQL functions can invoke and interate through queries
+<p><pre>
+declare
+   tup <font color="#996600">record</font>;
+begin
+   for tup in <i>Query</i>
+   loop
+      <i>Process</i> tup
+   end loop;
+   ...
+end;
+</pre><p>
+The <large><code>tup</code></large> variable inherits the type of query tuples.
+<p>
+I.e. the type of a <large><code>record</code></large> variable is determined at query time.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [22/25]</div> <DIV class='slideCl1    ' id="s23"  >
+<div class='navCl1'><a href="#s22"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s24"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; PLpgSQL functions returning sets</div></td><td align='right'></td></tr></table>
+<p>
+PLpgSQL functions can return sets of values, e.g.
+<p><pre>
+create or replace function
+   iota(_max integer) return setof integer
+as $$ ... $$
+</pre><p>
+If they return a set of tuples, the effectively return a table
+<p><pre>
+create or replace function
+   favBeers(_drinker text) return setof Beers
+as $$ ... $$
+</pre><p>
+Each tuple/value in the set is included by <large><font color="#008800"><b><code>return next</code></b></font></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [23/25]</div> <DIV class='slideCl1    ' id="s24"  >
+<div class='navCl1'><a href="#s23"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s25"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: The <large><code>iota</code></large> function</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Implement a function called <large><code>iota</code></large> that
+<ul>
+<li> takes an integer value <large><code>n</code></large>
+<li> returns the set of numbers from 1.. <large><code>n</code></large>
+</ul>
+<p><pre>
+create or replace function
+   iota(_max integer) returns setof integer
+as $$
+...
+$$ language plpgsql;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [24/25]</div> <DIV class='slideCl1    ' id="s25"  >
+<div class='navCl1'><a href="#s24"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: The <large><code>favBeers</code></large> function</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Implement the favourite beers function
+<p><pre>
+create or replace function
+   favBeers(_drinker text) returns setof Beers
+as $$
+...
+$$ language plpgsql;
+</pre><p>
+Assume that every beer a drinker drinks is one of their favourites
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Tuesday Lecture &#9826; [25/25]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 7 Mar 2023</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

@@ -1,0 +1,281 @@
+<html>
+<head>
+<title>COMP3311 Week 2 Monday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 2 Monday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 02</heading></a>
+<li class="i"> <a href="#s2">CSE Environment</a>
+<li class="i"> <a href="#s3">Recap</a>
+<li class="i"> <a href="#s4">ER to Relational Mapping</a>
+<li class="i"> <a href="#s5">SQL Schemas</a>
+<li class="i"> <a href="#s6">SQL Types</a>
+<li class="i"> <a href="#s7">SQL Constraints</a>
+<li class="i"> <a href="#s8">Exercise: Constraints</a>
+<li class="i"> <a href="#s9">Mapping Strong Entities</a>
+<li class="i"> <a href="#s10">Mapping Weak Entities</a>
+<li class="i"> <a href="#s11">Mapping N:M Relationships</a>
+<li class="i"> <a href="#s12">Mapping 1:N Relationships</a>
+<li class="i"> <a href="#s13">Mapping 1:1 Relationships</a>
+<li class="i"> <a href="#s15">Mapping n-way Relationships</a>
+<li class="i"> <a href="#s16">Mapping Composite Attributes</a>
+<li class="i"> <a href="#s17">Mapping Multi-valued Attributes (MVAs)</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [0/17]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 02</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> More SQL Data Definition Language (DDL)
+<li> More Mapping ER &rarr; Relational/SQL
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz before Friday midnight
+<li> SES survey before October 9
+<li> Set up your PostgreSQL server <br>
+	<span class="smaller">(170 students have logged in to db2 and have /localstorage)</span>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [1/17]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; CSE Environment</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/misc/environ.png]" src="Pics/misc/environ.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [2/17]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Recap</div></td><td align='right'></td></tr></table>
+<p>
+Entity-relationship data model
+<ul>
+<li> entities, attributes, relationships, subclasses
+<li> relationship variations: total/partial, n:m, 1:n, 1:1
+</ul>
+<p>
+SQL as an implementation of relational data model
+<ul>
+<li> relations &rarr; tables, tuples &rarr; tuples, attributes &rarr; columns/fields
+</ul>
+<p>
+Mapping ER to SQL
+<ul>
+<li> entity sets &rarr; tables, entities &rarr; tuples, attributes &rarr; fields
+<li> relationships &rarr; tables &nbsp;<span class="smaller">or</span>&nbsp; foreign keys
+<li> multi-valued-attributes/weak-entities/subclasses &rarr; ?
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [3/17]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; ER to Relational Mapping</div></td><td align='right'></td></tr></table>
+<p>
+Reminder: a useful strategy for database design:
+<ul>
+<li> perform initial data modelling using ER <br>
+	<small>(conceptual-level modelling)</small>
+<li> transform conceptual design into SQL relational model <br>
+	<small>(implementation-level modelling)</small>
+</ul>
+A formal mapping exists for ER model <i>&rarr;</i> SQL/Relational model.
+<p>
+This maps "structures"; but additional info is needed, e.g.
+<ul>
+<li> concrete domains for attributes and other constraints
+</ul>
+But can't map some things (e.g. n:m total participation)
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [4/17]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL Schemas</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Primary SQL DDL construct is table creation:
+<p><pre>
+<font color="#CC0000">create table</font> <i>TableName</i> <font color="#CC0000">(</font>
+   <i>attr<sub>1</sub>Name  type [constraints]</i><font color="#CC0000">,</font>
+   <i>attr<sub>2</sub>Name  type [constraints]</i><font color="#CC0000">,</font>
+   <i>attr<sub>3</sub>Name  type [constraints]</i><font color="#CC0000">,</font>
+   ...
+   <font color="#CC0000">primary key</font> <font color="#CC0000">(</font><i>attr<sub>x</sub>Name</i> <font color="#CC0000">),</font>
+   <font color="#CC0000">foreign key</font> <font color="#CC0000">(</font><i>attr<sub>y</sub>Name</i><font color="#CC0000">)</font>
+               <font color="#CC0000">references</font> <i>OtherTable</i> <font color="#CC0000">(</font><i>attr<sub>z</sub>Name </i><font color="#CC0000">)</font>
+);
+</pre><p>
+SQL schema = collection of table definitions, including constraints
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [5/17]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL Types</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Built-in types
+<ul>
+<li> numeric: <large><code>integer</code></large>, <large><code>numeric(<i>n</i>)</code></large>, <large><code>real</code></large>
+<li> strings: <large><code>char(<i>n</i>)</code></large>, <large><code>varchar(<i>n</i>)</code></large>, <large><code>text</code></large>
+<li> time: <large><code>date</code></large>, <large><code>time</code></large>, <large><code>timestamp</code></large>, <large><code>interval</code></large>
+<li> <large><code>boolean</code></large>, monetary, geometric, enumerated, ...
+</ul>
+Make your own
+<pre>
+create domain Dom as Type Constraint;
+create type Name as enum (val<sub>1</sub>, val<sub>2</sub>,...);
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [6/17]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; SQL Constraints</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Constraints in SQL DDL
+<ul>
+<li> on attributes e.g. &nbsp; <large><code>integer</code></large>, &nbsp; <large><code>check (x > 0)</code></large>, &nbsp; <large><code>not null</code></large>
+<li> on table e.g. &nbsp; <large><code>unique</code></large>, &nbsp; <large><code>primary key (a,b,c)</code></large>
+<li> between tables e.g. &nbsp; <large><code>foreign key (x) references T(y)</code></large>
+</ul>
+Tuples which do not satisfy constraints cannot be added to DB
+<p>
+Gives strong guarantee that the data is <font color='#0000BB'>valid</font> (internally consistent)
+<p>
+But does not guarantee that it reflects reality
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [7/17]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Constraints</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Constraint = SQL expression limiting possible values
+<p>
+Define type + constraints for
+<ul>
+<li> positive integers
+<li> marks (range 0..100)
+<li> unsw course codes (COMP3311)
+<li> person's name (alpha + space + - + ')
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [8/17]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Strong Entities</div></td><td align='right'></td></tr></table>
+<p>
+An entity set <i>E</i>&nbsp; with atomic attributes
+	&nbsp;<i>a<sub>1</sub>, a<sub>2</sub>, ... a<sub>n</sub></i>
+<p>
+maps to
+<p>
+A relation <i>R</i>&nbsp; with attributes (columns)
+	&nbsp;<i>a<sub>1</sub>, a<sub>2</sub>, ... a<sub>n</sub></i>
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/strongent.png]" src="Pics/er-rel/strongent.png">
+</div><p>
+<br>
+Note: the key is preserved in the mapping.
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [9/17]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Weak Entities</div></td><td align='right'></td></tr></table>
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapwkent.png]" src="Pics/er-rel/mapwkent.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [10/17]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping N:M Relationships</div></td><td align='right'></td></tr></table>
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapnnrel.png]" src="Pics/er-rel/mapnnrel.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [11/17]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping 1:N Relationships</div></td><td align='right'></td></tr></table>
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/map1nrel2.png]" src="Pics/er-rel/map1nrel2.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [12/17]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping 1:1 Relationships</div></td><td align='right'></td></tr></table>
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/map11rel.png]" src="Pics/er-rel/map11rel.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [13/17]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping 1:1 Relationships <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+If there is no reason to favour one side of the relationship ...
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/map11rel3.png]" src="Pics/er-rel/map11rel3.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [14/17]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping n-way Relationships</div></td><td align='right'></td></tr></table>
+<p>
+Relationship mappings above assume binary relationship.
+<p>
+If multiple entities are involved:
+<ul>
+<li> <i>n:m</i> generalises naturally to <i>n:m:p:q</i>
+<ul>
+<li> include foreign key for each participating entity
+<li> include any other attributes of the relationship
+</ul>
+<li> other multiplicities (e.g. <i>1:n:m</i>) ...
+<ul>
+<li> need to be mapped the same as <i>n:m:p:q</i>
+<li> so not quite an accurate mapping of the ER
+</ul>
+</ul>
+Some people advocate converting n-way relationships into:
+<ul>
+<li> a new entity, and a set of <i>n</i> binary relationships
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [15/17]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Composite Attributes</div></td><td align='right'></td></tr></table>
+<p>
+Composite attributes are mapped by concatenation or flattening.
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapstrent.png]" src="Pics/er-rel/mapstrent.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [16/17]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Multi-valued Attributes (MVAs)</div></td><td align='right'></td></tr></table>
+<p>
+MVAs are mapped by a new table linking values to their entity.
+<p>
+Example:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapmva.png]" src="Pics/er-rel/mapmva.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Monday Lecture &#9826; [17/17]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 21 Feb 2023</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

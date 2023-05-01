@@ -1,0 +1,62 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+# define any local helper functions here
+
+### set up some globals
+
+usage = f"Usage: {sys.argv[0]} Title Year"
+db = None
+
+### process command-line args
+
+if len(sys.argv) < 3:
+  print(usage)
+  exit(1)
+title = sys.argv[1]
+year = sys.argv[2]
+
+# define queries
+
+qry1 = '''
+select m.id
+from   Movies m
+where  m.title = %s and m.year = %s
+'''
+
+qry2 = '''
+select string_agg(p.name,', ')
+from   People p
+       join Principals s on s.person = p.id
+where  s.movie = %s and s.job = 'director'
+'''
+
+# manipulate database
+
+try:
+  db = psycopg2.connect("dbname=ass2")
+  cur = db.cursor()
+
+  # check that movie exists in Movies table
+  cur.execute(qry1, [title,year])
+  res = cur.fetchone()
+  if not res:
+    print("No such movie")
+    exit(1)
+  mid = res[0]
+
+  # fetch director's info from Principals
+  cur.execute(qry2, [mid])
+  res = cur.fetchone()
+
+  # print director's name
+  print(res[0])
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

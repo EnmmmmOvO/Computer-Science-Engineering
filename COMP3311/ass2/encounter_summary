@@ -1,0 +1,151 @@
+#! /usr/bin/env python3
+
+
+"""
+COMP3311
+23T1
+Assignment 2
+Pokemon Database
+
+Written by: Jinghan Wang z5286124
+Written on: 12/04/2023
+
+Encounter Summary
+
+Print a summary of all the Pokemon that can be encountered at a given location in a given game
+"""
+
+
+import sys
+import psycopg2
+import helpers
+
+
+### Constants
+USAGE = f"Usage: {sys.argv[0]} <Location> <Game>"
+
+
+### Globals
+db = None
+Location = None
+Game = None
+
+
+### Command-line args
+if len(sys.argv) != 3:
+    print(USAGE, file=sys.stderr)
+    sys.exit(1)
+Location = helpers.clean(sys.argv[1])
+Game     = helpers.clean(sys.argv[2])
+
+
+def main():
+    cur = db.cursor()
+
+    # Check Location and game is exits or not
+    qry = '''
+    select
+        exists(select 1 from locations where name = %s) as location_exists,
+        exists(select 1 from games where name = %s) as game_exists,
+        exists(
+            select 1 from locations where name = %s and appears_in = (select id from games where name ilike %s)
+        ) as location_in_game;
+    '''
+    cur.execute(qry, [Location, Game, Location, Game])
+    location_exists, game_exists, location_in_game = cur.fetchone()
+
+    if not location_exists:
+        print(f'\'{Location}\' isn\'t a location in the Pokemon series.', file=sys.stderr)
+        return
+
+    if not game_exists:
+        print(f'\'Pokemon {Game}\' isn\'t a game in the Pokemon series.', file=sys.stderr)
+        return
+
+    if not location_in_game:
+        print(f'\'{Location}\' isn\'t in \'Pokemon {Game}\'.', file=sys.stderr)
+        return
+
+    # The sql return all data which the print need
+
+    # Temp Table mb
+    # - row_number: as the result exists more than one same pokemon information, avoid merge same name row
+    # - name
+    # - type: use case when change a, null -> 'a' and a, b -> 'a / b'
+    # - rarity, min_level, max_level,
+    # - encounter_id: records the limitation of location name and game name to avoid reset the limitation in main table
+
+    # Main Table:
+    # As some data still exists more than one information like (egg_groups, abilities,
+    # encounter_requirements) during the limitation, use string_agg change the data to the finally
+    # format. For egg_groups, abilities it may exists null situation, and set it '';
+    # For encounter_requirements which need to consider inverted situation, use case when to
+    # case it
+
+    qry = '''
+    select
+        mb.name, mb.types, mb.rarity, mb.min_level, mb.max_level,
+        coalesce(string_agg(distinct eg.name::text, ',' order by eg.name), '') as egg_groups,
+        coalesce(string_agg(distinct a.name::text, ',' order by a.name), '') as abilities,
+        string_agg(distinct case
+            when er.inverted then 'NOT '
+            else ''
+            end || r.assertion, '\n                        ') as encounter_requirements
+    from (
+        select  p1.name,
+            case
+                when p1.second_type is null then t1.name
+                else concat(t1.name, '/', t2.name)
+                end as types,
+            p1.id,
+            e.rarity,
+            (e.levels).min as min_level,
+            (e.levels).max as max_level,
+            e.id as encounter_id,
+            row_number() over (order by e.rarity desc, p1.name, (e.levels).max) as row_number
+        from games g
+            join locations l on g.id = l.appears_in
+            join encounters e on l.id = e.occurs_at
+            join pokemon p1 on e.occurs_with = p1.id
+            join types t1 on t1.id = p1.first_type
+            left join types t2 on t2.id = p1.second_type
+        where l.name = %s and g.name = %s
+    ) mb
+        join pokemon p on p.id = mb.id
+        left join in_group ig on p.id = ig.pokemon
+        left join egg_groups eg on eg.id = ig.egg_group
+        left join knowable_abilities ka on p.id = ka.known_by
+        left join abilities a on a.id = ka.knows
+        join encounter_requirements er on er.encounter = mb.encounter_id
+        join requirements r on r.id = er.requirement
+    where ka.hidden = false
+    group by mb.name, mb.types, mb.rarity, mb.min_level, mb.max_level, mb.row_number
+    order by mb.row_number, string_agg(distinct r.assertion::text, ',' order by r.assertion)
+    '''
+    cur.execute(qry, [Location, Game])
+
+    # Print Result
+    print(f'In \'Pokemon {Game}\' at \'{Location}\' the following Pokemon can be Encountered:\n')
+    for i in cur.fetchall():
+        print(f'''        {i[0]}:
+                Type: {i[1]}
+                Rarity: {i[2]}%
+                Levels: min {i[3]}, max {i[4]}''')
+        if i[5] != '': print(f'                Egg Groups: {i[5]}')
+        if i[6] != '': print(f'                Abilities: {i[6]}')
+        print(f'                Encounter Requirements:\n                        {i[7]}')
+
+
+if __name__ == '__main__':
+    try:
+        db = psycopg2.connect(dbname="ass2")
+        main()
+    except psycopg2.Error as err:
+        print("DB error: ", err)
+    except Exception as err:
+        print("Internal Error: ", err)
+        raise err
+    finally:
+        if db is not None:
+            db.close()
+    sys.exit(0)

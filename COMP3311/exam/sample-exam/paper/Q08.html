@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <b>[Q8]</b> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 8 <span class='tiny'>(7 marks)</span></h3>
+<p>
+Consider the following ER diagram, describing the part-time and casual
+employees in a small company.
+</p>
+<center><img src="Pics/Q2.png"></center>
+<p>
+Assume that all people have an employee ID (a number), a name
+and a position (e.g. manager, developer, etc.)
+Salaries are determined based on the position and so are not
+stored in this part of the data model.
+For part-time employees, we need to record the fraction they
+work (e.g. 50% of full-time, etc.).
+For casual employees, we need to record the hours they work.
+Note that casuals can only work for <em>one</em> time period
+on any given day (i.e. one shift).
+</p>
+<p>
+<i>For each exercise below</i>, do the following:
+</p>
+<ul>
+<li> Express your schema as one or more PostgreSQL <tt>CREATE TABLE</tt> statements.
+<li> Give any attribute and table constraints that
+help to enforce the semantics implied in the diagram.
+<li> Specify appropriate primary keys (always)
+and foreign keys (if needed) for all tables.
+<li> You must specify appropriate types for attributes, based
+on the type information given in the diagram.
+<li> Explain how the <b>total participation</b>
+and <b>disjoint</b> semantics are/are-not preserved in the schema.
+</ul>
+<p><b>Exercises:</b></p>
+<ol type='a'>
+<li class="subq">
+<p class="qtext">
+Map the above ER diagram into a relational schema, using the
+<b>ER-style mapping</b> for translating the subclasses.
+</p>
+<li class="subq">
+<p class="qtext">
+Map the above ER diagram into a relational schema, using the
+<b>single-table mapping</b> for translating the subclasses.
+</p>
+</ol>
+<p>
+Note: If writing any constraint would require a large complicated
+expression, you do not need to write the expression; simply write
+"(large complex constraint)" and assume that it's correct.
+</p>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>q8.txt</tt>
+<li> Submit via: &nbsp; <b><tt>submit q8.txt</tt></b>
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

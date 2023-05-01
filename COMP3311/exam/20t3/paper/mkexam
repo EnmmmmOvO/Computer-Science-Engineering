@@ -1,0 +1,248 @@
+#!/Users/jas/srvr/php/bin/php
+<?
+if (count($argv) < 2) exit("Usage: $argv[0] ExamFile\n");
+$in = openFile($argv[1],"r");
+
+// Collect course and exam info
+
+if (!skipTo($in,"<exam>")) exit("Not an exam file\n");
+$courseInfo = explode(":",trim(fgets($in)));
+if (count($courseInfo) != 3) exit("Bad course info\n");
+$examInfo = explode(":",trim(fgets($in)));
+if (count($examInfo) != 6) exit("Bad exam info\n");
+
+// Collect questions
+
+$instructions = array(); $urls = array();
+$questions = array(); $q = 0;  $totMark = 0;
+$inNotes = $inQuestion = false;
+$nlines = 4; $text = "";
+while (($line = getLine($in)) !== false) {
+	$nlines++;
+	list($tag,$rest) = getTag($line);
+#	echo "Tag:$tag\nEtc:$rest\n";
+	switch ($tag) {
+	case "<link>":
+		// set up tabbed link
+		if ($inNotes || $inQuestion) exit("Line $nlines: <link> inside <i/q>\n");
+		list($label,$url) = explode("|",$rest);
+		$urls[$label] = $url;
+		break;
+	case "<notes>":
+		// start new notes page
+		if ($inQuestion) exit("Line $nlines: <i> inside <q>\n");
+		$text = ""; $inNotes = true; $label = $rest;
+		break;
+	case "</notes>":
+		// finish off notes page
+		$inNotes = false;
+		if ($label == "Front Page")
+			$file = "front_page.html";
+		else
+			$file = strtolower(str_replace(" ","_",$label).".html");
+		$instructions[$label] = array($file,$text);
+		break;
+	case "<question>":
+		if ($inNotes) exit("Line $nlines: <q> inside <i>\n");
+		$q++; $text = ""; $inQuestion = true;
+		$qmark = intval($rest);
+		if ($qmark == 0) exit("Line $nlines: Bad mark: $rest\n");
+		break;
+	case "</question>":
+		$inQuestion = false;
+		$file = sprintf("Q%02d.html",$q);
+		$text = str_replace("QQ",$q,$text);
+		$questions["Q$q"] = array($file,$text,$qmark);
+		$totMark += $qmark;
+		break;
+	default:
+		$text .= $line;
+		break;
+	}
+}
+
+# echo "\n\nQUESTIONS\n\n";
+# print_r($questions);
+# echo "\n\nINSTRUCTIONS\n\n";
+# print_r($instructions);
+
+// Check data from exam file against collected info
+
+if ($q != $examInfo[4]) {
+	echo "Questions? got $q, expected $examInfo[4]\n";
+	$examInfo[4] = $q;
+}
+if ($totMark != $examInfo[5]) {
+	echo "Marks? got $totMark, expected $examInfo[5]\n";
+	$examInfo[5] = $totMark;
+}
+
+// Write the HTML files
+
+foreach ($instructions as $label => $data) {
+	list($file,$text) = $data;
+	if ($text == "") continue;
+	$out = openFile($file,"w");
+	putHeader($out,$label,$courseInfo,$examInfo,
+	             $instructions,$urls,$questions);
+	if ($label == "Front Page")
+		putStandardInfo($out,$courseInfo,$examInfo);
+	$close = "<center><i>End of Notes</i></center>";
+	fputs($out,"$text\n</div>\n$close\n</body>\n</html>\n");
+	fclose($out);
+}
+
+foreach ($questions as $label => $data) {
+	list($file,$text,$marks) = $data;
+	if ($text == "") continue;
+	$out = openFile($file,"w");
+	putHeader($out,$label,$courseInfo,$examInfo,
+	             $instructions,$urls,$questions);
+	putQuestion($out,substr($label,1,10),$marks);
+	$close = "<center><i>End of Question</i></center>";
+	fputs($out,"$text\n</div>\n$close\n</body>\n</html>\n");
+	fclose($out);
+}
+
+// Helpers
+
+
+function showSubmit($q,$text)
+{
+	$text = str_replace("QQ",$q,$text);
+	return <<<_HTML_
+<p>
+Once you have completed this question, submit it using the
+following command:
+</p>
+<pre>
+$text
+</pre>
+_HTML_;
+}
+
+function putHeader($outf,$link,$cInfo,$xInfo,$instrs,$urls,$quests)
+{
+	list($cCode,$cTerm,$cTitle) = $cInfo;
+	list($xTitle,$xMonth,$xTimes,$xDuration,$xNq,$xMarks) = $xInfo;
+	$html = <<<_HTML_
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>$cCode $cTerm $xTitle</title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>$cCode $cTerm</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>$cCode $cTitle <br> $xTitle $cTerm</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>$cTitle</span>
+</td>
+</table>
+</div>
+<center>
+_HTML_;
+	foreach ($instrs as $xLink => $xData) {
+		$fname = $xData[0];
+		if ($link == $xLink)
+			$html .= "<b>[$xLink]</b> ";
+		else
+			$html .= "<a href='$fname'>[$xLink]</a> ";
+	}
+	foreach ($urls as $xLink => $xURL) {
+		if ($link == $xLink)
+			$html .= "<b>[$xLink]</b> ";
+		else
+			$html .= "<a target='$xLink' href='$xURL'>[$xLink]</a> ";
+	}
+	$html .= "\n<br>\n";
+	foreach ($quests as $xLink => $xData) {
+		$fname = $xData[0];
+		if ($link == $xLink)
+			$html .= "<b>[$xLink]</b> ";
+		else
+			$html .= "<a href='$fname'>[$xLink]</a> ";
+	}
+	$html .= "\n</center>\n<hr>\n";
+	$html .= "<div style='margin-left:40px;margin-right:40px'>\n";
+	fputs($outf, $html);
+}
+
+function putQuestion($outf,$qno,$qmark)
+{
+	$M = ($qmark == 1) ? "mark" : "marks";
+	$text = "<h3>Question $qno <span class='tiny'>($qmark $M)</span></h3>\n";
+	fputs($outf, $text);
+}
+
+function putStandardInfo($outf,$cInfo,$xInfo)
+{
+	list($cCode,$cTerm,$cTitle) = $cInfo;
+	list($xTitle,$xMonth,$xTimes,$xDuration,$xNq,$xMarks) = $xInfo;
+	$info = <<<_HTML_
+<center>
+<h4>The University of New South Wales</h4>
+<h2>$cCode $cTitle <br> $xTitle $cTerm</h2>
+<h2>$xMonth</h2>
+<table><tr><td><ol style="font-size:14pt;">
+<li> Time Required: $xDuration hours
+<li> Reading Time: as long as you like
+<li> Total number of questions: $xNq
+<li> Total marks available: $xMarks
+<li> Questions are not of equal value.
+<li> Marks are shown on each question.
+</ol></td></tr></table>
+</center>
+_HTML_;
+	fputs($outf,$info);
+}
+
+function openFile($name,$mode)
+{
+	$handle = fopen($name,$mode);
+	if (!is_resource($handle)) exit("Can't open $name\n");
+	return $handle;
+}
+
+function closeFile($outf)
+{
+	fputs($out,"\n</body>\n</html>\n");
+	fclose($out);
+}
+
+function getTag($line)
+{
+	$line = trim($line);
+	$n = strpos($line,">");
+	if ($n === false)
+		$pair = array("","");
+	else {
+		$pair[0] = substr($line,0,$n+1);
+		$pair[1] = substr($line,$n+1);
+	}
+	return $pair;
+}
+
+function skipTo($in,$tag)
+{
+	while (($line = getLine($in)) !== false) {
+		if (trim($line) == $tag) return true;
+	}
+	return false;
+}
+
+function getLine($inf)
+{
+	if (feof($inf))
+		return false;
+	else
+		return fgets($inf);
+}
+?>

@@ -1,0 +1,14 @@
+Ex1:
+- BCNF decomposition of abstract schema/FDs
+
+Ex2:
+- BCNF decomposition of real-estate schema/FDs
+
+Ex3:
+- 3NF decomposition of abstract schema/FDs
+
+Ex4:
+- 3NF decomposition of real-estate schema/FDs
+
+Ex5:
+- mapping SQL to relational algebra

@@ -1,0 +1,111 @@
+#! /usr/bin/env python3
+
+
+"""
+COMP3311
+23T1
+Assignment 2
+Pokemon Database
+
+Written by: Jinghan Wang z5286124
+Written on: 11/04/2023
+
+Possible Evolutions
+
+Given the name of a pokemon,
+display a list of all the pokemon that could evolve into the given pokemon,
+and a list of all the pokemon that the given pokemon could evolve into.
+"""
+
+import sys
+import psycopg2
+import helpers
+
+### Constants
+USAGE = f"Usage: {sys.argv[0]} <Pokemon Name>"
+
+### Globals
+db = None
+Pokemon_Name = None
+words = [['from', 'pre'], ['into', 'post']]
+
+### Command-line args
+if len(sys.argv) != 2:
+    print(USAGE, file=sys.stderr)
+    sys.exit(1)
+Pokemon_Name = helpers.clean(sys.argv[1])
+
+
+def main():
+    cur = db.cursor()
+
+    # Send requests to sql to get the pre or post evolution information
+    # return list = [Evolution ID, Pre-evolution name, Post-evolution name, Assertion, Inverted]
+    qry = '''
+    select e.id, p2.name, p3.name, r.assertion, er.inverted
+    from pokemon p
+        join evolutions e on e.post_evolution = p.id or e.pre_evolution = p.id
+        join evolution_requirements er on e.id = er.evolution
+        join requirements r on er.requirement = r.id
+        join pokemon p2 on p2.id = e.pre_evolution
+        join pokemon p3 on p3.id = e.post_evolution
+    where p.name = %s
+    order by p2.id, p3.id
+    '''
+    cur.execute(qry, [Pokemon_Name])
+    result = cur.fetchall()
+
+    if len(result) == 0:
+        print(f'\'{Pokemon_Name}\' isn\'t a Pokemon that exists.', file=sys.stderr)
+        return
+
+    i = 0
+    # Set Lambda Function to print Assertion and Inverted
+    output = lambda l: (l[4] and 'NOT ' or '') + l[3]
+
+    # Print Pre Evolution
+    if result[0][2] != Pokemon_Name:
+        print(f'\'{Pokemon_Name}\' doesn\'t have any pre-evolutions.')
+    else:
+        print(f'\'{Pokemon_Name}\' can evolve from:')
+        print(f'\'{result[0][1]}\' when the following requirements are satisfied:\n{output(result[0])}')
+        i += 1
+        while i < len(result) and result[i][1] != Pokemon_Name:
+            if result[i][0] != result[i - 1][0] and result[i][1] != result[i - 1][1]:
+                print(f'\'{result[i][1]}\' when the following requirements are satisfied:\n{output(result[i])}')
+            elif result[i][0] != result[i - 1][0] and result[i][1] == result[i - 1][1]:
+                print(f'OR\n{output(result[i])}')
+            else:
+                print(f'AND\n{output(result[i])}')
+            i += 1
+
+    # Print Post Evolution
+    if i == len(result):
+        print(f'\'{Pokemon_Name}\' doesn\'t have any post-evolutions.')
+    else:
+        print(f'\'{Pokemon_Name}\' can evolve into:')
+        print(f'\'{result[i][2]}\' when the following requirements are satisfied:\n{output(result[i])}')
+        i += 1
+        while i < len(result):
+            if result[i][0] != result[i - 1][0] and result[i][2] != result[i - 1][2]:
+                print(f'\'{result[i][2]}\' when the following requirements are satisfied:\n{output(result[i])}')
+            elif result[i][0] != result[i - 1][0] and result[i][2] == result[i - 1][2]:
+                print(f'OR\n{output(result[i])}')
+            else:
+                print(f'AND\n{output(result[i])}')
+            i += 1
+
+
+if __name__ == '__main__':
+    try:
+        db = psycopg2.connect(dbname="ass2")
+        main()
+    except psycopg2.Error as err:
+        print("DB error: ", err)
+    except Exception as err:
+        print("Internal Error: ", err)
+        raise err
+    finally:
+        if db is not None:
+            db.close()
+    sys.exit(0)

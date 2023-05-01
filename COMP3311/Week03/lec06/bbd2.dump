@@ -1,0 +1,403 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.8 (Debian 13.8-0+deb11u1)
+-- Dumped by pg_dump version 13.8 (Debian 13.8-0+deb11u1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: populationrecord; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.populationrecord AS (
+	tablename text,
+	ntuples integer
+);
+
+
+--
+-- Name: dbpop(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.dbpop() RETURNS SETOF public.populationrecord
+    LANGUAGE plpgsql
+    AS $$
+declare
+	rec record;
+	qry text;
+	res PopulationRecord;
+	num integer;
+begin
+	for rec in select tablename from pg_tables where schemaname='public' order by tablename
+	loop
+		qry := 'select count(*) from ' || quote_ident(rec.tablename);
+		execute qry into num;
+		res.tablename := rec.tablename; res.ntuples := num;
+		return next res;
+	end loop;
+	return;
+end;
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: bars; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.bars (
+    id integer NOT NULL,
+    name character varying(50),
+    addr character varying(50),
+    license integer
+);
+
+
+--
+-- Name: beers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.beers (
+    id integer NOT NULL,
+    name character varying(50),
+    brewer integer
+);
+
+
+--
+-- Name: brewers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.brewers (
+    id integer NOT NULL,
+    name character varying(50) NOT NULL,
+    country character varying(30) NOT NULL
+);
+
+
+--
+-- Name: drinkers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.drinkers (
+    id integer NOT NULL,
+    name character varying(50),
+    addr character varying(50),
+    phone character(10)
+);
+
+
+--
+-- Name: frequents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.frequents (
+    drinker integer NOT NULL,
+    bar integer NOT NULL
+);
+
+
+--
+-- Name: likes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.likes (
+    drinker integer NOT NULL,
+    beer integer NOT NULL
+);
+
+
+--
+-- Name: sells; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sells (
+    bar integer NOT NULL,
+    beer integer NOT NULL,
+    price double precision
+);
+
+
+--
+-- Data for Name: bars; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.bars (id, name, addr, license) FROM stdin;
+1	Australia Hotel	The Rocks	123456
+2	Coogee Bay Hotel	Coogee	966500
+3	Lord Nelson	The Rocks	123888
+4	Marble Bar	Sydney	122123
+5	Regent Hotel	Kingsford	987654
+6	Royal Hotel	Randwick	938500
+7	Local Taphouse	Darlinghurst	111111
+\.
+
+
+--
+-- Data for Name: beers; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.beers (id, name, brewer) FROM stdin;
+1	80/-	1
+2	Amber Ale	2
+3	Bigfoot Barley Wine	3
+4	Burragorang Bock	4
+5	Chestnut Lager	5
+6	Crown Lager	6
+7	Fosters Lager	6
+8	India Pale Ale	2
+9	Invalid Stout	6
+10	Melbourne Bitter	6
+11	New	8
+12	Nirvana Pale Ale	7
+13	Old	8
+14	Old Admiral	9
+15	Pale Ale	3
+16	Pilsener	2
+17	Porter	2
+18	Premium Lager	12
+19	Red	8
+20	Sink the Bismarck	10
+21	Sheaf Stout	8
+22	Sparkling Ale	11
+23	Stout	11
+24	Tactical Nuclear Penguin	10
+25	Three Sheets	9
+26	Victoria Bitter	6
+\.
+
+
+--
+-- Data for Name: brewers; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.brewers (id, name, country) FROM stdin;
+1	Caledonian	Scotland
+2	James Squire	Australia
+3	Sierra Nevada	USA
+4	George IV Inn	Australia
+5	Bridge Road Brewers	Australia
+6	Carlton	Australia
+7	Murray's	Australia
+8	Toohey's	Australia
+9	Lord Nelson	Australia
+10	Brew Dog	Scotland
+11	Cooper's	Australia
+12	Cascade	Australia
+\.
+
+
+--
+-- Data for Name: drinkers; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.drinkers (id, name, addr, phone) FROM stdin;
+12	Adam	Randwick	9385-4444 
+15	Gernot	Newtown	9415-3378 
+42	John	Clovelly	9665-1234 
+33	Justin	Mosman	9845-4321 
+\.
+
+
+--
+-- Data for Name: frequents; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.frequents (drinker, bar) FROM stdin;
+12	2
+15	3
+15	6
+42	2
+42	3
+42	1
+42	7
+33	5
+33	4
+\.
+
+
+--
+-- Data for Name: likes; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.likes (drinker, beer) FROM stdin;
+12	6
+12	7
+12	11
+15	18
+15	22
+42	1
+42	2
+42	15
+42	20
+42	25
+33	22
+33	26
+\.
+
+
+--
+-- Data for Name: sells; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.sells (bar, beer, price) FROM stdin;
+1	4	3.5
+1	11	3
+2	11	2.25
+2	13	2.5
+2	22	2.8
+2	26	2.3
+3	25	3.75
+3	11	3
+3	14	3.75
+4	11	2.8
+4	13	2.9
+4	26	2.8
+5	11	2.2
+5	26	2.2
+6	11	2.3
+6	13	2.65
+6	26	2.3
+7	15	7.5
+7	20	25
+\.
+
+
+--
+-- Name: bars bars_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.bars
+    ADD CONSTRAINT bars_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: beers beers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.beers
+    ADD CONSTRAINT beers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: brewers brewers_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.brewers
+    ADD CONSTRAINT brewers_name_key UNIQUE (name);
+
+
+--
+-- Name: brewers brewers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.brewers
+    ADD CONSTRAINT brewers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: drinkers drinkers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.drinkers
+    ADD CONSTRAINT drinkers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: frequents frequents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.frequents
+    ADD CONSTRAINT frequents_pkey PRIMARY KEY (drinker, bar);
+
+
+--
+-- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (drinker, beer);
+
+
+--
+-- Name: sells sells_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sells
+    ADD CONSTRAINT sells_pkey PRIMARY KEY (bar, beer);
+
+
+--
+-- Name: beers beers_brewer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.beers
+    ADD CONSTRAINT beers_brewer_fkey FOREIGN KEY (brewer) REFERENCES public.brewers(id);
+
+
+--
+-- Name: frequents frequents_bar_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.frequents
+    ADD CONSTRAINT frequents_bar_fkey FOREIGN KEY (bar) REFERENCES public.bars(id);
+
+
+--
+-- Name: frequents frequents_drinker_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.frequents
+    ADD CONSTRAINT frequents_drinker_fkey FOREIGN KEY (drinker) REFERENCES public.drinkers(id);
+
+
+--
+-- Name: likes likes_beer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_beer_fkey FOREIGN KEY (beer) REFERENCES public.beers(id);
+
+
+--
+-- Name: likes likes_drinker_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.likes
+    ADD CONSTRAINT likes_drinker_fkey FOREIGN KEY (drinker) REFERENCES public.drinkers(id);
+
+
+--
+-- Name: sells sells_bar_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sells
+    ADD CONSTRAINT sells_bar_fkey FOREIGN KEY (bar) REFERENCES public.bars(id);
+
+
+--
+-- Name: sells sells_beer_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sells
+    ADD CONSTRAINT sells_beer_fkey FOREIGN KEY (beer) REFERENCES public.beers(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

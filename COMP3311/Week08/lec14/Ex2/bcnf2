@@ -1,0 +1,45 @@
+Produce BCNF schema for real-estate example
+R(P#, When, Address, Notes, S#, naMe, Carreg)
+
+
+R = PWANSMC
+fds = {P->A, S->MC, PW->SN}
+key = PW    (PW+ = PWANSMC)
+
+
+problem: P->A
+fix: PWNSMC and PA
+
+PA has only 2 attrs => BCNF
+
+
+PWNSMC
+fds = { S->MC, PW->SN }
+key = PW
+
+problem: S->MC
+fix: SMC SWNP
+
+
+SMC
+fds = { S -> MC }
+key = S
+
+is in BCNF
+
+
+PA* SMC* SWNP
+
+
+SWNP 
+fds = { PW->SN }
+key = PW
+
+is in BCNF
+
+
+Final BCNF schema: PA SMC PWSN
+
+PA = property table
+SMC = staff table
+PWSN = visits table

@@ -1,0 +1,27 @@
+declare
+	qstring text;
+	number integer := 5;
+	table text;
+begin
+	qstring := 'select * from R';
+	qstring := qstring || ' where a ='||quote_literal(number);
+
+	execute qstring into rec;
+
+...
+
+	table := 'R';
+	qstring := 'select * from '||quote_ident(table);
+	qstring := qstring|| ' where a ='||quote_literal(number);
+
+	execute qstring into rec;
+	
+-- select * from R where a = '5'
+
+	for rec in
+		select * from R where a = number
+	loop
+		...
+	end loop;
+
+end;

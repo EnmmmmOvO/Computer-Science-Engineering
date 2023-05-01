@@ -1,0 +1,17 @@
+Schedule:
+
+T1: R(X)      W(X)      R(Y) W(Y)
+T2:      R(X)      W(X)
+
+
+Conflicts:
+
+T2:R(X) precedes T1:W(X)
+T1:W(X) precedes T2:W(X)
+
+in other words:
+
+T2 precedes T1
+T1 precedes T2
+
+gives a cycle => not conflict serializable

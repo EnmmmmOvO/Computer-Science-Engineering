@@ -1,0 +1,461 @@
+<html>
+<head>
+<title>COMP3311 Week 2 Tuesday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 2 Tuesday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 02 Tuesday</heading></a>
+<li class="i"> <a href="#s2">Recap</a>
+<li class="i"> <a href="#s3">Mapping Subclasses</a>
+<li class="i"> <a href="#s7">Converting ER to SQL</a>
+<li class="i"> <a href="#s8">Exercise:  ER-to-SQL (1)</a>
+<li class="i"> <a href="#s9">Exercise:  ER-to-SQL (2)</a>
+<li class="i"> <a href="#s10">Exercise:  ER-to-SQL (3)</a>
+<li class="i"> <a href="#s11">PostgreSQL Databases</a>
+<li class="i"> <a href="#s12"><large><code>psql</code></large></a>
+<li class="i"> <a href="#s17">Exercise: Creating a database</a>
+<li class="i"> <a href="#s18">Populating a Database</a>
+<li class="i"> <a href="#s19">Exercise: Inserting Tuples</a>
+<li class="i"> <a href="#s20">Exercise: More Inserting Tuples</a>
+<li class="i"> <a href="#s21">Bulk Insertion</a>
+<li class="i"> <a href="#s25">Exercise: Playing with Beer Database</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [0/25]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 02 Tuesday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> More ER &rarr; SQL, and SQL DDL
+<li> Building/restoring a database
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz before Friday midnight
+<li> Set up your PostgreSQL server <br>
+        <span class="smaller">(300 students have logged in to vxdb2 and have /localstorage)</span>
+<li> Help Session, Friday 4pm, Location: TBA
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [1/25]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Recap</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+ER &rarr; Relational/SQL Mapping
+<ul>
+<li> attributes &rarr; attributes
+<li> entities &rarr; relations/tables
+<li> 1:1 relationships &rarr; foreign key
+<li> 1:n relationships &rarr; foreign key
+<li> n:m relationships &rarr; link table
+<li> multi-valued attributes &rarr; table
+<li> compound attributes &rarr; attributes
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [2/25]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Subclasses</div></td><td align='right'></td></tr></table>
+<p>
+Three different approaches to mapping subclasses to tables:
+<ul>
+<li> ER style
+<small>
+<ul>
+<li> each entity becomes a separate table,
+<li> containing attributes of subclass + FK to superclass table
+</ul>
+</small>
+<li> object-oriented
+<small>
+<ul>
+<li> each entity becomes a separate table,
+<li> inheriting all attributes from all superclasses
+</ul>
+</small>
+<li> single table with nulls
+<small>
+<ul>
+<li> whole class hierarchy becomes one table,
+<li> containing all attributes of all subclasses (null, if unused)
+</ul>
+</small>
+</ul>
+Which mapping is best depends on how data is to be used.
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [3/25]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Subclasses <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example of ER-style mapping:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapsubclass.png]" src="Pics/er-rel/mapsubclass.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [4/25]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Subclasses <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example of object-oriented mapping:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapsubclass2.png]" src="Pics/er-rel/mapsubclass2.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [5/25]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Mapping Subclasses <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example of single-table-with-nulls mapping:
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/mapsubclass3.png]" src="Pics/er-rel/mapsubclass3.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [6/25]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Converting ER to SQL</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+General strategies:
+<ul>
+<li> one table for each entity set
+<li> attributes for each entity table
+<li> identify key attribute(s) for each table
+<li> suitable domains/constrints for each attribute
+<li> relationships either as tables or foreign keys
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [7/25]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  ER-to-SQL (1)</div></td><td align='right'></td></tr></table>
+<p>
+Convert the following class hierarchy to SQL using ER mapping:
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-sql/map-disjoint.png]" src="Pics/er-sql/map-disjoint.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [8/25]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  ER-to-SQL (2)</div></td><td align='right'></td></tr></table>
+<p>
+Convert this ER design to SQL:
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/emp-dept-proj.png]" src="Pics/er-rel/emp-dept-proj.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [9/25]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  ER-to-SQL (3)</div></td><td align='right'></td></tr></table>
+<p>
+Convert the Publishing ER model to SQL
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/er-rel/publishing.png]" src="Pics/er-rel/publishing.png">
+</div><p>
+<p>
+<small>
+<ul>
+<li> A TFN is stored as a 9-digit number
+<li> An ABN is stored as an 11-digit number 
+<li> An ISBN (13-digit version) looks like 978-3-16-148410-0
+</ul>
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [10/25]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; PostgreSQL Databases</div></td><td align='right'></td></tr></table>
+<p>
+Create a database in PostgreSQL via
+<p><pre>
+$ <font color="#008800">createdb</font>  <i>DatabaseName</i>
+</pre><p>
+Creates an empty database (no schema, no data)
+<p><br>
+Remove a database in PostgreSQL via
+<p><pre>
+$ <font color="#008800">dropdb</font>  <i>DatabaseName</i>
+</pre><p>
+Removes schema and all data permanently
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [11/25]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>psql</code></large></div></td><td align='right'></td></tr></table>
+<p>
+The <large><font color="#008800"><b><code>psql</code></b></font></large> command is a shell that allows you to
+<ul>
+<li> access databases &nbsp;<span class="smaller">(one at a time)</span>
+<li> ask SQL queries on a database
+<li> find information (meta data) about a database
+<li> add/delete/update tuples in tables
+</ul>
+Usage:
+<p><pre>
+$ <font color="#008800">psql</font>  <i>DatabaseName</i>
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [12/25]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>psql</code></large> <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<large><font color="#008800"><b><code>psql</code></b></font></large>'s normal behaviour
+<ul>
+<li> print prompt, read command, execute command, display result
+<li> <font color='#0000BB'>command</font> = an SQL statement &nbsp; or &nbsp; a <large><code>psql</code></large> meta-command
+</ul>
+<p><pre style="font-size:90%">
+$ <font color="#008800">psql</font> mydb
+...
+mydb=# <i>command<sub>1</sub></i>
+<i>result of command<sub>1</sub></i>
+mydb=# <i>command<sub>2</sub></i>
+<i>result of command<sub>2</sub></i>
+mydb=# <i>command<sub>3</sub></i>
+<i>result of command<sub>3</sub></i>
+...
+mydb=# \q
+$
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [13/25]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>psql</code></large> <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+A useful way to use &nbsp; <large><code>psql</code></large>:
+<p><pre>
+$ <font color="#008800">psql</font> -l
+</pre><p>
+Gives a list of all databases under your PostgreSQL server.
+<p>
+The "databases" &nbsp; <large><code>postgres</code></large>, &nbsp;<large><code>template1</code></large>, &nbsp; <large><code>template2</code></large>
+<ul>
+<li> are special databases used internally by PostgreSQL
+<li> do not &nbsp;<large><code>dropdb</code></large>&nbsp; them
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [14/25]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>psql</code></large> <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+The <large><font color="#008800"><b><code>psql</code></b></font></large> command has several prompts <smaller(to indicate it's waiting for input)</span>
+<ul>
+<li> <large><font color="#008800"><b><code>db=#</code></b></font></large> ... waiting to start a command
+<li> <large><font color="#008800"><b><code>db-#</code></b></font></large> ... waiting for rest of command
+<li> <large><font color="#008800"><b><code>db(#</code></b></font></large> ... waiting for rest of expression &nbsp;<large><code>(...)</code></large>
+<li> <large><font color="#008800"><b><code>db'#</code></b></font></large> ... waiting to finish a string <span class="smaller">(expecting closing <large><font color="#008800"><b><code>'</code></b></font></large>)</span>
+</ul>
+Note that <large><font color="#008800"><b><code>db</code></b></font></large> will be (replaced by) the name of the current database
+<p>
+Note that <large><font color="#008800"><b><code>#</code></b></font></large> means you are super-user; normal users get <large><font color="#008800"><b><code>&gt;</code></b></font></large>
+<p>
+SQL statements can span several lines, terminated by typing <large><font color="#008800"><b><code>;</code></b></font></large>
+<p>
+<large><code>psql</code></large> meta-commands are single-line commands
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [15/25]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>psql</code></large> <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+<large><font color="#008800"><b><code>psql</code></b></font></large> has a range of <font color='#0000BB'>meta-commands</font>, beginning with <large><font color="#008800"><b><code>\</code></b></font></large>
+<ul>
+<li> <large><font color="#008800"><b><code>help</code></b></font></large> ... a quick list of useful meta-commands
+<li> <large><font color="#008800"><b><code>\?</code></b></font></large> ... a list of all meta-commands <span class="smaller">(very many of them)</span>
+<li> <large><font color="#008800"><b><code>\dt</code></b></font></large> ... list of all tables in current schema
+<li> <large><font color="#008800"><b><code>\d</code></b></font></large> <i>Table</i> ... list of all attributes in <i>Table</i>
+<li> <large><font color="#008800"><b><code>\df</code></b></font></large> ... list of all user-defined functions in current schema
+<li> <large><font color="#008800"><b><code>\q</code></b></font></large> ... exit <large><font color="#008800"><b><code>psql</code></b></font></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [16/25]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Creating a database</div></td><td align='right'></td></tr></table>
+<p>
+On <large><code>vxdb2</code></large>, do the following:
+<ul>
+<li> create a database called <large><code>xyz</code></large>
+<li> examine its (empty) schema
+<li> within <large><code>xyz</code></large> create a table
+<p><pre style="font-size:90%">
+create table R (
+   x integer primary key,
+   y float not null,
+   z text
+);
+</pre><p>
+<li> examine the schema again
+<li> examine the attributes of table <large><code>R</code></large>
+<li> how many tuples are in table <large><code>R</code></large>?
+<li> remove the database <large><code>xyz</code></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [17/25]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Populating a Database</div></td><td align='right'></td></tr></table>
+<p>
+Basic way of adding tuples to a database:
+<p><pre>
+db=# <large><font color="#008800"><b><code>insert into</code></b></font></large> <i>Table</i> <large><font color="#008800"><b><code>values (</code></b></font></large><i>val<sub>1</sub>,val<sub>2</sub>,...</i><large><font color="#008800"><b><code>);</code></b></font></large>
+</pre><p>
+Adds a tuple to table <large><code><i>Table</i></code></large> assuming
+<ul>
+<li> values satisfy all constraints on tuples/table
+</ul>
+Ways it can fail ...
+<ul>
+<li> value for primary key field is already in the table
+<li> tuple has &nbsp;<large><code>null</code></large></code></large> values for fields defined as &nbsp;<large><code>not null</code></large>
+<li> value for some field violates constraints on that field
+<li> etc. etc. etc.
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [18/25]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Inserting Tuples</div></td><td align='right'></td></tr></table>
+<p>
+Which &nbsp;<large><code>insert</code></large>&nbsp; statements are successful? <br>
+If successful, what tuple value is inserted?
+<p><pre style="font-size:90%">
+create type Mood as enum ('sad','happy');
+
+create table People (
+	name text not null,
+	feels Mood
+);
+
+insert into People values ('John','happy');
+insert into People values ('Andrew','angry');
+insert into People values ('Tina',null);
+insert into People(name) values ('Anne');
+insert into People(feels) values ('happy');
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [19/25]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: More Inserting Tuples</div></td><td align='right'></td></tr></table>
+<p>
+Which &nbsp;<large><code>insert</code></large>&nbsp; statements are successful? <br>
+If successful, what tuple value is inserted?
+<p><pre style="font-size:90%">
+create domain PosInt as integer check (value > 0);
+
+create table Points (
+	x PosInt default 1,
+	y posint
+);
+
+insert into Points values (3,4);
+insert into Points values (3,null);
+insert into Points values (-3,4);
+insert into Points(y) values (5);
+insert into Points values (default,5);
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [20/25]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Bulk Insertion</div></td><td align='right'></td></tr></table>
+<p>
+Entering tuples interactively one-by-one is not feasible
+<p>
+Alternative: put &nbsp;<large><code>insert</code></large>&nbsp; statements in a file and run
+<p><pre>
+$ <large><font color="#008800"><b><code>psql</code></b></font></large> <i>DatabaseName</i> <large><font color="#008800"><b><code>-f</code></b></font></large> <i>FileName</i>
+</pre><p>
+Attempts to execute each <large><code>insert</code></large> statement:
+<ul>
+<li> if tuple valid, inserted into database
+<li> if tuple not valid, prints error message, then continues
+</ul>
+<br>
+Note that <large><code><i>FileName</i></code></large> can contain any SQL statements
+<p>
+Might consist only of &nbsp;<large><code>create table</code></large>&nbsp; statements to build a schema
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [21/25]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s23"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Bulk Insertion <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+A common way of building a database
+<p><pre>
+$ createdb mydb
+$ psql mydb -f schema.sql
+$ psql mydb -f data.sql
+</pre><p>
+where
+<ul>
+<li> <large><code>schema.sql</code></large> contains table and type definitions
+<li> <large><code>data.sql</code></large> contains statements to insert tuples
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [22/25]</div> <DIV class='slideCl1    ' id="s23"  >
+<div class='navCl1'><a href="#s22"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s24"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Bulk Insertion <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+How I "debug" a database
+<p><pre>
+$ dropdb mydb
+$ createdb mydb
+$ psql mydb -f schema.sql > .errs 2>&amp;1
+$ vi .errs
+<span class='comment'>  # fix any errors that appear in .errs</span>
+$ psql mydb -f data.sql > .errs 2>&amp;1
+$ vi .errs
+<span class='comment'>  # fix any errors that appear in .errs</span>
+</pre><p>
+Repeat until <large><code>.errs</code></large> contains no lines with <large><code>ERROR</code></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [23/25]</div> <DIV class='slideCl1    ' id="s24"  >
+<div class='navCl1'><a href="#s23"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s25"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Bulk Insertion <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Alternative way of inserting tuples
+<p><pre>
+<font color="#008800">copy</font> <i>TableName</i> <large><font color="#008800"><b><code>(</code></b></font></large> <i>attribute names</i> <large><font color="#008800"><b><code>) from stdin;</code></b></font></large>
+<span class='comment'>... lines containing tab-separated values ...</span>
+<span class='comment'>... one value for each of the named attributes ...</span>
+<large><font color="#008800"><b><code>\.</code></b></font></large>
+</pre><p>
+Difference between <large><font color="#008800"><b><code>copy</code></b></font></large> and multiple <large><font color="#008800"><b><code>insert</code></b></font></large>s
+<ul>
+<li> with <large><font color="#008800"><b><code>insert</code></b></font></large> ...
+<ul>
+<li> tuples with invalid values are not inserted
+<li> all tuples with valid values are inserted
+</ul>
+<li> with <large><font color="#008800"><b><code>copy</code></b></font></large> ...
+<ul>
+<li> if any tuples contain invlid values, nothing is inserted
+</ul>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [24/25]</div> <DIV class='slideCl1    ' id="s25"  >
+<div class='navCl1'><a href="#s24"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Playing with Beer Database</div></td><td align='right'></td></tr></table>
+<p>
+Load up the database from &nbsp;<large><code>schema.sql</code></large>&nbsp; and &nbsp;<large><code>data.sql</code></large>
+<p>
+Fix any errors that appear
+<p>
+Once loaded correctly, find out ...
+<ul>
+<li> what tables are in the database
+<li> what fields/attributes are in the &nbsp;<large><code>Beers</code></large>&nbsp; table
+<li> what fields/attributes are in the &nbsp;<large><code>Breweries</code></large>&nbsp; table
+<li> how many beers there are
+<li> how many breweries there are
+<li> what beers have "Black Lung" in their name
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 23T1 &#9826; Week 2 Tuesday Lecture &#9826; [25/25]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 23 Feb 2023</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0065)https://cgi.cse.unsw.edu.au/~cs3311/23T1/exams/23T1/database.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>COMP3311 Final Exam 23T1 </title>
+<link rel="stylesheet" type="text/css" href="./COMP3311 Final Exam 23T1_files/exam.css"></head>
+<body>
+<div align="center">
+<table width="100%" border="0">
+<tbody><tr valign="top">
+<td align="left" width="20%">
+  <span class="tiny">COMP3311 Final Exam 23T1</span>
+</td>
+<td align="center" width="60%">
+  The University of New South Wales <br>
+  <span class="heading">COMP3311 Database Systems <br>  Final Exam 23T1 <br> Exam Database </span>
+</td>
+<td align="right" width="20%">
+  <span class="tiny">Database Systems</span>
+</td>
+</tr></tbody></table>
+</div>
+<br>
+
+<hr>
+<div style="margin-left:40px;margin-right:40px">
+<p>
+The database for the exam is concerned with banking.
+It contains information about branches, customers,
+accounts and transaaction, and the relationships between them.
+The following ER design gives an overview of this database:
+</p><center>
+<img src="./COMP3311 Final Exam 23T1_files/bank-er.png">
+</center>
+<p>
+The SQL schema below gives all of the implementation details.
+</p>
+<p>
+Notes on the schema:
+</p>
+<ul>
+<li> all tables have a unique integer primary key called <tt>id</tt>
+</li><li> bank branches are an archaic concept where accoutns are held
+</li><li> there is at most one branch in any suburb
+</li><li> a customer can hold one or more accounts, possibly at different branches
+</li><li> an account is a pot of money which is held by by one or more customers
+</li><li> a transaction is an activity on an account by a customer on a given day
+</li><li> transactions are either deposits, withdrawls or transfers
+</li><li> all transactions involve an amount of money
+</li></ul>
+<pre>-- COMP3311 23T1 Exam Database - Banking
+
+create table Customers (
+	id       integer,
+	given    text not null,   -- given name
+	family   text not null,   -- family name
+	lives_in text not null,   -- suburb
+	primary key (id)
+);
+
+create table Branches (
+	id       integer,
+	location text not null,    -- suburb
+	assets   integer not null, -- combined balance on all accounts
+	primary key (id)
+);
+
+create table Accounts (
+	id      integer,
+	balance	integer not null check (balance &gt;= 0),
+	held_at integer not null references Branches(id),
+	primary key (id)
+);
+
+create table Held_by (
+	customer integer references Customers(id),
+	account  integer references Accounts(id),
+	primary key (customer,account)
+);
+
+create type Transaction_Type as enum
+	('deposit','transfer','withdrawal');
+
+create table Transactions (
+	id      integer,
+	ttype   Transaction_type not null,
+	tdate   date not null,
+	actor   integer not null references Customers(id),
+	amount	integer not null check (amount &gt; 0),
+	source  integer references Accounts(id),
+	dest    integer references Accounts(id),
+	primary key (id),
+	constraint ttypes check (
+	 (ttype = 'deposit' and source is null and dest is not null)
+	 or
+	 (ttype = 'transfer' and source is not null and dest is not null)
+	 or
+	 (ttype = 'withdrawal' and source is not null and dest is null)
+	)
+);
+</pre>
+<p>
+The data is available in a PostgreSQL dump file: <a href="https://cgi.cse.unsw.edu.au/~cs3311/23T1/exams/23T1/bank.dump" download="">bank.dump</a>.
+</p>
+<p>
+You should familiarise yourself with the schema
+before proceeding to solve the queries.
+It would also be useful to examine the database contents to ensure
+that you understand what all of the data represents.
+</p>
+
+</div>
+<center><i>End of Notes</i></center>
+
+
+</body></html>

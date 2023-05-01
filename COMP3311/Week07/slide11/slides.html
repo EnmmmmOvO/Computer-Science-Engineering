@@ -1,0 +1,287 @@
+<html>
+<head>
+<title>COMP3311 Week 7 Monday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 7 Monday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 07 Monday</heading></a>
+<li class="i"> <a href="#s2">Keep in mind for Assignment 2</a>
+<li class="i"> <a href="#s3">Assignment 2 Database</a>
+<li class="i"> <a href="#s6">Rest of Term</a>
+<li class="i"> <a href="#s7">Psycopg2</a>
+<li class="i"> <a href="#s9">Operations on <large><code>cursor</code></large>s</a>
+<li class="i"> <a href="#s11">Command-line Args</a>
+<li class="i"> <a href="#s12">Executable Scripts</a>
+<li class="i"> <a href="#s13">Exercise: Queries on Uni database</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [0/14]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 07 Monday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> Assignment 2, &nbsp; Rest of Term, &nbsp; Python/psycopg2
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz 4 due by 23:59 Friday 28 October
+<li> Assignment 2 due by 21:00 Friday 11 November &nbsp;<small>(Week 9)</small>
+<li> Play with the &nbsp;<large><code>ass2</code></large>&nbsp; database and Python/psycopg2
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [1/14]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Keep in mind for Assignment 2</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+If 100's of people are finishing the assignment last minute ...
+<ul>
+<li> we get bombarded with 100's of emails, forum posts, etc.
+	<p> <small>(it takes much longer to get your question answered)</small> </p>
+<li> <large><code>vxdb2</code></large>&nbsp; has 100's of PG servers running simultaneously
+	<p> <small>(it runs s-l-o-w; queries take much longer to run)</small> </p>
+</ul>
+<br><br>
+Beware: &nbsp;<large><code>/localstorage</code></large>&nbsp; is not backed up ... put <i>only</i> your DB there
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [2/14]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 2 Database</div></td><td align='right'></td></tr></table>
+<p>
+Based on IMDB (Internet Movie Database): simple schema, much data
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/assignments/movie-schema.png]" src="Pics/assignments/movie-schema.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [3/14]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 2 Database <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Relational Schema
+<p><pre>
+Countries(<b>code</b>,name)
+
+Movies(<b>id</b>,title,year,runtime,origin,rating,nvotes)
+
+MovieGenres(<i>movie</i>,genre)
+
+ReleasedIn(<i>movie</i>,<i>country</i>)
+
+People(<b>id</b>,name,born,died)
+
+KnownFor(<i>person</i>,<i>movie</i>)
+
+Principals(<b>id</b>,<i>movie</i>,<i>person</i>,ord,job)
+PlaysRole(<i>inmovie</i>,role)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [4/14]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 2 Database <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+How we built the database
+<ul>
+<li> collected downloadable data from IMDB <small>(1.1GB compressed)</small>
+<li> developed data model and schema based on available data
+<li> wrote scripts to extract (some) raw data into schema form
+<li> built database, via &nbsp;<large><code>createdb</code></large>, &nbsp;<large><code>psql -f</code></large>, &nbsp;<large><code>\copy</code></large>
+</ul>
+Database dump is 19MB; <large><code>pgsql/data/base</code></large> directory is 72MB
+<p>
+Your quota on <large><code>/localstorage</code></large> is 600MB; &nbsp;manage space carefully
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [5/14]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Rest of Term</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Plan for remainder of term:
+<p>
+<div align="center">
+<table cellpadding=12px>
+<tr>
+<td>Week 7</td><td>&nbsp;</td>
+<td>Python, Psycopg2, PostgreSQL</td>
+</tr>
+<tr>
+<td>Week 8</td><td>&nbsp;</td>
+<td>Relational Design, Normalization</td>
+</tr>
+<tr>
+<td>Week 9</td><td>&nbsp;</td>
+<td>Relational Algebra, Query Execution</td>
+</tr>
+<tr>
+<td>Week 10</td><td>&nbsp;</td>
+<td>Transactions, Concurrency Control</td>
+</tr>
+</table>
+</div>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [6/14]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Psycopg2</div></td><td align='right'></td></tr></table>
+<p>
+<large><code>Psycopg2</code></large> is a library for Python &harr; PostgreSQL interaction.
+<p>
+Where <large><code>psycopg2</code></large> fits in the PL/DB architecture
+<p><br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/pldb/pypsy-arch.png]" src="Pics/pldb/pypsy-arch.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [7/14]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Psycopg2 <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Summary of Psycopg2 functions:
+<ul>
+<li> <large><font color="#008800"><b><code>conn = psycopg2.connect(</code></b></font></large><i>DB_connection_string</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<li> <large><font color="#008800"><b><code>conn.close()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>conn.commit()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>cur = conn.cursor()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>cur.execute(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<li> <large><font color="#008800"><b><code>cur.mogrify(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<li> <large><font color="#008800"><b><code>list = cur.fetchall()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>tup = cur.fetchone()</code></b></font></large>
+<li> <large><font color="#008800"><b><code>list = cur.fetchmany(</code></b></font></large><i>nTuples</i><large><font color="#008800"><b><code>)</code></b></font></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [8/14]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Operations on <large><code>cursor</code></large>s</div></td><td align='right'></td></tr></table>
+<p>
+<large><font color="#008800"><b><code>cur.execute(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<ul>
+<li> if supplied, insert values into the SQL statement
+<li> then execute the modified SQL statement
+</ul>
+Examples:
+<p><pre style="font-size:90%">
+<span class='comment'># run a fixed query</span>
+cur.execute("select * from R where x = 1");
+
+<span class='comment'># run a query with values inserted</span>
+cur.execute("select * from R where x = %s", (1,))
+cur.execute("select * from R where x = %s", [1])
+
+<span class='comment'># run a query stored in a variable</span>
+query = "select * from Students where name ilike %s"
+pattern = "%mith%"
+cur.execute(query, [pattern])
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [9/14]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Operations on <large><code>cursor</code></large>s <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<large><font color="#008800"><b><code>cur.mogify(</code></b></font></large><i>SQL_statement</i><large><font color="#008800"><b><code>, </code></b></font></large><i>Values</i><large><font color="#008800"><b><code>)</code></b></font></large>
+<ul>
+<li> return the fully-formatted SQL statement &nbsp; <span class="smaller">(like <large><code>execute</code></large>)</small>
+</ul>
+<i>Tuple</i> &nbsp;= &nbsp;<large><font color="#008800"><b><code>cur.fetchone()</code></b></font></large>
+<ul>
+<li> fetch the next tuple in the result set for cursor &nbsp;<large><code>cur</code></large>
+<li> gives &nbsp;<large><code>( Value<sub>1</sub>, Value<sub>2</sub>, Value<sub>3</sub>, ... )</code></large>
+</ul>
+<i>List</i> &nbsp;= &nbsp;<large><font color="#008800"><b><code>cur.fetchall()</code></b></font></large>
+<ul>
+<li> fetch all tuples in the result set for cursor &nbsp;<large><code>cur</code></large>
+<li> gives &nbsp;<large><code>[ (...), (...), ... (...) ]</code></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [10/14]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Command-line Args</div></td><td align='right'></td></tr></table>
+<p>
+In C, we have &nbsp;<large><code>main(int argc, char *argv[])</code></large>
+<p>
+In Python, we have &nbsp;<large><code>sys.argv</code></large> &nbsp; <small>(a Python list of strings)</small>
+<p>
+To access command-line args
+<p><pre>
+import sys
+
+argc = len(sys.argv)
+
+<span class='comment'># access via index</span>
+print(sys.argv[0])
+
+<span class='comment'># access via iteration</span>
+for arg in sys.argv:
+   print(arg)
+<p><pre>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [11/14]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Executable Scripts</div></td><td align='right'></td></tr></table>
+<p>
+Can always run script &nbsp;<large><code>s.py</code></large>&nbsp; as
+<p><pre>
+$ python3 s.py <i>args...</i>
+</pre><p>
+To make &nbsp;<large><code>s.py</code></large>&nbsp; like an executable command
+<p><pre>
+#!/usr/bin/python3
+
+<i>code for script</i>
+</pre><p>
+And then 
+<p><pre>
+$ chmod 755 s.py
+$ ./s.py <i>args...</i>
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [12/14]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Queries on Uni database</div></td><td align='right'></td></tr></table>
+<p>
+Consider  the &nbsp;<large><code>uni</code></large>&nbsp; database
+<ul>
+<li> 43 tables, e.g. &nbsp;<large><code>Students</code></large>, &nbsp;<large><code>Courses</code></large>
+<li> ~5000 students, ~2600 course, ~67K enrolments
+</ul>
+Some of the tables ...
+<p><pre style="font-size:90%">
+People(<b>id</b>, family, given, fullname, birthday, <i>origin</i>)
+
+Students(<b>id</b>)
+
+Subjects(<b>id</b>, code, name, longname, uoc, <i>offeredby</i>, ...)
+
+Courses(<b>id</b>, <i>subject</i>, <i>term</i>, homepage)
+
+Terms(<b>id</b>, year, ttype, code, name, starting, ending)
+
+Orgunits(<b>id</b>, <i>utype</i>, name, longname, unswid)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [13/14]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Queries on Uni database <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Write Python/psycopg2 scripts on the Uni database to ...
+<ol>
+<li> get a list of subject codes+names <br><br>
+<li> get a list of subjects whose codes match a pattern <br><br>
+<li> get a list of courses and #enrolments for a given term <br><br>
+<li> display info about a subject given by a code <br><br>
+<li> get a list of students whose name matches a pattern <br><br>
+<li> display a transcript for a student, given a zID
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Monday Lecture &#9826; [14/14]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 24 Oct 2022</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

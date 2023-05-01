@@ -1,0 +1,13 @@
+# COMP3311 21T3 Final Exam Q8
+# Query execution times
+
+(A)
+
+
+
+
+(B)
+
+
+
+

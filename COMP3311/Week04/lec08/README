@@ -1,0 +1,23 @@
+schema.sql
+data.sql
+- schema and data to build a company database
+
+Ex1/view.sql
+Ex1/func.sql
+- view and function to give a subset of attributes
+
+Ex2/seq*.sql
+- three different functions to generate integer sequences
+
+Ex3/sel-into.sql
+- example of select...into...
+
+Ex4/found.sql
+Ex4/nomatch.sql
+- examples of checking whether a query gives any results
+
+Ex5/ed.sql
+- many variations on a theme (employee,departments,percentage)
+
+Ex6/addBeer.sql
+- function to add a new beer into the Beers table

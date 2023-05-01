@@ -1,0 +1,27 @@
+# mapping composite attributes
+
+# assume everything except primary keys could be null
+
+# Version 1 (concatenate)
+
+create table People (
+	ssn         integer,
+	name        text not null, -- given+family
+	address     text not null, -- number+street+suburb+pcode
+	primary key (ssn)
+);
+
+
+# Version 2 (flatten)
+
+create table People (
+	ssn         integer,
+	given       text,
+	family      text,
+	number      integer
+	street      text,
+    suburb      text,
+    pcode       chat(4) check (pcode ~ '[0-9]{4}'),
+	primary key (ssn)
+);
+

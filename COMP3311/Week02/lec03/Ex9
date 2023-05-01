@@ -1,0 +1,18 @@
+# mapping multi-valued attributes
+
+create table People (
+	ssn         integer,
+	name        text not null,
+	birthday    date,
+	primary key (ssn),
+);
+
+create table FavColour (
+	person      integer references People(ssn),
+	colour      text,
+	primary key (person,colour)
+);
+
+People: (1234,'John', null)
+FavColour: (1234,'red'), (1234,'blue')
+

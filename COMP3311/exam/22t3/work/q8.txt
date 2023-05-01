@@ -1,0 +1,19 @@
+# COMP3311 22T3 Final Exam Q8
+# Python/Psycopg2 analysis
+
+(A)
+
+
+
+(B)
+
+
+
+(C)
+
+
+
+(D)
+
+
+

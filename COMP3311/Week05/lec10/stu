@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+if len(sys.argv) < 2:
+	print(f'Usage: {sys.argv[0]} StuName')
+	exit(1)
+try:
+	db = psycopg2.connect("dbname=uni")
+	cur = db.cursor()
+	qry = """
+	select p.id, p.fullname
+	from People p join Students s on s.id=p.id
+	where  fullname ~* %s
+	"""
+	#print(cur.mogrify(qry,[sys.argv[1]]))
+	patt = sys.argv[1]
+	cur.execute(qry,[patt])
+	for tup in cur.fetchall():
+		zid,name = tup
+		print(zid,name)
+	db.close()
+
+except Exception as err:
+	print(err)
+	exit(1)

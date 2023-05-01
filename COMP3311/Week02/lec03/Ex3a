@@ -1,0 +1,21 @@
+# mapping 1:m relationship
+
+create domain PersonName as
+	text check (length(value) > 3);
+
+create table Customers (
+	custNo      integer,
+	name        PersonName not null,
+	address     text,
+	branch      integer not null,
+	joined      date  not null,
+	primary key (custNo),
+	foreign key (branch) references Branches(brNo)
+);
+
+create table Branches (
+	brNo        integer,
+	address     text not null,
+	assets      float not null,
+	primary key (acctNo)
+);

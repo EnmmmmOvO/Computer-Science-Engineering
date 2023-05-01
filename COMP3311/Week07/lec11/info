@@ -1,0 +1,44 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+# define any local helper functions here
+
+### set up some globals
+
+usage = f"Usage: {sys.argv[0]} SubjectCode TermCode"
+db = None
+
+### process command-line args
+
+argc = len(sys.argv)
+if argc < 3:
+  print(usage)
+  exit(1)
+code = sys.argv[1]
+term = sys.argv[2]
+qry = '''
+select s.*
+from subjects s
+     join courses c on c.subject = s.id
+     join terms t on t.id = c.term
+where s.code = %s and t.code = %s
+'''
+
+# manipulate database
+
+try:
+  db = psycopg2.connect("dbname=uni")
+
+  cur = db.cursor()
+  cur.execute(qry, [code,term])
+  t = cur.fetchone()
+  print(t)
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

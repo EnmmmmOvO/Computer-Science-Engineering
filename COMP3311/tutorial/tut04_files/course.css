@@ -1,0 +1,35 @@
+body {font-size:11pt;font-family:arial,sans-serif;margin:10px 20px;}
+a {color:#9999CC;text-decoration:none;}
+a.active {color:#9999CC;text-decoration:none;}
+a.inactive {color:#DDDDFF;text-decoration:none;}
+a[href]:hover {color:#CC0000;background:#FFFFCC;}
+small {font-size:75%}
+pre {background:#EEEEFF;border:thin solid #9999CC;margin:5px 20px 5px 20px;padding:4px 8px;}
+tt {font-size:12pt;}
+span.toggle {font-size:67%;}
+span.notice {font-size:110%;}
+span.tiny {font-size:75%;font-weight:normal;}
+span.heading {font-size:18pt;color:#9999CC;}
+span.subheading {font-size:16pt;color:#000000;font-weight:normal;}
+span.marks {font-weight:normal;font-size:75%;}
+span.identifier {color:#993300;font-size:110%;font-weight:bold;font-family:courier;}
+span.contentLink {font-weight:bold;font-size:110%}
+span.contentNote {font-weight:normal;font-size:85%;}
+tr.heading {font-size:large;font-weight:bold;background-color:#CCCCCC;}
+table.note {border:thin solid black;padding:2pt;width:75%}
+table.tests {border:thin solid #666666;padding:5pt;}
+div.note {border:thin solid black;font-size:90%;margin:5px 60px 5px 60px;padding:4px 8px;}
+dt.item {font-weight:bold;}
+h2 {font-size:20pt;font-weight:300;color:#9999CC;}
+h3 {font-size:16pt;font-weight:300;color:#9999CC;}
+h4 {font-size:14pt;font-weight:300;color:#9999CC;}
+.h2tt {font-size:20pt;font-weight:300;color:#9999CC;font-family:courier;}
+.h3tt {font-size:16pt;font-weight:300;color:#9999CC;font-family:courier;}
+.h4tt {font-size:14pt;font-weight:300;color:#9999CC;font-family:courier;}
+.red {color:#AA0000;}
+.green {color:#009900;}
+.brown {color:#662200;}
+.grey {color:#AAAAAA;}
+.comment {font-size:90%;color:#666666}
+.important {font-weight:bold;color:#CC0000;}
+.bigQ {font-size:13pt;font-style:italic;}

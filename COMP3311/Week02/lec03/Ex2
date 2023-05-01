@@ -1,0 +1,9 @@
+# mapping strong entity
+
+create table Students (
+	-- stuID    char(7) check (stuID ~ '[0-9]{7}'),
+	stuID       integer check (studID between 3000000 and 5999999),
+	name        varchar(100) not null,
+	degree      char(4) not null check (degree ~ '^[0-9]{4}$'),
+	primary key (stuID)
+);

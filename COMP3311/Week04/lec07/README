@@ -1,0 +1,17 @@
+beer.dump
+- simple beer database used lectures
+
+Ex1
+- solutions from lectures for queries on Beer database
+
+Ex2
+- priciest() SQL function
+
+Ex3
+- two factorial functions in PLpgSQL (returns integer)
+
+Ex4
+- iota (sequence) function in PLpgSQL (returns setof integer)
+
+Ex5
+- favBeers function in PLpgSQL (returns setof Beers)

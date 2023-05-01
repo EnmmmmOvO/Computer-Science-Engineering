@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <b>[Database]</b> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<p>
+Football/soccer/whatever is touted as the World Game&dagger;, and there
+are a plethora of sites dedicated particularly to international
+competition.
+Consider the following database design that could sit behind one
+such site:
+<center>
+<img src="Pics/footy-schema.png">
+</center>
+<p>
+Note that we have omitted the primary keys in the above diagram.
+They are all implemented as numeric attributes in
+<p>
+An SQL schema based on this design:
+</p>
+<pre>
+-- Football/Soccer Schema
+
+<span class="comment">-- These domains are not actually defined in the database</span>
+<span class="comment">-- They appear as constraints in the relevant tables</span>
+
+<span class="comment">-- Time in minutes since game started</span>
+create domain GameTime as integer check (value between 0 and 120);
+
+<span class="comment">-- Cards are warnings given to players for naughty acts</span>
+<span class="comment">-- Yellow card = final warning;  Red card = send off</span>
+create domain CardColour as varchar(6) check (value in ('red','yellow'));
+
+-- Tables
+
+create table Matches (
+	id          integer,
+	city        varchar(50) not null,
+	playedOn    date not null,
+	primary key (id)
+);
+
+create table Teams (
+	id          integer,
+	country     varchar(50) not null,
+	primary key (id)
+);
+
+create table Involves (
+	match       integer not null,
+	team        integer not null,
+	primary key (match,team),
+	foreign key (match) references Matches(id),
+	foreign key (team) references Teams(id)
+);
+
+create table Players (
+	id          integer,
+	name        varchar(50) not null,
+	birthday    date,
+	memberOf    integer not null,
+	position    varchar(20),
+	primary key (id),
+	foreign key (memberOf) references Teams(id)
+);
+
+create table Goals (
+	id          integer,
+	scoredIn    integer not null,
+	scoredBy    integer not null,
+	timeScored  GameTime not null,
+	rating      varchar(20),
+	primary key (id),
+	foreign key (scoredIn) references Matches(id),
+	foreign key (scoredBy) references Players(id)
+);
+
+create table Cards (
+	id          integer,
+	givenIn     integer not null,
+	givenTo     integer not null,
+	timeGiven   GameTime not null,
+	cardType    CardColour not null,
+	primary key (id),
+	foreign key (givenIn) references Matches(id),
+	foreign key (givenTo) references Players(id)
+);
+</pre>
+<p>
+Some assumptions made in developing the above schema:
+</p>
+<ul>
+<li> players play for a single country throughout their career
+<li> players are categorised into a particular position in the team
+<li> what position each player plays in a given match is not recorded
+<li> matches are played all over the world
+<li> each match involves teams from two countries
+<li> no match runs for more than 120 minutes
+<li> we need to record who scored each goal and when in the match it was scored
+<li> goals are rated by a "panel of experts" to determine how good they are
+<li> if players do something naughty during the game, they are "shown a card"
+<li> a yellow card means that they did something relatively minor
+<li> a red card means that they did something bad and are sent off
+</ul>
+<p>
+You should familiarise yourself with this schema
+before proceeding to solve the queries.
+It would also be useful to examine the database contents to ensure
+that you understand what all of the data represents.
+</p>
+<p>
+&dagger; even though Aussie Rules is clearly a much better game ...
+</p>
+
+</div>
+<center><i>End of Notes</i></center>
+</body>
+</html>

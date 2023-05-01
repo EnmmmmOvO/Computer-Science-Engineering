@@ -1,0 +1,24 @@
+conn
+- script to open a database ... and then close it
+
+bname
+- display name of beer, given a beer id
+
+inject
+- scripts showing SQL injection
+
+simple
+- simple query, displaying return from fetchall() in different ways
+
+subj
+subj2
+subj3
+subj4
+- fetch lists of subjects from the mymyunsw database
+
+subj5
+- display info about a course, given a course code
+
+stu
+- given part of a name, find all matching students
+

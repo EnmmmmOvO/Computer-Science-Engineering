@@ -1,0 +1,14 @@
+Ex1, departments.sql
+- SQL schema for employee-department-project ER model
+
+Ex2
+- SQL schema from ER subclasses of Employee
+
+Ex3
+- SQL schema from ER publishing model
+
+Ex4, Ex5
+- examples of SQL types and constraints
+
+schea.sql, Data.sql
+- SQL schema and data for a beer database

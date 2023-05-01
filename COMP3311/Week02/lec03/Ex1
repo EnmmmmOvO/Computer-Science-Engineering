@@ -1,0 +1,14 @@
+create domain PosInt as integer
+	check (value > 0);
+
+create domain Mark as integer
+	check (value between 0 and 100);
+create domain Mark as integer
+	check (value >= 0 and value <= 100);
+
+create domain CourseCode as char(8); -- weak
+create domain CourseCode as char(8)
+	check (value ~ '[A-Z]{4}[0-9]{4}');
+
+create domain PersonName as text
+	check (value ~ '^[A-Z][A-Za-z ''-]+$');

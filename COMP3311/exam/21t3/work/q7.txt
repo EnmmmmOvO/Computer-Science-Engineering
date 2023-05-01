@@ -1,0 +1,18 @@
+# COMP3311 21T3 Final Exam Q7
+# Python/Psycopg2 scripts
+
+(A)
+
+
+
+
+(B)
+
+
+
+
+(C)
+
+
+
+

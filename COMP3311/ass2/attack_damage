@@ -1,0 +1,178 @@
+#! /usr/bin/env python3
+
+
+"""
+COMP3311
+23T1
+Assignment 2
+Pokemon Database
+
+Written by: Jinghan Wang z5286124
+Written on: 13/04/2023
+
+Attack Damage
+
+Given the name of an attacking, and a defending pokemon along with the name of a game in the Pokemon series,
+display a list, ordered from lowest to highest damage,
+of all the moves the attacking pokemon could use on the defending pokemon in the given game.
+"""
+
+import sys
+import psycopg2
+import helpers
+
+### Constants
+USAGE = f"Usage: {sys.argv[0]} <Attacking Pokemon Name> <Defending Pokemon Name> <Pokemon Game Name>"
+
+### Globals
+db = None
+Attacking_Pokemon_Name = None
+Defending_Pokemon_Name = None
+Pokemon_Game_Name = None
+
+### Command-line args
+if len(sys.argv) != 4:
+    print(USAGE, file=sys.stderr)
+    sys.exit(1)
+Attacking_Pokemon_Name = helpers.clean(sys.argv[1])
+Defending_Pokemon_Name = helpers.clean(sys.argv[2])
+Pokemon_Game_Name = helpers.clean(sys.argv[3])
+
+
+def main():
+    cur = db.cursor()
+
+    # Get the attack and defender stat and type
+    qry = '''
+    select distinct p.name, p.first_type, p.second_type, p.base_stats
+    from pokemon p 
+        join pokedex pdex on p.id = pdex.national_id
+        join games g on pdex.game = g.id
+    where g.name = %s and p.name = %s or p.name = %s
+    '''
+    cur.execute(qry, [Pokemon_Game_Name, Attacking_Pokemon_Name, Defending_Pokemon_Name])
+    result = cur.fetchall()
+
+    # If the result only have 1 or 0, means at least one pokemon not exits or game not exists
+    if len(result) < 2:
+        qry = ''' 
+        select
+            exists(select 1 from pokemon where name = %(p1)s),
+            exists(select 1 from pokemon where name = %(p2)s),
+            exists(select 1 from games where name = %(g)s),
+            exists(select 1 
+                   from pokedex pd1 
+                       join pokemon p1 on p1.id = pd1.national_id 
+                       join games g on g.id = pd1.game 
+                   where p1.name = %(p1)s and g.name = %(g)s),
+            exists(select 1 
+                   from pokedex pd2 
+                       join pokemon p2 on p2.id = pd2.national_id 
+                       join games g on g.id = pd2.game 
+                   where p2.name = %(p2)s and g.name = %(g)s)
+               '''
+        cur.execute(qry, {'p1': Attacking_Pokemon_Name, 'p2': Defending_Pokemon_Name, 'g': Pokemon_Game_Name})
+        result = cur.fetchone()
+
+        if result[0] is False:
+            print(f'\'{Attacking_Pokemon_Name}\' isn\'t a Pokemon that exists.', file=sys.stderr)
+            return
+
+        if result[1] is False:
+            print(f'\'{Defending_Pokemon_Name}\' isn\'t a Pokemon that exists.', file=sys.stderr)
+            return
+
+        if result[2] is False:
+            print(f'\'Pokemon {Pokemon_Game_Name}\' isn\'t a game in the Pokemon series.', file=sys.stderr)
+            return
+
+        if result[3] is False:
+            print(f'\'{Attacking_Pokemon_Name}\' doesn\'t appear in \'Pokemon {Pokemon_Game_Name}\'.', file=sys.stderr)
+            return
+
+        if result[4] is False:
+            print(f'\'{Defending_Pokemon_Name}\' doesn\'t appear in \'Pokemon {Pokemon_Game_Name}\'.', file=sys.stderr)
+            return
+
+    # Set result row 1 is attack and row 2 is defender, if not swap
+    if result[0][0] != Attacking_Pokemon_Name: result[0], result[1] = result[1], result[0]
+
+    # Record attack and defense type, -1 is null type
+    attacker_type = [result[0][1], result[0][2] is None and -1 or result[0][2]]
+    defender_type = [result[1][1], result[1][2] is None and -1 or result[1][2]]
+
+    # Record attack and defense stat, follow by [Physical_Attack(Defense), Special_Attack(Defense)]
+    attacker_attack = [int(result[0][3].split(',')[1]), int(result[0][3].split(',')[3])]
+    defender_defense = [int(result[1][3].split(',')[2]), int(result[1][3].split(',')[4])]
+
+    qry = '''
+    select defending, attacking, multiplier from type_effectiveness
+    where defending = %s or defending = %s
+    '''
+    cur.execute(qry, [defender_type[0], defender_type[1]])
+
+    # Record the type effectiveness value, type_effectiveness[0] is for defense first type and other is for second type
+    type_effectiveness = [dict(), dict()]
+    for type, effect_type, value in cur.fetchall():
+        if type == defender_type[0]:
+            type_effectiveness[0][effect_type] = value
+        else:
+            type_effectiveness[1][effect_type] = value
+
+    qry = '''
+    select distinct m.name, m.power, m.of_type,
+                    case
+                        when m.category = 'Physical' then 0
+                        else 1
+                    end
+    from games g
+        join pokedex p on g.id = p.game
+        join pokemon p1 on p.national_id = p1.id
+        join learnable_moves lm on g.id = lm.learnt_in and p1.id = lm.learnt_by
+        join moves m on lm.learns = m.id
+    where g.name = %s and p1.name = %s and m.power is not null;
+    '''
+    cur.execute(qry, [Pokemon_Game_Name, Attacking_Pokemon_Name])
+
+    result = list()
+
+    # Use lambda function to Count the result
+    formula = lambda l, p, a, d, r, s, t: int(round(((((((2 * l) / 5) + 2) * p * (a / d)) / 50) + 2) * r * s * t, 1))
+    for name, p, of_type, category in cur.fetchall():
+        power = p
+        attack = attacker_attack[category]
+        defense = defender_defense[category]
+        stab = of_type in attacker_type and 1.5 or 1
+        effectiveness = type_effectiveness[0].get(of_type, 100) * type_effectiveness[1].get(of_type, 100) / 10000
+        max_d = formula(100, power, attack, defense, 1.0, stab, effectiveness)
+
+        # If max damage is 0, drop it
+        if max_d == 0: continue
+        result.append([name, formula(1, power, attack, defense, 0.85, stab, effectiveness), max_d])
+
+    # If pokemon have 0 move in the game or all max damage is 0, print cannot attack
+    if len(result) == 0:
+        print(f'In \'Pokemon {Pokemon_Game_Name}\', \'{Attacking_Pokemon_Name}\' can\'t attack '
+              f'\'{Defending_Pokemon_Name}\'.')
+        return
+
+    print(f'In \'Pokemon {Pokemon_Game_Name}\', When \'{Attacking_Pokemon_Name}\' attacks '
+          f'\'{Defending_Pokemon_Name}\', \'{Attacking_Pokemon_Name}\' can use the following moves:\n')
+    for i, j, k in sorted(result, key=lambda x: (x[2], x[1], x[0])):
+        print(f'\'{i}\' for a minimum of {j} damage and a maximum of {k} damage to '
+              f'\'{Defending_Pokemon_Name}\'.')
+
+
+if __name__ == '__main__':
+    try:
+        db = psycopg2.connect(dbname="ass2")
+        main()
+    except psycopg2.Error as err:
+        print("DB error: ", err)
+    except Exception as err:
+        print("Internal Error: ", err)
+        raise err
+    finally:
+        if db is not None:
+            db.close()
+    sys.exit(0)

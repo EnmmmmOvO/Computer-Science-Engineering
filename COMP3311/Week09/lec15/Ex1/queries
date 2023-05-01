@@ -1,0 +1,27 @@
+Beers(name,manf)   Bars(name,license)   Drinkers(name,addr)
+Likes(drinker,beer)  Sells(bar,beer,price)  Frequents(drinker,bar)
+
+Find bars that serve New at the same price
+as the Coogee Bay Hotel charges for VB.
+
+VBp(price) = Sel[bar='CBH' & beer ='VB']Sells
+Result(bar) = Sel[beer = 'New' & price in VBp]Sells
+
+
+Which bar is most popular? (Most drinkers)
+
+ND(bar,ndrinkers) = GroupAgg[count](GroupBy[bar](Proj[bar]Frequents))
+MPB(ndrinkers) = ApplyAgg[max](Proj[ndrinkers]ND)
+Result(bar) = Sel[ndrinkers in MPB]ND
+
+
+Price of cheapest beer at each bar?
+
+MinP(bar,price) = GroupSelect[min(price)](GroupBy[bar](Proj[bar,price]Sells)
+
+
+Which beers are sold at all bars?
+
+BeersAtBars(beer,bar) = Proj[beer,bar]Sells
+AllBars(bar) = Proj[name]Bars
+Results = AllBars / BeersAtBars

@@ -1,0 +1,329 @@
+<html>
+<head>
+<title>COMP3311 Week 4 Thursday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 4 Thursday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 04 Thursday</heading></a>
+<li class="i"> <a href="#s2">More on PLpgSQL Functions</a>
+<li class="i"> <a href="#s3">Functions vs Views</a>
+<li class="i"> <a href="#s4">Exercise: Function vs View</a>
+<li class="i"> <a href="#s5">Exercise: Function Overloading</a>
+<li class="i"> <a href="#s6"><large><code>select into</code></large></a>
+<li class="i"> <a href="#s7">Exercise: <large><code>select into</code></large></a>
+<li class="i"> <a href="#s8">Missing Data</a>
+<li class="i"> <a href="#s9">A new database</a>
+<li class="i"> <a href="#s10">Exercise: Missing Data</a>
+<li class="i"> <a href="#s11">Exercise: Generating a Table</a>
+<li class="i"> <a href="#s12">An "old" database</a>
+<li class="i"> <a href="#s13">Exercise: A <large><code>newBeer</code></large> Function</a>
+<li class="i"> <a href="#s14">Debugging PLpgSQL</a>
+<li class="i"> <a href="#s15">Dynamic Queries</a>
+<li class="i"> <a href="#s16">Exercise: Dynamic Queries</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [0/16]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 04 Thursday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> PLpgSQL
+<ul>
+<li> Assigning query results ... <large><font color="#008800"><b><code>select</code></b></font></large>&nbsp; a,b,c &nbsp;<large><font color="#008800"><b><code>into</code></b></font></large>&nbsp; x,y,z &nbsp; ...
+<li> Missing data ... <large><font color="#008800"><b><code>if not found then</code></b></font></large> ...
+<li> Debugging PLpgSQL ... <large><font color="#008800"><b><code>raise notice</code></b></font></large>&nbsp; <i>Message</i>
+<li> Dynamic queries ... <large><font color="#008800"><b><code>execute(</code></b></font></large><i>StringContainingSQLQuery</i><large><font color="#008800"><b><code>)</code></b></font></large>
+</ul>
+<li> Aggregates ... summarizing data
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> <font color="#CC0000">Census</font>: Sunday is last day to withdraw without paying
+<li> Quiz 3 due before Friday midnight <span class="smaller">(involves PLpgSQL)</span>
+<li> Set up your PostgreSQL server <br>
+        <span class="smaller">(only 420 students have a plausible PostgreSQL server on vxdb2)</span>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [1/16]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; More on PLpgSQL Functions</div></td><td align='right'></td></tr></table>
+<p>
+Function definition ...
+<p><pre>
+<font color="#008800">create or replace function</font>
+   FunctionName <font color="#008800">(</font> Parameters <font color="#008800">)</font> <font color="#008800">returns</font> [<font color="#008800">setof</font>] Type
+<font color="#008800">as</font> <font color="#0000EE">$$</font>
+<font color="#000099">declare</font>
+   VariableDeclarations
+<font color="#000099">begin</font>
+   FunctionBody
+<font color="#000099">end;</font>
+<font color="#0000EE">$$</font> <font color="#008800">language</font> ProgLanguage
+</pre><p>
+<i>Type</i> &nbsp;can be
+<ul>
+<li> <font color='#0000BB'>atomic</font> ... e.g. &nbsp;<large><code>integer</code></large>, &nbsp;<large><code>real</code></large>, &nbsp;<large><code>text</code></large>, &nbsp;<large><code>char(8)</code></large>, ...
+<li> <font color='#0000BB'>tuple</font> ... e.g. from &nbsp;<large><code>create table</code></large>, &nbsp;<large><code>create view</code></large>, &nbsp;<large><code>create type</code></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [2/16]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Functions vs Views</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Functions returning <large><code>setof</code></large> are used like tables.
+<p>
+Views are used like tables.
+<p>
+What's the difference?
+<ul>
+<li> parameters can feed values into a function
+<li> functions can manipulate data in "procedural ways"
+<li> functions require more explicit "infrastructure"
+<li> others?
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [3/16]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Function vs View</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Consider a view that gives Drinkers, but without their phone:
+<pre>
+create or replace view d1(drinker,surburb)
+as
+...
+</pre>
+<br>
+Implement this view
+<p>
+Then implement the same thing as a function
+<p>
+Then add parameter to restrict to names matching pattern
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [4/16]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Function Overloading</div></td><td align='right'></td></tr></table>
+<p>
+A function is udentified by its name and parameter types.
+<p>
+Can have several functions with same name, but different parameters.
+<p>
+Consider a function <large><code>seq</code></large> to return sequences of integer values
+<ul>
+<li> <large><code>seq(n)</code></large> ... returns sequence 1 .. n
+<li> <large><code>seq(n,m)</code></large> ... returns sequence n .. m
+<li> <large><code>seq(n,m,incr)</code></large> ... returns sequence n .. m by incr
+</ul>
+Implement this as three different PLpgSQL functions, all called &nbsp;<large><code>seq()</code></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [5/16]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>select into</code></large></div></td><td align='right'></td></tr></table>
+<p>
+Can capture individual attributes in a select statement
+<p><pre>
+select <i>att<sub>1</sub>, att<sub>2</sub>, ... att<sub>n</sub></i>
+  into <i>var<sub>1</sub>, var<sub>2</sub>, ... var<sub>n</sub></i>
+from   ...
+</pre><p>
+Notes:
+<ul>
+<li> <large><code><i>att<sub>i</sub></i></code></large>&nbsp; can be an arbitrary SQL expression
+<li> must have same number/types of &nbsp;<large><code>att<sub>i</sub></i></code></large>&nbsp; as &nbsp;<large><code>var<sub>i</sub></i></code></large>
+</ul>
+Can also assign whole tuples, e.g.
+<p><pre>
+create table R (...);
+
+declare tup R;
+
+select * into tup from R where <i>Condition</i>;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [6/16]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: <large><code>select into</code></large></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Consider a table &nbsp;<large><code>R(a integer, b text, c float)</code></large>
+<p>
+Implement different ways to collect individual attributes into variables
+<p>
+Variables are &nbsp;<large><code>x integer, y text, z float</code></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [7/16]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Missing Data</div></td><td align='right'></td></tr></table>
+<p>
+With functions, often use parameter values to find tuples
+<p>
+What to do if value leads to no match ...
+<p><pre style="font-size:90%">
+select * into tup from R where name ~ <i>Value</i>
+if (not <font color="#000099">found</font>) then
+   <i>handle case for no matching tuple</i>
+else
+   <i>handle case for matching tuple</i>
+end if
+</pre><p>
+<p>
+Alternative method <small>(but requires two selects if there is a match)</small>
+<p><pre style="font-size:90%">
+select count(*) into nmatches from R where name ~ <i>Value</i>
+if (nmatches = 0) then ...
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [8/16]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; A new database</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Examples based on Department/Employee database:
+<p><pre>
+Departments(<b>id</b>, name, <i>manager</i>))
+Employees(<b>tfn</b>,givenname,familyname,hourspweek,salary)
+WorksFor(<b><i>employee</i></b>, <b><i>department</i></b>, percentage)
+DeptMission(<i>department</i>,keyword)
+</pre><p>
+Exercise: implement views and functions for
+<p><pre>
+EmpDept(employee, department, fraction)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [9/16]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Missing Data</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Implement a PLpgSQL function
+<p><pre>
+create or replace function
+	tfnOf(name text) returns text
+as $$ ...
+</pre><p>
+That takes a name as argument ...
+<ul>
+<li> returns their TFN if they exist
+<li> returns "No such employee" if they don't
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [10/16]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Generating a Table</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Consider that we want a mechanism to give tuples
+<p><pre>
+create type EmpDept as
+(employee text, department text, fraction float)
+</pre><p>
+using the data in the employees/departments database
+<p>
+Implement this as a view and as a function
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [11/16]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; An "old" database</div></td><td align='right'></td></tr></table>
+<p>
+Recall the database for Assignment 1
+<p><pre style="font-size:90%">
+Countries(<font color="#CC0000">id</font>, code, name)
+
+Locations(<font color="#CC0000">id</font>, <font color="#996600">within</font>, region, metro, town)
+
+Styles(<font color="#CC0000">id</font>, name, min_abv, max_abv)
+
+Ingredients(<font color="#CC0000">id</font>, itype, name, <font color="#996600">origin</font>)
+
+Beers(<font color="#CC0000">id</font>, name, vintage, style, abv, ibu, sold_in, ...)
+
+Contains(<font color="#996600">beer</font>, <font color="#996600">ingredient</font>)
+
+Brewed_by(<font color="#996600">beer</font>, <font color="#996600">brewery</font>)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [12/16]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: A <large><code>newBeer</code></large> Function</div></td><td align='right'></td></tr></table>
+<p>
+Write a PLpgSQL function on the Ass1 database
+<p><pre>
+create or replace function
+   addBeer(_name text, _brewery text, _style text, _abv float)
+   returns integer
+as $$ ...
+</pre><p>
+that takes the name, brewery, style and abv
+<ul>
+<li> add a tuple to &nbsp;<large><code>Beers</code></large>&nbsp; for the new beer
+<li> adds a tuple to &nbsp;<large><code>Brewed_by</code></large>&nbsp; to link beer and brewer
+<li> raises a &nbsp;<large><code>Notice</code></large>&nbsp; if brewery or style don't exist
+<li> returns the &nbsp;<large><code>id</code></large>&nbsp; of the new beer
+</ul>
+What if the &nbsp;<large><code>Beers.id</code></large>&nbsp; field is defined as &nbsp;<large><code>serial</code></large> ?
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [13/16]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Debugging PLpgSQL</div></td><td align='right'></td></tr></table>
+<p>
+PLpgSQL does not have I/O functions
+<p>
+How to do debugging (see intermediate states)?
+<p>
+Use PostgreSQL logging statement
+<p><pre>
+<font color="#008800">raise notice '</font><i>Message</i><font color="#008800">'</font> [ <font color="#008800">,</font> <i>Expr<sub>1</sub></i> <font color="#008800">,</font> <i>Expr<sub>2</sub></i> <font color="#008800">,</font> ... ]
+</pre><p>
+Examples:
+<p><pre>
+declare x integer; y float;
+...
+raise notice 'x = %', x
+raise notice 'x = %, y = %', x, y
+raise notice 'x^2 = %', x*x
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [14/16]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Dynamic Queries</div></td><td align='right'></td></tr></table>
+<p>
+Queries can be "built" as strings of SQL code within functions
+<p>
+And then evaluated using &nbsp;<large><font color="#008800"><b><code>execute</code></b></font></large>&nbsp; <i>Query</i>
+<p>
+Including constant and identifiers in queries needs
+<ul>
+<li> <large><font color="#008800"><b><code>quote_literal</code></b></font></large> ... ensure that constants are appropriately quoted
+<li> <large><font color="#008800"><b><code>quote_ident</code></b></font></large> ... ensure that identifiers are quoted, if needed
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [15/16]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Dynamic Queries</div></td><td align='right'></td></tr></table>
+<p>
+Write a PLpgSQL function
+<p><pre>
+create or replce function
+   nTuples(tableName text) return integer
+as $$ ...
+</pre><p>
+The function
+<ul>
+<li> takes the name of a table as an argument
+<li> returns the number of tuples in that table
+</ul>
+<br>
+See the &nbsp;<large><code>dbPop()</code></large>&nbsp; function for an extension of this idea.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 4 Thursday Lecture &#9826; [16/16]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 9 Mar 2023</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

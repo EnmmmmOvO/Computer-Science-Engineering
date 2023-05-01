@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+import psycopg2
+
+try:
+	db = psycopg2.connect("dbname=uni")
+	cur = db.cursor()
+	qry = """
+	select code,name from Subjects
+	order by code
+	"""
+	cur.execute(qry)
+	for tup in cur.fetchall():
+		code,name = tup
+		#print(f'{code} {name}')
+		print(code+' '+name)
+		# print(code,name)
+	db.close()
+
+except Exception as err:
+	print(err)
+	exit(1)

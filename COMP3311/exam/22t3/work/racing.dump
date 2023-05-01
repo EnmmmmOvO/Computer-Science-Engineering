@@ -1,0 +1,4072 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.8 (Debian 13.8-0+deb11u1)
+-- Dumped by pg_dump version 13.8 (Debian 13.8-0+deb11u1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: populationrecord; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.populationrecord AS (
+	tablename text,
+	ntuples integer
+);
+
+
+--
+-- Name: dbpop(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.dbpop() RETURNS SETOF public.populationrecord
+    LANGUAGE plpgsql
+    AS $$
+declare
+	rec record;
+	qry text;
+	res PopulationRecord;
+	num integer;
+begin
+	for rec in select tablename from pg_tables where schemaname='public' order by tablename
+	loop
+		qry := 'select count(*) from ' || quote_ident(rec.tablename);
+		execute qry into num;
+		res.tablename := rec.tablename; res.ntuples := num;
+		return next res;
+	end loop;
+	return;
+end;
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: horses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.horses (
+    id integer NOT NULL,
+    name text NOT NULL,
+    gender character(1) NOT NULL,
+    age integer NOT NULL,
+    CONSTRAINT horses_age_check CHECK (((age >= 2) AND (age <= 8))),
+    CONSTRAINT horses_gender_check CHECK ((gender = ANY (ARRAY['S'::bpchar, 'G'::bpchar, 'M'::bpchar, 'F'::bpchar])))
+);
+
+
+--
+-- Name: jockeys; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jockeys (
+    id integer NOT NULL,
+    name text NOT NULL,
+    gender character(1)
+);
+
+
+--
+-- Name: meetings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.meetings (
+    id integer NOT NULL,
+    run_on date NOT NULL,
+    run_at integer NOT NULL
+);
+
+
+--
+-- Name: racecourses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.racecourses (
+    id integer NOT NULL,
+    name text NOT NULL,
+    city text NOT NULL
+);
+
+
+--
+-- Name: races; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.races (
+    id integer NOT NULL,
+    name text NOT NULL,
+    ord integer,
+    level integer NOT NULL,
+    prize integer NOT NULL,
+    length integer NOT NULL,
+    part_of integer NOT NULL,
+    CONSTRAINT races_length_check CHECK ((length >= 1000)),
+    CONSTRAINT races_level_check CHECK (((level >= 1) AND (level <= 4))),
+    CONSTRAINT races_ord_check CHECK (((ord >= 1) AND (ord <= 15))),
+    CONSTRAINT races_prize_check CHECK ((prize >= 1000))
+);
+
+
+--
+-- Name: runners; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.runners (
+    id integer NOT NULL,
+    horse integer NOT NULL,
+    race integer NOT NULL,
+    jockey integer NOT NULL,
+    finished integer,
+    CONSTRAINT runners_finished_check CHECK ((finished > 0))
+);
+
+
+--
+-- Data for Name: horses; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.horses (id, name, gender, age) FROM stdin;
+1	Alanis Mare-issette	F	4
+2	Al Capony	F	3
+3	Alimony Pony	M	3
+4	Always Neighing	F	5
+5	Arnold Schwarze-neigh-ger	F	2
+6	Bayardo	F	3
+7	Bill Burr	G	3
+8	Blair Athol	G	3
+9	Blenheim	F	3
+10	Blink Bonny	M	5
+11	Book Law	G	3
+12	Bored Bronco	M	3
+13	Britney Spurs	M	4
+14	Brown Jack	G	2
+15	Burress	M	3
+16	Call Boy	M	4
+17	Cameronian	M	4
+18	Captain Cuttle	M	4
+19	Centenary	M	3
+20	Chappelle	M	3
+21	Chatters	M	4
+22	Chewbacca	M	4
+23	Chuck Horris	F	5
+24	Cicero	M	3
+25	Colombo	F	4
+26	Colorado	M	5
+27	Colt Forty Five	G	2
+28	Coronach	F	3
+29	Dappleganger	M	5
+30	D’Apples Are Sweet	F	2
+31	David Hasselhoofs	G	2
+32	Degeneres	M	5
+33	Diamond Jubilee	F	3
+34	Dick Turpin	F	5
+35	Doncaster	M	4
+36	Donovan	M	4
+37	Eddie	S	3
+38	Edgar Allen Pony	M	4
+39	Enterprise	M	4
+40	Equine Intervention	F	3
+41	Fairway	G	3
+42	Felstead	F	2
+43	Fifty Bales of Hay	M	3
+44	Firdaussi	M	4
+45	Flamingo	G	3
+46	Fleabag	M	4
+47	Flying Fox	S	4
+48	Flying Scotsman	F	2
+49	Foalin Around	G	3
+50	Forrest Jump	F	2
+51	funny horses	G	5
+52	Gainsborough	F	3
+53	Gaits of Hell	G	3
+54	Galopin	F	5
+55	Galtee More	M	4
+56	Gay Crusader	M	3
+57	Gladiateur	M	4
+58	Gluteus Maximus	F	3
+59	Grand Parade	F	4
+60	Great Northern	F	3
+61	Haddish	M	5
+62	Harry Trotter	F	2
+63	Hart	M	3
+64	Harvester	M	4
+65	Hay Girl Hay	G	4
+66	Hay Neighbor	S	3
+67	Hermit	M	5
+68	Hermoineigh	F	3
+69	Hoof Hearted	M	4
+70	Hoofy Heart	G	3
+71	Hooves	M	4
+72	Horsen Around	M	4
+73	Horse Power	F	3
+74	Horsey Kiss	G	3
+75	Hot to Trot	F	5
+76	Humorist	M	3
+77	Hyperion	F	4
+78	Isinglass	G	3
+79	Jersey Shorse	M	4
+80	Jon Bon Pony	F	3
+81	Junkinthetrunk	F	3
+82	Justine Thyme	F	4
+83	Just Mare-ied	F	4
+84	Kate Winsalot	M	3
+85	Knight of the Thistle	F	4
+86	Kolt Kardashian	G	4
+87	Ladas	G	3
+88	Lady She	M	4
+89	laughing horse	F	5
+90	Lemberg	S	3
+91	Leon Trotsky	F	4
+92	Liam Neighson	F	3
+93	Long Face	M	3
+94	Lucy Fur	M	3
+95	Mane Attraction	F	3
+96	Mane Event	G	3
+97	Manna	M	4
+98	Maple Stirrup	M	4
+99	Maythehorsebewithyou	S	4
+100	Melton	M	4
+101	Merry Hampton	M	4
+102	Minnie Scule	F	3
+103	Minoru	M	3
+104	Mount Whiney	F	4
+105	Mr McWhinney	F	3
+106	Mr Miyagi	F	4
+107	My Little Pony	M	4
+108	NeighNeigh Leaks	G	3
+109	Neigh Sayer	F	4
+110	Neil Gow	M	3
+111	Night Hawk	F	4
+112	Night Mare	M	4
+113	Nosoupforyou	M	4
+114	Odor in the Court	M	5
+115	Ormonde	F	3
+116	Papyrus	F	4
+117	Passing Wind	M	3
+118	Penny Loafer	M	3
+119	Persimmon	F	4
+120	Pinto Bean	G	3
+121	Poehler	F	3
+122	Pony Montana	F	4
+123	Pony of my Ownie	F	4
+124	Pony Soprano	G	3
+125	Pony Tail	F	4
+126	Post Stallione	F	3
+127	Pretty Polly	M	2
+128	Prince Palatine	F	5
+129	PxHere	F	3
+130	Reya Sunshine	M	2
+131	Richard Friction	M	3
+132	Ricky Bobby	M	4
+133	Riding Miss Daisy	F	4
+134	Robert the Devil	M	3
+135	Rogue One	M	4
+136	Ron Neighsly	M	3
+137	Royal Lancer	F	3
+138	Russel	M	4
+139	Salmon Trout	F	3
+140	Sandwich	F	4
+141	Sansovino	F	3
+142	Sceptre	F	4
+143	Schumer	F	3
+144	Seinfeld	M	4
+145	Shoe Crew	F	3
+146	Shotover	M	4
+147	Silly Sid	F	5
+148	Silverman	F	3
+149	Singapore	F	4
+150	Sir Frederick Banbury	F	3
+151	Sir Hugo	G	3
+152	Sir Neighs Alot	M	3
+153	Sir Visto	S	5
+154	Sofa Can Fast	M	3
+155	Sofa Can Slow	M	5
+156	Solario	F	4
+157	Spearmint	M	5
+158	Spion Kop	M	4
+159	Spongebob Horsepant	M	3
+160	St. Frusquin	M	3
+161	St. Gatien	F	3
+162	St Simon	F	2
+163	Sunstar	F	4
+164	Sylvester Stallion	F	5
+165	Talk Derby to Me	F	4
+166	Tater Trot	M	3
+167	Thanorse	M	4
+168	The Tetrarch	F	4
+169	The White Knight	G	3
+170	Tig Notaro	M	5
+171	Tina Hay	M	4
+172	Tosh	G	4
+173	Tracery	G	3
+174	Tranquil	M	5
+175	Trigo	M	3
+176	Usain Colt	G	5
+177	Victor Wild	M	4
+178	Walk of Shame	F	4
+179	Wear The Fox Hat	F	4
+180	Weebiscuit	F	4
+181	Whatshesaid	M	3
+182	What the Buck	G	3
+183	Wheres the Beef	M	5
+184	Whinny the Horseshoe	M	4
+185	Whykickamoocow	F	3
+186	William Whitelaw	M	2
+187	Windsor Lad	M	4
+188	Woolwinder	G	5
+189	Zee Bruh	M	4
+\.
+
+
+--
+-- Data for Name: jockeys; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.jockeys (id, name, gender) FROM stdin;
+1	Eddie Ahern	M
+2	Robby Albarado	M
+3	Anna Lee Aldred	F
+4	Kim Andersen	F
+5	Chris Antley	M
+6	Eddie Arcaro	M
+7	Cash Asmussen	M
+8	Andrea Atzeni	F
+9	Calvin Borel	M
+10	Mary Bacon	F
+11	Lester Balaski	M
+12	Donna Barton Brothers	F
+13	Tyler Baze	M
+14	Bobby Beasley	M
+15	Martin Becher	M
+16	Kaye Bell	F
+17	Terry Biddlecombe	M
+18	Dominique Boeuf	F
+19	Glen Boss	M
+20	Joe Bravo	M
+21	Paddy Brennan	M
+22	Charlotte Brew	F
+23	William Buick	M
+24	Nina Carberry	F
+25	Tommy Carberry	M
+26	Eliza Carpenter	F
+27	Willie Carson	M
+28	Javier Castellano	M
+29	Eddie Castro	M
+30	Bob Champion	M
+31	Joe Childs	M
+32	Ray Cochrane	M
+33	Patricia Cooksey	F
+34	Jean Cruguet	F
+35	Diane Crump	F
+36	Charlie Cunningham	M
+37	Frankie Dettori	M
+38	Robbie Davis	M
+39	Mick Dittman	M
+40	Steve Donoghue	M
+41	Hollie Doyle	F
+42	Jimmy Duggan	M
+43	Richard Dunwoody	M
+44	Shane Dye	M
+45	Penny Ann Early	F
+46	Pat Eddery	M
+47	Victor Espinoza	M
+48	Kieren Fallon	M
+49	Jimmy Fortune	M
+50	Freddie Fox	M
+51	Manuel Franco	M
+52	John Francome	M
+53	Cathy Gannon	F
+54	Martin Garcia	M
+55	Barry Geraghty	M
+56	Josh Gifford	M
+57	Campbell Gillies	M
+58	Tom Goodisson	M
+59	Josephine Gordon	F
+60	Jemmy Grimshaw	M
+61	Aaron Gryder	M
+62	Bill Hartack	M
+63	Sandy Hawley	F
+64	Chris Hayes	M
+65	Brian Hernandez Jr.	M
+66	Roy Higgins	M
+67	Rosemary Homeister Jr.	F
+68	Richard Hughes	M
+69	Patrick Husbands	M
+70	Simon Husbands	M
+71	Michael Hussey	M
+72	Yasunari Iwata	M
+73	Linda Jones	F
+74	Julie Krone	F
+75	Willy Kan	M
+76	Colin Keane	M
+77	Lizzie Kelly	F
+78	Christophe Lemaire	M
+79	Julien Leparoux	M
+80	Jose Lezcano	M
+81	Carl Llewellyn	M
+82	Tommy Loates	M
+83	Johnny Loftus	M
+84	Paco Lopez	M
+85	Tommy Lowrey	M
+86	Manfred K. L. Man	M
+87	Ryan Mania	M
+88	Eddie Maple	M
+89	Rajiv Maragh	M
+90	Chris McCarron	M
+91	Tony McCoy	M
+92	Kerrin McEvoy	M
+93	Kirsty Milczarek	F
+94	Martin Molony	M
+95	Johnny Murtagh	M
+96	Rosie Napravnik	F
+97	Damien Oliver	M
+98	Irad Ortiz Jr.	M
+99	Olivier Peslier	M
+100	Lester Piggott	M
+101	Red Pollard	M
+102	Tom Queally	M
+103	Jimmy Quinn	M
+104	Jorge Ricardo	M
+105	Willie Robinson	M
+106	Randy Romero	M
+107	Jean-Luc Samyn	M
+108	Emanuel Jose Sanchez	M
+109	Ricardo Santana Jr.	M
+110	Peter Schiergen	M
+111	Peter Scudamore	M
+112	Yoshitomi Shibata	M
+113	Blake Shinn	M
+114	Bill Shoemaker	M
+115	Pesi Shroff	M
+116	Bob Skelton	M
+117	Virginia Pinky Smith	F
+118	Alex Solis	M
+119	Y. S. Srinath	M
+120	Tommy Stack	M
+121	Andrasch Starke	M
+122	Wally Swinburn	M
+123	Fred Templeman	M
+124	Terry J. Thompson	M
+125	Alicia Thornton	F
+126	Liam Treadwell	M
+127	Hayley Turner	F
+128	Alice Van-Springsteen	F
+129	Francine Villeneuve	F
+130	Ruby Walsh	F
+131	Fulke Walwyn	M
+132	Tommy Weston	M
+133	Jack Westrope	M
+134	Emma-Jayne Wilson	F
+135	Harry Wragg	M
+136	Manuel Ycaza	M
+137	Raymond York	M
+\.
+
+
+--
+-- Data for Name: meetings; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.meetings (id, run_on, run_at) FROM stdin;
+1	2019-08-10	1
+2	2019-08-10	5
+3	2019-08-17	2
+4	2019-08-24	4
+5	2019-08-31	2
+6	2019-08-31	5
+7	2019-09-07	3
+8	2019-09-07	4
+9	2019-09-14	1
+10	2019-09-14	5
+11	2019-09-21	2
+12	2019-09-21	4
+13	2019-09-27	3
+14	2019-09-28	5
+15	2019-09-29	2
+16	2019-10-05	1
+17	2019-10-05	4
+18	2019-10-12	2
+19	2019-10-12	4
+20	2019-10-16	2
+21	2019-10-19	2
+22	2019-10-19	4
+23	2019-10-25	3
+24	2019-10-26	3
+25	2019-10-26	4
+26	2019-11-02	1
+27	2019-11-05	1
+28	2019-11-07	1
+29	2019-11-09	1
+30	2019-11-09	5
+31	2019-11-30	8
+32	2019-11-30	5
+33	2019-12-14	4
+34	2019-12-26	4
+35	2019-12-28	8
+36	2020-01-01	1
+37	2020-01-24	3
+38	2020-01-25	2
+39	2020-02-01	2
+40	2020-02-01	5
+41	2020-02-08	2
+42	2020-02-08	6
+43	2020-02-15	1
+44	2020-02-15	4
+45	2020-02-21	3
+46	2020-02-22	2
+47	2020-02-22	5
+48	2020-02-29	1
+49	2020-02-29	4
+50	2020-03-07	1
+51	2020-03-07	4
+52	2020-03-13	3
+53	2020-03-14	5
+54	2020-03-20	3
+55	2020-03-21	5
+56	2020-03-28	5
+57	2020-04-04	4
+58	2020-04-11	2
+59	2020-04-11	4
+60	2020-04-18	4
+61	2020-04-25	5
+62	2020-05-08	8
+63	2020-05-09	8
+64	2020-05-16	8
+65	2020-05-16	5
+66	2020-05-23	8
+67	2020-05-23	7
+68	2020-05-30	8
+69	2020-05-30	7
+70	2020-06-06	8
+71	2020-06-06	7
+72	2020-06-13	8
+73	2020-06-20	7
+74	2020-07-11	2
+75	2020-07-25	2
+\.
+
+
+--
+-- Data for Name: racecourses; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.racecourses (id, name, city) FROM stdin;
+1	Flemington	Melbourne
+2	Caulfield	Melbourne
+3	Moonee Valley	Melbourne
+4	Randwick	Sydney
+5	Rosehill	Sydney
+6	Warwick Farm	Sydney
+7	Eagle Farm	Brisbane
+8	Doomben	Brisbane
+\.
+
+
+--
+-- Data for Name: races; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.races (id, name, ord, level, prize, length, part_of) FROM stdin;
+2	Missile Stakes	5	2	200000	1200	2
+3	P B Lawrence Stakes	4	2	200000	1400	3
+4	Quezette Stakes	5	3	160000	1100	3
+5	Vain Stakes	6	3	160000	1100	3
+6	Show County Quality Handicap	3	3	160000	1200	4
+7	Silver Shadow Stakes	4	2	200000	1200	4
+9	Up And Coming Stakes	6	3	160000	1300	4
+10	Winx Stakes	7	1	500000	1400	4
+11	HDF McNeil Stakes	4	3	160000	1200	5
+12	Memsie Stakes	5	1	1000000	1400	5
+13	The Heath 1100	6	3	160000	1100	5
+14	W W Cockram Stakes	7	3	160000	1200	5
+15	Ming Dynasty Quality Handicap	3	3	160000	1400	6
+16	Premier's Cup (ATC)	4	3	160000	1900	6
+17	San Domenico Stakes	5	3	160000	1100	6
+18	John F. Feehan Stakes	4	2	250000	1600	7
+19	McEwen Stakes	5	2	200000	1000	7
+21	Concorde Stakes	3	3	160000	1000	8
+22	Furious Stakes	4	2	200000	1200	8
+23	Tramway Stakes	5	2	200000	1400	8
+24	Bobbie Lewis Quality	4	2	200000	1200	9
+25	Danehill Stakes	5	2	200000	1200	9
+26	Let's Elope Stakes	6	2	200000	1400	9
+27	Makybe Diva Stakes	7	1	750000	1600	9
+28	Sheraco Stakes	3	2	200000	1200	10
+29	The Run To The Rose	4	2	200000	1200	10
+31	How Now Stakes	4	3	160000	1200	11
+32	Naturalism Stakes	5	3	160000	2000	11
+33	Sir Rupert Clarke Stakes	6	1	500000	1400	11
+34	Bill Ritchie Handicap	4	3	160000	1400	12
+35	George Main Stakes	5	1	500000	1600	12
+36	Kingston Town Stakes	6	3	160000	2000	12
+37	Tea Rose Stakes	7	2	200000	1400	12
+38	The Shorts	8	2	500000	1100	12
+39	A J Moir Stakes	4	1	500000	1000	13
+41	JRA Cup	6	3	200000	2040	13
+42	Scarborough Stakes	7	3	160000	1200	13
+43	W H Stocks Stakes	8	2	200000	1600	13
+44	Colin Stephen Quality Handicap	4	3	160000	2400	14
+45	Gloaming Stakes	5	3	200000	1800	14
+46	Golden Pendant	6	2	400000	1400	14
+47	Golden Rose Stakes	7	1	1000000	1400	14
+48	Shannon Stakes	8	2	200000	1500	14
+50	Thousand Guineas Prelude	3	2	200000	1400	15
+51	Underwood Stakes	4	1	750000	1800	15
+52	Edward Manifold Stakes	3	2	200000	1600	16
+53	Gilgai Stakes	4	2	200000	1200	16
+54	Rose Of Kingston Stakes	5	2	200000	1400	16
+55	The Bart Cummings	6	3	300000	2500	16
+56	Turnbull Stakes	7	1	500000	2000	16
+57	Breeders' Plate	2	3	160000	1000	17
+58	Epsom Handicap	3	1	1000000	1600	17
+59	Flight Stakes	4	1	500000	1600	17
+60	Gimcrack Stakes (ATC)	5	3	160000	1000	17
+61	Hill Stakes	6	2	500000	2000	17
+62	Premiere Stakes	7	2	500000	1200	17
+64	Caulfield Guineas	2	1	2000000	1600	18
+65	Caulfield Stakes	3	1	1000000	2000	18
+66	Herbert Power Stakes	4	2	400000	2400	18
+67	Northwood Plume Stakes	5	3	160000	1200	18
+68	Schillaci Stakes	6	2	400000	1100	18
+69	The Thousand Guineas	7	1	500000	1600	18
+71	Toorak Handicap	9	1	500000	1600	18
+72	Angst Stakes	4	3	160000	1600	19
+73	Roman Consul Stakes	5	2	300000	1200	19
+74	Spring Champion Stakes	6	1	1000000	2000	19
+75	Stan Fox Stakes	7	2	250000	1500	19
+76	Blue Sapphire Stakes	3	3	350000	1200	20
+77	Coongy Handicap	4	3	160000	2000	20
+78	Ladies Day Vase	5	3	160000	1600	20
+79	Caulfield Classic	3	3	350000	2000	21
+80	Caulfield Cup	4	1	5000000	2400	21
+81	Caulfield Sprint	5	2	200000	1100	21
+82	Ethereal Stakes	6	3	160000	2000	21
+83	Moonga Stakes	7	3	160000	1400	21
+84	Tristarc Stakes	8	2	200000	1400	21
+85	Craven Plate	3	3	500000	2000	22
+86	Sydney Stakes	4	3	500000	1200	22
+88	Crystal Mile	2	2	200000	1600	24
+89	Moonee Valley Fillies Classic	3	2	200000	1600	24
+90	Moonee Valley Gold Cup	4	2	300000	2500	24
+91	Moonee Valley Vase	5	2	200000	2040	24
+92	Red Anchor Stakes	6	3	160000	1200	24
+93	Tesio Stakes	7	3	160000	1600	24
+94	W. S. Cox Plate	8	1	5000000	2040	24
+95	The Nivison	5	3	200000	1200	25
+97	Cantala Stakes	5	1	1000000	1600	26
+98	Carbine Club Stakes (VRC)	6	3	200000	1600	26
+99	Coolmore Stud Stakes	7	1	1000000	1200	26
+100	Lexus Stakes	8	3	300000	2500	26
+101	Linlithgow Stakes	9	2	300000	1200	26
+102	Myer Classic	10	1	500000	1600	26
+103	Victoria Derby	11	1	2000000	2500	26
+104	Wakeful Stakes	12	2	300000	2000	26
+105	Hong Kong Jockey Club Stakes	2	3	200000	1400	27
+106	Melbourne Cup	3	1	7750000	3200	27
+107	Ottawa Stakes	4	3	160000	1000	27
+108	Chatham Stakes	4	3	200000	1400	28
+109	VRC Oaks	5	1	1000000	2500	28
+111	Maribyrnong Plate	3	3	160000	1000	29
+112	Matriarch Stakes	4	2	300000	2000	29
+113	Queen Elizabeth Stakes (VRC)	5	3	300000	2600	29
+114	VRC Sprint Classic	6	1	1000000	1200	29
+115	Hot Danish Stakes	4	2	500000	1400	30
+116	George Moore Stakes	4	3	200000	1200	31
+118	Villiers Stakes	3	2	250000	1600	33
+119	Summer Cup	3	3	160000	2000	34
+120	B J McLachlan Stakes	3	3	200000	1200	35
+121	Vo Rogue Plate	4	3	200000	1350	35
+123	Australia Stakes	4	2	200000	1200	37
+124	Blue Diamond Preview Fillies	5	3	160000	1000	38
+125	Chairman's Stakes (MRC)	4	3	160000	1100	39
+126	Manfred Stakes	5	3	160000	1200	39
+127	Canonbury Stakes	4	3	160000	1100	40
+128	Expressway Stakes	5	2	200000	1200	40
+129	Widden Stakes	6	3	160000	1100	40
+130	Autumn Stakes	3	2	200000	1400	41
+132	Blue Diamond Prelude Fillies	5	2	200000	1100	41
+133	C.F. Orr Stakes	6	1	500000	1400	41
+134	Carlyon Cup	7	3	160000	1600	41
+135	Geoffrey Belmaine Stakes	8	3	160000	1200	41
+136	Kevin Hayes Stakes	9	3	160000	1200	41
+137	Rubiton Stakes	10	2	200000	1100	41
+138	Eskimo Prince Stakes	5	3	160000	1200	42
+139	Black Caviar Lightning	4	1	750000	1000	43
+140	C S Hayes Stakes	5	3	160000	1400	43
+141	The Vanity	6	3	160000	1400	43
+142	Apollo Stakes	2	2	250000	1400	44
+144	Southern Cross Stakes	4	3	160000	1200	44
+145	Triscay Stakes	5	3	160000	1200	44
+146	Typhoon Tracy Stakes	4	3	160000	1200	45
+147	Angus Armanasco Stakes	2	2	200000	1400	46
+148	Blue Diamond Stakes	3	1	1500000	1200	46
+149	Caulfield Autumn Classic	4	2	200000	1800	46
+150	Futurity Stakes	5	1	500000	1400	46
+151	Mannerism Stakes	6	3	160000	1400	46
+152	Oakleigh Plate	7	1	500000	1100	46
+153	Peter Young Stakes	8	2	200000	1800	46
+154	Zeditave Stakes	9	3	160000	1200	46
+156	Millie Fox Stakes	5	2	200000	1300	47
+157	Silver Slipper Stakes	6	2	250000	1100	47
+158	Australian Guineas	3	1	1000000	1600	48
+159	Frances Tressady Stakes	4	3	160000	1400	48
+160	Shaftesbury Avenue Handicap	5	3	160000	1400	48
+161	Chipping Norton Stakes	3	1	600000	1600	49
+162	Guy Walter Stakes	4	2	200000	1400	49
+164	Skyline Stakes	6	2	160000	1200	49
+165	Surround Stakes	7	1	500000	1400	49
+166	Sweet Embrace Stakes	8	2	200000	1200	49
+167	A.V Kewney Stakes	4	2	200000	1400	50
+168	Australian Cup	5	1	1500000	2000	50
+169	Blamey Stakes	6	2	200000	1600	50
+170	Matron Stakes	7	3	160000	1600	50
+171	Newmarket Handicap	8	1	1250000	1200	50
+172	Sires' Produce Stakes (VRC)	9	2	200000	1400	50
+174	Aspiration Quality	3	3	160000	1600	51
+175	Canterbury Stakes	4	1	500000	1300	51
+176	Challenge Stakes	5	2	500000	1000	51
+177	Randwick Guineas	6	1	1000000	1600	51
+178	Reisling Stakes	7	2	300000	1200	51
+179	Todman Stakes	8	2	300000	1200	51
+180	Wenona Girl Quality	9	3	160000	1200	51
+181	Alister Clark Stakes	3	2	200000	2040	52
+182	Ajax Stakes	3	2	200000	1500	53
+184	Magic Night Stakes	5	3	175000	1200	53
+185	Maurice McCarten Stakes	6	3	160000	1100	53
+186	Pago Pago Stakes	7	3	175000	1200	53
+187	Phar Lap Stakes	8	2	200000	1500	53
+188	Sky High Stakes	9	3	350000	2000	53
+189	Alexandra Stakes	4	3	160000	1600	54
+190	Sunline Stakes	5	2	200000	1600	54
+191	William Reid Stakes	6	1	500000	1200	54
+193	Epona Stakes	4	3	160000	1900	55
+194	George Ryder Stakes	5	1	1000000	1500	55
+195	Golden Slipper Stakes	6	1	3500000	1200	55
+196	N E Manion Cup	7	3	160000	2400	55
+197	Ranvet Stakes	8	1	700000	2000	55
+198	Rosehill Guineas	9	1	600000	2000	55
+199	The Galaxy	10	1	700000	1100	55
+200	Doncaster Prelude	3	3	160000	1500	56
+201	Emancipation Stakes	4	2	200000	1500	56
+203	Neville Sellwood Stakes	6	3	160000	2000	56
+204	Star Kingdom Stakes	7	3	160000	1200	56
+205	T L Baillieu Handicap	8	3	160000	1400	56
+206	Tulloch Stakes	9	2	200000	2000	56
+207	Vinery Stud Stakes	10	1	500000	2000	56
+208	Adrian Knox Quality Stakes	2	3	200000	2000	57
+209	Australian Derby	3	1	2000000	2400	57
+211	Chairman's Handicap (ATC)	5	2	300000	2600	57
+212	Doncaster Mile	6	1	1500000	1600	57
+213	Inglis Sires'	7	1	500000	1400	57
+214	Kindergarten Stakes	8	3	200000	1100	57
+215	P J Bell Stakes	9	3	200000	1200	57
+216	T J Smith Stakes	10	1	1250000	1200	57
+217	Easter Cup	5	3	128000	2000	58
+218	Victoria Handicap	6	3	128000	1400	58
+220	Australian Oaks	4	1	1000000	2400	59
+221	Coolmore Legacy	5	1	500000	1600	59
+222	Percy Sykes Stakes	6	2	500000	1200	59
+223	Queen Elizabeth Stakes (ATC)	7	1	2000000	2000	59
+224	Sapphire Stakes	8	2	300000	1200	59
+225	Sydney Cup	9	1	1000000	3200	59
+226	All Aged Stakes	4	1	480000	1400	60
+227	Champagne Stakes	5	1	400000	1600	60
+228	Frank Packer Plate	6	3	140000	2000	60
+230	James H B Carr Stakes	8	3	140000	1400	60
+231	Japan Racing Association Plate	9	3	140000	2000	60
+232	Godolphin Crown	4	3	140000	1300	61
+266	Race 1	1	4	3000	2100	1
+267	Race 2	2	4	6000	1000	1
+1	Aurie's Star Handicap	3	3	160000	1200	1
+268	Race 1	1	4	5000	1100	2
+269	Race 2	2	4	5000	1500	2
+270	Race 3	3	4	1000	1800	2
+271	Race 4	4	4	3000	2000	2
+272	Race 1	1	4	7000	1200	3
+273	Race 2	2	4	5000	2300	3
+274	Race 3	3	4	5000	1600	3
+275	Race 1	1	4	1000	1700	4
+276	Race 2	2	4	7000	2000	4
+8	Toy Show Quality Handicap	5	3	160000	1100	4
+277	Race 1	1	4	9000	1300	5
+278	Race 2	2	4	2000	2000	5
+279	Race 3	3	4	4000	1600	5
+280	Race 1	1	4	9000	1900	6
+281	Race 2	2	4	3000	1300	6
+282	Race 1	1	4	8000	1700	7
+283	Race 2	2	4	4000	1100	7
+284	Race 3	3	4	8000	1600	7
+285	Race 1	1	4	9000	1100	8
+20	Chelmsford Stakes	2	2	250000	1600	8
+286	Race 1	1	4	2000	1200	9
+287	Race 2	2	4	8000	2100	9
+288	Race 3	3	4	2000	1200	9
+289	Race 1	1	4	8000	1800	10
+290	Race 2	2	4	4000	2400	10
+30	Theo Marks Stakes	5	2	200000	1300	10
+291	Race 1	1	4	10000	1400	11
+292	Race 2	2	4	4000	1700	11
+293	Race 3	3	4	4000	1500	11
+294	Race 1	1	4	2000	1000	12
+295	Race 2	2	4	5000	1300	12
+296	Race 3	3	4	9000	1500	12
+297	Race 1	1	4	10000	2100	13
+298	Race 2	2	4	1000	1100	13
+299	Race 3	3	4	9000	1100	13
+40	Bill Stutt Stakes	5	2	200000	1600	13
+300	Race 1	1	4	9000	1600	14
+301	Race 2	2	4	8000	2400	14
+302	Race 3	3	4	4000	2000	14
+303	Race 1	1	4	10000	1800	15
+49	Caulfield Guineas Prelude	2	3	175000	1400	15
+304	Race 1	1	4	10000	2300	16
+305	Race 2	2	4	4000	2400	16
+306	Race 1	1	4	6000	1600	17
+63	The Metropolitan	8	1	750000	2400	17
+307	Race 1	1	4	4000	2500	18
+70	Thoroughbred Club Stakes	8	3	160000	1200	18
+308	Race 1	1	4	7000	1400	19
+309	Race 2	2	4	7000	2100	19
+310	Race 3	3	4	10000	2400	19
+311	Race 1	1	4	10000	2200	20
+312	Race 2	2	4	1000	1500	20
+313	Race 1	1	4	6000	2000	21
+314	Race 2	2	4	5000	2100	21
+315	Race 1	1	4	4000	1700	22
+316	Race 2	2	4	10000	2400	22
+317	Race 1	1	4	5000	1700	23
+318	Race 2	2	4	10000	2100	23
+319	Race 3	3	4	7000	1400	23
+87	Manikato Stakes	4	1	1000000	1200	23
+320	Race 1	1	4	7000	2100	24
+321	Race 1	1	4	8000	1600	25
+322	Race 2	2	4	4000	1500	25
+323	Race 3	3	4	8000	1100	25
+324	Race 4	4	4	6000	1200	25
+325	Race 1	1	4	5000	2100	26
+326	Race 2	2	4	1000	1000	26
+327	Race 3	3	4	1000	1600	26
+96	Begonia Belle Stakes	4	3	200000	1100	26
+328	Race 1	1	4	10000	1200	27
+329	Race 1	1	4	2000	1300	28
+330	Race 2	2	4	7000	2400	28
+331	Race 3	3	4	8000	1100	28
+332	Race 1	1	4	3000	1000	29
+110	Mackinnon Stakes	2	1	1500000	2000	29
+333	Race 1	1	4	4000	2200	30
+334	Race 2	2	4	5000	1400	30
+335	Race 3	3	4	4000	1600	30
+336	Race 1	1	4	2000	1700	31
+337	Race 2	2	4	8000	1500	31
+338	Race 3	3	4	2000	1200	31
+339	Race 1	1	4	10000	1100	32
+340	Race 2	2	4	9000	1800	32
+341	Race 3	3	4	1000	1600	32
+117	Festival Stakes	4	3	160000	1500	32
+342	Race 1	1	4	3000	2100	33
+343	Race 2	2	4	5000	2100	33
+344	Race 1	1	4	8000	1700	34
+345	Race 2	2	4	5000	2200	34
+346	Race 1	1	4	9000	1100	35
+347	Race 2	2	4	1000	1100	35
+348	Race 1	1	4	3000	1300	36
+234	Hawkesbury Guineas	6	3	160000	1400	61
+235	Doomben 10000	5	1	700000	1200	62
+236	BRC Sprint	4	3	125000	1350	63
+238	Dark Jewel Classic	3	3	160000	1400	65
+239	Champagne Classic	5	2	175000	1200	66
+240	Glenlogan Park Stakes	2	3	150000	1300	67
+241	Grand Prix Stakes	3	3	150000	2200	67
+242	Gunsynd Classic	4	3	115000	1600	67
+244	Lord Mayor's Cup	6	3	125000	1600	67
+245	Premier's Cup (BRC)	7	3	125000	2200	67
+246	Sires' Produce Stakes (BRC)	8	2	250000	1400	67
+247	Victory Stakes	9	2	175000	1200	67
+248	Chairman's Handicap (BRC)	3	3	125000	2000	68
+249	Fred Best Classic	2	3	150000	1400	69
+250	Moreton Cup	3	2	175000	1300	69
+252	Queensland Oaks	5	1	500000	2400	69
+253	Rough Habit Plate	3	3	175000	1200	70
+254	Brisbane Cup	3	2	300000	2400	71
+255	Dane Ripper Stakes	4	2	200000	1400	71
+256	J.J. Atkins	5	1	350000	1600	71
+257	Queensland Derby	6	1	600000	2400	71
+259	Stradbroke Handicap	8	1	350000	1400	71
+260	Doomben Roses	5	2	175000	2000	72
+261	Tattersall's Cup	4	3	200000	3000	73
+262	Tattersall's Tiara	5	1	500000	1400	73
+263	W J Healy Stakes	6	3	175000	1200	73
+264	Sir John Monash Stakes	4	3	160000	1100	74
+265	Bletchingly Stakes	4	3	160000	1200	75
+349	Race 2	2	4	8000	1000	36
+350	Race 3	3	4	4000	2500	36
+122	Standish Handicap	4	3	160000	1200	36
+351	Race 1	1	4	8000	1800	37
+352	Race 2	2	4	4000	2200	37
+353	Race 3	3	4	2000	2500	37
+354	Race 1	1	4	9000	2400	38
+355	Race 2	2	4	2000	1900	38
+356	Race 3	3	4	5000	2500	38
+357	Race 4	4	4	6000	1100	38
+358	Race 1	1	4	2000	1700	39
+359	Race 2	2	4	4000	1400	39
+360	Race 3	3	4	1000	1800	39
+361	Race 1	1	4	10000	2200	40
+362	Race 2	2	4	1000	1900	40
+363	Race 3	3	4	10000	1300	40
+364	Race 1	1	4	6000	1700	41
+365	Race 2	2	4	1000	2500	41
+131	Blue Diamond Prelude C&G	4	3	200000	1100	41
+366	Race 1	1	4	8000	1000	42
+367	Race 2	2	4	7000	1200	42
+368	Race 3	3	4	7000	2500	42
+369	Race 4	4	4	7000	1700	42
+370	Race 1	1	4	4000	2000	43
+371	Race 2	2	4	9000	2500	43
+372	Race 3	3	4	1000	1000	43
+373	Race 1	1	4	4000	1200	44
+143	Light Fingers Stakes	3	2	200000	1200	44
+374	Race 1	1	4	4000	1600	45
+375	Race 2	2	4	7000	2500	45
+376	Race 3	3	4	9000	2200	45
+377	Race 1	1	4	9000	1400	46
+378	Race 1	1	4	1000	1900	47
+379	Race 2	2	4	3000	1000	47
+380	Race 3	3	4	10000	1100	47
+155	Hobartville Stakes	4	2	400000	1400	47
+381	Race 1	1	4	5000	2000	48
+382	Race 2	2	4	9000	2000	48
+383	Race 1	1	4	7000	2200	49
+384	Race 2	2	4	10000	1800	49
+163	Liverpool City Cup	5	3	160000	1300	49
+385	Race 1	1	4	3000	2100	50
+386	Race 2	2	4	7000	1200	50
+387	Race 3	3	4	9000	1800	50
+173	Thoroughbred Breeders Stakes	10	3	160000	1200	50
+388	Race 1	1	4	6000	2300	51
+389	Race 2	2	4	7000	2100	51
+390	Race 1	1	4	8000	2000	52
+391	Race 2	2	4	3000	1900	52
+392	Race 1	1	4	2000	2500	53
+393	Race 2	2	4	5000	1000	53
+183	Coolmore Classic	4	1	600000	1500	53
+394	Race 1	1	4	5000	2400	54
+395	Race 2	2	4	9000	2500	54
+396	Race 3	3	4	3000	1500	54
+397	Race 1	1	4	9000	2400	55
+398	Race 2	2	4	6000	1000	55
+192	Birthday Card Stakes	3	3	160000	1200	55
+399	Race 1	1	4	4000	1900	56
+400	Race 2	2	4	7000	2500	56
+202	H E Tancred Stakes	5	1	1500000	2400	56
+401	Race 1	1	4	4000	1000	57
+210	Carbine Club Stakes (ATC)	4	3	200000	1600	57
+402	Race 1	1	4	9000	1700	58
+403	Race 2	2	4	7000	2200	58
+404	Race 3	3	4	6000	1300	58
+405	Race 4	4	4	8000	1000	58
+406	Race 1	1	4	8000	1300	59
+407	Race 2	2	4	9000	2500	59
+219	Arrowfield 3yo Sprint	3	2	1000000	1200	59
+408	Race 1	1	4	4000	1200	60
+409	Race 2	2	4	2000	1900	60
+410	Race 3	3	4	8000	2100	60
+229	Hall Mark Stakes	7	3	140000	1200	60
+411	Race 1	1	4	5000	1500	61
+412	Race 2	2	4	7000	1100	61
+413	Race 3	3	4	1000	2400	61
+233	Hawkesbury Gold Cup	5	3	160000	1600	61
+414	Race 1	1	4	5000	2500	62
+415	Race 2	2	4	8000	1000	62
+416	Race 3	3	4	8000	2400	62
+417	Race 4	4	4	7000	1900	62
+418	Race 1	1	4	7000	2400	63
+419	Race 2	2	4	10000	2500	63
+420	Race 3	3	4	1000	1600	63
+421	Race 1	1	4	5000	2200	64
+422	Race 2	2	4	9000	1700	64
+423	Race 3	3	4	4000	2400	64
+237	Doomben Cup	4	1	650000	2000	64
+424	Race 1	1	4	8000	2200	65
+425	Race 2	2	4	9000	1200	65
+426	Race 1	1	4	8000	2200	66
+427	Race 2	2	4	1000	1800	66
+428	Race 3	3	4	6000	1100	66
+429	Race 4	4	4	4000	1600	66
+430	Race 1	1	4	3000	1700	67
+243	Kingsford-Smith Cup	5	1	700000	1300	67
+431	Race 1	1	4	9000	1600	68
+432	Race 2	2	4	3000	1900	68
+433	Race 1	1	4	8000	2500	69
+251	P J O'Shea Stakes	4	2	200000	2200	69
+434	Race 1	1	4	4000	2100	70
+435	Race 2	2	4	4000	1000	70
+436	Race 1	1	4	9000	2000	71
+437	Race 2	2	4	5000	1600	71
+258	Queensland Guineas	7	2	350000	1600	71
+438	Race 1	1	4	6000	2300	72
+439	Race 2	2	4	8000	1000	72
+440	Race 3	3	4	6000	1700	72
+441	Race 4	4	4	5000	1800	72
+442	Race 1	1	4	8000	1800	73
+443	Race 2	2	4	4000	1200	73
+444	Race 3	3	4	3000	1700	73
+445	Race 1	1	4	3000	2500	74
+446	Race 2	2	4	10000	2200	74
+447	Race 3	3	4	9000	2300	74
+448	Race 1	1	4	1000	2400	75
+449	Race 2	2	4	6000	2100	75
+450	Race 3	3	4	8000	1800	75
+\.
+
+
+--
+-- Data for Name: runners; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.runners (id, horse, race, jockey, finished) FROM stdin;
+1	123	266	89	1
+2	79	266	48	2
+3	78	266	116	3
+4	118	266	77	4
+5	1	266	51	5
+6	22	266	45	6
+7	91	266	87	7
+8	48	266	88	8
+9	82	267	105	1
+10	74	267	67	2
+11	69	267	23	3
+12	27	267	123	4
+13	143	267	24	5
+14	182	267	31	6
+15	12	1	21	1
+16	39	1	34	2
+17	149	1	25	3
+18	76	1	86	4
+19	174	1	31	5
+20	165	1	80	6
+21	147	1	37	7
+22	63	268	75	1
+23	173	268	103	2
+24	140	268	67	3
+25	94	268	19	4
+26	165	268	97	5
+27	67	268	25	6
+28	168	268	10	7
+29	157	269	128	1
+30	60	269	21	2
+31	128	269	83	3
+32	182	269	46	4
+33	46	269	116	5
+34	186	269	23	6
+35	49	269	1	7
+36	13	269	10	8
+37	40	270	13	1
+38	51	270	32	2
+39	18	270	127	3
+40	115	270	114	4
+41	23	270	121	5
+42	81	271	112	1
+43	183	271	36	2
+44	43	271	30	3
+45	188	271	40	4
+46	91	271	123	5
+47	172	271	104	6
+48	30	2	7	1
+49	131	2	23	2
+50	48	2	136	3
+51	176	2	122	4
+52	178	2	27	5
+53	118	2	14	6
+54	28	2	109	7
+55	187	2	92	8
+56	20	272	17	1
+57	127	272	88	2
+58	21	272	47	3
+59	168	272	99	4
+60	68	272	80	5
+61	44	272	49	6
+62	130	272	126	7
+63	173	273	37	1
+64	17	273	87	2
+65	31	273	118	3
+66	171	273	22	4
+67	13	273	78	5
+68	166	273	19	6
+69	6	273	97	7
+70	67	274	61	1
+71	125	274	28	2
+72	61	274	85	3
+73	95	274	13	4
+74	132	274	101	5
+75	97	274	72	6
+76	137	274	92	7
+77	16	3	50	1
+78	169	3	23	2
+79	53	3	67	3
+80	121	3	44	4
+81	135	3	133	5
+82	98	4	23	1
+83	25	4	119	2
+84	52	4	39	3
+85	150	4	56	4
+86	176	4	88	5
+87	185	4	9	6
+88	123	4	11	7
+89	81	5	33	1
+90	118	5	72	2
+91	165	5	35	3
+92	73	5	41	4
+93	55	5	115	5
+94	124	5	26	6
+95	62	5	66	7
+96	43	275	128	1
+97	16	275	78	2
+98	2	275	1	3
+99	28	275	73	4
+100	160	275	77	5
+101	138	276	32	1
+102	27	276	113	2
+103	44	276	108	3
+104	139	276	76	4
+105	86	276	79	5
+106	65	6	23	1
+107	3	6	69	2
+108	153	6	96	3
+109	187	6	115	4
+110	118	6	102	5
+111	110	7	95	1
+112	9	7	116	2
+113	186	7	38	3
+114	149	7	8	4
+115	49	7	72	5
+116	34	7	43	6
+117	127	7	103	7
+118	4	8	74	1
+119	135	8	54	2
+120	100	8	112	3
+121	91	8	36	4
+122	92	8	77	5
+123	183	8	75	6
+124	1	9	47	1
+125	5	9	92	2
+126	18	9	98	3
+127	131	9	96	4
+128	62	9	77	5
+129	172	10	89	1
+130	31	10	128	2
+131	158	10	1	3
+132	152	10	2	4
+133	60	10	41	5
+134	96	10	136	6
+135	157	277	9	1
+136	42	277	15	2
+137	30	277	41	3
+138	3	277	108	4
+139	160	277	63	5
+140	165	277	88	6
+141	17	278	85	1
+142	150	278	64	2
+143	52	278	10	3
+144	133	278	15	4
+145	156	278	126	5
+146	6	278	68	6
+147	167	278	134	7
+148	38	278	20	8
+149	117	279	107	1
+150	82	279	23	2
+151	164	279	120	3
+152	7	279	37	4
+153	105	279	90	5
+154	113	279	45	6
+155	142	11	24	1
+156	71	11	124	2
+157	149	11	101	3
+158	152	11	27	4
+159	161	11	57	5
+160	107	12	29	1
+161	132	12	92	2
+162	171	12	38	3
+163	16	12	117	4
+164	78	12	127	5
+165	125	12	130	6
+166	72	12	39	7
+167	116	12	86	8
+168	130	13	70	1
+169	119	13	103	2
+170	188	13	40	3
+171	63	13	92	4
+172	166	13	38	5
+173	181	14	17	1
+174	180	14	72	2
+175	114	14	74	3
+176	80	14	48	4
+177	70	14	28	5
+178	99	14	27	6
+179	20	280	73	1
+180	76	280	98	2
+181	129	280	37	3
+182	59	280	34	4
+183	97	280	85	5
+184	73	281	41	1
+185	68	281	72	2
+186	175	281	35	3
+187	19	281	10	4
+188	179	281	116	5
+189	74	281	94	6
+190	113	15	90	1
+191	15	15	84	2
+192	77	15	7	3
+193	136	15	15	4
+194	173	15	58	5
+195	160	16	98	1
+196	164	16	58	2
+197	116	16	24	3
+198	178	16	14	4
+199	126	16	51	5
+200	148	17	5	1
+201	142	17	70	2
+202	11	17	129	3
+203	165	17	63	4
+204	57	17	49	5
+205	132	17	52	6
+206	147	17	25	7
+207	174	17	66	8
+208	50	282	123	1
+209	35	282	19	2
+210	182	282	77	3
+211	31	282	121	4
+212	151	282	79	5
+213	69	282	55	6
+214	43	283	136	1
+215	162	283	117	2
+216	34	283	39	3
+217	102	283	50	4
+218	68	283	99	5
+219	65	283	114	6
+220	16	284	4	1
+221	129	284	77	2
+222	46	284	66	3
+223	150	284	131	4
+224	132	284	68	5
+225	59	284	23	6
+226	75	18	89	1
+227	12	18	135	2
+228	178	18	109	3
+229	27	18	100	4
+230	33	18	25	5
+231	10	18	53	6
+232	103	18	1	7
+233	169	18	85	8
+234	104	19	64	1
+235	130	19	68	2
+236	18	19	79	3
+237	112	19	120	4
+238	13	19	13	5
+239	95	19	136	6
+240	4	19	77	7
+241	173	285	100	1
+242	3	285	50	2
+243	129	285	68	3
+244	162	285	106	4
+245	70	285	132	5
+246	143	20	38	1
+247	111	20	91	2
+248	90	20	49	3
+249	20	20	44	4
+250	110	20	113	5
+251	171	20	124	6
+252	154	20	37	7
+253	98	21	3	1
+254	28	21	22	2
+255	100	21	121	3
+256	130	21	12	4
+257	48	21	18	5
+258	115	22	107	1
+259	180	22	52	2
+260	161	22	9	3
+261	27	22	63	4
+262	7	22	2	5
+263	114	22	32	6
+264	126	22	118	7
+265	142	22	17	8
+266	102	23	24	1
+267	34	23	1	2
+268	43	23	95	3
+269	149	23	100	4
+270	57	23	57	5
+271	49	23	109	6
+272	136	286	40	1
+273	4	286	86	2
+274	78	286	35	3
+275	187	286	71	4
+276	135	286	116	5
+277	73	287	67	1
+278	68	287	25	2
+279	24	287	97	3
+280	31	287	93	4
+281	61	287	78	5
+282	126	287	71	6
+283	37	287	7	7
+284	77	287	26	8
+285	128	288	74	1
+286	12	288	23	2
+287	80	288	44	3
+288	6	288	33	4
+289	107	288	9	5
+290	54	24	116	1
+291	121	24	112	2
+292	35	24	101	3
+293	148	24	97	4
+294	62	24	94	5
+295	44	25	43	1
+296	106	25	16	2
+297	55	25	44	3
+298	152	25	131	4
+299	101	25	119	5
+300	59	26	8	1
+301	174	26	15	2
+302	161	26	135	3
+303	65	26	24	4
+304	157	26	82	5
+305	3	26	46	6
+306	5	26	29	7
+307	177	27	110	1
+308	64	27	86	2
+309	25	27	15	3
+310	134	27	130	4
+311	42	27	78	5
+312	95	27	48	6
+313	83	27	82	7
+314	85	27	111	8
+315	139	289	87	1
+316	42	289	17	2
+317	154	289	100	3
+318	142	289	123	4
+319	56	289	70	5
+320	98	289	82	6
+321	9	289	68	7
+322	120	290	68	1
+323	93	290	40	2
+324	170	290	93	3
+325	141	290	36	4
+326	131	290	66	5
+327	94	28	10	1
+328	161	28	38	2
+329	74	28	15	3
+330	57	28	121	4
+331	148	28	79	5
+332	90	28	100	6
+333	17	28	92	7
+334	152	29	21	1
+335	100	29	60	2
+336	173	29	8	3
+337	178	29	71	4
+338	133	29	1	5
+339	108	29	108	6
+340	106	30	49	1
+341	179	30	120	2
+342	77	30	104	3
+343	89	30	98	4
+344	155	30	111	5
+345	54	291	39	1
+346	166	291	74	2
+347	120	291	17	3
+348	97	291	40	4
+349	91	291	92	5
+350	142	292	16	1
+351	140	292	31	2
+352	93	292	58	3
+353	44	292	64	4
+354	62	292	115	5
+355	5	293	116	1
+356	98	293	94	2
+357	179	293	119	3
+358	182	293	21	4
+359	125	293	82	5
+360	153	293	33	6
+361	75	31	84	1
+362	1	31	63	2
+363	38	31	12	3
+364	95	31	10	4
+365	52	31	103	5
+366	133	31	2	6
+367	184	31	18	7
+368	6	31	29	8
+369	85	32	113	1
+370	41	32	77	2
+371	59	32	16	3
+372	34	32	106	4
+373	170	32	124	5
+374	24	32	121	6
+375	152	33	16	1
+376	124	33	114	2
+377	101	33	89	3
+378	116	33	29	4
+379	56	33	50	5
+380	163	33	5	6
+381	105	33	107	7
+382	68	294	43	1
+383	83	294	20	2
+384	117	294	1	3
+385	153	294	11	4
+386	59	294	4	5
+387	178	294	9	6
+388	63	294	46	7
+389	107	295	136	1
+390	40	295	72	2
+391	32	295	64	3
+392	179	295	55	4
+393	171	295	95	5
+394	21	295	125	6
+395	110	295	3	7
+396	138	296	128	1
+397	113	296	79	2
+398	46	296	101	3
+399	115	296	58	4
+400	54	296	68	5
+401	45	296	105	6
+402	78	34	42	1
+403	180	34	75	2
+404	124	34	18	3
+405	158	34	98	4
+406	112	34	62	5
+407	27	34	8	6
+408	60	35	83	1
+409	49	35	21	2
+410	125	35	48	3
+411	160	35	111	4
+412	66	35	94	5
+413	175	35	105	6
+414	172	35	5	7
+415	97	35	70	8
+416	142	36	124	1
+417	28	36	29	2
+418	127	36	1	3
+419	89	36	111	4
+420	130	36	130	5
+421	176	36	46	6
+422	70	36	7	7
+423	126	37	59	1
+424	42	37	18	2
+425	132	37	88	3
+426	93	37	3	4
+427	80	37	14	5
+428	48	37	86	6
+429	10	38	91	1
+430	121	38	83	2
+431	43	38	48	3
+432	106	38	103	4
+433	182	38	52	5
+434	72	38	65	6
+435	12	38	15	7
+436	184	38	69	8
+437	85	297	26	1
+438	131	297	103	2
+439	142	297	68	3
+440	144	297	127	4
+441	124	297	89	5
+442	71	297	94	6
+443	24	297	38	7
+444	43	297	90	8
+445	10	298	104	1
+446	127	298	52	2
+447	58	298	118	3
+448	72	298	27	4
+449	184	298	134	5
+450	132	298	112	6
+451	5	298	37	7
+452	141	298	58	8
+453	51	299	98	1
+454	138	299	78	2
+455	175	299	40	3
+456	6	299	66	4
+457	11	299	112	5
+458	68	299	26	6
+459	180	299	67	7
+460	93	39	102	1
+461	173	39	97	2
+462	61	39	122	3
+463	137	39	134	4
+464	158	39	65	5
+465	151	40	111	1
+466	32	40	129	2
+467	83	40	25	3
+468	167	40	91	4
+469	102	40	67	5
+470	22	40	3	6
+471	156	40	1	7
+472	84	40	133	8
+473	143	41	87	1
+474	89	41	21	2
+475	117	41	91	3
+476	153	41	96	4
+477	120	41	32	5
+478	112	42	90	1
+479	59	42	72	2
+480	54	42	121	3
+481	1	42	73	4
+482	31	42	78	5
+483	125	42	116	6
+484	77	43	110	1
+485	7	43	100	2
+486	46	43	99	3
+487	104	43	23	4
+488	8	43	109	5
+489	166	43	17	6
+490	60	43	4	7
+491	129	43	132	8
+492	25	300	87	1
+493	159	300	33	2
+494	14	300	81	3
+495	72	300	30	4
+496	80	300	78	5
+497	181	301	120	1
+498	69	301	26	2
+499	22	301	89	3
+500	100	301	65	4
+501	176	301	31	5
+502	173	301	82	6
+503	39	301	64	7
+504	87	302	5	1
+505	142	302	76	2
+506	89	302	68	3
+507	156	302	134	4
+508	165	302	27	5
+509	6	44	51	1
+510	58	44	132	2
+511	12	44	9	3
+512	151	44	120	4
+513	29	44	79	5
+514	35	44	35	6
+515	96	45	36	1
+516	116	45	32	2
+517	36	45	62	3
+518	164	45	5	4
+519	88	45	27	5
+520	79	45	101	6
+521	24	46	92	1
+522	132	46	68	2
+523	163	46	101	3
+524	48	46	13	4
+525	97	46	10	5
+526	144	47	105	1
+527	133	47	1	2
+528	118	47	121	3
+529	68	47	21	4
+530	120	47	60	5
+531	47	47	39	6
+532	112	47	52	7
+533	95	47	126	8
+534	38	48	31	1
+535	98	48	49	2
+536	110	48	27	3
+537	27	48	80	4
+538	93	48	64	5
+539	185	48	100	6
+540	91	48	111	7
+541	74	48	93	8
+542	97	303	5	1
+543	26	303	111	2
+544	32	303	52	3
+545	75	303	136	4
+546	134	303	78	5
+547	187	303	23	6
+548	115	49	31	1
+549	162	49	33	2
+550	136	49	58	3
+551	72	49	40	4
+552	86	49	88	5
+553	24	50	85	1
+554	53	50	2	2
+555	145	50	33	3
+556	149	50	130	4
+557	4	50	23	5
+558	25	50	16	6
+559	68	50	24	7
+560	2	50	11	8
+561	49	51	6	1
+562	116	51	33	2
+563	59	51	36	3
+564	117	51	46	4
+565	38	51	22	5
+566	111	51	133	6
+567	162	304	33	1
+568	187	304	9	2
+569	107	304	120	3
+570	64	304	14	4
+571	101	304	129	5
+572	91	304	61	6
+573	36	304	121	7
+574	28	304	82	8
+575	2	305	108	1
+576	124	305	40	2
+577	152	305	77	3
+578	50	305	82	4
+579	61	305	63	5
+580	32	305	86	6
+581	79	305	90	7
+582	6	52	117	1
+583	3	52	34	2
+584	103	52	55	3
+585	69	52	121	4
+586	9	52	128	5
+587	35	52	82	6
+588	148	53	106	1
+589	184	53	75	2
+590	133	53	67	3
+591	104	53	93	4
+592	178	53	56	5
+593	128	53	8	6
+594	183	54	29	1
+595	157	54	124	2
+596	161	54	9	3
+597	25	54	110	4
+598	23	54	68	5
+599	41	54	62	6
+600	125	54	108	7
+601	123	54	57	8
+602	49	55	131	1
+603	108	55	136	2
+604	15	55	97	3
+605	117	55	14	4
+606	88	55	7	5
+607	130	55	85	6
+608	119	56	115	1
+609	21	56	112	2
+610	44	56	19	3
+611	134	56	45	4
+612	143	56	121	5
+613	102	56	96	6
+614	27	56	21	7
+615	115	56	75	8
+616	13	306	125	1
+617	75	306	101	2
+618	88	306	33	3
+619	67	306	29	4
+620	59	306	71	5
+621	176	306	58	6
+622	69	306	46	7
+623	180	306	126	8
+624	3	57	8	1
+625	95	57	13	2
+626	155	57	79	3
+627	42	57	81	4
+628	126	57	4	5
+629	86	58	127	1
+630	37	58	26	2
+631	145	58	129	3
+632	2	58	72	4
+633	72	58	2	5
+634	164	58	106	6
+635	84	58	110	7
+636	83	58	111	8
+637	134	59	5	1
+638	34	59	119	2
+639	116	59	27	3
+640	40	59	67	4
+641	119	59	3	5
+642	46	59	93	6
+643	120	59	84	7
+644	175	59	85	8
+645	15	60	42	1
+646	138	60	97	2
+647	8	60	53	3
+648	17	60	103	4
+649	131	60	78	5
+650	33	60	88	6
+651	146	60	9	7
+652	144	61	128	1
+653	179	61	91	2
+654	22	61	57	3
+655	117	61	105	4
+656	56	61	12	5
+657	1	62	51	1
+658	129	62	39	2
+659	71	62	62	3
+660	74	62	116	4
+661	51	62	136	5
+662	136	62	66	6
+663	57	62	22	7
+664	108	62	115	8
+665	185	63	126	1
+666	32	63	35	2
+667	118	63	110	3
+668	125	63	69	4
+669	183	63	81	5
+670	101	63	42	6
+671	27	63	30	7
+672	128	63	118	8
+673	159	307	10	1
+674	6	307	63	2
+675	105	307	113	3
+676	157	307	86	4
+677	131	307	33	5
+678	133	307	18	6
+679	167	64	124	1
+680	134	64	91	2
+681	7	64	63	3
+682	163	64	118	4
+683	164	64	108	5
+684	180	65	123	1
+685	11	65	56	2
+686	38	65	88	3
+687	91	65	7	4
+688	17	65	62	5
+689	57	65	43	6
+690	108	66	60	1
+691	80	66	98	2
+692	89	66	59	3
+693	16	66	56	4
+694	96	66	45	5
+695	110	66	49	6
+696	15	67	19	1
+697	114	67	111	2
+698	165	67	94	3
+699	86	67	87	4
+700	166	67	14	5
+701	54	67	90	6
+702	184	67	98	7
+703	27	67	10	8
+704	151	68	6	1
+705	140	68	91	2
+706	128	68	29	3
+707	75	68	3	4
+708	155	68	37	5
+709	41	68	102	6
+710	153	69	58	1
+711	122	69	37	2
+712	48	69	30	3
+713	107	69	125	4
+714	119	69	122	5
+715	78	69	23	6
+716	8	69	93	7
+717	168	70	95	1
+718	97	70	75	2
+719	156	70	85	3
+720	23	70	127	4
+721	90	70	77	5
+722	93	70	21	6
+723	174	70	69	7
+724	139	70	123	8
+725	123	71	114	1
+726	47	71	58	2
+727	147	71	65	3
+728	24	71	127	4
+729	42	71	106	5
+730	160	71	28	6
+731	49	71	14	7
+732	61	308	57	1
+733	15	308	114	2
+734	66	308	38	3
+735	133	308	90	4
+736	105	308	8	5
+737	4	309	62	1
+738	85	309	13	2
+739	122	309	113	3
+740	160	309	51	4
+741	2	309	45	5
+742	106	309	69	6
+743	170	309	100	7
+744	167	309	31	8
+745	155	310	44	1
+746	17	310	130	2
+747	67	310	41	3
+748	57	310	80	4
+749	49	310	48	5
+750	138	310	54	6
+751	157	72	46	1
+752	59	72	62	2
+753	10	72	39	3
+754	80	72	59	4
+755	8	72	53	5
+756	120	72	2	6
+757	64	72	60	7
+758	76	73	48	1
+759	145	73	17	2
+760	5	73	18	3
+761	27	73	69	4
+762	143	73	3	5
+763	43	74	85	1
+764	139	74	73	2
+765	113	74	25	3
+766	88	74	51	4
+767	117	74	4	5
+768	60	74	61	6
+769	169	75	94	1
+770	164	75	77	2
+771	104	75	88	3
+772	54	75	57	4
+773	131	75	127	5
+774	39	75	22	6
+775	55	311	67	1
+776	129	311	106	2
+777	66	311	72	3
+778	143	311	108	4
+779	67	311	74	5
+780	85	312	52	1
+781	21	312	80	2
+782	78	312	61	3
+783	13	312	23	4
+784	80	312	93	5
+785	83	312	25	6
+786	1	312	75	7
+787	118	76	96	1
+788	146	76	48	2
+789	132	76	102	3
+790	152	76	23	4
+791	98	76	70	5
+792	181	76	55	6
+793	20	76	34	7
+794	11	77	9	1
+795	81	77	76	2
+796	33	77	45	3
+797	71	77	68	4
+798	162	77	3	5
+799	102	78	101	1
+800	56	78	12	2
+801	164	78	127	3
+802	79	78	27	4
+803	183	78	18	5
+804	22	78	74	6
+805	134	78	75	7
+806	74	78	117	8
+807	2	313	15	1
+808	68	313	52	2
+809	142	313	92	3
+810	32	313	36	4
+811	99	313	38	5
+812	158	313	73	6
+813	39	314	86	1
+814	129	314	37	2
+815	48	314	42	3
+816	23	314	113	4
+817	25	314	44	5
+818	166	314	41	6
+819	57	79	125	1
+820	86	79	90	2
+821	115	79	79	3
+822	66	79	88	4
+823	105	79	26	5
+824	146	79	80	6
+825	83	79	119	7
+826	78	79	15	8
+827	64	80	16	1
+828	26	80	64	2
+829	160	80	108	3
+830	63	80	9	4
+831	118	80	79	5
+832	140	81	90	1
+833	132	81	5	2
+834	15	81	95	3
+835	172	81	105	4
+836	46	81	15	5
+837	185	81	58	6
+838	53	81	99	7
+839	157	82	60	1
+840	111	82	63	2
+841	31	82	72	3
+842	89	82	86	4
+843	123	82	9	5
+844	56	83	4	1
+845	103	83	25	2
+846	145	83	9	3
+847	113	83	21	4
+848	38	83	83	5
+849	168	84	47	1
+850	30	84	14	2
+851	125	84	33	3
+852	37	84	67	4
+853	156	84	115	5
+854	96	84	93	6
+855	62	84	9	7
+856	103	315	106	1
+857	185	315	56	2
+858	47	315	23	3
+859	48	315	33	4
+860	111	315	18	5
+861	150	315	63	6
+862	105	316	132	1
+863	107	316	125	2
+864	71	316	123	3
+865	72	316	25	4
+866	158	316	66	5
+867	18	316	94	6
+868	60	316	111	7
+869	29	85	123	1
+870	77	85	109	2
+871	56	85	23	3
+872	99	85	97	4
+873	89	85	120	5
+874	85	85	77	6
+875	88	85	30	7
+876	96	85	37	8
+877	90	86	92	1
+878	93	86	112	2
+879	112	86	23	3
+880	81	86	43	4
+881	44	86	41	5
+882	74	86	27	6
+883	131	317	54	1
+884	160	317	29	2
+885	138	317	112	3
+886	67	317	127	4
+887	164	317	104	5
+888	36	318	93	1
+889	44	318	115	2
+890	69	318	132	3
+891	27	318	44	4
+892	159	318	34	5
+893	43	318	6	6
+894	163	318	102	7
+895	41	319	94	1
+896	42	319	48	2
+897	96	319	24	3
+898	157	319	78	4
+899	34	319	112	5
+900	142	319	26	6
+901	5	319	131	7
+902	87	87	125	1
+903	146	87	136	2
+904	165	87	63	3
+905	183	87	80	4
+906	6	87	4	5
+907	184	87	65	6
+908	176	320	60	1
+909	81	320	27	2
+910	121	320	16	3
+911	114	320	54	4
+912	148	320	28	5
+913	49	320	88	6
+914	187	88	55	1
+915	136	88	114	2
+916	69	88	128	3
+917	112	88	134	4
+918	29	88	109	5
+919	68	88	17	6
+920	14	88	116	7
+921	160	89	127	1
+922	173	89	50	2
+923	185	89	62	3
+924	137	89	97	4
+925	113	89	102	5
+926	13	89	94	6
+927	168	89	103	7
+928	89	90	121	1
+929	57	90	110	2
+930	128	90	119	3
+931	140	90	36	4
+932	144	90	17	5
+933	5	90	60	6
+934	131	90	123	7
+935	65	91	82	1
+936	110	91	86	2
+937	174	91	67	3
+938	60	91	131	4
+939	11	91	44	5
+940	153	91	16	6
+941	47	91	2	7
+942	102	92	100	1
+943	162	92	2	2
+944	40	92	31	3
+945	149	92	128	4
+946	72	92	59	5
+947	169	93	113	1
+948	155	93	22	2
+949	51	93	31	3
+950	37	93	50	4
+951	70	93	106	5
+952	183	94	109	1
+953	146	94	54	2
+954	50	94	3	3
+955	22	94	23	4
+956	91	94	48	5
+957	99	94	126	6
+958	97	94	18	7
+959	74	94	77	8
+960	36	321	132	1
+961	95	321	13	2
+962	81	321	135	3
+963	188	321	11	4
+964	180	321	81	5
+965	101	321	92	6
+966	136	322	48	1
+967	112	322	69	2
+968	168	322	37	3
+969	60	322	13	4
+970	20	322	7	5
+971	61	322	31	6
+972	158	322	22	7
+973	19	323	26	1
+974	164	323	6	2
+975	54	323	35	3
+976	13	323	49	4
+977	105	323	79	5
+978	62	324	56	1
+979	126	324	42	2
+980	46	324	34	3
+981	162	324	46	4
+982	128	324	122	5
+983	2	324	88	6
+984	159	95	83	1
+985	133	95	93	2
+986	63	95	57	3
+987	58	95	86	4
+988	4	95	84	5
+989	40	325	65	1
+990	7	325	100	2
+991	27	325	75	3
+992	115	325	83	4
+993	180	325	24	5
+994	56	325	58	6
+995	186	325	79	7
+996	100	326	84	1
+997	127	326	122	2
+998	34	326	101	3
+999	154	326	20	4
+1000	33	326	21	5
+1001	107	326	7	6
+1002	182	326	25	7
+1003	21	326	108	8
+1004	131	327	59	1
+1005	50	327	108	2
+1006	159	327	89	3
+1007	89	327	19	4
+1008	112	327	113	5
+1009	181	96	76	1
+1010	52	96	129	2
+1011	126	96	96	3
+1012	152	96	80	4
+1013	86	96	68	5
+1014	92	96	46	6
+1015	109	96	135	7
+1016	118	96	56	8
+1017	101	97	71	1
+1018	72	97	32	2
+1019	42	97	38	3
+1020	20	97	88	4
+1021	140	97	104	5
+1022	25	98	97	1
+1023	95	98	73	2
+1024	36	98	125	3
+1025	39	98	63	4
+1026	103	98	98	5
+1027	75	98	106	6
+1028	60	99	51	1
+1029	97	99	80	2
+1030	74	99	128	3
+1031	78	99	2	4
+1032	24	99	75	5
+1033	35	99	121	6
+1034	173	99	24	7
+1035	161	100	24	1
+1036	8	100	122	2
+1037	113	100	111	3
+1038	157	100	130	4
+1039	51	100	18	5
+1040	178	100	5	6
+1041	132	100	1	7
+1042	19	100	28	8
+1043	3	101	12	1
+1044	129	101	100	2
+1045	135	101	39	3
+1046	150	101	105	4
+1047	147	101	32	5
+1048	93	102	2	1
+1049	177	102	126	2
+1050	151	102	51	3
+1051	96	102	22	4
+1052	146	102	28	5
+1053	188	102	78	6
+1054	137	103	127	1
+1055	104	103	112	2
+1056	73	103	126	3
+1057	174	103	134	4
+1058	156	103	93	5
+1059	111	103	46	6
+1060	164	103	97	7
+1061	133	104	98	1
+1062	83	104	93	2
+1063	121	104	77	3
+1064	23	104	127	4
+1065	165	104	119	5
+1066	16	104	75	6
+1067	111	328	10	1
+1068	84	328	105	2
+1069	43	328	2	3
+1070	31	328	118	4
+1071	129	328	22	5
+1072	118	105	109	1
+1073	72	105	5	2
+1074	29	105	38	3
+1075	75	105	25	4
+1076	141	105	101	5
+1077	127	105	125	6
+1078	92	105	19	7
+1079	98	106	4	1
+1080	125	106	15	2
+1081	175	106	92	3
+1082	38	106	41	4
+1083	178	106	68	5
+1084	100	107	63	1
+1085	152	107	80	2
+1086	18	107	46	3
+1087	34	107	102	4
+1088	61	107	84	5
+1089	52	107	65	6
+1090	10	329	127	1
+1091	168	329	134	2
+1092	76	329	22	3
+1093	27	329	108	4
+1094	7	329	128	5
+1095	151	330	94	1
+1096	63	330	32	2
+1097	37	330	38	3
+1098	147	330	114	4
+1099	131	330	40	5
+1100	108	330	120	6
+1101	109	330	54	7
+1102	17	330	124	8
+1103	57	331	133	1
+1104	127	331	62	2
+1105	67	331	80	3
+1106	93	331	116	4
+1107	136	331	12	5
+1108	77	108	60	1
+1109	83	108	22	2
+1110	35	108	67	3
+1111	180	108	55	4
+1112	80	108	42	5
+1113	154	108	19	6
+1114	179	109	15	1
+1115	56	109	49	2
+1116	84	109	59	3
+1117	182	109	5	4
+1118	20	109	14	5
+1119	134	109	101	6
+1120	6	332	26	1
+1121	101	332	98	2
+1122	171	332	111	3
+1123	122	332	103	4
+1124	170	332	132	5
+1125	110	332	121	6
+1126	14	110	58	1
+1127	149	110	116	2
+1128	48	110	18	3
+1129	185	110	106	4
+1130	133	110	92	5
+1131	104	110	89	6
+1132	68	110	88	7
+1133	75	110	120	8
+1134	144	111	3	1
+1135	116	111	135	2
+1136	69	111	14	3
+1137	85	111	126	4
+1138	3	111	112	5
+1139	53	111	15	6
+1140	44	112	7	1
+1141	107	112	54	2
+1142	7	112	74	3
+1143	71	112	124	4
+1144	134	112	76	5
+1145	9	113	129	1
+1146	157	113	9	2
+1147	177	113	54	3
+1148	52	113	20	4
+1149	20	113	48	5
+1150	162	113	104	6
+1151	22	113	121	7
+1152	109	114	4	1
+1153	65	114	16	2
+1154	60	114	109	3
+1155	156	114	18	4
+1156	79	114	22	5
+1157	142	114	133	6
+1158	71	333	11	1
+1159	111	333	18	2
+1160	164	333	85	3
+1161	122	333	12	4
+1162	76	333	59	5
+1163	132	333	89	6
+1164	182	333	56	7
+1165	139	333	6	8
+1166	24	334	95	1
+1167	127	334	97	2
+1168	184	334	53	3
+1169	170	334	81	4
+1170	167	334	14	5
+1171	17	335	29	1
+1172	37	335	100	2
+1173	147	335	66	3
+1174	29	335	40	4
+1175	47	335	28	5
+1176	40	335	47	6
+1177	86	115	48	1
+1178	83	115	34	2
+1179	31	115	94	3
+1180	27	115	124	4
+1181	112	115	59	5
+1182	113	115	54	6
+1183	70	336	19	1
+1184	52	336	54	2
+1185	183	336	73	3
+1186	38	336	93	4
+1187	152	336	105	5
+1188	110	336	23	6
+1189	92	336	88	7
+1190	145	336	79	8
+1191	68	337	110	1
+1192	7	337	112	2
+1193	67	337	104	3
+1194	95	337	5	4
+1195	53	337	99	5
+1196	170	337	40	6
+1197	80	337	69	7
+1198	185	337	103	8
+1199	124	338	117	1
+1200	2	338	113	2
+1201	87	338	103	3
+1202	167	338	45	4
+1203	88	338	79	5
+1204	6	116	135	1
+1205	147	116	60	2
+1206	89	116	64	3
+1207	141	116	26	4
+1208	101	116	12	5
+1209	156	116	71	6
+1210	140	116	112	7
+1211	158	116	99	8
+1212	161	339	2	1
+1213	35	339	130	2
+1214	72	339	35	3
+1215	186	339	72	4
+1216	146	339	81	5
+1217	20	339	18	6
+1218	169	339	29	7
+1219	148	339	23	8
+1220	135	340	120	1
+1221	53	340	132	2
+1222	3	340	79	3
+1223	30	340	100	4
+1224	147	340	38	5
+1225	16	340	73	6
+1226	55	341	117	1
+1227	50	341	82	2
+1228	29	341	118	3
+1229	39	341	120	4
+1230	83	341	92	5
+1231	15	117	3	1
+1232	47	117	100	2
+1233	172	117	30	3
+1234	57	117	68	4
+1235	68	117	82	5
+1236	82	117	127	6
+1237	86	342	58	1
+1238	64	342	95	2
+1239	102	342	14	3
+1240	3	342	16	4
+1241	112	342	94	5
+1242	110	342	88	6
+1243	158	342	86	7
+1244	14	343	33	1
+1245	35	343	90	2
+1246	99	343	80	3
+1247	148	343	57	4
+1248	71	343	11	5
+1249	161	118	130	1
+1250	75	118	108	2
+1251	49	118	9	3
+1252	69	118	124	4
+1253	20	118	133	5
+1254	109	344	59	1
+1255	30	344	3	2
+1256	57	344	135	3
+1257	96	344	95	4
+1258	170	344	2	5
+1259	111	344	54	6
+1260	129	344	122	7
+1261	13	344	28	8
+1262	38	345	113	1
+1263	130	345	33	2
+1264	154	345	103	3
+1265	53	345	112	4
+1266	134	345	101	5
+1267	62	345	81	6
+1268	140	345	14	7
+1269	176	345	52	8
+1270	55	119	106	1
+1271	153	119	39	2
+1272	138	119	118	3
+1273	168	119	15	4
+1274	143	119	35	5
+1275	108	119	67	6
+1276	58	119	109	7
+1277	163	346	26	1
+1278	27	346	115	2
+1279	113	346	8	3
+1280	168	346	10	4
+1281	67	346	87	5
+1282	122	347	101	1
+1283	147	347	18	2
+1284	172	347	96	3
+1285	85	347	34	4
+1286	171	347	33	5
+1287	115	347	82	6
+1288	84	347	46	7
+1289	184	347	106	8
+1290	152	120	34	1
+1291	29	120	21	2
+1292	54	120	68	3
+1293	91	120	81	4
+1294	102	120	63	5
+1295	105	120	129	6
+1296	74	120	85	7
+1297	150	120	56	8
+1298	75	121	123	1
+1299	65	121	116	2
+1300	145	121	32	3
+1301	107	121	63	4
+1302	148	121	107	5
+1303	186	121	76	6
+1304	153	121	3	7
+1305	119	121	64	8
+1306	77	348	31	1
+1307	19	348	121	2
+1308	55	348	80	3
+1309	7	348	75	4
+1310	146	348	46	5
+1311	96	349	22	1
+1312	28	349	82	2
+1313	179	349	93	3
+1314	105	349	125	4
+1315	135	349	114	5
+1316	79	349	127	6
+1317	86	349	34	7
+1318	138	350	27	1
+1319	33	350	56	2
+1320	172	350	16	3
+1321	131	350	33	4
+1322	15	350	69	5
+1323	42	122	76	1
+1324	43	122	97	2
+1325	170	122	68	3
+1326	124	122	56	4
+1327	13	122	29	5
+1328	151	122	5	6
+1329	8	122	30	7
+1330	72	351	113	1
+1331	128	351	12	2
+1332	149	351	20	3
+1333	101	351	46	4
+1334	44	351	44	5
+1335	14	352	75	1
+1336	188	352	81	2
+1337	143	352	43	3
+1338	126	352	73	4
+1339	125	352	21	5
+1340	24	353	119	1
+1341	52	353	30	2
+1342	183	353	68	3
+1343	5	353	69	4
+1344	39	353	54	5
+1345	42	353	48	6
+1346	62	353	24	7
+1347	85	353	132	8
+1348	168	123	57	1
+1349	27	123	29	2
+1350	117	123	5	3
+1351	98	123	16	4
+1352	111	123	97	5
+1353	91	354	27	1
+1354	106	354	103	2
+1355	20	354	125	3
+1356	92	354	13	4
+1357	13	354	133	5
+1358	134	354	25	6
+1359	161	354	30	7
+1360	67	354	62	8
+1361	34	355	22	1
+1362	148	355	99	2
+1363	21	355	42	3
+1364	173	355	71	4
+1365	172	355	6	5
+1366	74	355	95	6
+1367	51	355	80	7
+1368	125	355	34	8
+1369	156	356	28	1
+1370	147	356	83	2
+1371	43	356	72	3
+1372	182	356	57	4
+1373	184	356	95	5
+1374	180	357	65	1
+1375	85	357	107	2
+1376	22	357	82	3
+1377	61	357	24	4
+1378	181	357	90	5
+1379	55	357	13	6
+1380	183	124	125	1
+1381	4	124	8	2
+1382	41	124	38	3
+1383	142	124	94	4
+1384	122	124	67	5
+1385	55	358	106	1
+1386	93	358	56	2
+1387	91	358	76	3
+1388	105	358	88	4
+1389	166	358	65	5
+1390	73	358	39	6
+1391	180	358	96	7
+1392	87	359	98	1
+1393	1	359	14	2
+1394	115	359	58	3
+1395	110	359	51	4
+1396	157	359	69	5
+1397	12	359	7	6
+1398	80	359	107	7
+1399	31	360	34	1
+1400	99	360	5	2
+1401	38	360	56	3
+1402	173	360	131	4
+1403	174	360	37	5
+1404	109	360	124	6
+1405	5	360	66	7
+1406	22	360	109	8
+1407	37	125	132	1
+1408	178	125	101	2
+1409	136	125	44	3
+1410	82	125	135	4
+1411	161	125	91	5
+1412	143	125	6	6
+1413	86	126	111	1
+1414	62	126	80	2
+1415	3	126	50	3
+1416	64	126	129	4
+1417	163	126	55	5
+1418	137	361	54	1
+1419	58	361	103	2
+1420	55	361	118	3
+1421	49	361	12	4
+1422	20	361	67	5
+1423	130	361	110	6
+1424	126	362	11	1
+1425	169	362	41	2
+1426	176	362	87	3
+1427	107	362	119	4
+1428	14	362	106	5
+1429	108	363	121	1
+1430	128	363	82	2
+1431	45	363	68	3
+1432	76	363	2	4
+1433	77	363	131	5
+1434	171	363	99	6
+1435	185	127	53	1
+1436	141	127	3	2
+1437	110	127	113	3
+1438	121	127	85	4
+1439	65	127	125	5
+1440	2	127	108	6
+1441	36	127	83	7
+1442	135	128	15	1
+1443	7	128	18	2
+1444	83	128	118	3
+1445	3	128	45	4
+1446	34	128	46	5
+1447	69	128	110	6
+1448	31	128	39	7
+1449	88	129	95	1
+1450	84	129	134	2
+1451	173	129	17	3
+1452	142	129	6	4
+1453	187	129	89	5
+1454	122	129	110	6
+1455	68	129	109	7
+1456	164	364	62	1
+1457	44	364	63	2
+1458	168	364	133	3
+1459	128	364	82	4
+1460	48	364	119	5
+1461	167	364	30	6
+1462	99	364	112	7
+1463	51	365	26	1
+1464	13	365	135	2
+1465	110	365	64	3
+1466	92	365	117	4
+1467	23	365	65	5
+1468	104	365	11	6
+1469	144	365	66	7
+1470	165	130	117	1
+1471	113	130	121	2
+1472	141	130	45	3
+1473	129	130	20	4
+1474	14	130	51	5
+1475	62	130	13	6
+1476	3	131	45	1
+1477	82	131	23	2
+1478	184	131	132	3
+1479	65	131	8	4
+1480	73	131	129	5
+1481	176	132	22	1
+1482	166	132	39	2
+1483	151	132	104	3
+1484	70	132	74	4
+1485	100	132	30	5
+1486	108	133	80	1
+1487	114	133	35	2
+1488	136	133	64	3
+1489	149	133	82	4
+1490	117	133	103	5
+1491	138	133	18	6
+1492	29	133	15	7
+1493	96	133	56	8
+1494	56	134	102	1
+1495	27	134	112	2
+1496	53	134	110	3
+1497	7	134	95	4
+1498	18	134	90	5
+1499	89	135	22	1
+1500	153	135	55	2
+1501	143	135	14	3
+1502	72	135	84	4
+1503	130	135	102	5
+1504	148	135	96	6
+1505	41	135	130	7
+1506	178	135	15	8
+1507	1	136	50	1
+1508	37	136	111	2
+1509	171	136	39	3
+1510	38	136	133	4
+1511	181	136	73	5
+1512	25	137	9	1
+1513	85	137	80	2
+1514	45	137	48	3
+1515	9	137	89	4
+1516	26	137	31	5
+1517	150	137	90	6
+1518	5	137	22	7
+1519	60	137	10	8
+1520	47	366	28	1
+1521	119	366	19	2
+1522	162	366	126	3
+1523	21	366	39	4
+1524	154	366	106	5
+1525	169	367	134	1
+1526	65	367	25	2
+1527	139	367	122	3
+1528	64	367	30	4
+1529	44	367	12	5
+1530	68	367	136	6
+1531	32	368	49	1
+1532	5	368	16	2
+1533	177	368	71	3
+1534	26	368	86	4
+1535	149	368	119	5
+1536	2	368	39	6
+1537	123	368	112	7
+1538	99	368	91	8
+1539	141	369	45	1
+1540	58	369	65	2
+1541	77	369	59	3
+1542	103	369	61	4
+1543	143	369	99	5
+1544	14	369	72	6
+1545	93	369	20	7
+1546	159	138	69	1
+1547	82	138	66	2
+1548	146	138	118	3
+1549	111	138	92	4
+1550	86	138	62	5
+1551	172	138	56	6
+1552	124	138	13	7
+1553	170	370	135	1
+1554	60	370	99	2
+1555	114	370	73	3
+1556	15	370	25	4
+1557	58	370	126	5
+1558	20	370	35	6
+1559	77	371	20	1
+1560	78	371	69	2
+1561	75	371	128	3
+1562	62	371	27	4
+1563	129	371	34	5
+1564	14	371	35	6
+1565	164	371	41	7
+1566	124	372	78	1
+1567	96	372	37	2
+1568	169	372	41	3
+1569	179	372	55	4
+1570	50	372	10	5
+1571	66	139	81	1
+1572	166	139	113	2
+1573	173	139	15	3
+1574	93	139	71	4
+1575	82	139	23	5
+1576	26	139	108	6
+1577	51	139	67	7
+1578	27	139	92	8
+1579	187	140	126	1
+1580	123	140	39	2
+1581	30	140	92	3
+1582	87	140	62	4
+1583	141	140	28	5
+1584	115	140	132	6
+1585	22	140	127	7
+1586	119	140	109	8
+1587	159	141	22	1
+1588	150	141	136	2
+1589	181	141	117	3
+1590	177	141	115	4
+1591	57	141	135	5
+1592	43	141	18	6
+1593	175	141	132	7
+1594	185	373	93	1
+1595	180	373	31	2
+1596	48	373	48	3
+1597	157	373	65	4
+1598	6	373	115	5
+1599	122	373	128	6
+1600	113	142	67	1
+1601	171	142	47	2
+1602	94	142	72	3
+1603	129	142	85	4
+1604	53	142	117	5
+1605	105	143	16	1
+1606	108	143	98	2
+1607	85	143	111	3
+1608	61	143	91	4
+1609	181	143	12	5
+1610	91	143	39	6
+1611	34	143	69	7
+1612	56	144	53	1
+1613	78	144	1	2
+1614	84	144	75	3
+1615	121	144	66	4
+1616	153	144	99	5
+1617	60	145	22	1
+1618	76	145	105	2
+1619	187	145	42	3
+1620	13	145	65	4
+1621	51	145	97	5
+1622	10	145	125	6
+1623	5	145	63	7
+1624	69	145	83	8
+1625	29	374	65	1
+1626	54	374	117	2
+1627	1	374	12	3
+1628	172	374	8	4
+1629	97	374	69	5
+1630	147	374	86	6
+1631	38	374	70	7
+1632	110	375	15	1
+1633	59	375	133	2
+1634	101	375	20	3
+1635	129	375	24	4
+1636	95	375	65	5
+1637	128	375	116	6
+1638	145	375	77	7
+1639	7	376	49	1
+1640	52	376	135	2
+1641	18	376	113	3
+1642	168	376	118	4
+1643	80	376	106	5
+1644	115	376	51	6
+1645	94	376	110	7
+1646	130	376	82	8
+1647	82	146	40	1
+1648	109	146	89	2
+1649	148	146	73	3
+1650	48	146	47	4
+1651	73	146	4	5
+1652	167	146	16	6
+1653	65	146	107	7
+1654	15	146	36	8
+1655	142	377	41	1
+1656	24	377	26	2
+1657	179	377	19	3
+1658	186	377	89	4
+1659	164	377	98	5
+1660	18	377	15	6
+1661	39	377	62	7
+1662	50	147	49	1
+1663	183	147	11	2
+1664	116	147	3	3
+1665	30	147	134	4
+1666	78	147	14	5
+1667	8	147	109	6
+1668	105	148	37	1
+1669	169	148	7	2
+1670	178	148	70	3
+1671	91	148	13	4
+1672	156	148	6	5
+1673	56	148	129	6
+1674	131	149	50	1
+1675	167	149	25	2
+1676	104	149	10	3
+1677	15	149	120	4
+1678	83	149	128	5
+1679	36	149	119	6
+1680	141	149	45	7
+1681	107	149	52	8
+1682	57	150	21	1
+1683	38	150	14	2
+1684	86	150	130	3
+1685	134	150	124	4
+1686	94	150	53	5
+1687	122	150	41	6
+1688	34	150	28	7
+1689	92	151	92	1
+1690	140	151	106	2
+1691	108	151	25	3
+1692	181	151	7	4
+1693	66	151	90	5
+1694	155	151	97	6
+1695	137	151	69	7
+1696	47	151	31	8
+1697	79	152	46	1
+1698	118	152	74	2
+1699	82	152	105	3
+1700	161	152	76	4
+1701	96	152	2	5
+1702	180	152	118	6
+1703	69	153	44	1
+1704	109	153	68	2
+1705	162	153	134	3
+1706	159	153	98	4
+1707	64	153	127	5
+1708	102	154	21	1
+1709	144	154	50	2
+1710	150	154	86	3
+1711	110	154	54	4
+1712	168	154	109	5
+1713	71	154	103	6
+1714	73	378	53	1
+1715	26	378	123	2
+1716	166	378	27	3
+1717	123	378	105	4
+1718	33	378	89	5
+1719	181	378	106	6
+1720	185	378	132	7
+1721	105	378	70	8
+1722	46	379	59	1
+1723	2	379	103	2
+1724	45	379	25	3
+1725	130	379	16	4
+1726	66	379	105	5
+1727	153	379	77	6
+1728	129	379	85	7
+1729	56	380	116	1
+1730	172	380	7	2
+1731	14	380	114	3
+1732	15	380	127	4
+1733	71	380	83	5
+1734	62	155	43	1
+1735	21	155	4	2
+1736	116	155	40	3
+1737	60	155	116	4
+1738	154	155	96	5
+1739	164	156	119	1
+1740	12	156	130	2
+1741	95	156	14	3
+1742	187	156	34	4
+1743	6	156	97	5
+1744	93	157	72	1
+1745	148	157	31	2
+1746	58	157	15	3
+1747	48	157	16	4
+1748	84	157	66	5
+1749	32	381	81	1
+1750	34	381	130	2
+1751	154	381	61	3
+1752	68	381	5	4
+1753	185	381	57	5
+1754	106	381	126	6
+1755	149	381	129	7
+1756	136	382	42	1
+1757	175	382	4	2
+1758	163	382	16	3
+1759	188	382	89	4
+1760	159	382	84	5
+1761	35	382	13	6
+1762	19	382	28	7
+1763	14	158	134	1
+1764	30	158	21	2
+1765	142	158	3	3
+1766	20	158	77	4
+1767	101	158	73	5
+1768	143	158	12	6
+1769	83	159	13	1
+1770	84	159	29	2
+1771	156	159	68	3
+1772	4	159	81	4
+1773	112	159	5	5
+1774	18	159	135	6
+1775	91	159	107	7
+1776	161	159	57	8
+1777	135	160	107	1
+1778	125	160	27	2
+1779	51	160	25	3
+1780	42	160	113	4
+1781	171	160	84	5
+1782	153	160	34	6
+1783	20	383	113	1
+1784	32	383	136	2
+1785	174	383	69	3
+1786	181	383	37	4
+1787	82	383	51	5
+1788	96	383	71	6
+1789	78	384	55	1
+1790	80	384	75	2
+1791	159	384	72	3
+1792	168	384	132	4
+1793	45	384	110	5
+1794	64	384	88	6
+1795	76	384	84	7
+1796	142	161	101	1
+1797	105	161	97	2
+1798	60	161	10	3
+1799	119	161	71	4
+1800	158	161	29	5
+1801	62	161	109	6
+1802	117	162	104	1
+1803	123	162	94	2
+1804	54	162	1	3
+1805	49	162	101	4
+1806	95	162	83	5
+1807	155	163	11	1
+1808	102	163	111	2
+1809	187	163	69	3
+1810	100	163	86	4
+1811	114	163	30	5
+1812	122	163	10	6
+1813	79	163	122	7
+1814	165	163	89	8
+1815	68	164	127	1
+1816	18	164	4	2
+1817	44	164	117	3
+1818	115	164	51	4
+1819	120	164	15	5
+1820	8	164	16	6
+1821	152	164	90	7
+1822	71	165	114	1
+1823	19	165	109	2
+1824	147	165	69	3
+1825	67	165	115	4
+1826	134	165	64	5
+1827	160	165	102	6
+1828	121	165	87	7
+1829	14	165	2	8
+1830	65	166	123	1
+1831	34	166	4	2
+1832	22	166	80	3
+1833	75	166	93	4
+1834	108	166	79	5
+1835	79	385	112	1
+1836	91	385	67	2
+1837	2	385	89	3
+1838	38	385	90	4
+1839	51	385	58	5
+1840	140	385	116	6
+1841	136	385	59	7
+1842	156	386	71	1
+1843	154	386	28	2
+1844	15	386	24	3
+1845	35	386	131	4
+1846	70	386	21	5
+1847	118	386	121	6
+1848	95	386	62	7
+1849	180	387	110	1
+1850	171	387	47	2
+1851	16	387	17	3
+1852	20	387	89	4
+1853	10	387	85	5
+1854	107	167	18	1
+1855	42	167	121	2
+1856	145	167	39	3
+1857	178	167	27	4
+1858	111	167	105	5
+1859	84	167	132	6
+1860	185	167	9	7
+1861	183	167	133	8
+1862	22	168	97	1
+1863	57	168	105	2
+1864	115	168	120	3
+1865	133	168	106	4
+1866	131	168	16	5
+1867	93	168	82	6
+1868	153	168	12	7
+1869	142	168	72	8
+1870	3	169	74	1
+1871	88	169	110	2
+1872	48	169	81	3
+1873	157	169	130	4
+1874	56	169	42	5
+1875	65	169	85	6
+1876	72	169	40	7
+1877	44	170	68	1
+1878	108	170	21	2
+1879	64	170	6	3
+1880	25	170	116	4
+1881	182	170	11	5
+1882	54	170	1	6
+1883	26	170	93	7
+1884	90	170	64	8
+1885	92	171	125	1
+1886	47	171	51	2
+1887	62	171	96	3
+1888	179	171	6	4
+1889	5	171	61	5
+1890	188	171	132	6
+1891	163	172	1	1
+1892	78	172	80	2
+1893	149	172	31	3
+1894	46	172	91	4
+1895	67	172	44	5
+1896	132	173	103	1
+1897	100	173	37	2
+1898	17	173	12	3
+1899	76	173	126	4
+1900	121	173	102	5
+1901	144	388	83	1
+1902	101	388	53	2
+1903	141	388	92	3
+1904	157	388	36	4
+1905	121	388	106	5
+1906	107	389	71	1
+1907	125	389	12	2
+1908	119	389	31	3
+1909	106	389	39	4
+1910	33	389	17	5
+1911	61	389	38	6
+1912	7	389	121	7
+1913	56	174	128	1
+1914	52	174	32	2
+1915	19	174	4	3
+1916	148	174	78	4
+1917	103	174	15	5
+1918	79	174	37	6
+1919	127	174	93	7
+1920	120	175	122	1
+1921	34	175	40	2
+1922	117	175	19	3
+1923	170	175	112	4
+1924	188	175	47	5
+1925	177	175	75	6
+1926	135	175	56	7
+1927	178	176	134	1
+1928	90	176	94	2
+1929	76	176	90	3
+1930	182	176	11	4
+1931	134	176	34	5
+1932	87	176	56	6
+1933	3	176	42	7
+1934	136	176	101	8
+1935	95	177	124	1
+1936	29	177	7	2
+1937	145	177	55	3
+1938	73	177	60	4
+1939	112	177	52	5
+1940	176	178	82	1
+1941	58	178	29	2
+1942	185	178	47	3
+1943	18	178	65	4
+1944	180	178	120	5
+1945	183	179	67	1
+1946	28	179	77	2
+1947	94	179	111	3
+1948	43	179	48	4
+1949	41	179	2	5
+1950	172	180	20	1
+1951	69	180	52	2
+1952	160	180	116	3
+1953	153	180	8	4
+1954	89	180	72	5
+1955	113	180	108	6
+1956	71	390	59	1
+1957	166	390	41	2
+1958	20	390	103	3
+1959	54	390	119	4
+1960	89	390	96	5
+1961	110	390	22	6
+1962	36	391	108	1
+1963	16	391	69	2
+1964	122	391	13	3
+1965	185	391	34	4
+1966	152	391	39	5
+1967	165	391	18	6
+1968	56	391	3	7
+1969	139	181	40	1
+1970	51	181	52	2
+1971	3	181	68	3
+1972	6	181	9	4
+1973	59	181	100	5
+1974	97	181	23	6
+1975	164	181	91	7
+1976	156	392	102	1
+1977	188	392	12	2
+1978	34	392	40	3
+1979	26	392	53	4
+1980	74	392	79	5
+1981	2	392	37	6
+1982	16	392	70	7
+1983	68	392	39	8
+1984	126	393	114	1
+1985	20	393	50	2
+1986	106	393	117	3
+1987	35	393	24	4
+1988	90	393	115	5
+1989	139	393	118	6
+1990	86	393	73	7
+1991	169	182	100	1
+1992	76	182	119	2
+1993	177	182	108	3
+1994	149	182	76	4
+1995	83	182	9	5
+1996	175	182	117	6
+1997	72	182	6	7
+1998	112	182	37	8
+1999	85	183	53	1
+2000	73	183	119	2
+2001	53	183	59	3
+2002	71	183	60	4
+2003	89	183	13	5
+2004	135	183	76	6
+2005	80	183	4	7
+2006	171	184	68	1
+2007	108	184	108	2
+2008	36	184	73	3
+2009	17	184	41	4
+2010	97	184	47	5
+2011	165	184	75	6
+2012	133	185	136	1
+2013	148	185	44	2
+2014	183	185	73	3
+2015	162	185	78	4
+2016	44	185	120	5
+2017	158	185	35	6
+2018	140	186	39	1
+2019	178	186	65	2
+2020	130	186	72	3
+2021	103	186	136	4
+2022	160	186	89	5
+2023	120	186	128	6
+2024	116	186	71	7
+2025	163	186	102	8
+2026	31	187	28	1
+2027	168	187	119	2
+2028	91	187	18	3
+2029	49	187	135	4
+2030	122	187	124	5
+2031	32	187	102	6
+2032	5	188	121	1
+2033	54	188	85	2
+2034	38	188	94	3
+2035	29	188	113	4
+2036	147	188	7	5
+2037	107	394	133	1
+2038	123	394	86	2
+2039	125	394	96	3
+2040	3	394	79	4
+2041	30	394	90	5
+2042	177	394	58	6
+2043	163	394	43	7
+2044	104	395	108	1
+2045	47	395	109	2
+2046	148	395	79	3
+2047	150	395	20	4
+2048	50	395	55	5
+2049	61	396	104	1
+2050	1	396	119	2
+2051	158	396	113	3
+2052	14	396	108	4
+2053	84	396	54	5
+2054	48	396	121	6
+2055	166	189	109	1
+2056	86	189	133	2
+2057	66	189	119	3
+2058	56	189	49	4
+2059	55	189	15	5
+2060	8	190	12	1
+2061	155	190	102	2
+2062	44	190	129	3
+2063	91	190	52	4
+2064	2	190	31	5
+2065	182	190	111	6
+2066	168	191	64	1
+2067	92	191	66	2
+2068	188	191	135	3
+2069	114	191	28	4
+2070	83	191	47	5
+2071	65	191	123	6
+2072	175	191	76	7
+2073	165	191	81	8
+2074	184	397	110	1
+2075	133	397	79	2
+2076	57	397	11	3
+2077	50	397	32	4
+2078	150	397	113	5
+2079	7	397	77	6
+2080	46	398	123	1
+2081	79	398	80	2
+2082	136	398	36	3
+2083	101	398	25	4
+2084	127	398	3	5
+2085	137	192	127	1
+2086	47	192	39	2
+2087	154	192	135	3
+2088	80	192	100	4
+2089	84	192	89	5
+2090	146	192	57	6
+2091	53	193	115	1
+2092	75	193	29	2
+2093	71	193	64	3
+2094	41	193	92	4
+2095	54	193	91	5
+2096	14	193	37	6
+2097	60	193	100	7
+2098	141	193	2	8
+2099	29	194	101	1
+2100	168	194	56	2
+2101	183	194	17	3
+2102	66	194	40	4
+2103	25	194	120	5
+2104	63	195	81	1
+2105	3	195	131	2
+2106	55	195	39	3
+2107	107	195	124	4
+2108	123	195	34	5
+2109	38	196	100	1
+2110	122	196	91	2
+2111	56	196	114	3
+2112	59	196	29	4
+2113	34	196	41	5
+2114	161	196	12	6
+2115	139	197	23	1
+2116	36	197	105	2
+2117	90	197	71	3
+2118	159	197	103	4
+2119	58	197	94	5
+2120	91	198	85	1
+2121	103	198	51	2
+2122	167	198	101	3
+2123	67	198	40	4
+2124	151	198	57	5
+2125	164	198	131	6
+2126	117	198	19	7
+2127	149	198	108	8
+2128	33	199	119	1
+2129	158	199	55	2
+2130	20	199	105	3
+2131	106	199	98	4
+2132	5	199	18	5
+2133	181	199	29	6
+2134	78	199	101	7
+2135	182	199	135	8
+2136	103	399	73	1
+2137	156	399	115	2
+2138	8	399	40	3
+2139	183	399	35	4
+2140	77	399	41	5
+2141	19	400	15	1
+2142	4	400	76	2
+2143	33	400	21	3
+2144	26	400	36	4
+2145	129	400	72	5
+2146	105	400	119	6
+2147	85	200	3	1
+2148	58	200	53	2
+2149	87	200	43	3
+2150	74	200	39	4
+2151	81	200	71	5
+2152	17	201	43	1
+2153	100	201	13	2
+2154	54	201	133	3
+2155	12	201	107	4
+2156	25	201	19	5
+2157	164	201	53	6
+2158	24	201	109	7
+2159	89	201	40	8
+2160	52	202	27	1
+2161	61	202	67	2
+2162	116	202	66	3
+2163	101	202	52	4
+2164	124	202	83	5
+2165	151	202	94	6
+2166	111	202	96	7
+2167	28	203	5	1
+2168	130	203	98	2
+2169	185	203	60	3
+2170	14	203	87	4
+2171	16	203	65	5
+2172	5	204	124	1
+2173	174	204	85	2
+2174	38	204	65	3
+2175	127	204	88	4
+2176	99	204	41	5
+2177	45	204	57	6
+2178	47	204	49	7
+2179	115	205	66	1
+2180	93	205	3	2
+2181	92	205	32	3
+2182	9	205	75	4
+2183	10	205	103	5
+2184	65	205	129	6
+2185	138	205	126	7
+2186	27	205	2	8
+2187	119	206	64	1
+2188	73	206	12	2
+2189	80	206	102	3
+2190	20	206	29	4
+2191	175	206	81	5
+2192	70	206	79	6
+2193	136	206	19	7
+2194	36	206	25	8
+2195	147	207	23	1
+2196	35	207	115	2
+2197	137	207	50	3
+2198	178	207	52	4
+2199	71	207	75	5
+2200	71	401	115	1
+2201	138	401	89	2
+2202	97	401	102	3
+2203	80	401	44	4
+2204	126	401	14	5
+2205	176	401	128	6
+2206	181	208	29	1
+2207	24	208	92	2
+2208	78	208	85	3
+2209	59	208	75	4
+2210	155	208	15	5
+2211	31	209	91	1
+2212	144	209	58	2
+2213	53	209	46	3
+2214	51	209	66	4
+2215	63	209	35	5
+2216	177	209	26	6
+2217	146	209	101	7
+2218	188	209	62	8
+2219	34	210	29	1
+2220	36	210	78	2
+2221	184	210	109	3
+2222	28	210	119	4
+2223	186	210	50	5
+2224	100	210	73	6
+2225	91	210	62	7
+2226	171	211	33	1
+2227	88	211	2	2
+2228	185	211	96	3
+2229	124	211	126	4
+2230	77	211	50	5
+2231	130	212	83	1
+2232	72	212	23	2
+2233	168	212	65	3
+2234	110	212	63	4
+2235	102	212	106	5
+2236	85	212	93	6
+2237	76	212	40	7
+2238	179	213	7	1
+2239	125	213	82	2
+2240	37	213	104	3
+2241	11	213	10	4
+2242	35	213	121	5
+2243	132	214	68	1
+2244	44	214	41	2
+2245	42	214	122	3
+2246	56	214	77	4
+2247	128	214	101	5
+2248	160	215	36	1
+2249	136	215	109	2
+2250	106	215	10	3
+2251	180	215	20	4
+2252	57	215	87	5
+2253	170	215	57	6
+2254	107	215	4	7
+2255	135	215	90	8
+2256	46	216	15	1
+2257	22	216	106	2
+2258	84	216	45	3
+2259	116	216	91	4
+2260	93	216	68	5
+2261	62	216	110	6
+2262	158	216	57	7
+2263	175	216	123	8
+2264	47	402	92	1
+2265	75	402	117	2
+2266	88	402	127	3
+2267	53	402	2	4
+2268	31	402	74	5
+2269	122	402	87	6
+2270	70	402	131	7
+2271	40	403	123	1
+2272	102	403	50	2
+2273	1	403	81	3
+2274	67	403	27	4
+2275	23	403	78	5
+2276	169	404	8	1
+2277	100	404	42	2
+2278	113	404	64	3
+2279	105	404	119	4
+2280	94	404	9	5
+2281	16	405	131	1
+2282	182	405	136	2
+2283	81	405	58	3
+2284	162	405	63	4
+2285	59	405	88	5
+2286	28	217	69	1
+2287	57	217	36	2
+2288	55	217	122	3
+2289	14	217	107	4
+2290	160	217	97	5
+2291	42	217	115	6
+2292	72	217	93	7
+2293	4	217	71	8
+2294	97	218	123	1
+2295	181	218	21	2
+2296	139	218	7	3
+2297	165	218	14	4
+2298	140	218	54	5
+2299	133	218	84	6
+2300	25	218	124	7
+2301	73	218	95	8
+2302	96	406	63	1
+2303	80	406	85	2
+2304	146	406	78	3
+2305	34	406	54	4
+2306	48	406	87	5
+2307	132	407	131	1
+2308	51	407	75	2
+2309	59	407	107	3
+2310	64	407	44	4
+2311	20	407	78	5
+2312	29	407	121	6
+2313	13	407	102	7
+2314	19	219	93	1
+2315	136	219	65	2
+2316	8	219	47	3
+2317	127	219	73	4
+2318	87	219	108	5
+2319	101	219	134	6
+2320	104	219	119	7
+2321	112	220	72	1
+2322	120	220	2	2
+2323	31	220	36	3
+2324	160	220	26	4
+2325	3	220	48	5
+2326	117	220	112	6
+2327	147	220	62	7
+2328	156	221	49	1
+2329	131	221	61	2
+2330	183	221	5	3
+2331	53	221	20	4
+2332	152	221	77	5
+2333	2	221	127	6
+2334	142	222	78	1
+2335	168	222	52	2
+2336	54	222	75	3
+2337	46	222	58	4
+2338	38	222	37	5
+2339	108	222	87	6
+2340	79	222	123	7
+2341	14	223	74	1
+2342	128	223	17	2
+2343	67	223	83	3
+2344	180	223	57	4
+2345	126	223	4	5
+2346	161	223	75	6
+2347	10	223	45	7
+2348	107	223	6	8
+2349	115	224	95	1
+2350	11	224	47	2
+2351	170	224	120	3
+2352	105	224	42	4
+2353	36	224	99	5
+2354	88	224	39	6
+2355	12	225	77	1
+2356	5	225	4	2
+2357	138	225	56	3
+2358	174	225	111	4
+2359	124	225	66	5
+2360	159	225	48	6
+2361	86	225	119	7
+2362	173	225	102	8
+2363	138	408	62	1
+2364	73	408	93	2
+2365	102	408	44	3
+2366	76	408	18	4
+2367	77	408	33	5
+2368	42	409	10	1
+2369	109	409	9	2
+2370	131	409	63	3
+2371	65	409	62	4
+2372	91	409	58	5
+2373	13	410	134	1
+2374	100	410	75	2
+2375	184	410	115	3
+2376	23	410	136	4
+2377	32	410	10	5
+2378	3	226	64	1
+2379	63	226	45	2
+2380	90	226	65	3
+2381	120	226	80	4
+2382	7	226	123	5
+2383	72	226	53	6
+2384	4	226	6	7
+2385	59	226	87	8
+2386	141	227	61	1
+2387	61	227	45	2
+2388	163	227	98	3
+2389	145	227	87	4
+2390	170	227	50	5
+2391	149	227	3	6
+2392	16	227	80	7
+2393	124	228	67	1
+2394	110	228	9	2
+2395	57	228	37	3
+2396	81	228	51	4
+2397	95	228	109	5
+2398	96	228	81	6
+2399	75	229	32	1
+2400	103	229	65	2
+2401	167	229	1	3
+2402	69	229	73	4
+2403	107	229	27	5
+2404	158	229	59	6
+2405	18	230	28	1
+2406	80	230	119	2
+2407	14	230	100	3
+2408	112	230	123	4
+2409	140	230	68	5
+2410	2	230	124	6
+2411	152	230	126	7
+2412	25	231	78	1
+2413	127	231	23	2
+2414	119	231	87	3
+2415	161	231	17	4
+2416	19	231	58	5
+2417	1	231	114	6
+2418	40	231	38	7
+2419	175	231	127	8
+2420	96	411	106	1
+2421	139	411	55	2
+2422	66	411	130	3
+2423	49	411	75	4
+2424	12	411	17	5
+2425	164	411	59	6
+2426	173	411	117	7
+2427	20	412	135	1
+2428	41	412	37	2
+2429	107	412	124	3
+2430	145	412	12	4
+2431	2	412	136	5
+2432	110	412	93	6
+2433	168	412	133	7
+2434	129	412	2	8
+2435	77	413	118	1
+2436	102	413	126	2
+2437	149	413	57	3
+2438	128	413	133	4
+2439	117	413	91	5
+2440	161	413	102	6
+2441	125	413	33	7
+2442	34	413	92	8
+2443	130	232	63	1
+2444	83	232	69	2
+2445	143	232	34	3
+2446	56	232	72	4
+2447	151	232	103	5
+2448	176	232	7	6
+2449	100	232	30	7
+2450	159	232	113	8
+2451	25	233	110	1
+2452	138	233	49	2
+2453	120	233	120	3
+2454	179	233	71	4
+2455	148	233	135	5
+2456	67	234	97	1
+2457	181	234	106	2
+2458	24	234	99	3
+2459	51	234	61	4
+2460	4	234	131	5
+2461	53	234	27	6
+2462	17	414	82	1
+2463	116	414	109	2
+2464	18	414	19	3
+2465	55	414	111	4
+2466	120	414	13	5
+2467	52	414	42	6
+2468	134	414	125	7
+2469	149	414	48	8
+2470	91	415	61	1
+2471	125	415	106	2
+2472	37	415	35	3
+2473	78	415	55	4
+2474	111	415	25	5
+2475	62	415	94	6
+2476	142	415	79	7
+2477	110	416	83	1
+2478	64	416	42	2
+2479	160	416	126	3
+2480	150	416	63	4
+2481	6	416	36	5
+2482	94	416	84	6
+2483	138	416	17	7
+2484	71	416	127	8
+2485	45	417	84	1
+2486	104	417	59	2
+2487	42	417	71	3
+2488	145	417	76	4
+2489	155	417	51	5
+2490	177	417	31	6
+2491	29	417	117	7
+2492	119	235	28	1
+2493	58	235	76	2
+2494	13	235	69	3
+2495	21	235	131	4
+2496	49	235	77	5
+2497	96	235	51	6
+2498	178	235	19	7
+2499	166	418	136	1
+2500	36	418	39	2
+2501	177	418	83	3
+2502	160	418	94	4
+2503	75	418	82	5
+2504	39	418	50	6
+2505	100	419	116	1
+2506	48	419	50	2
+2507	60	419	33	3
+2508	110	419	74	4
+2509	44	419	22	5
+2510	33	419	58	6
+2511	62	419	97	7
+2512	174	419	108	8
+2513	158	420	34	1
+2514	114	420	87	2
+2515	168	420	121	3
+2516	159	420	92	4
+2517	113	420	117	5
+2518	88	236	4	1
+2519	28	236	114	2
+2520	105	236	13	3
+2521	84	236	125	4
+2522	179	236	111	5
+2523	136	236	103	6
+2524	56	421	105	1
+2525	31	421	100	2
+2526	27	421	53	3
+2527	48	421	93	4
+2528	45	421	61	5
+2529	15	421	94	6
+2530	57	422	117	1
+2531	99	422	56	2
+2532	135	422	118	3
+2533	2	422	25	4
+2534	90	422	123	5
+2535	137	422	33	6
+2536	64	422	97	7
+2537	155	423	105	1
+2538	53	423	25	2
+2539	34	423	30	3
+2540	11	423	91	4
+2541	24	423	136	5
+2542	111	423	122	6
+2543	49	423	68	7
+2544	127	237	32	1
+2545	110	237	87	2
+2546	171	237	119	3
+2547	180	237	61	4
+2548	9	237	15	5
+2549	147	237	12	6
+2550	19	237	9	7
+2551	148	237	73	8
+2552	111	424	7	1
+2553	6	424	36	2
+2554	168	424	35	3
+2555	142	424	131	4
+2556	177	424	16	5
+2557	107	424	32	6
+2558	29	424	90	7
+2559	36	424	129	8
+2560	58	425	104	1
+2561	53	425	84	2
+2562	182	425	7	3
+2563	30	425	75	4
+2564	76	425	64	5
+2565	81	425	99	6
+2566	47	425	97	7
+2567	72	425	35	8
+2568	14	238	68	1
+2569	172	238	7	2
+2570	63	238	118	3
+2571	97	238	93	4
+2572	18	238	32	5
+2573	60	238	72	6
+2574	21	238	17	7
+2575	123	238	8	8
+2576	81	426	130	1
+2577	159	426	106	2
+2578	138	426	104	3
+2579	144	426	35	4
+2580	43	426	75	5
+2581	129	426	47	6
+2582	22	426	116	7
+2583	84	427	71	1
+2584	28	427	100	2
+2585	141	427	43	3
+2586	34	427	83	4
+2587	23	427	104	5
+2588	170	427	10	6
+2589	71	427	21	7
+2590	56	428	136	1
+2591	175	428	54	2
+2592	165	428	78	3
+2593	59	428	79	4
+2594	77	428	50	5
+2595	137	428	27	6
+2596	87	428	89	7
+2597	26	429	121	1
+2598	109	429	90	2
+2599	187	429	73	3
+2600	94	429	2	4
+2601	180	429	134	5
+2602	86	429	105	6
+2603	25	429	99	7
+2604	160	239	33	1
+2605	29	239	72	2
+2606	133	239	56	3
+2607	55	239	27	4
+2608	51	239	104	5
+2609	4	239	102	6
+2610	57	430	133	1
+2611	40	430	130	2
+2612	11	430	122	3
+2613	72	430	79	4
+2614	79	430	98	5
+2615	161	430	57	6
+2616	82	430	131	7
+2617	5	430	4	8
+2618	15	240	47	1
+2619	171	240	124	2
+2620	154	240	1	3
+2621	29	240	73	4
+2622	80	240	113	5
+2623	73	240	84	6
+2624	186	240	104	7
+2625	78	240	83	8
+2626	185	241	37	1
+2627	147	241	6	2
+2628	182	241	90	3
+2629	59	241	2	4
+2630	183	241	24	5
+2631	128	241	3	6
+2632	177	241	123	7
+2633	61	241	115	8
+2634	20	242	54	1
+2635	16	242	28	2
+2636	167	242	69	3
+2637	51	242	116	4
+2638	127	242	131	5
+2639	143	242	10	6
+2640	56	243	9	1
+2641	37	243	16	2
+2642	75	243	18	3
+2643	133	243	113	4
+2644	74	243	119	5
+2645	184	243	64	6
+2646	53	244	46	1
+2647	93	244	54	2
+2648	176	244	89	3
+2649	131	244	13	4
+2650	148	244	15	5
+2651	134	244	106	6
+2652	116	245	25	1
+2653	63	245	124	2
+2654	163	245	86	3
+2655	1	245	98	4
+2656	110	245	71	5
+2657	50	245	9	6
+2658	99	245	5	7
+2659	111	246	25	1
+2660	104	246	48	2
+2661	100	246	38	3
+2662	46	246	116	4
+2663	172	246	43	5
+2664	54	246	32	6
+2665	155	247	16	1
+2666	141	247	78	2
+2667	92	247	129	3
+2668	19	247	87	4
+2669	132	247	31	5
+2670	4	247	136	6
+2671	76	431	76	1
+2672	95	431	104	2
+2673	24	431	47	3
+2674	118	431	130	4
+2675	151	431	97	5
+2676	141	432	106	1
+2677	56	432	34	2
+2678	26	432	133	3
+2679	11	432	84	4
+2680	148	432	67	5
+2681	177	248	132	1
+2682	53	248	43	2
+2683	42	248	39	3
+2684	68	248	118	4
+2685	169	248	81	5
+2686	64	248	31	6
+2687	126	248	37	7
+2688	32	248	128	8
+2689	174	433	103	1
+2690	80	433	17	2
+2691	115	433	130	3
+2692	77	433	6	4
+2693	23	433	82	5
+2694	37	249	92	1
+2695	101	249	98	2
+2696	176	249	60	3
+2697	162	249	12	4
+2698	29	249	117	5
+2699	15	250	30	1
+2700	60	250	103	2
+2701	112	250	127	3
+2702	53	250	2	4
+2703	85	250	46	5
+2704	75	251	105	1
+2705	124	251	23	2
+2706	6	251	16	3
+2707	49	251	78	4
+2708	133	251	55	5
+2709	181	252	82	1
+2710	72	252	133	2
+2711	188	252	14	3
+2712	31	252	128	4
+2713	158	252	99	5
+2714	109	252	114	6
+2715	177	252	109	7
+2716	36	434	86	1
+2717	135	434	127	2
+2718	90	434	119	3
+2719	78	434	110	4
+2720	187	434	88	5
+2721	117	435	7	1
+2722	144	435	53	2
+2723	131	435	89	3
+2724	153	435	19	4
+2725	174	435	9	5
+2726	84	253	97	1
+2727	25	253	26	2
+2728	80	253	87	3
+2729	71	253	13	4
+2730	138	253	90	5
+2731	161	253	111	6
+2732	124	253	88	7
+2733	60	253	130	8
+2734	110	436	107	1
+2735	10	436	123	2
+2736	81	436	22	3
+2737	38	436	133	4
+2738	99	436	15	5
+2739	26	437	127	1
+2740	47	437	98	2
+2741	65	437	73	3
+2742	109	437	116	4
+2743	74	437	136	5
+2744	1	437	30	6
+2745	125	254	126	1
+2746	82	254	64	2
+2747	12	254	118	3
+2748	43	254	123	4
+2749	102	254	40	5
+2750	90	254	36	6
+2751	152	254	111	7
+2752	4	254	119	8
+2753	139	255	60	1
+2754	31	255	107	2
+2755	27	255	119	3
+2756	106	255	31	4
+2757	97	255	101	5
+2758	59	255	61	6
+2759	5	255	64	7
+2760	131	256	129	1
+2761	111	256	83	2
+2762	56	256	93	3
+2763	86	256	119	4
+2764	135	256	77	5
+2765	149	256	31	6
+2766	142	256	106	7
+2767	145	256	88	8
+2768	171	257	131	1
+2769	44	257	75	2
+2770	150	257	89	3
+2771	184	257	119	4
+2772	154	257	37	5
+2773	165	257	60	6
+2774	163	257	21	7
+2775	41	258	75	1
+2776	177	258	105	2
+2777	9	258	66	3
+2778	126	258	57	4
+2779	182	258	136	5
+2780	62	258	118	6
+2781	124	258	90	7
+2782	132	259	62	1
+2783	18	259	121	2
+2784	21	259	48	3
+2785	157	259	76	4
+2786	94	259	87	5
+2787	80	259	135	6
+2788	156	259	69	7
+2789	175	259	2	8
+2790	164	438	127	1
+2791	145	438	107	2
+2792	57	438	124	3
+2793	124	438	86	4
+2794	144	438	39	5
+2795	103	438	126	6
+2796	34	438	13	7
+2797	135	438	123	8
+2798	20	439	11	1
+2799	95	439	135	2
+2800	105	439	89	3
+2801	90	439	62	4
+2802	10	439	57	5
+2803	87	439	18	6
+2804	92	439	115	7
+2805	36	440	61	1
+2806	110	440	11	2
+2807	136	440	10	3
+2808	39	440	22	4
+2809	186	440	102	5
+2810	112	440	55	6
+2811	76	441	30	1
+2812	17	441	29	2
+2813	14	441	22	3
+2814	123	441	17	4
+2815	99	441	106	5
+2816	185	260	22	1
+2817	155	260	125	2
+2818	55	260	24	3
+2819	73	260	107	4
+2820	69	260	106	5
+2821	78	442	104	1
+2822	178	442	67	2
+2823	18	442	16	3
+2824	79	442	51	4
+2825	54	442	84	5
+2826	43	442	93	6
+2827	10	442	34	7
+2828	58	442	33	8
+2829	11	443	135	1
+2830	151	443	131	2
+2831	186	443	18	3
+2832	48	443	4	4
+2833	20	443	20	5
+2834	166	443	21	6
+2835	114	444	133	1
+2836	70	444	55	2
+2837	126	444	53	3
+2838	148	444	58	4
+2839	109	444	116	5
+2840	139	261	105	1
+2841	184	261	128	2
+2842	149	261	87	3
+2843	88	261	26	4
+2844	98	261	129	5
+2845	40	261	121	6
+2846	29	261	12	7
+2847	161	262	121	1
+2848	127	262	72	2
+2849	85	262	105	3
+2850	122	262	81	4
+2851	53	262	91	5
+2852	32	262	9	6
+2853	137	263	111	1
+2854	22	263	124	2
+2855	125	263	5	3
+2856	51	263	72	4
+2857	182	263	129	5
+2858	51	445	59	1
+2859	169	445	116	2
+2860	124	445	2	3
+2861	103	445	63	4
+2862	142	445	111	5
+2863	143	445	93	6
+2864	123	445	77	7
+2865	144	446	45	1
+2866	41	446	29	2
+2867	162	446	51	3
+2868	106	446	119	4
+2869	101	446	124	5
+2870	166	446	109	6
+2871	57	446	97	7
+2872	24	446	79	8
+2873	115	447	125	1
+2874	58	447	90	2
+2875	17	447	21	3
+2876	128	447	43	4
+2877	134	447	127	5
+2878	81	447	58	6
+2879	37	447	91	7
+2880	47	264	76	1
+2881	64	264	67	2
+2882	127	264	100	3
+2883	109	264	101	4
+2884	105	264	84	5
+2885	3	264	125	6
+2886	28	264	87	7
+2887	92	448	85	1
+2888	139	448	80	2
+2889	21	448	95	3
+2890	44	448	75	4
+2891	74	448	88	5
+2892	24	448	115	6
+2893	37	448	123	7
+2894	119	448	73	8
+2895	143	449	116	1
+2896	95	449	110	2
+2897	116	449	65	3
+2898	22	449	123	4
+2899	158	449	20	5
+2900	82	450	34	1
+2901	120	450	21	2
+2902	85	450	89	3
+2903	86	450	17	4
+2904	18	450	50	5
+2905	14	265	57	1
+2906	28	265	64	2
+2907	90	265	83	3
+2908	107	265	125	4
+2909	1	265	75	5
+2910	161	265	84	6
+2911	146	265	43	7
+2912	45	265	9	8
+\.
+
+
+--
+-- Name: horses horses_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.horses
+    ADD CONSTRAINT horses_name_key UNIQUE (name);
+
+
+--
+-- Name: horses horses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.horses
+    ADD CONSTRAINT horses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jockeys jockeys_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jockeys
+    ADD CONSTRAINT jockeys_name_key UNIQUE (name);
+
+
+--
+-- Name: jockeys jockeys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jockeys
+    ADD CONSTRAINT jockeys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: meetings meetings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.meetings
+    ADD CONSTRAINT meetings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: racecourses racecourses_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.racecourses
+    ADD CONSTRAINT racecourses_name_key UNIQUE (name);
+
+
+--
+-- Name: racecourses racecourses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.racecourses
+    ADD CONSTRAINT racecourses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: races races_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.races
+    ADD CONSTRAINT races_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: runners runners_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.runners
+    ADD CONSTRAINT runners_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: meetings meetings_run_at_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.meetings
+    ADD CONSTRAINT meetings_run_at_fkey FOREIGN KEY (run_at) REFERENCES public.racecourses(id);
+
+
+--
+-- Name: races races_part_of_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.races
+    ADD CONSTRAINT races_part_of_fkey FOREIGN KEY (part_of) REFERENCES public.meetings(id);
+
+
+--
+-- Name: runners runners_horse_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.runners
+    ADD CONSTRAINT runners_horse_fkey FOREIGN KEY (horse) REFERENCES public.horses(id);
+
+
+--
+-- Name: runners runners_jockey_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.runners
+    ADD CONSTRAINT runners_jockey_fkey FOREIGN KEY (jockey) REFERENCES public.jockeys(id);
+
+
+--
+-- Name: runners runners_race_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.runners
+    ADD CONSTRAINT runners_race_fkey FOREIGN KEY (race) REFERENCES public.races(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

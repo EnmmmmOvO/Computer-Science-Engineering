@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <b>[Q6]</b> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 6 <span class='tiny'>(9 marks)</span></h3>
+<p>
+Write Python/Psycopg2 script that produces a list of match reports
+for a specified team <i>T</i>.
+The team is given as the first command-line argument and must
+<i>exactly</i> match the name of a team in the <tt>Teams</tt> table;
+if it doesn't, print an error message and exit.
+The second command-line argument gives the year of interest <i>Y</i>.
+</p>
+<p>
+If the team name is valid, print, in order of when the match
+was played, information about matches played by <i>T</i> in
+year <i>Y</i>.
+Each line in the match reports list contains:
+</p>
+<ul>
+<li> <tt>opponent</tt> ... the other team in the match
+<li> <tt>location</tt> ... the city where the match was played
+<li> <tt>date</tt> ... the date on which the match was played
+<li> <tt>result</tt> ... whether <i>T</i> won or lost
+<li> <tt>score</tt> ... goals by <i>T</i> and goals by opponent
+</ul>
+<p>An example, to show the expected output format and error messages:</p>
+<pre>
+$ <b>./q6 'Australia'</b>
+Usage: q6 TeamName Year
+$ <b>./q6 'australia' 2002</b>
+No team 'australia'  <span class="comment">-- not an EXACT match</span>
+$ <b>./q6 'Australia' 1999</b> 
+No matches
+$ <b>./q6 'Australia' 2006</b>
+played Argentina in Sydney on 2006-02-21 and drew 1-1
+played Japan in Melbourne on 2006-05-20 and lost 0-2
+played Netherlands in Melbourne on 2006-08-08 and won 1-0
+played Japan in Kyoto on 2006-11-21 and drew 1-1
+played Uruguay in San Carlos on 2006-12-24 and lost 1-2
+</pre>
+<p>
+The first goal is always the goal scored by team <i>T</i>.
+</p>
+<p>There are more examples in the <tt>tests/*.expected</tt> files.</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Put the Python code in the file <tt>q6</tt>
+<li> Put any Python helper functions in this file as well
+<li> Place any helper views or PLpgSQL functions in the <tt>q6.sql</tt> file
+<li> Load any SQL code via: &nbsp; <tt>psql footy -f q6.sql</tt>
+<li> Test it via: &nbsp; <tt>./q6 'Australia' 2006</tt>
+<li> Check it using: &nbsp; <tt>sh check q6</tt>
+<li> Submit it using: &nbsp; <tt>give cs3311 sample_q6 q6.sql q6</tt> &nbsp; or &nbsp; Webcms3
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

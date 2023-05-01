@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <b>[Q9]</b> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 9 <span class='tiny'>(8 marks)</span></h3>
+<p>
+<b>Note:</b> This question is asking you to write some PLpgSQL functions.
+While you have a PostgreSQL server and could test these out, by building
+a small database of your own, we do not expect you to do this.
+Simply write the code in the file q9.sql as accurately as you can. Your
+work will not be tested via PostgreSQL, but will be assessed based on how
+close your code is to a correct solution.
+</p>
+<p>
+In the MyMyUNSW database from Assignment 2, courses had evaluations
+(or ratings) assoaciated with them, which roughly correspond to the
+average score for the final question on the MyExperience survey.
+Some students might be interested in selecting/avoiding courses based
+on their rating.
+Doing this would require using the data in the following two tables:
+</p>
+<pre>
+Courses(<b>id</b>,subject,term,homepage)
+CourseEnrolments(<b>student</b>,<b>course</b>,mark,grade,stueval)
+</pre>
+<p>
+Note that we don't want to consider all courses here since e.g. a
+course with one student who rates the course 6 would get an unfair
+rating advantage.
+To ensure that we have a reasonable statistical basis for ratings, we
+use the following strategy:
+<ul>
+<li> the <tt>stueval</tt> field gives a rating on a 1..6 scale (1=poor .. 6=excellent)
+<li> <i>nS</i> ... the total number of students enrolled in the course
+<li> <i>nE</i> ... the number of students who gave an evaluation
+<li> <i>avgEval</i> ... the mean of the non-null evaluations (the overall course evaluation)
+<li> we consider only courses satisfying &nbsp; <i>(nS > 10 &amp;&amp; (3*nE) > nS)</i>
+</ul>
+</p>
+<p>
+Writing a query to provide an answer to this results in an expensive
+computation each time a student wants to find course ratings.
+It is simpler and more efficient if each <tt>Courses</tt> tuple
+already contains values for <i>nS</i>, <i>nE</i>, <i>avgEval</i>.
+This can be achieved by adding extra fields to the <tt>Courses</tt>
+table and using triggers to maintain these fields to be consistent
+with the records in the <tt>CourseEnrolments</tt> table.
+That is, we can modify the <tt>Courses</tt> table to:
+</p>
+<pre>
+Courses(<b>id</b>,subject,term,homepage,nS,nE,avgEval)
+</pre>
+<p>
+Newly-inserted <tt>Courses</tt> tuples have <i>nS</i> and <i>nE</i> set to 0,
+and <i>avgEval</i> set to <tt>NULL</tt>.
+</p>
+<p>
+The triggers are defined as follows:
+</p>
+<pre>
+create trigger AddCourseEnrolmentTrigger
+after insert on CourseEnrolments
+execute procedure fixCoursesOnAddCourseEnrolment();
+
+create trigger DropCourseEnrolmentTrigger
+after delete on CourseEnrolments
+execute procedure fixCoursesOnDropCourseEnrolment();
+
+create trigger ModCourseEnrolmentTrigger
+after update on CourseEnrolments
+execute procedure fixCoursesOnModCourseEnrolment();
+</pre>
+<p><b>Exercises:</b></p>
+<ol type='a'>
+<li class="subq">
+<p class="qtext">
+Write the trigger function <tt>fixCoursesOnAddCourseEnrolment()</tt>.
+</p>
+<li class="subq">
+<p class="qtext">
+Write the trigger function <tt>fixCoursesOnDropCourseEnrolment()</tt>.
+</p>
+<li class="subq">
+<p class="qtext">
+Write the trigger function <tt>fixCoursesOnModCourseEnrolment()</tt>.
+<br><br>
+Note that most of the time, an update to a course enrolment will
+change only the mark or grade, and leave the evaluation unchanged.
+However, it is also possible that an update might add a new evaluation
+or change an existing evaluation. You may assume that evaluations will
+never be erased once set.
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>q9.txt</tt>
+<li> Submit via: &nbsp; <b><tt>submit q9.txt</tt></b>
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

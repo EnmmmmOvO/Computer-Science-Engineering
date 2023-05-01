@@ -1,0 +1,31 @@
+Gmail data model
+
+users:
+	email
+	password
+
+messages: (v1 ... no conversations)
+	title or parent
+	poster
+	posted
+	content
+
+messages: (v2 ... with conversations)
+	poster
+	posted
+	content
+
+conversation:
+	title
+
+message part-of conversation
+
+tag:
+	name
+
+attachment:
+	media-type
+	file containing media
+
+message has tag
+

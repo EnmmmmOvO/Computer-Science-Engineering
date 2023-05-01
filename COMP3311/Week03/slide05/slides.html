@@ -1,0 +1,258 @@
+<html>
+<head>
+<title>COMP3311 Week 3 Tuesday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 3 Tuesday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 03 Tuesday</heading></a>
+<li class="i"> <a href="#s2">Assignment 1</a>
+<li class="i"> <a href="#s3">Know Your Product ...</a>
+<li class="i"> <a href="#s6">Assignment 1</a>
+<li class="i"> <a href="#s9">Dump/Restore</a>
+<li class="i"> <a href="#s10"><large><code>psql</code></large> Recap</a>
+<li class="i"> <a href="#s11">Exercise: Exploring the Beer Database</a>
+<li class="i"> <a href="#s12">Manipulating Tuples</a>
+<li class="i"> <a href="#s13">Modifying a database</a>
+<li class="i"> <a href="#s14">Exercise: Delete/Update Examples</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [0/14]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 03 Tuesday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> Assignment 1
+<li> Insert, delete, update
+<li> SQL Query Language
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz 2 due before Friday midnight
+<li> Set up your PostgreSQL server <br>
+        <span class="smaller">(450 students have logged in to vxdb2 and have /localstorage)</span>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [1/14]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 1</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Beer Database, with info on
+<ul>
+<li> <font color='#0000BB'>Beers</font>: particular batches of beer <span class="smaller">(name,style,etc.)</small>
+<li> <font color='#0000BB'>Breweries</font>: places that make beer
+<li> <font color='#0000BB'>Ingredients</font> that go into making beer <span class="smaller">(e.g. hops, malt)</span>
+</ul>
+Goal: &nbsp; write some SQL and PLpgSQL code to extract info
+<p>
+Due: &nbsp; 11:59pm Friday 17 March &nbsp; <small>(end week 5)</small>
+<p>
+Supplied: &nbsp; <large><code>ass1.sql</code></large> template, <large><code>ass1.dump</code></large>
+<p>
+Submit: &nbsp; <large><code>ass1.sql</code></large>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [2/14]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Know Your Product ...</div></td><td align='right'></td></tr></table>
+<p>
+Beer cans often have whimsical labels ...
+<p><div align='center'>
+<img alt="[Diagram:Pics/misc/can1.jpg]" src="Pics/misc/can1.jpg">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [3/14]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Know Your Product ... <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Sometimes they have scary, but relevant, labels ...
+<p><div align='center'>
+<img alt="[Diagram:Pics/misc/can2.jpg]" src="Pics/misc/can2.jpg">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [4/14]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Know Your Product ... <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Properties of beers
+<ul>
+<li> name = random sequence of words thought up by brewer
+<li> ABV = strength = percentage alcohol by volume
+<li> IBU = bitterness = international bitterness units
+<li> style e.g. lager, pale ale, IPA, stout, porter, saison
+<li> brewed by = which brewery made the beer
+<li> vintage = year brewed &nbsp; <small>(most beers consumed within 6 months)</small>
+<li> ingredients = combination of hops, grains (malts), adjuncts
+<li> others e.g. colour, mouthfeel, head, brewing notes, ...
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [5/14]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 1</div></td><td align='right'></td></tr></table>
+<p>
+ER design for beer database:
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/assignments/beers.png]" src="Pics/assignments/beers.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [6/14]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 1 <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<p>
+How to do the assignment
+<ul>
+<li> make database (<large><code>createdb</code></large>, load <large><code>ass1.dump</code></large>)
+<li> repeatedly ...
+<ul>
+<li> fill in templates in &nbsp;<large><code>ass1.sql</code></large>
+<li> load &nbsp;<large><code>ass1.sql</code></large>&nbsp; into database (<large><code>psql -f</code></large> &nbsp;or&nbsp; <large><code>\i</code></large>)
+<li> run query to check if result correct
+</ul>
+<li> submit <large><code>ass1.sql</code></large>
+</ul>
+Need to complete views Q1-Q10 and functions Q11 and Q12
+<p>
+Can define as many axuiliary views/functions as you like
+<p>
+Must be included in <large><code>ass1.sql</code></large>, and <large><code>ass1.sql</code></large> must load in one pass
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [7/14]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Assignment 1 <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+How we test your submission ...
+<p><pre>
+vxdb2$ <b>dropdb ass1</b>
+vxdb2$ <b>createdb ass1</b>
+vxdb2$ <b>psql ass1 -f ass1.dump > /dev/null</b>
+vxdb2$ <b>psql ass1 -f ass1.sql > .errs 2>&1</b>
+vxdb2$ <b>grep ERR .errs</b>
+vxdb2$ <b>psql ass1 -f check.sql</b>
+vxdb2$ <b>psql ass1 -f run_tests.sql</b>
+</pre><p>
+<br>
+<large><code>ass1.sql</code></large>&nbsp; <font color="#CC0000">must</font> load into a newly built DB without error
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [8/14]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Dump/Restore</div></td><td align='right'></td></tr></table>
+<p>
+Once a database is built, can make a complete copy in a text file
+<ul>
+<li> the whole schema <small>(including types, constraints, etc)</small>, and all data
+</ul>
+by running the command
+<p><pre>
+$ <large><font color="#008800"><b><code>pg_dump -O -x</code></b></font></large> <i>DatabaseName</i> > <i>DumpFileName</i>
+</pre><p>
+and can make a new copy via
+<p><pre>
+$ <large><font color="#008800"><b><code>createdb</code></b></font></large> newdb
+$ <large><font color="#008800"><b><code>psql</code></b></font></large> newdb <large><font color="#008800"><b><code>-f</code></b></font></large> <i>DumpFileName</i>
+</pre><p>
+We often supply databases using pre-built dump files
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [9/14]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; <large><code>psql</code></large> Recap</div></td><td align='right'></td></tr></table>
+<p>
+<large><code>psql</code></large> is PostgreSQL's shell &nbsp; (cf. <large><code>bash</code></large>)
+<p>
+Allows you to execute ...
+<ul>
+<li> SQL commands &nbsp; <small>(e.g. <large><code>select</code></large>, <large><code>update</code></large>, ...)</small>
+<li> meta commands &nbsp; <small>(e.g. <large><code>\d</code></large>, <large><code>\e</code></large>, <large><code>\x</code></large>, <large><code>\timing</code></large>...</small>
+</ul>
+SQL commands: terminated by <large><code>;</code></large>, can extend over multiple lines
+<p>
+Prompt changes
+<ul>
+<li> <large><code>dbname=#</code></large> = ready to start a command
+<li> <large><code>dbname-#</code></large> = in middle of command, waiting for <large><code>;</code></large>
+<li> <large><code>dbname'#</code></large> = in middle of string, waiting for <large><code>'</code></large>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [10/14]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Exploring the Beer Database</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Explore the <large><code>ass1</code></large> database using <large><code>psql</code></large>
+<p>
+<ul>
+<li> what are the tables?
+<li> how many beers are there?
+<li> are there any views? any functions?
+<li> what style of beer is Toohey's New?
+<li> what is the longest beer name?
+<li> what is the most ridiculous beer name?
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [11/14]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Manipulating Tuples</div></td><td align='right'></td></tr></table>
+<p>
+Three basic mechanisms:
+<ul>
+<li> <large><font color="#008800"><b><code>insert</code></b></font></large> ... add a new tuple
+<li> <large><font color="#008800"><b><code>delete</code></b></font></large> ... remove tuples satisfying a condition
+<li> <large><font color="#008800"><b><code>update</code></b></font></large> ... modify tuples satisfying a condition
+</ul>
+Examples of using &nbsp;<large><code>insert</code></large>
+<p><pre style="font-size:90%">
+insert into Student(id,name,degree)
+       values (5654321,'John',3778);
+insert into Student(name,degree)
+       values ('John',3778) returning id;
+insert into Student(id,name,degree)
+       values (default,'John',3778);
+</program90>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [12/14]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Modifying a database</div></td><td align='right'></td></tr></table>
+<p>
+SQL commands for changing data in a database
+<p><pre>
+<font color="#008800">insert into</font> Table <font color="#008800">values (</font> Val1, Val2, ... <font color="#008800">)</font>
+<font color="#008800">delete from</font> Table <font color="#008800">where</font> Condition
+<font color="#008800">update</font> Table <font color="#008800">set</font> Field <font color="#008800">=</font> Value <font color="#008800">where</font> Condition
+<font color="#008800">create table</font> Table <font color="#008800">(</font> Attributes/Constraints <font color="#008800">)</font>
+<font color="#008800">drop table</font> Table
+<font color="#008800">copy</font> Table ...   <span class='comment'>-- PostgreSQL specific</span>
+</pre><p>
+PostgreSQL commands for manipulating databases
+<p><pre>
+<font color="#0000EE">createdb</font> DatabaseName
+<font color="#0000EE">dropdb</font> DatabaseName
+<font color="#0000EE">pg_dump</font> DatabaseName <font color="#0000EE">&gt;</font> DumpFile
+<font color="#0000EE">psql</font> DatabaseName <font color="#0000EE">-f</font> DumpFile
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [13/14]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Delete/Update Examples</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Carry out the following actions on the beer database:
+<ul>
+<li> Increase the prices for beers by 10%
+<li> Remove all beers selling for more than 5.00
+<li> Remove all drinkers who live in Randwick
+<li> Close down the Royal in Randwick
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 3 Tuesday Lecture &#9826; [14/14]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 2 Mar 2023</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

@@ -1,0 +1,17 @@
+#!/usr/bin/python3
+
+import psycopg2
+
+try:
+	db = psycopg2.connect("dbname=test")
+	cur = db.cursor()
+	cur.execute("select * from x")
+	results = cur.fetchall()
+	print(results)
+	for tup in results:
+		print(tup)
+	db.close()
+
+except Exception as err:
+	print(err)
+	exit(1)

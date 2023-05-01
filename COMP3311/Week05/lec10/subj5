@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+if len(sys.argv) < 2:
+	print(f'Usage: {sys.argv[0]} CourseCode')
+	exit(1)
+try:
+	db = psycopg2.connect("dbname=uni")
+	cur = db.cursor()
+	qry = """
+	select * from Subjects
+	where  code = %s
+	"""
+	#print(cur.mogrify(qry,[sys.argv[1]]))
+	code = sys.argv[1]
+	cur.execute(qry,[code])
+	for tup in cur.fetchall():
+		#name = tup[0]
+		#print(f'{code} {name}')
+		id,c,name,x,uc,offerer,career,syllabus = tup
+		print(f"Subject: {c} {name}\nUOC: {uc}\nPG/UG: {career}")
+	db.close()
+
+except Exception as err:
+	print(err)
+	exit(1)

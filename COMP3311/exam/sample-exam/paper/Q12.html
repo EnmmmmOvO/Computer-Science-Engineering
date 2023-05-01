@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <b>[Q12]</b> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 12 <span class='tiny'>(6 marks)</span></h3>
+<p>
+Consider the following simplified schema for a database representing
+employees and departments in a medium-sized business:
+</p>
+<pre>
+create table Employees (
+	eno     integer,  <span class="comment">-- employee ID</span>
+	ename   text,     <span class="comment">-- employee's name</span>
+	payRate float,    <span class="comment">-- hourly rate of pay</span>
+	dno     integer,  <span class="comment">-- department where they work</span>
+	...
+	primary key (eno),
+	foreign key (dno) references Departments(dno)
+);
+create table TimeSheet (  <span class="comment">-- keep data for only one week</span>
+	eno     integer,  <span class="comment">-- employee ID</span>
+	day     varchar(3) check (day in ('mon','tue','wed','thu','fri','sat','sun')),
+	started time,     <span class="comment">-- starting time of work period</span>
+	ended   time,     <span class="comment">-- ending time of work period</span>
+
+	primary key (eno,day,start),
+	foreign key (eno) references Employees(eno)
+);
+create table Department (
+	dno     integer,  <span class="comment">-- department ID</span>
+	dname   text,     <span class="comment">-- department name</span>
+	eno     integer,  <span class="comment">-- department manager</span>
+	...
+	primary key (dno),
+	foreign key (eno) references Employees(eno)
+);
+</pre>
+<p>
+The above SQL schema could be represented as the following abstract
+schema (with some renaming):
+<pre>
+Empl(eno,ename,payRate,dno...)
+Time(eno,day,started,ended)
+Dept(dno,dname,eno,...)
+</pre>
+<p>
+Using the abstract schema and the standard relational agebra operators
+(selection (<tt>Sel</tt>), projection (<tt>Proj</tt>), join (<tt>Join</tt>),
+union (<tt>Union</tt>), intersection (<tt>Intersect</tt>), difference (<tt>-</tt>),
+division (<tt>/</tt>))
+along with the boolean operators from SQL <tt>where</tt> clauses,
+write relational algebra expressions to solve the queries below.
+You can express your relational algebra as a sequence of assignments
+to relational algebra variables representing intermediate results.
+</p>
+<p>
+A sample of the syntax for relational algebra follows:
+</p>
+<pre>
+<span style="color:#999999;">Assume that tables are R(x,z), S(y,w)</span>
+Tmp1(x,z)     = Sel[x > 5](R)
+Tmp2(x,z,y,w) = Tmp1 Join[x = y] S
+Res           = Proj[x,z](Tmp2)
+</pre>
+<p>
+Note that you do not need to use an explicit <tt>Rename</tt> operator
+(although you can if you want to). You can accomplish renaming by writing
+the new names of <em>all</em> attributes on the left-hand side of the equals.
+If you do not use renaming, we assume that the attributes have the same
+names as the attributes in the tables on the right-hand side of the equals.
+</p>
+<p><b>Exercises:</b></p>
+<ol type='a'>
+<li class="subq">
+<p class="qtext">
+Which employees earn more than $20 per hour (give their employee id and name).
+</p>
+<li class="subq">
+<p class="qtext">
+Who are the department managers (give just their name).
+</p>
+<li class="subq">
+<p class="qtext">
+Which employees worked on every week day during the last week
+(give just their name). <br>
+You may assume that there will be at least one employee working on
+each week day.
+</p>
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>q12.txt</tt>
+<li> Submit via: &nbsp; <b><tt>submit q12.txt</tt></b>
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

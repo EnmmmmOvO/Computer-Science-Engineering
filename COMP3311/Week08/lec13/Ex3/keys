@@ -1,0 +1,50 @@
+Determine keys for the following scenarios ...
+
+
+1. FD = { A->B, C->D, E->FG }
+
+ACE+ = ABCDEFG => ACE is a key
+
+
+
+2. FD = { A->B, B->C, C->D }
+
+A+ = A -> AB -> ABC -> ABCD => A is a key
+
+
+
+3. FD = { A->B, B->C, C->A }
+
+A+ = ABC => A is a key
+B+ = ABC => B is a key
+C+ = ABC => C is a key
+
+
+
+4. FD = { AB->C,  C->B }
+
+AB+ = ABC => AB is a key
+AC+ = ABC => AC is a key
+
+
+
+5. FD = { MN->P, NP->Q, Q->R }
+
+MN+ = MN -> MNP -> MNPQ -> MNPQR => MN is a key
+
+
+
+6. FD = { ABH->C, A->DE, BGH->F, FD->ADH, BH->GE }
+
+ABH+ = ABCH -> ABCDEH -> ABCDEGH -> ABCDEFGH => ABH is a key
+FD+ = ADFH -> ADEFH -> end
+
+
+
+7. FD = { ABH->C, A->D, C->E, F->A, E->F, BGH->E }
+
+BGH+ = BGH -> BEGH -> BEFGH -> ABEFGH -> ABCEFGH -> ABCDEFGH
+So BGH is a key
+Are there other keys?
+
+

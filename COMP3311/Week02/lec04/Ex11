@@ -1,0 +1,29 @@
+# OO-style subclass mapping
+
+create table People (
+	ssn         integer,
+	name        text not null,
+	address     text not null,
+	primary key (ssn)
+);
+
+create table Employees (
+	ssn         integer,
+	name        text not null,
+	address     text not null,
+	salary      float not null,
+	position    text not null,
+	primary key (ssn),
+    foreign key (ssn) references People(ssn)
+);
+
+create table Managers (
+	ssn         integer,
+	name        text not null,
+	address     text not null,
+	salary      float not null,
+	position    text not null,
+	bonus       float not null,
+	primary key (ssn),
+    foreign key (ssn) references Employees(ssn)
+);

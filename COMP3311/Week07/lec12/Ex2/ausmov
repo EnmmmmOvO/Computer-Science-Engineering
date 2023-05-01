@@ -1,0 +1,37 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+# define any local helper functions here
+
+### set up some globals
+
+db = None
+
+### process command-line args
+
+qry = '''
+select m.title, m.year
+from   Movies m
+where  m.origin = 'AU'
+order  by m.year, m.title
+'''
+
+# manipulate database
+
+try:
+  db = psycopg2.connect("dbname=ass2")
+
+  cur = db.cursor()
+  cur.execute(qry)
+  for t in cur.fetchall():
+    title,year = t
+    print(f"{title} ({year})")
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

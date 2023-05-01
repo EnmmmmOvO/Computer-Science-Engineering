@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <b>[Q7]</b> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 7 <span class='tiny'>(10 marks)</span></h3>
+<p>
+Write a Python/Psycopg2 script that uses data from the <tt>footy</tt>
+database to produce a summary report on a player's career.
+The player is supplied as a command-line argument and needs to exactly
+match the name as stored in the database (the whole name, with matching
+upper/lower case).
+</p>
+<p>
+There are multiple players in the database who share names.
+None of the test cases will use these players, so you can assume
+that the supplied name matches 0 or 1 players.
+</p>
+<p>
+The script should print one line for each match they played
+where they scored at least one goal; the line should contain
+where they played, what date and how many goals they scored.
+Matches should be shown in chronological order.
+The script should also count the number of matches played, the total
+goals scored and produce a summary line at the, which includes
+the name of the team/country they played for.
+The examples bewlow show the expected output format:
+</p>
+<pre>
+$ <b>./q7</b>
+Usage: ./q7 PlayerName
+$ <b>./q7 "Bugs Bunny"</b>
+No such player
+$ <b>./q7 'Michael Baumann'</b>
+played in Eindhoven on 2000-02-06 and scored 1 goal
+played in Lyon on 2001-07-21 and scored 1 goal
+played in Seoul on 2001-10-04 and scored 1 goal
+played in Firenze on 2002-10-27 and scored 1 goal
+played in Linkoping on 2003-11-03 and scored 1 goal
+played in Dortmund on 2005-03-28 and scored 1 goal
+played in Munich on 2005-10-20 and scored 1 goal
+played in Madrid on 2007-08-12 and scored 1 goal
+Summary: played for Germany, 56 matches, 8 goals
+</pre>
+<p>There are more examples in the <tt>tests/*.expected</tt> files.</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Put the Python code in the file <tt>q7</tt>
+<li> Put any Python helper functions in this file as well
+<li> Place any helper views or PLpgSQL functions in the <tt>q7.sql</tt> file
+<li> Load any SQL code via: &nbsp; <tt>psql footy -f q7.sql</tt>
+<li> Test it via: &nbsp; <tt>./q7 'Michael Baumann'</tt>
+<li> Check it using: &nbsp; <tt>sh check q7</tt>
+<li> Submit it using: &nbsp; <tt>give cs3311 sample_q7 q7.sql q7</tt> &nbsp; or &nbsp; Webcms3
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

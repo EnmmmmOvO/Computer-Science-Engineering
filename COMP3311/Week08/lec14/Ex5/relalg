@@ -1,0 +1,46 @@
+Express SQL statements in Relational Algebra
+
+select name as "Beer", manf as "Brewer"
+from Beers;
+
+Res = rename[Beer,Brewer](Beers)
+
+
+select * from Bars where addr = 'Coogee'
+
+Res = Sel[addr=Coogee](Bars)
+
+
+select addr from Bars where addr = 'Coogee'
+
+Res = Proj[addr](Sel[addr=Coogee](Bars))
+
+Tmp = Sel[addr=Coogee](Bars)
+Res = Proj[addr](Tmp)
+
+
+select price from Sells
+where bar = 'CBH' and beer = 'New'
+
+Res = Proj[price](Sel[bar=CBH && beer=New](Sells))
+
+
+select * from Sells
+where price = (select price from Sells
+               where bar = 'CBH' and beer = 'New')
+
+P = Proj[price](Sel[bar=CBH && beer=New](Sells))
+Res = Sel[(price) in P](Sells)
+
+-- Res = Sel[price = P](Sells) (not quite accurate)
+
+select b.name as beer, b.manf as brewer, d.name as drinker
+from   Beers b join Likes L on b.name = L.beer
+       join Drinkers d on L.drinker = d.name
+
+Tmp1(name,manf,beer,drinker) = Beers join[name=beer] Likes
+Tmp0 Rename[dname,addr)(Drinkers)
+Tmp2(name,manf,beer,drinker,dname,addr) = Tmp0 join[drinker=dname] Tmp1
+Tmp3 = Proj[name,manf,dname](Tmp2)
+Res = Rename[beer,brewer,drinker]Tmp3
+

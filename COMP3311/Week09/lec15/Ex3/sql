@@ -1,0 +1,12 @@
+select   s.id, s.code
+from     Course c, Subject s, Enrolment e
+where    c.id = e.course and c.subject = s.id
+group by s.id, s.code
+having   count(*) > 100;
+
+select   s.id, s.code
+from     Course c
+         join Enrolment e on c.id=e.course
+         join Subject s on s.id = c.subject
+group by s.id, s.code
+having   count(*) > 100;

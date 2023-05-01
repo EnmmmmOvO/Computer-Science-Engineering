@@ -1,0 +1,757 @@
+<html>
+<head>
+<title>COMP3311 Week 10 Monday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 10 Monday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 10 Monday</heading></a>
+<li class="i"> <a href="#s2">Transactions <tiny>(review)</tiny></a>
+<li class="i"> <a href="#s4">Conflict Serializability</a>
+<li class="i"> <a href="#s6">View Serializability</a>
+<li class="i"> <a href="#s8">Exercise: Checking Serializability</a>
+<li class="i"> <a href="#s9">Concurrency Control</a>
+<li class="i"> <a href="#s11">Lock-based Concurrency Control</a>
+<li class="i"> <a href="#s13">Locking in PostgreSQL</a>
+<li class="i"> <a href="#s15">Exercise: Locking</a>
+<li class="i"> <a href="#s16">Locking and Performance</a>
+<li class="i"> <a href="#s17">Multi-version Concurrency Control</a>
+<li class="i"> <a href="#s19">Concurrency Control in SQL</a>
+<li class="i"> <a href="#s21">Future of Database</a>
+<li class="i"> <a href="#s24">Big Data</a>
+<li class="i"> <a href="#s26">Object-relational Mapping</a>
+<li class="i"> <a href="#s27">Information Retrieval</a>
+<li class="i"> <a href="#s28">Multimedia Data</a>
+<li class="i"> <a href="#s29">Uncertainty</a>
+<li class="i"> <a href="#s30">Stream Management Systems</a>
+<li class="i"> <a href="#s31">Graph-based Databases</a>
+<li class="i"> <a href="#s32">Dispersed Databases</a>
+<li class="i"> <a href="#s33">Main-memory Databases</a>
+<li class="i"> <a href="#s34">Other DB Research</a>
+<li class="i"> <a href="#s35">Beyond COMP3311</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [0/35]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 10 Monday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> Transactions, Concurrency, DB survey
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz 6 due by 23:59 Friday (Nov 18)
+</ul>
+<h4>Coming Up ...</h4>
+<ul>
+<li> Tuesday lecture ONLINE (Zoom) ... discuss the exam
+<li> Help Session on Wednesday, 3-5 on Zoom
+<li> Exam on Fri 25 Nov, details tomorrow, sample exams out now
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [1/35]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transactions <tiny>(review)</tiny></div></td><td align='right'></td></tr></table>
+<p>
+Transaction (tx) = application unit of work involving multiple DB updates
+<p>
+Want tx's to be: &nbsp;Atomic, &nbsp;Consistent, &nbsp;Isolated, &nbsp;Durable
+<p>
+Description of tx's normally abstracted to <large><code>R(X)</code></large>, <large><code>W(X)</code></large>, <large><code>C</code></large>, <large><code>A</code></large> operations
+<p>
+Schedule = sequence of operations involving one or more tx's
+<p>
+Example <font color='#0000BB'>serial</font> schedule involving three transactions:
+<p><pre>
+T1:                R(X) W(X) R(Y) W(Y)
+T2:                                    R(Y) W(Y) R(X)
+T3: R(X) W(X) W(Z)
+</pre><p>
+Example <font color='#0000BB'>concurrent</font> schedule involving same three transactions:
+<p><pre>
+T1: R(X)      W(X)      R(Y)                W(Y)
+T2:      R(Y)                W(Y)      R(X)
+T3:                R(X)           W(X)           W(Z)
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [2/35]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Transactions <tiny>(review)</tiny> <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Serial schedules (e.g. <large><code>T1</code></large> then <large><code>T2</code></large> then <large><code>T3</code></large>) are valid/safe
+<p>
+Not all concurrent schedules are valid <small>(e.g. above example is not safe)</small>
+<p>
+<font color='#0000BB'>Serializable</font> schedule = concurrent schedule equivalent to a serial schedule
+<p>
+Example serializable concurrent schedule:
+<p><pre>
+T1: R(X) W(X)      R(Y)     W(Y)
+T2:                              R(Y)       W(Y) R(X)
+T3:           R(X)      W(X)           W(Z)
+</pre><p>
+Two notions of serializability: <font color='#0000BB'>conflict</font> serializability, <font color='#0000BB'>view</font> serializability
+<p>
+DBMSs aim to control concurrency via <font color='#0000BB'>locking</font> and <font color='#0000BB'>rollback</font>
+<small>
+<ul>
+<li> arrange order of <large><code>R</code></large> and <large><code>W</code></large> operations to produce serializable schedules
+</ul>
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [3/35]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Conflict Serializability</div></td><td align='right'></td></tr></table>
+<p>
+A characterization of serializability based on conflicting operations
+<p>
+Two transactions have a potential <font color='#0000BB'>conflict</font> if
+<ul>
+<li> they perform operations on the same data item
+<li> at least one of the operations is a write operation
+</ul>
+<p>
+<p>
+If we can transform a schedule
+<ul>
+<li> by swapping the order of non-conflicting operations
+<li> such that the result is a serial schedule
+</ul>
+then we say that the schedule is <font color='#0000BB'>conflict serializible</font>.
+<p>
+Conflict serializability can also be tested via a <font color='#0000BB'>precedence graph</font>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [4/35]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Conflict Serializability <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example schedule which is not conflict serializable:
+<p><pre>
+T1: R(X)           R(Y) W(X)      W(Y)
+T2:           R(X)           W(X)
+T3:      R(X)                          W(X)
+<font color="#CC0000">swap</font>
+T1:           R(X) W(X)          R(Y) W(Y)
+T2:      R(X)           W(X)
+T3: R(X)                     W(X)
+</pre><p>
+Precendence graph for the above schedule:
+<p><div align='center'>
+<img alt="[Diagram:Pics/xact/prec-graph.png]" src="Pics/xact/prec-graph.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [5/35]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; View Serializability</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>View Serializability</font> is
+<ul>
+<li> an alternative formulation of serializability
+<li> that is less conservative than conflict serializability (CS) <br>
+	<small>(some safe schedules that are view serializable are not conflict serializable)</small>
+</ul>
+As with CS, it is based on a notion of schedule equivalence
+<ul>
+<li> a schedule is "safe" if <i>view equivalent</i> to a serial schedule
+</ul>
+The idea: if across the two schedules ...
+<ul>
+<li> they read the same version of a shared object
+<li> they write the same final version of an object
+</ul>
+then they are <font color='#0000BB'>view equivalent</font>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [6/35]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; View Serializability <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Two schedules <i>S</i> and <i>S'</i> on <i>T<sub>1</sub> .. T<sub>n</sub></i>
+are <font color='#0000BB'>view equivalent</font> iff
+<ul>
+<li> for each shared data item <i>X</i>
+<ul>
+<li> if, in <i>S</i>, <i>T<sub>j</sub></i> reads the initial value of <i>X</i>, <br>
+	then, in <i>S'</i>, <i>T<sub>j</sub></i> also reads the initial value of <i>X</i>
+<li> if, in <i>S</i>, <i>T<sub>j</sub></i> reads <i>X</i> written by <i>T<sub>k</sub></i>,<br>
+then, in <i>S'</i> <i>T<sub>j</sub></i> also reads the value of <i>X</i> written by <i>T<sub>k</sub></i> in <i>S'</i>
+<li> if, in <i>S</i>, <i>T<sub>j</sub></i> performs the final write of <i>X</i>,<br>
+then, in <i>S'</i>, <i>T<sub>j</sub></i>  also performs the final write of <i>X</i>
+</ul>
+</ul>
+To check serializibilty of <i>S</i> ...
+<ul>
+<li> find a serial schedule that is <i>view equivalent</i> to <i>S</i>
+<li> from among the <i>n!</i> possible serial schedules
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [7/35]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Checking Serializability</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Check whether each schedule is conflict/view serializable:
+<p>
+<ol>
+<li> T1:R(X) T2:R(X) T1:W(X) T2:W(X)
+<p>
+<li> T1:W(X) T2:R(Y) T1:R(Y) T2:R(X)
+<p>
+<li>T1:R(X) T2:W(X) T1:W(X) T3:W(X)
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [8/35]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Concurrency Control</div></td><td align='right'></td></tr></table>
+<p>
+Serializability tests are useful theoretically ... 
+<p>
+But don't provide a mechanism for organising schedules
+<ul>
+<li> they can only be done "after the event"
+<li> they are computationally very expensive <i>O(n!)</i>
+</ul>
+What is required are methods that ...
+<ul>
+<li> can be applied to each transaction individually
+<li> guarantee that overall schedule is serializable
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [9/35]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Concurrency Control <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Approaches to ensuring AC<font color="#000099">I</font>D transactions:
+<ul>
+<li> lock-based
+<p>
+<small>Synchronise transaction execution via locks on some portion 
+of the database.</small>
+<li> version-based
+<p>
+<small>Allow multiple consistent versions of the data to exist, and
+allow each transaction exclusive access to one version.</small>
+<li> timestamp-based
+<p>
+<small>Organise transaction execution in advance by assigning timestamps to
+operations.</small>
+<li> validation-based &nbsp; <small>(optimistic concurrency control)</small>
+<p>
+<small>Exploit typical execution-sequence properties of transactions to determine safety dynamically.</small>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [10/35]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Lock-based Concurrency Control</div></td><td align='right'></td></tr></table>
+<p>
+Synchronise access to shared data items via following rules:
+<ul>
+<li> before reading <i>X</i>, get shared (read) lock on <i>X</i>
+<li> before writing <i>X</i>, get exclusive (write) lock on <i>X</i>
+<li> an attempt to get a shared lock on <i>X</i> is blocked<br>
+	if another transaction already has exclusive lock on <i>X</i>
+<li> an attempt to get an exclusive lock on <i>X</i> is blocked<br>
+	if another transaction has any kind of lock on <i>X</i>
+</ul>
+These rules alone do not guarantee serializability ...
+<ul>
+<li> but <font color='#0000BB'>two-phase locking</font> does
+<li> acquire all needed locks before performing any unlocks
+</ul>
+<br>
+Locking also introduces potential for deadlock and starvation.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [11/35]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Lock-based Concurrency Control <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Examples of locking:
+<p><pre>
+<i>Schedule 1</i>
+T1: L<sub>x</sub>(X)       R(X)           W(X) U(X)
+T2:       L<sub>x</sub>(Y)      R(Y) W(Y)           U(Y)
+
+<i>Schedule 2</i>
+T1: L<sub>x</sub>(X)       R(X) W(X) U(X)
+T2:       L<sub>x</sub>(X) .............. R(X) W(X) U(X)
+</pre><p>
+New operations: <large><code>L<sub>x</sub>()</code></large> = exclusive lock, <large><code>L<sub>s</sub>()</code></large> = shared lock, <large><code>U()</code></large> unlock
+<p>
+Note: in Schedule 2, locking forces serial execution
+<p>
+This is not generally the case; there may be some concurrency
+<p>
+In general, locking reduces concurrency, but gains safety
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [12/35]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Locking in PostgreSQL</div></td><td align='right'></td></tr></table>
+<p>
+Some locking in PG is implicit (e.g. changing schema)
+<p>
+Explicit locks are available:
+<p><pre>
+LOCK TABLE <i>TableName</i> [ IN <i>LockMode</i> MODE ]
+</pre><p>
+Some possible <i>LockMode</i>s:
+<ul>
+<li> <large><code>SHARE</code></large> ... simply reading the table
+<li> <large><code>SHARE ROW EXCLUSIVE</code></large> ... intened to update table
+</ul>
+No <large><code>UNLOCK</code></large> ... all locks are released at end of transaction
+<p>
+Row-level locking: lock all selected rows for writing
+<p><pre>
+SELECT * FROM <i>Table</i> WHERE <i>Cond</i> FOR UPDATE
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [13/35]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Locking in PostgreSQL <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Two examples of lock usage in PostgreSQL:
+<p><pre style="font-size:90%">
+BEGIN WORK;
+LOCK TABLE films IN SHARE MODE;
+SELECT id INTO _id_ FROM films
+    WHERE name = 'Star Wars: Episode I - The Phantom Menace';
+-- Do ROLLBACK if record was not returned
+INSERT INTO films_user_comments VALUES
+    (_id_, 'GREAT! I was waiting for it for so long!');
+COMMIT WORK;
+
+BEGIN WORK;
+LOCK TABLE films IN SHARE ROW EXCLUSIVE MODE;
+DELETE FROM films_user_comments WHERE id IN
+    (SELECT id FROM films WHERE rating < 5);
+DELETE FROM films WHERE rating < 5;
+COMMIT WORK;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [14/35]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Locking</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Apply appropriate locking in the bank transfer transaction.
+<p><pre>
+create or replace function
+   transfer(N integer, Src text, Dest text)
+   returns integer
+declare
+   sID integer; dID integer; avail integer;
+begin
+   select id,balance into sID,avail
+   from   Accounts where name=Src;
+...
+   return nextval('tx_id_seq');
+end;
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [15/35]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Locking and Performance</div></td><td align='right'></td></tr></table>
+<p>
+Locking reduces concurrency <i>&rArr;</i> lower throughput.
+<p>
+<font color='#0000BB'>Granularity</font> of locking can impact performance:
+<p>
+<font color="#008800"><b>+</b></font>
+lock a small item <i>&rArr;</i> more of database accessible
+<p>
+<font color="#008800"><b>+</b></font>
+lock a small item <i>&rArr;</i> quick update <i>&rArr;</i> quick lock release
+<p>
+<font color="#CC0000"><b>-</b></font>
+lock small items <i>&rArr;</i> more locks <i>&rArr;</i> more lock management
+<p>
+Granularity levels: field, row (tuple), table, whole database
+<p>
+Many DBMSs support multiple lock-granularities.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [16/35]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Multi-version Concurrency Control</div></td><td align='right'></td></tr></table>
+<p>
+One approach to reducing the requirement for locks is to
+<ul>
+<li> provide multiple (consistent) versions of the database
+<li> give each transaction access to an "appropriate" version <br>
+	<small>(i.e. a version that maintains the serializability of the transaction)</small>
+</ul>
+This approach is called <font color='#0000BB'>Multi-Version Concurrency Control</font>.
+<p>
+Differences between MVCC and standard locking models:
+<ul>
+<li> writing never blocks reading &nbsp; <small>(make new version of tuple)</small>
+<li> reading never blocks writing &nbsp; <small>(read old version of tuple)</small>
+</ul>
+<br>
+PostgreSQL pioneered MVCC as a concurrency control mechanism
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [17/35]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Multi-version Concurrency Control <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+PostgreSQL MVCC ...
+<ul>
+<li> each tuple is tagged with (time of) tx that created/deleted it
+<li> each tuple is linked to the next newer version of same tuple
+</ul>
+Access to a tuple requires
+<ul>
+<li> check most recent version which existed when tx started; use that version
+</ul>
+Periodic <large><font color="#008800"><b><code>vacuum</code></b></font></large> process deletes tuples that
+<ul>
+<li> are not accessible to any currently executing transactions
+</ul>
+Time/space overheads in implementing MVCC
+<ul>
+<li> are justified by reduced requirement for locking <tiny>(&rArr; more concurrency)</tiny>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [18/35]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Concurrency Control in SQL</div></td><td align='right'></td></tr></table>
+<p>
+Transactions in SQL are specified by
+<ul>
+<li> <large><font color="#008800"><b><code>BEGIN</code></b></font></large> ... start a transaction
+<li> <large><font color="#008800"><b><code>COMMIT</code></b></font></large> ... successfully complete a transaction
+<li> <large><font color="#008800"><b><code>ROLLBACK</code></b></font></large> ... undo changes made by transaction + abort
+</ul>
+In PostgreSQL, other actions that cause rollback:
+<ul>
+<li> <b>raise exception</b> during execution of a function
+<li> returning null from a <b>before</b> trigger
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [19/35]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Concurrency Control in SQL <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Concurrent access can be controlled via SQL:
+<ul>
+<li> table-level locking: apply lock to entire table
+<li> row-level locking: apply lock to just some rows 
+</ul>
+<large><font color="#008800"><b><code>LOCK TABLE</code></b></font></large> explicitly acquires lock on an entire table.
+<p>
+Other SQL commands implictly acquire appropriate locks, e.g.
+<ul>
+<li> <large><code>ALTER TABLE</code></large> acquires an exclusive lock on table
+<li> <large><code>UPDATE</code></large>, <large><code>DELETE</code></large> acquire locks on affected rows
+</ul>
+All locks are released at end of transaction <small>(no explicit unlock)</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [20/35]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Future of Database</div></td><td align='right'></td></tr></table>
+<p>
+Core "database" goals:
+<ul>
+<li> deal with very large amounts of data  <small>(terabytes, petabyes, ...)</small>
+<li> very-high-level languages <small>(deal with big data in uniform ways)</small>
+<li> query optimisation &nbsp; <small>(evaluation too slow <i>&rArr;</i> useless)</small>
+</ul>
+At the moment <small>(and for the last 30 years)</small> <font color="#CC0000">R</font>DBMSs dominate ...
+<ul>
+<li> simple, clean data model, backed up by theory
+<li> high-level language for accessing data 
+<li> 50 years development work on RDB engine technology
+</ul>
+RDBMSs work well in domains with uniform, structured data.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [21/35]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s23"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Future of Database <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Limitations/pitfalls of RDBMSs:
+<ul>
+<li> NULL is ambiguous: unknown, not applicable, not supplied
+<li> "limited" support for constraints/integrity and rules
+<li> no support for uncertainty <small>(data represents <font color='#0000BB'>the</font> state-of-the-world)</small>
+<li> data model too simple <small>(e.g. no support for complex objects)</small>
+<li> query model too rigid <small>(e.g. no approximate match)</small>
+<li> cotinually changing data sources not well-handled
+<li> data must be "molded" to fit a single rigid schema
+<li> database systems must be manually "tuned"
+<li> do not scale well to some data sets <small>(e.g. Google, Telco's)</small>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [22/35]</div> <DIV class='slideCl1    ' id="s23"  >
+<div class='navCl1'><a href="#s22"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s24"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Future of Database <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+How to overcome (some of) these limitations?
+<p>
+Extend the relational model ...
+<ul>
+<li> add new data types and query ops for new applications <br>
+<li> deal with uncertainty/inaccuracy/approximation in data
+</ul>
+Replace the relational model ...
+<ul>
+<li> object-oriented DBMS ... <small>OO programming with persistent objects</small>
+<li> XML DBMS ... <small>all data stored as XML documents, new query model</small>
+<li> application-effective data model <small>(e.g. <i>(key,value)</i> pairs)</small>
+</ul>
+Performance: DBMSs that "tune" themselves ...
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [23/35]</div> <DIV class='slideCl1    ' id="s24"  >
+<div class='navCl1'><a href="#s23"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s25"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Big Data</div></td><td align='right'></td></tr></table>
+<p>
+Some modern applications have massive data sets <small>(e.g. Google)</small>
+<ul>
+<li> far too large to store on a single machine/RDBMS
+<li> query demands far too high even if could store in DBMS
+</ul>
+Approach to dealing with such data
+<ul>
+<li> distribute data over large collection of nodes <small>(redundancy)</small>
+<li> provide computational mechanisms for distributing computation
+</ul>
+Often this data does not need full relational selection
+<ul>
+<li> represent data via <i>(key,value)</i> pairs
+<li> unique <i>key</i> values can be used for addressing data
+<li> <i>values</i> can be large objects <small>(e.g. web pages, images, ...)</small>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [24/35]</div> <DIV class='slideCl1    ' id="s25"  >
+<div class='navCl1'><a href="#s24"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s26"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Big Data <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Popular computational approach to Big Data: <font color='#0000BB'>map/reduce</font>
+<ul>
+<li> suitable for widely-distributed, very-large data
+<li> allows parallel computation on such data to be easily specified
+<li> distribute (map) parts of computation across network
+<li> compute in parallel <small>(possibly with further map'ing)</small>
+<li> merge (reduce) multiple results for delivery to requestor
+</ul>
+Some Big Data proponents see no future need for SQL/relational ...
+<ul>
+<li> depends on application <small>(e.g. hard integrity vs eventual consistency)</small>
+</ul>
+Humour:
+<a target=demo href="http://www.xtranormal.com/watch/6995033/mongo-db-is-web-scale">Parody of noSQL fans</a>
+<small>(strong language warning)</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [25/35]</div> <DIV class='slideCl1    ' id="s26"  >
+<div class='navCl1'><a href="#s25"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s27"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Object-relational Mapping</div></td><td align='right'></td></tr></table>
+<p>
+Pure OO databases came and went in the 90's &nbsp;<small>(similarly XML databases)</small>
+<p>
+A compromise:
+<ul>
+<li> data stored in relational format
+<li> "wrapper" gives the apperance of objects
+</ul>
+Programmer works purely with objects; wrapper converts to SQL
+<p>
+Problems:
+<ul>
+<li> OO query mechanisms are no better than SQL
+<li> translation leads to inefficient SQL
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [26/35]</div> <DIV class='slideCl1    ' id="s27"  >
+<div class='navCl1'><a href="#s26"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s28"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Information Retrieval</div></td><td align='right'></td></tr></table>
+<p>
+DBMSs generally do precise matching <small>(although <large><code>like</code></large>/regexps)</small>
+<p>
+Information retrieval systems do approximate matching.
+<p>
+E.g. documents containing these words (Google, etc.)
+<p>
+Also introduces notion of "quality" of matching <br>
+(e.g. tuple <i>T<sub>1</sub></i> is a <font color='#0000BB'>better</font> match than tuple <i>T<sub>2</sub></i>)
+<p>
+Quality also implies <font color='#0000BB'>ranking</font> of results.
+<p>
+Much activity in incorporating IR ideas into DBMS context.
+<p>
+Goal: support database exploration better.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [27/35]</div> <DIV class='slideCl1    ' id="s28"  >
+<div class='navCl1'><a href="#s27"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s29"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Multimedia Data</div></td><td align='right'></td></tr></table>
+<p>
+Data which does not fit the "tabular model":
+<ul>
+<li> image, video, music, text, ... <small>(and combinations of these)</small>
+</ul>
+Research problems:
+<ul>
+<li> how to specify queries on such data? 
+	<small>(<i>image<sub>1</sub> &cong; image<sub>2</sub></i>)</small>
+<li> how to "display" results?
+	<small>(synchronize components)</small>
+</ul>
+Solutions to the first problem typically:
+<ul>
+<li> extend notions of "matching"/indexes for querying
+<li> require sophisticated methods for capturing data features
+</ul>
+Sample query: find other songs <font color='#0000BB'>like</font> this one?
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [28/35]</div> <DIV class='slideCl1    ' id="s29"  >
+<div class='navCl1'><a href="#s28"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s30"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Uncertainty</div></td><td align='right'></td></tr></table>
+<p>
+Multimedia/IR introduces approximate matching.
+<p>
+In some contexts, we have approximate/uncertain data.
+<p>
+E.g. witness statements in a crime-fighting database
+<p>
+"I think the getaway car was red ... or maybe orange ..."
+<p>
+"I am 75% sure that John carried out the crime"
+<p>
+Work by Jennifer Widom at Stanford on the <font color='#0000BB'>Trio</font> system 
+<ul>
+<li> extends the relational model (ULDB)
+<li> extends the query language (TriQL)
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [29/35]</div> <DIV class='slideCl1    ' id="s30"  >
+<div class='navCl1'><a href="#s29"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s31"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Stream Management Systems</div></td><td align='right'></td></tr></table>
+<p>
+Makes one addition to the relational model
+<ul>
+<li> <font color='#0000BB'>stream</font> = infinite sequence of tuples, arriving one-at-a-time
+</ul>
+Applications: <small>news feeds, telecomms, monitoring web usage, ...</small>
+<p>
+RDBMSs: run a variety of queries on (relatively) fixed data <br>
+<p>
+StreamDBs: run fixed queries on changing data (stream)
+<p>
+Approaches:
+<ul>
+<li> <font color='#0000BB'>window</font> = relation formed from a stream via a rule
+<li> <font color='#0000BB'>stream data type</font> = build new stream-specific operations
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [30/35]</div> <DIV class='slideCl1    ' id="s31"  >
+<div class='navCl1'><a href="#s30"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s32"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Graph-based Databases</div></td><td align='right'></td></tr></table>
+<p>
+Uses <font color='#0000BB'>graphs</font> rather than tables as basic data structure tool.
+<p>
+Applications: complex data representation, via "flexible" objects
+<p>
+Implementing graphs in RDBMSs is possible, but often inefficient.
+<p>
+Graph nature of data changes query model considerably.
+<ul>
+<li> different kinds of queries: kNN, neighbourhood, skyline
+</ul>
+<p>
+Research problem: query processing for large graphs
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [31/35]</div> <DIV class='slideCl1    ' id="s32"  >
+<div class='navCl1'><a href="#s31"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s33"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Dispersed Databases</div></td><td align='right'></td></tr></table>
+<p>
+Characteristics of dispersed databases:
+<ul>
+<li> very large numbers of small processing nodes
+<li> data is distributed/shared among nodes
+</ul>
+Applications: <small> environmental monitoring devices, "intelligent dust", ...</small>
+<p>
+Research issues:
+<ul>
+<li> query/search strategies
+	<small>(how to organise query processing)</small>
+<li> distribution of data
+	<small>(trade-off between centralised and diffused)</small>
+</ul>
+Less extreme versions of this already exist:
+<ul>
+<li> grid and cloud computing
+<li> database management for mobile devices
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [32/35]</div> <DIV class='slideCl1    ' id="s33"  >
+<div class='navCl1'><a href="#s32"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s34"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Main-memory Databases</div></td><td align='right'></td></tr></table>
+<p>
+Disk-based data is slow to access, and page-at-a-time
+<p>
+Non-volatile non-disk storage is becoming larger and cheaper
+<ul>
+<li> many databases would fit in memory ... disk as a backup/archive
+</ul>
+<p>
+Research problems:
+<ul>
+<li> how to structure data on SSD-like devices
+<li> how to process queries in such an environment
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [33/35]</div> <DIV class='slideCl1    ' id="s34"  >
+<div class='navCl1'><a href="#s33"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s35"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Other DB Research</div></td><td align='right'></td></tr></table>
+<p>
+Open problems:
+<ul>
+<li> database integration/federation
+<small>
+<ul>
+<li> making a collection of heterogeneous databases work together
+<li> schema reconciliation is a difficult problem (vocab, schemas)
+</ul>
+</small>
+<li> replication
+<small>
+<ul>
+<li> maintain consistent copies of one database across multiple hosts
+<li> how to propagate changes systematically?
+</ul>
+</small>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [34/35]</div> <DIV class='slideCl1    ' id="s35"  >
+<div class='navCl1'><a href="#s34"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Beyond COMP3311</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>COMP9312</font> Data Analyutics for Graphs
+<ul>
+<li> manipulating large-scale graph structures
+</ul>
+<font color='#0000BB'>COMP9313</font> Big Data Management
+<ul>
+<li> handling data that won't fit in a DBMS on one machine
+</ul>
+<font color='#0000BB'>COMP9315</font> Database Systems Implementation
+<ul>
+<li> comprehensive study of DBMS internals
+</ul>
+<font color='#0000BB'>COMP9319</font> Web Data Compression and Search
+<ul>
+<li> compression and searching algorithms, and XML
+</ul>
+<font color='#0000BB'>COMP6714</font> Information Retrieval and Web Search
+<ul>
+<li> finding information in unstructured text
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 10 Monday Lecture &#9826; [35/35]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 14 Nov 2022</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

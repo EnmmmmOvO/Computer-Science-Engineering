@@ -1,0 +1,12 @@
+R(a,b) S(c,d)
+Tuple numbers are estimates
+
+Tmp1 = R join[b=c] S     # (a,b,c,d) with |R| tuples  5000
+Tmp2 = Sel[d=100]Tmp1    # (a,b,c,d) with 0.1*|R|     500
+Tmp3 = Proj[a]Tmp2       # (a)       with 0.1*|R|     <= 500
+
+
+Tmp1 = Sel[d=100]S       # (a,b,c,d) with 0.1*|S|     1000
+Tmp2 = Proj[a,b,c]Tmp1   # (a,b,c)                    <= 1000
+Tmp3 = R join[b=c]Tmp2   # (a,b,c)   with x tuples    <= 1000
+Tmp3 = Proj[a]Tmp2       # (a)       with y tuples    <= 500

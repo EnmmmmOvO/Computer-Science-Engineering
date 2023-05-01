@@ -1,0 +1,33 @@
+# mapping 1:1 relationship
+# (neither side has total participation)
+
+# in the absence of any other information
+# all attributes have type integer
+
+# version 1
+
+create table S (
+	sid  integer primary key,
+	c    integer
+);
+
+create table T (
+	tid  integer primary key,
+    a    integer,
+	sid  integer references S(sid),
+	b    integer
+);
+
+# version 2
+
+create table T (
+	tid  integer primary key,
+	a    integer
+);
+
+create table S (
+	sid  integer primary key,
+	c    integer
+	tid  integer references T(tid),
+	b    integer
+);

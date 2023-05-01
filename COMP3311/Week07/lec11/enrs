@@ -1,0 +1,52 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+# define any local helper functions here
+
+### set up some globals
+
+usage = f"Usage: {sys.argv[0]} TermCode"
+db = None
+
+### process command-line args
+
+argc = len(sys.argv)
+if argc < 2:
+  print(usage)
+  exit(1)
+term = sys.argv[1]
+qry = '''
+select s.code, c.term, s.name, count(*)
+from subjects s
+     join courses c on c.subject = s.id
+     join course_enrolments e on e.course = c.id
+where c.term = %s
+group by s.code, c.term, s.name
+order by s.code;
+'''
+
+# manipulate database
+
+try:
+  db = psycopg2.connect("dbname=uni")
+  cur = db.cursor()
+
+  # check the term code
+  cur.execute("select id from terms where code = %s",[term]);
+  t = cur.fetchone()
+  if t == None:
+     print(f"Unknown term {term}")
+     exit(1)
+
+  cur.execute(qry, [t[0]])
+  for t in cur.fetchall():
+    print(f"{t[3]:>3d} {t[0]} {t[1]} {t[2]}")
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

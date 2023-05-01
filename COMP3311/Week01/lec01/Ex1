@@ -1,0 +1,17 @@
+Course Outline
+
+simple version:
+a big piece of text
+
+more structured version:
+
+outline: course title, course code, uoc, convenor, admin*, website:q
+sections:
+	simple: text
+	list: text*
+	tabular: rows*
+row: tag, value
+
+relationship:
+	section is-part-of outline
+	row is-part-of tabular-section

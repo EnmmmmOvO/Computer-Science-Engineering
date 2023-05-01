@@ -1,0 +1,19 @@
+# mapping 1:1 relationship
+# (one side has total participation)
+
+create table Branches (
+	branchNo    integer,
+	address     text not null,
+	assets      float not null,
+	primary key (branchNo)
+);
+
+create table Managers (
+	empNo       integer,
+	name        text not null,
+	salary      float not null,
+	manages     integer not null,
+	primary key (empNo),
+    foreign key (manages)
+		references Branches (branchNo)
+);

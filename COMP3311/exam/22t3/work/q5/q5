@@ -1,0 +1,36 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+import re
+
+# Helper functions (if any)
+
+# ... functions go here ...
+
+# Initial setup
+
+db = None
+cur = None
+
+if len(sys.argv) < 3:
+   print(f"Usage: {sys.argv[0]} Racecourse Date")
+   exit(1)
+track = sys.argv[1]
+date = sys.argv[2]
+
+validDate = re.compile("^\d{4}-\d{2}-\d{2}$")
+if not validDate.match(date):
+   print(f"Invalid date")
+   exit(1)
+
+try:
+   # ... python code goes here ...
+
+except psycopg2.Error as err:
+   print("DB error: ", err)
+finally:
+   if db:
+      db.close()
+   if cur:
+       cur.close()

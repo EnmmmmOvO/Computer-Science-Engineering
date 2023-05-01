@@ -1,0 +1,25 @@
+# COMP3311 22T3 Final Exam Q7
+# Relational Algebra
+
+
+(A) Proj[a]R
+
+
+
+(B) Sel[e>d]S
+
+
+
+(C) R Join S
+
+
+
+(D) R Join[b=e] S
+
+
+
+(E) R Div T
+
+
+
+

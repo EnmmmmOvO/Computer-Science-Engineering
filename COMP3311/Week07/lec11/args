@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+
+import sys
+
+### process command-line args
+
+argc = len(sys.argv)
+print(f"argc = {argc}")
+i = 0
+for arg in sys.argv:
+	print(f"argv[{i}] = {arg}")
+	i = i+1
+

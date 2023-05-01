@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+
+import psycopg2
+
+db = psycopg2.connect("dbname=test")
+
+cur = db.cursor()
+
+_name = "fred'; delete from students; select '";
+
+q1 = f"select * from students where name = '{_name}'"
+q2 = "select * from students where name = %s"
+
+print(cur.mogrify(q1))
+print(cur.mogrify(q2,[_name]))

@@ -1,0 +1,6 @@
+Ex1 ... example of inefficient technique for join
+Ex2 ... count tuples in a table (exmple of EXECUTE)
+Ex3 ... exception handling (e.g. catch div-by-zero)
+Ex4 ... aggregates (product, cat, mycount)
+Ex5 ... trigger to implement foreign key checking
+Ex6 ... trigger to maintain student counts in Classes

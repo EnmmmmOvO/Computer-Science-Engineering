@@ -1,0 +1,9 @@
+Tmp1(a,b,c,d) = R Join[b=c] S
+Tmp2(a,b,c,d) = Sel[d=100](Tmp1)
+Tmp3(a)       = Proj[a](Tmp2)
+Res(x)        = Rename[Res(x)](Tmp3)
+
+Tmp1(c,d)   = Sel[d=100](S)
+Tmp2(a,b,c) = R Join[b=c] Tmp1
+Tmp3(a)     = Proj[a](Tmp2)
+Res(x)      = Rename[Res(x)](Tmp3)

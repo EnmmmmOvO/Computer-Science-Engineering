@@ -1,0 +1,27 @@
+# COMP3311 20T2 Final Exam
+# Q7: print a specified player's career performance
+
+import sys
+import psycopg2
+
+# ... put any helper functions here ...
+
+db = None
+cur = None
+
+if len(sys.argv) < 2:
+   print(f"Usage: {sys.argv[0]} PlayerName")
+   exit(1)
+player = sys.argv[1]
+
+try:
+   db = psycopg2.connect("dbname=footy")
+   # ... your code goes here ...
+except psycopg2.Error as err:
+	print("DB error: ", err)
+finally:
+   if cur:
+       cur.close()
+   if db:
+      db.close()
+       

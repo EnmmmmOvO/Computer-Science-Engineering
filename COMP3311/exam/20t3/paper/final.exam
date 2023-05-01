@@ -1,0 +1,965 @@
+<exam>
+COMP3311:Final Exam 20T3:Database Systems
+:Thursday 3 December, 2020::~3:12:92
+
+<notes>Front Page
+<center>
+<p class="red">
+Read <b>all</b> of the instructions below before commencing.
+<br>You will need to scroll until <i>End of Notes</i> to see everything 
+</p>
+</center>
+<div style="margin:50px 100px;">
+<b>About the Exam duration</b>:
+<ul>
+<li> the exam will be open from 10am AEDT Thursday 3 December
+<li> the exam will close at 10pm AEDT Thursday 3 December
+<li> you can work on the exam any time during that period
+<li> you should definitely start <i>before</i> 6pm AEDT on December 3
+<li> anything submitted after 10pm AEDT on December 3 will be ignored
+</ul>
+<p>
+<b>About this Exam web-site:</b>
+<ul>
+<li> The Instructions and the Questions use one browser tab
+<li> Each documentation manual has its own tab
+<li> The tab will be created the first time you access the manual
+<li> You can use the tabs to navigate to the manuals once<br>
+	 they're open, without losing your place in the questions
+</ul>
+<b>Start-of-Exam Instructions:</b>
+<ul>
+<li> Details are in the <a target="_b" href="../index.html">Instructions Page</a>
+</ul>
+<b>General Instructions:</b>
+<ul>
+<li> Answer <b>all</b> questions.
+<li> Questions are not worth equal marks.
+<li> Questions may be answered in any order.
+<li> During the Exam ...
+<ul>
+<li> you must <b>not</b> communicate with other students in <em>any</em> way
+</ul>
+<li> All questions must be submitted using <tt>give</tt> or Webcms3
+<li> Submit each question as you finish it
+<li> You can submit questions multiple times
+<li> Do not leave submissions to the last minute
+<li> Each question has instructions on what needs to be submitted
+</ul>
+<b>End-of-Exam <b>Instructions:</b></b>
+<ul>
+<li> Stop working on questions
+<li> Check that you submitted all of your answers
+<li> Relax ... COMP3311 is done and dusted
+</ul>
+</ul>
+<p>
+If you believe that insufficient information has been provided to answer <br>
+a given question, then you should write any assumptions that you think are <br>
+necessary to complete the question and continue work from there. If the <br>
+assumptions are reasonable, you can still obtain full marks for the question.
+</p>
+<p>
+Note that marks are awarded for your working, not just for getting the <br>
+correct final answer. If you get an incorrect final answer in one part of<br>
+a question and use it in a later part of that question, it is still possible <br>
+to achieve full marks for the later part if all working is correct.
+</p>
+<p>
+For the programming questions, you can only receive full marks for a
+<br> correctly-working program that loads/executes with no warnings. In all
+<br> other cases, you receive partial-marks based on how close the program
+<br> is to being correct. Submitting the supplied template is worth zero marks.
+</p>
+</div>
+</notes>
+
+<notes>Notes
+<p>
+These notes describe the environment available to you in this exam.
+Reading them carefully could potentially save you much time in completing
+the questions.
+</p>
+<p>
+When you unzip the <tt>exam-work.zip</tt> file,
+the following files will be copied to your working directory:
+</p>
+<center>
+<table cellspacing="0" cellpadding="5" border="1">
+<tr>
+<td><b>File</b></td>
+<td><b>Contents</b></td>
+</tr>
+<tr>
+<td><tt>check</tt></td>
+<td>A shell script to do the testing for the prac questions</td>
+</tr>
+<tr>
+<td><tt>music.dump</tt></td>
+<td>An PostgreSQL dump of database about music for use in the prac questions</td>
+</tr>
+<tr>
+<td><tt>q1/q1.sql</tt></td>
+<td>SQL view template for Question 1 (prac)</td>
+</tr>
+<tr>
+<td><tt>q2/q2.sql</tt></td>
+<td>SQL view template for Question 2 (prac)</td>
+</tr>
+<tr>
+<td><tt>q3/q3.sql</tt></td>
+<td>SQL view template for Question 3 (prac)</td>
+</tr>
+<tr>
+<td><tt>q4/q4.sql</tt></td>
+<td>Template for PLpgSQL function for Question 4 (prac)</td>
+</tr>
+<tr>
+<td><tt>q5/q5.sql</tt></td>
+<td>Template for PLpgSQL function for Question 5 (prac)</td>
+</tr>
+<tr>
+<td><tt>q6/q6</tt></td>
+<td>Template Python script for Question 6 (prac)</td>
+</tr>
+<tr>
+<td><tt>q6/q6.sql</tt></td>
+<td>Template file for any helper SQL code for Question 6 (prac)</td>
+</tr>
+<tr>
+<td><tt>q7/q7</tt></td>
+<td>Template Python script for Question 7 (prac)</td>
+</tr>
+<tr>
+<td><tt>q7/q7.sql</tt></td>
+<td>Template file for any helper SQL code for Question 7 (prac)</td>
+</tr>
+<tr>
+<td><tt>q8.txt</tt></td>
+<td>Template for ER diagrams in Question 8 (written)</td>
+</tr>
+<tr>
+<td><tt>q9.txt</tt></td>
+<td>Template for ??? in Question 9 (written)</td>
+</tr>
+<tr>
+<td><tt>q10.txt</tt></td>
+<td>Template for ??? in Question 10 (written)</td>
+</tr>
+<tr>
+<td><tt>q11.txt</tt></td>
+<td>Template for ??? in Question 11 (written)</td>
+</tr>
+<tr>
+<td><tt>q12.txt</tt></td>
+<td>Template for transactions in Question 12 (written)</td>
+</tr>
+</table>
+</center>
+<p>
+The <tt>q<i>X</i>.sql</tt>, <tt>q<i>X</I></tt> (Python scripts)
+ and <tt>q<i>X</i>.txt</tt> are provided to
+save you some typing. Files with a <tt>sql</tt> suffix are part of
+the practical component of this exam and you should test that the code
+in them works before submitting.
+Similary for the Python scripts in Q6 and Q7.
+Files with a <tt>.txt</tt> suffix are part of the written component of
+the exam, and, even if they contain code, do not require testing before
+submission. Of course, you should read them carefully before submitting.
+</p>
+<p>
+Each prac question has its own directory, and each of these contains,
+along with the template files:
+</p>
+<center>
+<table cellspacing="0" cellpadding="5" border="1">
+<tr>
+<td><b>File</b></td>
+<td><b>Contents</b></td>
+</tr>
+<tr>
+<td><tt>tests/</tt></td>
+<td>A directory containing test cases for your view/function/script
+</tr>
+<tr>
+<td><tt>check</tt></td>
+<td>A shell script to run the tests</td>
+</tr>
+<tr>
+<td><tt>tests/*.sh</tt></td>
+<td>Small scripts to run each test</td>
+</tr>
+<tr>
+<td><tt>tests/*.expected</tt></td>
+<td>Expected outputs for each of the tests</td>
+</tr>
+</table>
+</center>
+<p>
+Note that each of the tests directories contains an
+empty file
+called <tt>00.expected</tt>. Do not remove this file.
+</p>
+<p>
+If you accidentally remove any of the above files,
+you can get a fresh copy via the command:
+</p>
+<pre>
+unzip exam-work.zip <i>fileName</i>
+</pre>
+<p>
+This command will ask before overwriting any existing copy
+of a file called <tt><i>fileName</i></tt>.
+</p>
+<!--
+<p>
+Be careful not to remove other files. You cannot restore them.
+It is a useful strategy to submit your work every so often.
+You are allowed to make multiple submissions; only the latest
+one will be marked.
+</p>
+-->
+<p>
+The <tt>check</tt> script will create other files in the
+<tt>tests</tt> directory when it runs its tests.
+You can examine these to help with debugging.
+</p>
+</notes>
+
+<notes>Database
+<p>
+We have designed and built a database of (fake) information about
+modern popular music.
+This database contains information about performers, the music
+groups they belong to, the albums those groups release, and the
+songs on those albums.
+The following ER design describes this database:
+<center>
+<img src="Pics/music-er.png">
+</center>
+<p>
+Note that we have omitted the primary keys in the above diagram.
+They are all implemented as numeric attributes called <tt>id</tt>
+in the SQL implementation.
+<p>
+An SQL schema based on this design:
+</p>
+<pre>
+create table Groups (
+	id          integer,
+	name        text not null,
+	formed      date not null, -- when the group formed
+	disbanded   date, -- when they split up (null if still together)
+	primary key (id)
+);
+
+create table Albums (
+	id          integer,
+	title       text not null,
+	year        integer not null check (year >= 1980),
+	made_by     integer not null, -- which group made this album
+	genre       text not null,
+	primary key (id),
+	foreign key (made_by) references Groups(id)
+);
+
+create table Performers (
+	id          integer,
+	name        text not null,
+	birthday    date,
+	primary key (id)
+);
+
+create table Songs (
+	id          integer,
+	title       text not null,
+	length      integer not null check (length > 0), -- seconds
+	on_album    integer not null, -- which album this song appears on
+	trackNo     integer not null check (trackNo > 0), -- position
+	primary key (id),
+	foreign key (on_album) references Albums(id)
+);
+
+create table PlaysOn (
+	performer   integer,
+	song        integer,
+	instrument  text,
+	primary key (performer,song,instrument),
+	foreign key (performer) references Performers(id),
+	foreign key (song) references Songs(id)
+);
+
+create table MemberOf (
+	in_group    integer,
+	performer   integer,
+	primary key (in_group,performer),
+	foreign key (in_group) references Groups(id),
+	foreign key (performer) references Performers(id)
+);
+
+</pre>
+<p>
+Notes on the above schema:
+</p>
+<ul>
+<li> performers belong to a single Group (even though <tt>MemberOf</tt> is n:m)
+<li> an album is a collection of songs made by one group
+<li> album titles and song titles are not necessarily unique
+<li> however, on a given album, song titles are unique
+<li> a performer may play multiple instruments in a given song
+<li> vocals are counted as an instrument in some contexts
+<li> each group member typically plays on only some songs on an album
+<li> albums are sometimes called CDs
+</ul>
+<p>
+You should familiarise yourself with this schema
+before proceeding to solve the queries.
+It would also be useful to examine the database contents to ensure
+that you understand what all of the data represents.
+</p>
+</notes>
+
+<link>Course Website|https://webcms3.cse.unsw.edu.au/COMP3311/20T3/
+
+<link>Cheat Sheets|doco/index.html
+
+
+<question> 4 marks
+<p>
+Write an <b>SQL view</b> that gives information about the
+album(s) with the longest total running time (sum of length
+of songs on the album).
+</p>
+<p>
+Define the view as <tt>qQQ("group",album,year)</tt>,
+where the attributes are:
+</p>
+<ul>
+<li> <tt>"group"</tt> = the name of the group
+<li> <tt>album</tt> = the title of the album
+<li> <tt>year</tt> = the year the album was released
+</ul>
+<p>
+Note that the attribute name <tt>"group"</tt> must appear in
+double-quotes because it's an SQL reserved word.
+</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Work on this question in the <tt>work/qQQ/</tt> directory
+<li> Define the <tt>qQQ</tt> view in the <tt>qQQ.sql</tt> file
+<li> Also, place any additional views used by <tt>qQQ</tt> in this file
+<li> Additional views must be placed <i>before</i> the <tt>qQQ</tt> definition
+<li> You may not define your own functions to help in answering this question
+<li> Load it into your database using: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Sample output is in the file: &nbsp; <tt>tests/01.expected</tt>
+<li> Test it via: &nbsp; <tt>select * from qQQ order by "group";</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt> &nbsp; in the <tt>qQQ</tt> directory
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql</tt> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 5 marks
+<p>
+Write an <b>SQL view</b> that report which group(s) have no albums
+(at least not in the database).
+</p>
+<p>
+Define the view as <tt>qQQ("group")</tt>, where the attribute is:
+</p>
+<ul>
+<li> <tt>"group"</tt> = the name of a group
+</ul>
+<p>
+Note that the attribute name <tt>"group"</tt> must appear in
+double-quotes because it's an SQL reserved word.
+</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Work on this question in the <tt>work/qQQ/</tt> directory
+<li> Define the view <tt>qQQ</tt> in the file <tt>qQQ.sql</tt>
+<li> Also, place any additional views used by <tt>qQQ</tt> in this file
+<li> You may not define your own functions to help in answering this question
+<li> Additional views must be placed <i>before</i> the <tt>qQQ</tt> definition
+<li> Load it into your database using: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Sample output is in the file: &nbsp; <tt>tests/01.expected</tt>
+<li> Test it via: &nbsp; <tt>select * from qQQ order by "group";</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt> &nbsp; in the <tt>qQQ</tt> directory
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql</tt> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 7 marks
+<p>
+Write an <b>SQL view</b> that gives a list performers who play many
+instruments, and how many instruments they play.
+"Many" is defined as <em>more than half</em> of the possible instruments.
+The possible instruments can be determined by looking at the
+<tt>instrument</tt> column in the <tt>PlaysOn</tt> table.
+However we impose the following conditions:
+</p>
+<ul>
+<li> we do <em>not</em> count <tt>'vocals'</tt> as an instrument
+<li> guitars are mentioned as <tt>'lead guitar'</tt>, <tt>'rythm guitar'</tt>,
+<tt>'acoustic guitar'</tt>
+and <tt>'guitars'</tt> in the <tt>PlaysOn.instrument</tt> column;
+treat all of these as if they were simply <tt>'guitar'</tt>
+</ul>
+<p>
+If you handle the above conditions correctly there are 12 distinct instruments
+(<tt>'banjo'</tt>, <tt>'bass'</tt>, <tt>'drums'</tt>, <tt>'flute'</tt>,
+<tt>'guitar'</tt>, <tt>'keyboard'</tt>, <tt>'mandolin'</tt>, <tt>'percussion'</tt>,
+<tt>'saxophone'</tt>, <tt>'synthesizer'</tt>, <tt>'tambourine'</tt>, <tt>'violin'</tt>)
+in the current database.
+However, you should not assume that this will always be the case
+(i.e. you should compute the number of instruments).
+Answers that assume that there are 12 instruments (e.g. explicitly use
+the number 12 or 6) are worth a maximum of half marks.
+</p>
+<p>
+Define the view as <tt>qQQ(performer,ninstruments)</tt>,
+where the attributes are:
+</p>
+<ul>
+<li> <tt>performer</tt> = the name of a performer
+<li> <tt>ninstruments</tt> = the number of distinct instruments that they play
+</ul>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Work on this question in the <tt>work/qQQ/</tt> directory
+<li> Define the <tt>qQQ</tt> view in the file <tt>qQQ.sql</tt>
+<li> Also, place any additional views used by <tt>qQQ</tt> in this file
+<li> Additional views must be placed <i>before</i> the <tt>qQQ</tt> definition
+<li> <span style="color:#990000">You may not define your own functions to help in answering this question</span>
+<li> Load it into your database using: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Sample output is in the file: &nbsp; <tt>tests/01.expected</tt>
+<li> Test it via: &nbsp; <tt>select * from qQQ order by ninstruments desc, performer;</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt> &nbsp; in the <tt>qQQ</tt> directory
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql</tt> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+<question> 8 marks
+<p>
+Write a <b>PLpgSQL function</b> that reports the number of "short" and "long"
+songs by each group over their whole recording career.
+A "short" song is defined to be one whose length is strictly less that 3 minutes (180 seconds).
+A "long" song is defined to be one whose length is strictly greater than 6 minutes (360 seconds).
+</p>
+<pre>
+create type SongCounts as ( "group" text, nshort integer, nlong integer );
+
+create or replace function q4() returns setof SongCounts ...
+</pre>
+<p>
+The attributes in <tt>SongCounts</tt> are as follows:
+<ul>
+<li> <tt>"group"</tt> = the name of a group
+<li> <tt>nshort</tt> = the number of short (&lt; 3 mins) songs by this group
+<li> <tt>nlong</tt> = the number of long (&gt; 6 mins) songs by this group
+</ul>
+<p>
+Note that the function has no parameters, so will always produce
+the same result, e.g.
+</p>
+<pre>
+music=# <b>select * from q4() order by "group";</b>
+        group         | nshort | nlong 
+----------------------+--------+-------
+ After the Sea        |      4 |    14
+ After the Sky        |      0 |     0
+ All of the Floyd     |      3 |     5
+ All of the Sea       |      2 |    15
+ Black Eyed Boy       |      4 |    26
+ Black Eyed Nails     |      6 |    30
+ Black Mountains      |      3 |     7
+ Black Vanilla        |      6 |    18
+ Blue Floyd           |     10 |    18
+ Blue Mountains       |      4 |    11
+... etc etc etc ...
+</pre>
+<p>
+<b><span style="color:#660000">Warning</span></b>:
+you may have a different collation setting in your PostgreSQL
+server to the one that produced the expected results.
+This affects the ordering of certain characters, such as space.
+If you get a message that your test failed with "Different order",
+then your solution is most likely correct.
+</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Work on this question in the <tt>work/qQQ/</tt> directory
+<li> Define the function <tt>qQQ(...)</tt> in the file <tt>qQQ.sql</tt>
+<li> Also, place any additional views/functions used by <tt>qQQ</tt> in this file
+<li> These must be placed <i>before</i> the <tt>qQQ</tt> definition
+<li> Load it into your database using: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Sample output is in the file: &nbsp; <tt>tests/01.expected</tt>
+<li> Test it via: &nbsp; <tt>select * from qQQ() order by "group";</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt> in the <tt>qQQ</tt> directory
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql</tt> &nbsp; or &nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 9 marks
+<p>
+Write a <b>PLpgSQL function</b> that produces a list of groups
+and all of the music genres they have recorded albums in.
+</p>
+<pre>
+create type GroupGenres as ("group" text, genres text);
+
+create or replace function q5() returns setof GroupGenres ...
+</pre>
+<p>
+The attributes in <tt>GroupGenres</tt> tuples are as follows:
+</p>
+<ul
+<li> 
+<li> <tt>"group"</tt> = the name of a group
+<li> <tt>genres</tt> = a comma-separated list of genres
+</ul>
+<p>
+The list of genres is produced as a single string and must
+be in alphabetical order of genres.
+If a group has never recorded ad album, return an empty string
+(not <tt>NULL</tt>).
+</p>
+<p>
+Note that the function has no parameters, so will always produce the same result, e.g</p>
+<pre>
+music# <b>select * from q5() order by "group";</b>
+        group         |                  genres                  
+----------------------+------------------------------------------
+ After the Sea        | hip-hop,post-rock,rock
+ After the Sky        | 
+ All of the Floyd     | rock
+ All of the Sea       | hip-hop,pop,rock
+ Black Eyed Boy       | country,hip-hop,rock
+ Black Eyed Nails     | metal,pop,rock
+ Black Mountains      | blues,rock
+ Black Vanilla        | pop,rock
+ Blue Floyd           | hip-hop,metal,pop,post-rock,rock
+ Blue Mountains       | country,post-rock,rock
+... etc etc etc ...
+</pre>
+<p>
+<b><span style="color:#660000">Warning</span></b>:
+see the comments about ordering in the previous question.
+</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Work on this question in the <tt>work/qQQ/</tt> directory
+<li> Define the function <tt>qQQ(...)</tt> in the file <tt>qQQ.sql</tt>
+<li> Also, place any additional views/functions used by <tt>qQQ</tt> in this file
+<li> Additional views must be placed <i>before</i> the <tt>qQQ</tt> definition
+<li> Load it into your database using: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Sample output is in the file: &nbsp; <tt>tests/*.expected</tt>
+<li> Test it via: &nbsp; <tt>select * from qQQ() order by "group";</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt> &nbsp; in the <tt>qQQ</tt> directory
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql</tt> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+<question> 10 marks
+<p>
+Write Python/Psycopg2 script that, given a group ID, produces a
+discography for that group.
+The discography consists of an initial line that gives the
+names of the group, and then one entry for each album.
+For each album, it prints the list of songs and the length of
+each song in minutes:seconds format.
+</p>
+<p>
+It uses the following ordering:
+</p>
+<ul>
+<li> albums are in order of year, and by title if multiple albums in one year
+<li> songs on each album are in order of <tt>trackno</tt>
+</ul>
+<p style="color:#990000">
+Note that you should use the <tt>trackno</tt> value from the database as
+the displayed track number, as well as using it for ordering.
+</p>
+<p style="color:#990000">
+Edge cases like a group with no albums and and an album with no songs
+will not be tested, so you can write whatever you like for those cases.
+</p>
+<p>
+The examples below show the expected output format:
+</p>
+<pre>
+$ <b>./q6</b>
+Usage: ./q6 GroupID
+$ <b>./q6 999</b>
+Invalid group ID
+$ <b>./q6 5</b>
+Discography for Roaring Gang
+--------------------
+Waiting for Home (2010) (rock)
+--------------------
+ 1. Dreams of Defeat (5:01)
+ 2. Fast Train to Tokyo (9:40)
+ 3. Kill for Summer (1:11)
+ 4. Feel Life (5:14)
+ 5. Take the Clouds (6:03)
+ 6. Up to Haze (1:55)
+ 7. Fast Train to the Heat (4:48)
+ 8. Fly to this World (4:37)
+ 9. Beyond White (5:40)
+10. Feel Khatmandu (1:28)
+--------------------
+Up to Triumph (2011) (rock)
+--------------------
+ 1. Escape from the Horizon (3:29)
+ 2. Pump up Haze (3:20)
+ 3. Master of this World (8:13)
+... etc etc etc ...
+</pre>
+<p>
+Each album is introduced by its title, the year it was made,
+and its genre (see above),
+surrounded by two lines of 20 <tt>'-'</tt> characters.
+Each song is displayed as if printed by the C statement:
+</p>
+<pre>
+printf("%2d. %s (%d:%02d)\n", trackno, title, minutes, seconds)
+</pre>
+</p>
+<p>There are more examples in the <tt>tests/*.expected</tt> files.</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Put the Python code in the file <tt>qQQ</tt>
+<li> Put any Python helper functions in this file as well
+<li> Place any helper views or PLpgSQL functions in the <tt>qQQ.sql</tt> file
+<li> Load any SQL code via: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Test it via: &nbsp; <tt>./q6 5</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt>
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql qQQ</tt> &nbsp; or &nbsp; Webcms3
+</ul>
+</question>
+
+<question> 11 marks
+<p>
+Write a Python/Psycopg2 script that, given an album ID, produces
+a list of songs giving the song title, the people who performed
+on that song, and the instrument(s) they played on that song.
+Before the song details, it prints the title of the album,
+the year it was made, and the genre, followed by a line with 40 <tt>'='</tt>
+characters.
+</p>
+<p>
+Use the following ordering:
+</p>
+<ul>
+<li> songs are given in <tt>trackno</tt> order
+<li> within a song, performers are given in alphabetical orde ron their name
+<li> for each performer, instruments are given in alphabetical order
+</ul>
+<p style="color:#990000">
+If nobody is mentioned as plying on on the song, assume that everyone
+played and write "The whole group".
+</p>
+<p>
+If the supplied album ID is invalid, the script should print an
+error message (see  below) and terminate.
+</p>
+<p>
+The examples below show the expected output format:
+</p>
+<pre>
+$ <b>./q7</b>
+Usage: ./q7 AlbumID
+$ <b>./q7 999</b>
+Invalid album ID
+$ <b>./q7 123</b>
+Up to this Night (2008) (blues)
+========================================
+ 1. Fly to this Night
+        Angus Serious: rythm guitar
+        Steve Ward: mandolin,saxophone
+ 2. Master of the Sea
+        Bernie Jaeger: acoustic guitar,guitars
+        Ricky Malone: keyboard
+ 3. Where is Dancing
+        Bernie Jaeger: vocals
+        Ricky Malone: vocals
+        Sam Plant: drums,mandolin
+ 4. What happened to this Night
+        Bernie Jaeger: flute,keyboard
+        Elton Smith: vocals
+        Steve Ward: vocals
+ 5. Kill for Plague
+        The whole group
+ 6. Force the Heat
+        Elton Smith: vocals
+        Sam Plant: vocals
+ 7. Shock Tokyo
+        Steve Ward: vocals
+</pre>
+<p>
+Note that each song
+and the lines for each performer are printed 
+as if by C statements like:
+</p>
+<pre>
+printf("%2d. %s\n", trackno, title)
+printf('%8s%s: %s\n", ' ', name, instruments)
+</pre>
+<p>There are more examples in the <tt>tests/*.sh</tt>
+and <tt>tests/*.expected</tt> files.
+</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Put the Python code in the file <tt>qQQ</tt>
+<li> Put any Python helper functions in this file as well
+<li> Place any helper views or PLpgSQL functions in the <tt>qQQ.sql</tt> file
+<li> Load any SQL code via: &nbsp; <tt>psql music -f qQQ.sql</tt>
+<li> Test it via: &nbsp; <tt>./q7 123</tt>
+<li> Check it using: &nbsp; <tt>sh check qQQ</tt>
+<li> Submit it using: &nbsp; <tt>give cs3311 exam_qQQ qQQ.sql qQQ</tt> &nbsp; or &nbsp; Webcms3
+</ul>
+<p>
+Note: if the script won't execute properly as <tt>./q7</tt>,
+try <tt>python3 ./q7</tt> or whatever name the appropriate
+Python interpreter has in your environment.
+</p>
+</question>
+
+
+<question> 8 marks
+<p>
+Convert each of the following ER diagram fragments into a relational schema
+expressed as a collection of PostgreSQL <tt>CREATE TABLE</tt> statements.
+Your schemas must show all primary key constraints and foreign key constraints.
+None of the attributes <tt>a</tt>, <tt>b</tt>, <tt>c</tt>, <tt>e</tt>,
+<tt>f</tt>, <tt>g</tt> may contain <tt>null</tt> values.
+Determine other <tt>not null</tt> constraints from the context.
+You may add any new attributes that you need to represent all aspects of
+the ER diagram; assign them types and constraints as appropriate.
+The precise name of any new attributes is not important, as long as they
+are different from existing attributes.
+Also, document any semantic aspects suggested by the diagram which <i>cannot</i>
+be represented in the relational schema using standard SQL constraints.
+</p>
+<p>
+Use the following to determine the type of each attribute:
+</p>
+<ul>
+<li> any attribute called <tt>id</tt> is a <tt>serial</tt> attribute
+<li> attributes <tt>a</tt>, <tt>f</tt> and <tt>g</tt> have type <tt>integer</tt>
+<li> attributes <tt>b</tt>, <tt>c</tt>, <tt>e</tt> and <tt>m</tt> have type <tt>text</tt>
+</ul>
+<p><b>Exercises:</b></p>
+<ol type='A'>
+<li class="subq"> <p class="qtext">
+Map this entity and its attributes into an SQL schema.
+</p>
+<center><img src="Pics/q8a.png"></center>
+</li>
+<li class="subq"> <p class="qtext">
+Map this ER design into an SQL schema.
+</p>
+<center><img src="Pics/q8b.png"></center>
+</li>
+<li class="subq"> <p class="qtext">
+Map this class hierarchy to an SQL schema using the ER mapping.
+</p>
+<center><img src="Pics/q8c.png"></center>
+</li>
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>qQQ.txt</tt>
+<li> Submit via: &nbsp; <b><tt>give cs3311 exam_q8 qQQ.txt</tt></b> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 9 marks
+<p>
+<b>Note:</b> This question is asking you to write some PLpgSQL functions.
+While you have a PostgreSQL server and could test these out, 
+we do not expect you to do this.
+Simply write the code in the file <tt>qQQ.txt</tt> as accurately as you can.
+Your work will not be tested via PostgreSQL, but will be assessed based on
+how close your code is to a correct solution.
+</p>
+<p style="color:#990000">
+For this question, assume that the <tt>MemberOf</tt> table
+has two extra fields: <tt>joined</tt> (date the performer
+joined the group), <tt>departed</tt> (date the performer
+left the group).
+</p>
+<p><b>Exercises:</b></p>
+<p>
+Write triggers to ensure that the <tt>Groups</tt>
+data is correctly maintained when the following changes occur:
+<ol type="A">
+<li class="subq"> <p class="qtext">
+When the last member of a group leaves (i.e. all members are noted as <tt>departed</tt>)
+<ul>
+<li> the group should be recorded as disbanded
+<li> use the value of member's departure data as the date of disbanding
+</ul>
+</li>
+<li class="subq"> <p class="qtext">
+When a group changes its name
+<ul>
+<li> the existing <tt>Groups</tt> tuple should not have its name changed;
+it should instead be marked as disbanded (using the value of <tt>current_date</tt>)
+<li> a new <tt>Groups</tt> entry should be made, using the value of <tt>current_date</tt> as the formation date
+<li> <span style="color:#990000">you can assume that there is some method available to generate new group id's <br>
+(write an assumption to this effect; any reasonable assumption is acceptable)</span>
+<li> all musicians who were members of the old group should be entered as members of
+the new group
+<li> all musicians where were members of the old group should be marked as having left the old group
+</ul>
+</ol>
+<p>
+For each case, you must write a suitable PostgreSQL <tt>CREATE TRIGGER</tt>
+statement and define a PLpgSQL function (or collection of functions) to
+carry out the appropriate actions.
+You must specify whether the trigger is executed <tt>before</tt> or
+<tt>after</tt> after the modification event.
+Your triggers should be defined so as to avoid trigger-cycles; to do this,
+you are allowed to assume that PostgreSQL allows triggers to be restricted
+to updates of specified columns.
+</p>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>qQQ.txt</tt>
+<li> Submit via: &nbsp; <b><tt>give cs3311 exam_qQQ qQQ.txt</tt></b> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 5 marks
+<p>
+Consider the schema:
+</p>
+<pre>
+Flights(fid, from, to, distance, departs, arrives, price)
+Aircraft(aid, aname, range)
+Certified(employee, aircraft)
+Employees(eid, ename, salary)
+</pre>
+<p>
+The attributes <tt>fid</tt>, <tt>aid</tt> and <tt>eid</tt> are primary keys in their
+respective relations.
+In the <tt>Certified</tt> relation, the attribute <tt>employee</tt> is a foreign key
+to the <tt>Employees</tt> relation, and the attribute <tt>aircraft</tt> is a foreign
+key to the <tt>Aircraft</tt> relation.
+In the <tt>Flights</tt> relation, the attributes <tt>from</tt> and <tt>to</tt>
+refer to airports and the <tt>distance</tt> attribute gives the distance between
+them.
+Also in the <tt>Flights</tt> relation, the attributes <tt>departs</tt>
+and <tt>arrives</tt> are timestamps that refer to departure and arrival
+times on a particular day.
+The meaning of all other attributes is obvious from their names.
+</p>
+<p>
+While the schema might look OK, it is not (quite) in Boyce-Codd normal form.
+</p>
+<ol type='A'>
+<li class="subq"> <p class="qtext">
+Determine the functional dependencies in this schema.
+</p></li>
+<li class="subq"> <p class="qtext">
+Identify the functional dependency that violate BCNF
+and propose a new version of the schema that <em>is</em> in BCNF.
+</p></li>
+</ol>
+<p>
+Hint: the notion of a route is relevant.
+</p>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>qQQ.txt</tt>
+<li> Submit via: &nbsp; <b><tt>give cs3311 exam_qQQ qQQ.txt</tt></b> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 9 marks
+<p>
+Assume that we have a collection of relations as follows:
+</p>
+<pre>
+R(a,b,c)   S(d,e)   T(a,d,f)
+</pre>
+<p>
+Write relational algebra equivalents of the following SQL statements.
+You may write multiple steps, with one RA operation in each step.
+Use the notation which has implicit projections and renaming by
+writing attribute names on the left-hand side of the "assignment",
+e.g.
+</p>
+<pre> Tmp1(a,b) = Sel[c=5]R </pre>
+<p>rather than</p>
+<pre>Tmp = Rename[R&rarr;Tmp](Proj[a,b](Sel[c=5]R)) </pre>
+<p>
+The final step should produce a relation called <tt>Res</tt>.
+</p>
+<p><b>Exercises:</b></p>
+<ol type='A'>
+<li class="subq"> <p class="qtext">
+<pre>
+select * from R;
+</pre>
+<li class="subq"> <p class="qtext">
+<pre>
+select a,b from R where c &lt; 0;
+</pre>
+</p></li>
+</p></li>
+<li class="subq"> <p class="qtext">
+<pre>
+select a,d from R join S on (b = e) where c &lt; 0;
+</pre>
+</p></li>
+<li class="subq"> <p class="qtext">
+<pre>
+select b,c,e,f from R natural join T natural join S;
+</pre>
+</p></li>
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>qQQ.txt</tt>
+<li> Submit via: &nbsp; <b><tt>give cs3311 exam_qQQ qQQ.txt</tt></b> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+
+
+<question> 7 marks
+<p>
+Consider the following schedule resulting from the
+concurrent execution of three transactions:
+</p>
+<pre>
+T1:           W(Y)     W(X)
+
+T2:  R(Y)                       W(X)
+
+T3:                                      W(X)
+</pre>
+<p><b>Exercises:</b></p>
+<ol type="A">
+<li class="subq"> <p class="qtext">
+Determine whether the schedule is conflict serializable. <br>
+Show your working (but you do not need to <i>draw</i> a precedence graph).
+</p></li>
+<li class="subq"> <p class="qtext">
+Determine whether the schedule is view serializable. <br>
+Show your working.
+</p></li>
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>qQQ.txt</tt>
+<li> Submit via: &nbsp; <b><tt>give cs3311 exam_qQQ qQQ.txt</tt></b> &nbsp;or&nbsp; Webcms3
+</ul>
+</question>
+

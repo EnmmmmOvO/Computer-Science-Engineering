@@ -1,0 +1,6 @@
+bbd.dump ... Beers/Bars/Drinkers (BBD) database as used in lectures
+bbd2.dump ... version of BBD where entity tables have numeric IDs
+Ex1 ... database modifications
+Ex2 ... Q1-7 on BBD database
+Ex3 ... Q8-15 on BBD database
+soln2.sql ... solutions for Q1-21 on the BBD2 database

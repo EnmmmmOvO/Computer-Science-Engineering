@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 Final Exam 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 Final Exam 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  Final Exam 20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='front_page.html'>[Front Page]</a> <a href='notes.html'>[Notes]</a> <b>[Database]</b> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<p>
+We have designed and built a database of (fake) information about
+modern popular music.
+This database contains information about performers, the music
+groups they belong to, the albums those groups release, and the
+songs on those albums.
+The following ER design describes this database:
+<center>
+<img src="Pics/music-er.png">
+</center>
+<p>
+Note that we have omitted the primary keys in the above diagram.
+They are all implemented as numeric attributes called <tt>id</tt>
+in the SQL implementation.
+<p>
+An SQL schema based on this design:
+</p>
+<pre>
+create table Groups (
+	id          integer,
+	name        text not null,
+	formed      date not null, -- when the group formed
+	disbanded   date, -- when they split up (null if still together)
+	primary key (id)
+);
+
+create table Albums (
+	id          integer,
+	title       text not null,
+	year        integer not null check (year >= 1980),
+	made_by     integer not null, -- which group made this album
+	genre       text not null,
+	primary key (id),
+	foreign key (made_by) references Groups(id)
+);
+
+create table Performers (
+	id          integer,
+	name        text not null,
+	birthday    date,
+	primary key (id)
+);
+
+create table Songs (
+	id          integer,
+	title       text not null,
+	length      integer not null check (length > 0), -- seconds
+	on_album    integer not null, -- which album this song appears on
+	trackNo     integer not null check (trackNo > 0), -- position
+	primary key (id),
+	foreign key (on_album) references Albums(id)
+);
+
+create table PlaysOn (
+	performer   integer,
+	song        integer,
+	instrument  text,
+	primary key (performer,song,instrument),
+	foreign key (performer) references Performers(id),
+	foreign key (song) references Songs(id)
+);
+
+create table MemberOf (
+	in_group    integer,
+	performer   integer,
+	primary key (in_group,performer),
+	foreign key (in_group) references Groups(id),
+	foreign key (performer) references Performers(id)
+);
+
+</pre>
+<p>
+Notes on the above schema:
+</p>
+<ul>
+<li> performers belong to a single Group (even though <tt>MemberOf</tt> is n:m)
+<li> an album is a collection of songs made by one group
+<li> album titles and song titles are not necessarily unique
+<li> however, on a given album, song titles are unique
+<li> a performer may play multiple instruments in a given song
+<li> vocals are counted as an instrument in some contexts
+<li> each group member typically plays on only some songs on an album
+<li> albums are sometimes called CDs
+</ul>
+<p>
+You should familiarise yourself with this schema
+before proceeding to solve the queries.
+It would also be useful to examine the database contents to ensure
+that you understand what all of the data represents.
+</p>
+
+</div>
+<center><i>End of Notes</i></center>
+</body>
+</html>

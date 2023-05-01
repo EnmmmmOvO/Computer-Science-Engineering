@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <b>[Q4]</b> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <a href='Q11.html'>[Q11]</a> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 4 <span class='tiny'>(9 marks)</span></h3>
+<p>
+Write a <b>PLpgSQL function</b> that takes the names of two teams
+ans returns the number of matches that they have played against
+each other.
+</p>
+<pre>
+create or replace function Q4(_team1 text, _team2 text) returns integer ...
+</pre>
+<p>
+If the teams have never played against each other, the function should return 0.
+If either of the function parameters is not the name of a team, return NULL.
+</p>
+<p> <b>Instructions:</b> </p>
+<ul>
+<li> Work on this question in the <tt>work/q4/</tt> directory
+<li> Define the function <tt>q4(...)</tt> in the file <tt>q4.sql</tt>
+<li> Also, place any additional views used by <tt>q4</tt> in this file
+<li> Additional views must be placed <i>before</i> the <tt>q4</tt> definition
+<li> Load it into your database using: &nbsp; <tt>psql footy -f q4.sql</tt>
+<li> Sample output is in the file: &nbsp; <tt>tests/01.expected</tt>
+<li> Test it via: &nbsp; <tt>select * from q4('Australia','France');</tt>
+<li> Check it using: &nbsp; <tt>./check</tt> in the <tt>q4</tt> directory
+<li> Submit it using: &nbsp; <tt>give cs3311 sample_q4 q4.sql</tt> &nbsp; or &nbsp; Webcms3
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

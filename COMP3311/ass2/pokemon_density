@@ -1,0 +1,124 @@
+#! /usr/bin/env python3
+
+
+"""
+COMP3311
+23T1
+Assignment 2
+Pokemon Database
+
+Written by: Jinghan Wang z5286124
+Written on: 12/04/2023
+
+Pokemon Density
+
+Find the density of pokemon in each location within a given region.
+"""
+import math
+import sys
+import psycopg2
+import helpers
+
+### Constants
+USAGE = f"Usage: {sys.argv[0]} <Region>"
+
+### Globals
+db = None
+Region = None
+
+### Command-line args
+if len(sys.argv) != 2:
+    print(USAGE, file=sys.stderr)
+    sys.exit(1)
+Region = helpers.clean(sys.argv[1])
+
+
+def main():
+    cur = db.cursor()
+
+    qry = '''
+    select l.name, l.id, p.average_height, p.average_weight, e.rarity
+    from games g
+        join locations l on g.id = l.appears_in
+        left join encounters e on l.id = e.occurs_at
+        left join pokemon p on e.occurs_with = p.id
+    where region = %s
+    order by l.name, l.id;
+    '''
+    try:
+        cur.execute(qry, [Region])
+    except psycopg2.DataError:
+        # Catch the err of the input word is not in regions enum type
+        print(f'\'{Region}\' isn\'t a region in the Pokemon series.', file=sys.stderr)
+        return
+
+    # Record the value of regions [name str: value float]
+    result = dict()
+    # Record null value of regions [name]
+    ignore = list()
+
+    # If it is False, means the pokemon detail is null
+    check_name = False
+    name = None
+    id = None
+
+    # As avg = (games_1_regions_destiny + ... + games_n_regions_destiny) / n,
+    #    games_i_regions_destiny = sum(all pokemon_destiny) * possibility i = 1..n
+    # Therefore, avg = sum(all pokemon_destiny * possibility in each games) / n
+    # - Sum records the sum of all pokemon_destiny * possibility date
+    # - Index records the number of game
+    sum = float(0)
+    index = 1
+
+    # Simplify ((w * 1000) / ((4 / 3) * pi * (h / 2)^3 * (100)^3)) * (possibility / 100)
+    destiny = lambda l: (l[3] * l[4] * 3) / (50000 * (l[2]) ** 3 * math.pi)
+
+    for i in cur.fetchall():
+        if name != i[0]:
+            # If check_name is True, It has at least one value, or record null value part
+            if name is not None:
+                if check_name is True: result[name] = round(sum / index, 4)
+                else: ignore.append(name)
+            name = i[0]
+            id = i[1]
+            sum = float(0)
+            index = 1
+            check_name = False
+
+        # Drop null value
+        if i[2] is None or i[3] is None or i[4] is None: continue
+
+        # Ignore counting the game with null value
+        if id != i[1]:
+            if check_name is True: index += 1
+            id = i[1]
+
+        check_name = True
+        sum += destiny(i)
+
+    # Record the last data
+    if check_name is True: result[name] = round(sum / index, 4)
+    else: ignore.append(name)
+
+    # Print normal value result followed by first desc value then text
+    print(f'The average density of Pokemon within each location in the \'{Region}\' region:\n')
+    for i, j in sorted(result.items(), key=lambda item: (-item[1], item[0])): print(f'        {i}: {j:.4f}')
+
+    # Print null value result
+    print(f'\nThe following locations in the \'{Region}\' region have no wild Pokemon encounters:\n')
+    for i in sorted(ignore): print('        ' + i)
+
+
+if __name__ == '__main__':
+    try:
+        db = psycopg2.connect(dbname="ass2")
+        main()
+    except psycopg2.Error as err:
+        print("DB error: ", err)
+    except Exception as err:
+        print("Internal Error: ", err)
+        raise err
+    finally:
+        if db is not None:
+            db.close()
+    sys.exit(0)

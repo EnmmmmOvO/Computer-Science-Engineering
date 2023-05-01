@@ -1,0 +1,26 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+if len(sys.argv) < 2:
+	print(f'Usage: {sys.argv[0]} SubjPattern')
+	exit(1)
+try:
+	db = psycopg2.connect("dbname=uni")
+	cur = db.cursor()
+	qry = """
+	select code,name from Subjects
+	where  code ~* %s
+	order by code
+	"""
+	#print(cur.mogrify(qry,[sys.argv[1]]))
+	cur.execute(qry,[sys.argv[1]])
+	for tup in cur.fetchall():
+		code,name = tup
+		print(f'{code} {name}')
+	db.close()
+
+except Exception as err:
+	print(err)
+	exit(1)

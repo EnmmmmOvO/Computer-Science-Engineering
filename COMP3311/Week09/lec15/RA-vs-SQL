@@ -1,0 +1,99 @@
+Convert given RA into SQL
+
+* Details of all bars in The Rocks
+
+Result = Sel[addr=The Rocks](Bars)
+
+select * from Bars where addr = 'The Rocks';
+
+
+* Beers made by Sierra Nevada
+
+SNBeers = Sel[manf=Sierra Nevada](Beers)
+Result  = Rename[beer](Proj[name](SNBeers))
+
+select name as beer from Beers where manf='Sierra Nevada'
+
+
+* Names of all beers
+
+Result = Proj[name](Beers)
+
+select distinct name from Beers;
+
+
+* Names of drinkers who live in Newtown
+
+Result = Proj[name](Sel[addr=Newtown](Drinkers))
+
+select distinct name from Drinkers where addr = 'Newtown';
+
+* What are all of the breweries?
+
+Result(brewer) = Proj[manf](Beers)
+
+select distinct manf as brewer from Beers
+
+
+* Bars where either John or Gernot drinks
+
+JohnBars = Proj[bar](Sel[drinker=John](Frequents))
+GernotBars = Proj[bar](Sel[drinker=Gernot](Frequents))
+
+Result = JohnBars union GernotBars
+
+
+* Bars where both John and Gernot drink
+
+Result = JohnBars  intersect  GernotBars
+
+
+* Bars where John drinks and Gernot doesn't
+
+Result = JohnBars - GernotBars
+
+(select bar from Bars where drinker='John')
+except
+(select bar from Bars where drinker='Gernot')
+
+
+
+* Bars that sell VB, but not New
+
+VBBars = Proj[bar](Sel[beer=VB](Sells))
+NewBars = Proj[bar](Sel[beer=New](Sells))
+
+Result = VBBars - NewBars
+
+
+* Who drinks in Newtown bars?
+
+NewtownBars(nbar) = Sel[addr=Newtown](Bars)
+Tmp = Frequents Join[bar=nbar] NewtownBars
+Result(drinker) = Proj[drinker](Tmp)
+
+
+* Who drinks beers made by Carlton?
+
+CarltonBeers = Sel[manf=Carlton](Beers)
+Tmp = Likes Join[beer=name] CarltonBeers
+Result(drinker) = Proj[drinker)Tmp
+
+select L.drinker
+from   Likes L join Beers b on (L.beer=b.name)
+where  b.manf = 'Carlton';
+
+
+* Which beers are sold in all bars?
+
+r1  = Proj[beer,bar](Sells)
+r2  = Rename[r2(bar)](Proj[name](Bars))
+res = r1 Div r2
+
+select b.name
+from   Beers b
+where  not exists (
+         (select name as bar from Bars)
+         except
+         (select s.bar from Sells s where s.beer = b.beer)
+       )

@@ -1,0 +1,637 @@
+<html>
+<head>
+<title>COMP3311 Week 8 Tuesday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 8 Tuesday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 08 Tuesday</heading></a>
+<li class="i"> <a href="#s2">Normalisation</a>
+<li class="i"> <a href="#s3">Boyce-Codd Normal Form</a>
+<li class="i"> <a href="#s5">BCNF Decomposition</a>
+<li class="i"> <a href="#s9">Exercise:  BCNF Decomposition (1)</a>
+<li class="i"> <a href="#s10">Exercise:  BCNF Decomposition (2)</a>
+<li class="i"> <a href="#s11">Third Normal Form</a>
+<li class="i"> <a href="#s15">Exercise:  3NF Decomposition (1)</a>
+<li class="i"> <a href="#s16">Exercise:  3NF Decomposition (2)</a>
+<li class="i"> <a href="#s17">Database Design Methodology</a>
+<li class="i"> <a href="#s18">Relational Algebra</a>
+<li class="i"> <a href="#s21">Notation</a>
+<li class="i"> <a href="#s22">Describing RA Operations</a>
+<li class="i"> <a href="#s24">Example Database #1</a>
+<li class="i"> <a href="#s25">Example Database #2</a>
+<li class="i"> <a href="#s26">Rename</a>
+<li class="i"> <a href="#s28">Selection</a>
+<li class="i"> <a href="#s30">Projection</a>
+<li class="i"> <a href="#s32">Exercise:  SQL &rarr; Rel Alg</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [0/32]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 08 Tuesday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> Normalisation, Relational Algebra
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz 5 due by 23:59 Friday 4 November
+<li> Assignment 2 due by 21:00 Friday 11 November &nbsp;<small>(Week 9)</small>
+<li> Understand Python/Psycopg2 by end of week
+</ul>
+<h4>Things to note ...</h4>
+<ul>
+<li> I am away on Thursday and Friday (no web access)
+<li> Testing script and submission pages now up and fixed(!)
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [1/32]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Normalisation</div></td><td align='right'></td></tr></table>
+<p>
+<p>
+<font color='#0000BB'>Normalisation</font> aims to puts a schema into <i>xNF</i>
+<ul>
+<li> by ensuring that all relations in the schema are in <i>xNF</i>
+</ul>
+<br>
+How normalisation works ...
+<ul>
+<li> decide which normal form <i>xNF</i> is "acceptable"
+<ul>
+<li> i.e. how much redundancy are we willing to tolerate?
+</ul>
+<li> check whether each relation in schema is in <i>xNF</i>
+<li> if a relation is not in <i>xNF</i>
+<ul>
+<li> <font color='#0000BB'>partition</font> into sub-relations where each is "closer to" <i>xNF</i>
+</ul>
+<li> repeat until all relations in schema are in <i>xNF</i>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [2/32]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Boyce-Codd Normal Form</div></td><td align='right'></td></tr></table>
+<p>
+A relation schema <i>R</i> is in BCNF w.r.t a set <i>F</i> of functional dependencies iff:
+<p>
+for all <i>fd</i>s <i>X &rarr; Y</i> in <i>F<sup>+</sup></i>
+<ul>
+<li> either <i>X &rarr; Y</i> is trivial (i.e. <i>Y &sub; X</i>)
+<li> or <i>X</i> is a superkey  <small>(i.e. non-strict superset of attributes in key)</small>
+</ul>
+<br>
+A DB schema is in BCNF if all of its relation schemas are in BCNF.
+<p>
+<small>
+Observations:
+<ul>
+<li> any two-attribute relation is in BCNF
+<li> any relation with key <i>K</i>, other attributes <i>Y</i>, and <i>K &rarr; Y</i> is in BCNF
+</ul>
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [3/32]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Boyce-Codd Normal Form <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+If we transform a schema into BCNF, we are guaranteed:
+<ul>
+<li> no update anomalies due to <i>fd</i>-based redundancy
+<li> lossless join decomposition
+</ul>
+However, we are <font color='#0000BB'>not</font> guaranteed:
+<ul>
+<li> the new schema preserves all <i>fd</i>s from the original schema
+</ul>
+<p>
+This may be a problem if the <i>fd</i>s contain significant semantic
+information about the problem domain.
+<p>
+If we need to preserve dependencies, use 3NF.
+<p>
+<br>
+<small>
+A dependency <i>X &rarr; Y</i> is not preserved if, e.g.
+<ul>
+<li> <i>X = ABC</i> and <i>ABC</i> are all in relation <i>R</i>
+<li> after decomposition into <i>S</i> and <i>T</i>, &nbsp;<i>AB</i> is in <i>S</i> &nbsp;and&nbsp; <i>BC</i> is in <i>T</i>
+</ul>
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [4/32]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; BCNF Decomposition</div></td><td align='right'></td></tr></table>
+<p>
+The following algorithm converts an arbitrary schema to BCNF:
+<p><pre style="font-size:90%">
+Inputs: schema <i>R</i>, set <i>F</i> of <i>fd</i>s
+Output: set <i>Res</i> of BCNF schemas (tables)
+
+<i>Res</i> = {R};
+while (any schema <i>S &isin; Res</i> is not in BCNF) {
+    choose any <i>fd</i> <i>X &rarr; Y</i> on <i>S</i> that violates BCNF
+    <i>Res</i> = <i>(Res-S) &cup; (S-Y) &cup; XY</i>
+}
+</pre><p>
+The last step means: make a table from <i>XY</i>; drop <i>Y</i>&nbsp; from table <i>S</i>
+<p>
+The "choose any" step means that the algorithm is non-deterministic
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [5/32]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; BCNF Decomposition <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example (the <i>BankLoans</i> schema):
+<p>
+<i>BankLoans(branchName,  branchCity, assets, custName, loanNo, amount)</i>
+<p>
+Has functional dependencies <i>F</i>
+<ul>
+<li> <i>branchName &rarr; assets,branchCity</i>
+<li> <i>loanNo &rarr; amount,branchName</i>
+</ul>
+The key for <i>BankLoans</i> is <i>branchName,custName,loanNo</i>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [6/32]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; BCNF Decomposition <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Applying the BCNF algorithm:
+<ul>
+<li> check <i>BankLoans</i> relation ... it is not in BCNF <br>
+	<small>(<i>branchName &rarr; assets,branchCity</i> violates BCNF
+	 criteria; LHS is not a key)</small>
+<li> to fix ... decompose <i>BankLoans</i> into <p>
+&nbsp;&nbsp;&nbsp; <i>Branch(branchName, branchCity, assets)</i> <br>
+&nbsp;&nbsp;&nbsp; <i>LoanInfo(branchName, custName, loanNo, amount)</i>
+<li> check <i>Branch</i> relation ... it is in BCNF <br>
+	<small>(the only nontrivial <i>fd</i> has LHS=<i>branchName</i>, which is a key)</small>
+</ul>
+<small>(continued on next slide)</small>
+<p>
+<small>
+Notes:
+<ul>
+<li> For <i>Branch</i>: key = <i>branchname</i>, &nbsp; FDs are <i>branchName &rarr; assets,branchCity</i>
+<li> For <i>LoanInfo</i>: key = <i>loanNo,custName</i>, &nbsp; FDs are <i>loanNo &rarr; amount,branchName</i>
+</ul>
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [7/32]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; BCNF Decomposition <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Applying the BCNF algorithm (cont):
+<ul>
+<li> check <i>LoanInfo</i> relation ... it is not in BCNF <br>
+	<small>(<i>loanNo &rarr; amount,branchName</i> violates BCNF
+	criteria; LHS is not a key)</small>
+<li> to fix ... decompose <i>LoanInfo</i> into <p>
+&nbsp;&nbsp;&nbsp; <i>Loan(branchName, loanNo, amount)</i> <br>
+&nbsp;&nbsp;&nbsp; <i>Borrower(custName, loanNo)</i>
+<li> check <i>Loan</i> ... it is in BCNF
+<li> check <i>Borrower</i> ... it is in BCNF
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [8/32]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  BCNF Decomposition (1)</div></td><td align='right'></td></tr></table>
+<p>
+Consider the schema <i>R</i> and set of fds <i>F</i>
+<p>
+<i>R &nbsp;=&nbsp; ABCDEFGH</i>
+<p>
+<i>F &nbsp;=&nbsp; { ABH &rarr; C, A &rarr; DE, BGH &rarr; F,
+F &rarr; ADH, BH &rarr; GE }</i>
+<p>
+Produce a BCNF decomposition of <i>R</i>.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [9/32]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  BCNF Decomposition (2)</div></td><td align='right'></td></tr></table>
+<p>
+Recall the following table (based on e.g. a spreadsheet):
+<p><pre style="font-size:80%">
+<b>P</b>#  | <b>W</b>hen        | <b>A</b>ddress    | <b>N</b>otes         | <b>S</b>#   | Na<b>m</b>e  | <b>C</b>arReg
+----+-------------+------------+---------------+------+-------+-------
+PG4 | 03/06 15:15 | 55 High St | Bathroom leak | SG44 | Rob   | ABK754
+PG1 | 04/06 11:10 | 47 High St | All ok        | SG44 | Rob   | ABK754
+PG4 | 03/07 12:30 | 55 High St | All ok        | SG43 | Dave  | ATS123
+PG1 | 05/07 15:00 | 47 High St | Broken window | SG44 | Rob   | ABK754
+PG1 | 05/07 15:00 | 47 High St | Leaking tap   | SG44 | Rob   | ABK754
+PG2 | 13/07 12:00 | 12 High St | All ok        | SG42 | Peter | ATS123
+...
+</pre><p>
+<p>
+Recall the functional dependencies identified previously,
+<p>
+Use these to convert the table to a BCNF schema.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [10/32]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Third Normal Form</div></td><td align='right'></td></tr></table>
+<p>
+A relation schema <i>R</i> is in 3NF w.r.t a set <i>F</i> of functional dependencies iff:
+<p>
+for all <i>fd</i>s <i>X &rarr; Y</i> in <i>F<sup>+</sup></i>
+<ul>
+<li> either <i>X &rarr; Y</i> is trivial (i.e. <i>Y &sub; X</i>)
+<li> or <i>X</i> is a superkey
+<li> or <i>Y</i> is a single attribute from a key
+</ul>
+A DB schema is in 3NF if all relation schemas are in 3NF.
+<p>
+<small>The extra condition represents a slight weakening of BCNF requirements.</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [11/32]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Third Normal Form <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+If we transform a schema into 3NF, we are guaranteed:
+<ul>
+<li> lossless join decomposition
+<li> the new schema preserves all of the <i>fd</i>s from the original schema
+</ul>
+However, we are <font color='#0000BB'>not</font> guaranteed:
+<ul>
+<li> no update anomalies due to <i>fd</i>-based redundancy
+</ul>
+<p>
+Whether to use BCNF or 3NF depends on overall design considerations.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [12/32]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Third Normal Form <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+The following algorithm converts an arbitrary schema to 3NF:
+<p><pre><small>
+Inputs: schema <i>R</i>, set <i>F</i> of <i>fd</i>s
+Output: set <i>R<sub>i</sub></i> of 3NF schemas
+
+let <i>F<sub>c</sub></i> be a <font color='#0000BB'>minimal cover</font> for <i>F</i>
+<i>Res</i> = {}
+for each <i>fd</i> <i>X &rarr; Y</i> in <i>F<sub>c</sub></i> {
+    if (no schema <i>S &isin; Res</i> contains <i>XY</i>) {
+        <i>Res</i> = <i>Res &cup; XY</i>
+    }
+}
+if (no schema <i>S &isin; Res</i> contains a candidate key for <i>R</i>) {
+    <i>K</i> = any candidate key for <i>R</i>
+    <i>Res</i> = <i>Res &cup; K</i>
+}
+</small></pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [13/32]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Third Normal Form <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Critical step is producing minimal cover <i>F<sub>c</sub></i> for <i>F</i>
+<p>
+A set <i>F</i> of fds is minimal if
+<ul>
+<li> every fd <i>X &rarr; Y</i> is <i>simple</i> <br>
+	<small>(<i>Y</i> is a single attribute)</small>
+<li> every fd <i>X &rarr; Y</i> is <i>left-reduced</i> <br>
+	<small>(no <i>Z &sub; X</i> such that <i>Z &rarr; A</i> could replace <i>X &rarr; A</i> in <i>F</i> and preserve <i>F<sup>+</sup></i>)</small>
+<li> every fd <i>X &rarr; Y</i> is <i>necessary</i> <br>
+	<small>(no <i>X &rarr; Y</i> can be removed without changing <i>F<sup>+</sup></i>)</small>
+</ul>
+Algorithm: right-reduce, left-reduce, eliminate redundant fds
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [14/32]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  3NF Decomposition (1)</div></td><td align='right'></td></tr></table>
+<p>
+Consider the schema <i>R</i> and set of fds <i>F</i>
+<p>
+<i>R &nbsp;=&nbsp; ABCDEFGH</i>
+<p>
+<i>F &nbsp;=&nbsp; F<sub>c</sub> &nbsp;=&nbsp; { BH &rarr; C, A &rarr; D, C &rarr; E,
+F &rarr; A, E &rarr; F, BGH &rarr; E }</i>
+<p>
+Produce a 3NF decomposition of <i>R</i>.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [15/32]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  3NF Decomposition (2)</div></td><td align='right'></td></tr></table>
+<p>
+Recall the following table (based on e.g. a spreadsheet):
+<p><pre><small>
+<b>P</b>#  | <b>W</b>hen        | <b>A</b>ddress    | <b>N</b>otes         | <b>S</b>#   | Na<b>m</b>e  | <b>C</b>arReg
+----+-------------+------------+---------------+------+-------+-------
+PG4 | 03/06 15:15 | 55 High St | Bathroom leak | SG44 | Rob   | ABK754
+PG1 | 04/06 11:10 | 47 High St | All ok        | SG44 | Rob   | ABK754
+PG4 | 03/07 12:30 | 55 High St | All ok        | SG43 | Dave  | ATS123
+PG1 | 05/07 15:00 | 47 High St | Broken window | SG44 | Rob   | ABK754
+PG1 | 05/07 15:00 | 47 High St | Leaking tap   | SG44 | Rob   | ABK754
+PG2 | 13/07 12:00 | 12 High St | All ok        | SG42 | Peter | ATS123
+...
+</small></pre><p>
+<p>
+Recall the functional dependencies identified previously,
+<p>
+Use these to convert the table to a 3NF schema.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [16/32]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Database Design Methodology</div></td><td align='right'></td></tr></table>
+<p>
+To achieve a "good" database design:
+<ul>
+<li> identify attributes, entities, relationships &nbsp; <i>&rarr;</i> &nbsp; ER design
+<li> map ER design to relational schema
+<li> identify constraints <small>(including keys and functional dependencies)</small>
+<li> apply BCNF/3NF algorithms to produce normalized schema
+</ul>
+<small>
+Note: may subsequently need to "denormalise" if the design yields inadequate performance.
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [17/32]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Algebra</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Relational algebra</font> (RA) can be viewed as ...
+<ul>
+<li> mathematical system for manipulating relations, or
+<li> data manipulation language (DML) for the relational model
+</ul>
+Relational algebra consists of:
+<ul>
+<li> <font color='#0000BB'>operands</font>: relations, or variables representing relations
+<li> <font color='#0000BB'>operators</font> that map relations to relations
+<li> rules for combining operands/operators into expressions
+<li> rules for evaluating such expressions
+</ul>
+Why is it important?
+<ul>
+<li> because if forms the basis for DBMS implementation
+<li> relational algebra ops are  like the machine code for DBMSs
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [18/32]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Algebra <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Core relational algebra operations:
+<ul>
+<li> <font color='#0000BB'>selection</font>: choosing a subset of tuples/rows
+<li> <font color='#0000BB'>projection</font>: choosing a subset of attributes/columns
+<li> <font color='#0000BB'>product</font>, <font color='#0000BB'>join</font>: combining relations
+<li> <font color='#0000BB'>union</font>, <font color='#0000BB'>intersection</font>, <font color='#0000BB'>difference</font>: combining relations
+<li> <font color='#0000BB'>rename</font>: change names of relations/attributes
+</ul>
+Common extensions include:
+<ul>
+<li> <font color='#0000BB'>aggregation</font>, &nbsp;<font color='#0000BB'>projection++</font>, &nbsp;<font color='#0000BB'>division</font>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [19/32]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Algebra <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Select, project, join provide a powerful set of operations for
+building relations and extracting interesting data from them.
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/relalg/spj1.png]" src="Pics/relalg/spj1.png">
+</div><p>
+<p>
+Adding set operations and renaming makes RA <font color='#0000BB'>complete</font>.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [20/32]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Notation</div></td><td align='right'></td></tr></table>
+<p>
+Standard treatments of relational algebra use Greek symbols.
+<p>
+We use the following notation <small>(because it is easier to reproduce)</small>:
+<p><table border='0' cellpadding='6'>
+<tr valign=top>
+  <td><nobr><b>Operation</b></td>
+  <td></td><td><b>Standard<br>Notation</b></td>
+  <td></td><td><b>Our<br>Notation</b></td>
+</tr>
+<tr valign=top>
+  <td><nobr>Selection</td>
+  <td></td><td><i><span style="font-size:150%">&sigma;</span><sub>expr</sub>(Rel)</i></td>
+  <td></td><td><i>Sel[expr](Rel)</i></td>
+</tr>
+<tr valign=top>
+  <td><nobr>Projection</td>
+  <td></td><td><i><span style="font-size:150%">&pi;</span><sub>A,B,C</sub>(Rel)</i></td>
+  <td></td><td><i>Proj[A,B,C](Rel)</i></td>
+</tr>
+<tr valign=top>
+  <td><nobr>Join</td>
+  <td></td><td><i>Rel<sub>1</sub> &#8904;<sub>expr</sub> Rel<sub>2</sub></i></td>
+  <td></td><td><i>Rel<sub>1</sub> &nbsp;Join[expr]&nbsp; Rel<sub>2</sub></i></td> 
+</tr>
+<tr valign=top>
+  <td><nobr>Rename</td>
+  <td></td><td><i>&rho;<sub>schema</sub>Rel</i></td>
+  <td></td><td><i>Rename[schema](Rel)</i></td> 
+</tr>
+</table><p>
+<small>
+For other operations (e.g. set operations) we adopt the standard notation. <br>
+Except when typing in a text file, where <large><code>*</code></large> = intersection, <large><code>+</code></large> = union
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [21/32]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s23"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Describing RA Operations</div></td><td align='right'></td></tr></table>
+<p>
+We define the semantics of RA operations using
+<ul>
+<li> "conditional set" expressions &nbsp; e.g. <i>{ X | condition on X }</i>
+<li> tuple notations:
+<ul>
+<li> <i>t[AB]</i> &nbsp; <small>(extracts attributes <i>A</i> and <i>B</i> from tuple <i>t</i>)</small>
+<li> <i>(x,y,z)</i> &nbsp; <small>(enumerated tuples; specify attribute values)</small>
+</ul>
+<li> quantifiers, set operations, boolean operators
+</ul>
+For each operation, we also describe it operationally:
+<ul>
+<li> give an algorithm to compute the result, tuple-by-tuple
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [22/32]</div> <DIV class='slideCl1    ' id="s23"  >
+<div class='navCl1'><a href="#s22"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s24"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Describing RA Operations <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+All RA operators return a result of type <font color='#0000BB'>relation</font>.
+<p>
+For convenience, we can name a result and use it later.
+<p>
+E.g.
+<p><pre>
+Temp = R <i>op<sub>1</sub></i> S <i>op<sub>2</sub></i> T
+Res  = Temp <i>op<sub>3</sub></i> Z
+<span class='comment'>-- which is equivalent to</span>
+Res  = (R <i>op<sub>1</sub></i> S <i>op<sub>2</sub></i> T) <i>op<sub>3</sub></i> Z
+</pre><p>
+<br>
+Each result is a relation with a well-defined schema
+<ul>
+<li> this applies equally to intermediate results and final results
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [23/32]</div> <DIV class='slideCl1    ' id="s24"  >
+<div class='navCl1'><a href="#s23"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s25"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example Database #1</div></td><td align='right'></td></tr></table>
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/relalg/db1.png]" src="Pics/relalg/db1.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [24/32]</div> <DIV class='slideCl1    ' id="s25"  >
+<div class='navCl1'><a href="#s24"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s26"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Example Database #2</div></td><td align='right'></td></tr></table>
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/relalg/db2a.png]" src="Pics/relalg/db2a.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [25/32]</div> <DIV class='slideCl1    ' id="s26"  >
+<div class='navCl1'><a href="#s25"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s27"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Rename</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Rename</font> provides "schema mapping".
+<p>
+If expression <i>E</i> returns a relation
+<i>R(A<sub>1</sub>, A<sub>2</sub>, ... A<sub>n</sub>)</i>, then
+<p>
+<div class='center'>
+<i>Rename[S(B<sub>1</sub>, B<sub>2</sub>, ... B<sub>n</sub>)](E)</i>
+</div>
+<p>
+gives a relation called <i>S</i>
+<ul>
+<li> containing the same set of tuples as <i>E</i>
+<li> but with the name of each attribute changed from <i>A<sub>i</sub></i>
+to <i>B<sub>i</sub></i>
+</ul>
+<small>
+Rename is like the identity function on the <i>contents</i> of a relation;
+it changes only the schema.
+</small>
+<p>
+<font color='#0000BB'>Rename</font> can be viewed as a "technical" apparatus of RA.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [26/32]</div> <DIV class='slideCl1    ' id="s27"  >
+<div class='navCl1'><a href="#s26"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s28"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Rename <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example rename:
+<br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/relalg/rename2.png]" src="Pics/relalg/rename2.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [27/32]</div> <DIV class='slideCl1    ' id="s28"  >
+<div class='navCl1'><a href="#s27"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s29"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Selection</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Selection</font> returns a subset of the tuples
+in a relation <i>r(R)</i> that satisfy a condition <i>C</i>.
+<p>
+<div class='center'>
+<i><span style="font-size:150%">&sigma;</span><sub>C</sub>(r)</i> &nbsp; = &nbsp; <i>Sel[C](r)</i> &nbsp; = &nbsp; { <i>t</i> &nbsp;|&nbsp; <i>t &isin; r &and; C(t)</i> }
+</div>
+<p>
+<i>C</i> is a boolean expression on attributes in <i>R</i>.
+<p>
+Result size: &nbsp; |<i><span style="font-size:150%">&sigma;</span><sub>C</sub>(r)</i>| <i>&le;</i> |<i>r</i>|
+<p>
+Result schema: &nbsp; same as the schema of <i>r</i> &nbsp; (i.e. <i>R</i>)
+<p>
+Algorithmic view:
+<p><pre>
+<i>result</i> = {}
+for each tuple <i>t</i> in relation <i>r</i>
+    if (<i>C(t)</i>) { <i>result</i> = <i>result &cup; {t}</i> }
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [28/32]</div> <DIV class='slideCl1    ' id="s29"  >
+<div class='navCl1'><a href="#s28"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s30"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Selection <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example selections:
+<br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/relalg/selection2.png]" src="Pics/relalg/selection2.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [29/32]</div> <DIV class='slideCl1    ' id="s30"  >
+<div class='navCl1'><a href="#s29"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s31"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Projection</div></td><td align='right'></td></tr></table>
+<p>
+<font color='#0000BB'>Projection</font> returns a set of tuples containing
+a subset of the attributes in the original relation.
+<p>
+<div class='center'>
+<i><span style="font-size:150%">&pi;</span><sub>X</sub>(r)</i> &nbsp; = &nbsp; <i>Proj[X](r)</i> &nbsp; = &nbsp; { <i>t[X]</i> &nbsp;|&nbsp; <i>t &isin; r</i> }, &nbsp;&nbsp;&nbsp; where <i>r(R)</i>
+</div>
+<p>
+<i>X</i> specifies a subset of the attributes of <i>R</i>.
+<p>
+Note that removing key attributes can produce duplicates.
+<p>
+In RA, duplicates are removed from the result <font color='#0000BB'>set</font>.
+<br>
+<small><font color="#777777">(In RDBMS's, duplicates are retained &nbsp; (i.e. they use bags, not sets)</small>)</font></small>
+<p>
+Result size: &nbsp; |<i><span style="font-size:150%">&pi;</span><sub>X</sub>(r)</i>| <i>&le;</i> |<i>r</i>|
+&nbsp;&nbsp;&nbsp;
+Result schema: &nbsp; <i>R'(X)</i>
+<p>
+Algorithmic view:
+<p><pre>
+<i>result</i> = {}
+for each tuple <i>t</i> in relation <i>r</i>
+    <i>result</i> = <i>result &cup; {t[X]}</i>
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [30/32]</div> <DIV class='slideCl1    ' id="s31"  >
+<div class='navCl1'><a href="#s30"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s32"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Projection <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Example projections:
+<br>
+<p><div align='center'>
+<img alt="[Diagram:Pics/relalg/projection2.png]" src="Pics/relalg/projection2.png">
+</div><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [31/32]</div> <DIV class='slideCl1    ' id="s32"  >
+<div class='navCl1'><a href="#s31"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise:  SQL &rarr; Rel Alg</div></td><td align='right'></td></tr></table>
+<p>
+Express each of the SQL statements in relation algebra:
+<p><pre>
+select name as "Beer", manf as "Brewer"
+from Beers;
+
+select * from Bars where addr = 'Coogee'
+
+select price from Sells
+where bar = 'CBH' and beer = 'New'
+
+select * from Sells
+where price = (select price from Sells
+               where bar = 'CBH' and beer = 'New')
+</pre><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 8 Tuesday Lecture &#9826; [32/32]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 1 Nov 2022</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

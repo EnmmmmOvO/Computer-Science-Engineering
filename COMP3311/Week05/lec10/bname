@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+import psycopg2
+import sys
+
+if len(sys.argv) < 2:
+   print(f"Usage: {sys.argv[0]} beerID")
+   exit()
+try:
+   bid = sys.argv[1]
+   conn = psycopg2.connect("dbname=ass1")
+   cur = conn.cursor()
+   print(cur.mogrify(f"select id,name from beers where id = {bid}"))
+   t = cur.fetchone()
+   if t is None:
+      print("No such beer")
+   else:
+      id,name = t
+      print(name)
+   conn.close()
+except Exception as e:
+   print(e)

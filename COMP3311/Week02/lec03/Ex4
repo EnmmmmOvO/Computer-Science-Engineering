@@ -1,0 +1,29 @@
+# mapping n:m relationship
+
+create domain PersonName as
+	text check (length(value) > 3);
+
+create table Customers (
+	custNo      integer,
+	name        PersonName not null,
+	address     text,
+	primary key (custNo)
+);
+
+create table Accounts (
+	acctNo      integer,
+	title       text not null,
+	balance     float not null,
+	primary key (acctNo)
+);
+
+create table Owns (
+	customer    integer,
+	account     integer,
+	lastAccessed timestamp not null,
+	primary key (customer,account),
+	foreign key (customer)
+	        references Customers(custNo)
+	foreign key (account)
+	        references Accounts(acctNo)
+);

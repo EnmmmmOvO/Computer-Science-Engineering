@@ -1,0 +1,10 @@
+Consider R = ABCD with FDs { ..., AB->CD, ... }
+
+*if* you decomposed R into S = ABC and T = ABD
+
+then AB->CD would not apply to either table
+
+need to break it to include only attributes from each table
+
+S = ABC with FDs = { ..., AB->C, ...}
+T = ABD with FDs = { ..., AB->D, ...}

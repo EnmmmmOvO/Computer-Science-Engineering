@@ -1,0 +1,14 @@
+
+create type Colours as enum ('red','green','blue');
+create type Mood as enum ('sad','happy');
+
+create table People (
+	name text not null,
+	feels Mood
+);
+
+insert into People values ('John','happy'); -- ok
+insert into People values ('Andrew','angry'); -- NOT ok, 'angry' not a Mood
+insert into People values ('Tina',null); -- ok
+insert into People(name) values ('Anne'); -- ok, inserts ('Anne',null)
+insert into People(mood) values ('happy'); -- fails, tries to insert (null,'happy')

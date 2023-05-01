@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP3311 Final Exam 20T3 </title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='20%'>
+  <span class='tiny'>COMP3311 Final Exam 20T3</span>
+</td>
+<td align='center' width='60%'>
+  The University of New South Wales <br>
+  <span class='heading'>COMP3311 Database Systems <br>  Final Exam 20T3</span>
+</td>
+<td align='right' width='20%'>
+  <span class='tiny'>Database Systems</span>
+</td>
+</table>
+</div>
+<center><a href='front_page.html'>[Front Page]</a> <a href='notes.html'>[Notes]</a> <a href='database.html'>[Database]</a> <a target='Course Website' href='https://webcms3.cse.unsw.edu.au/COMP3311/20T3/'>[Course Website]</a> <a target='Cheat Sheets' href='doco/index.html'>[Cheat Sheets]</a> 
+<br>
+<a href='Q01.html'>[Q1]</a> <a href='Q02.html'>[Q2]</a> <a href='Q03.html'>[Q3]</a> <a href='Q04.html'>[Q4]</a> <a href='Q05.html'>[Q5]</a> <a href='Q06.html'>[Q6]</a> <a href='Q07.html'>[Q7]</a> <a href='Q08.html'>[Q8]</a> <a href='Q09.html'>[Q9]</a> <a href='Q10.html'>[Q10]</a> <b>[Q11]</b> <a href='Q12.html'>[Q12]</a> 
+</center>
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 11 <span class='tiny'>(9 marks)</span></h3>
+<p>
+Assume that we have a collection of relations as follows:
+</p>
+<pre>
+R(a,b,c)   S(d,e)   T(a,d,f)
+</pre>
+<p>
+Write relational algebra equivalents of the following SQL statements.
+You may write multiple steps, with one RA operation in each step.
+Use the notation which has implicit projections and renaming by
+writing attribute names on the left-hand side of the "assignment",
+e.g.
+</p>
+<pre> Tmp1(a,b) = Sel[c=5]R </pre>
+<p>rather than</p>
+<pre>Tmp = Rename[R&rarr;Tmp](Proj[a,b](Sel[c=5]R)) </pre>
+<p>
+The final step should produce a relation called <tt>Res</tt>.
+</p>
+<p><b>Exercises:</b></p>
+<ol type='A'>
+<li class="subq"> <p class="qtext">
+<pre>
+select * from R;
+</pre>
+<li class="subq"> <p class="qtext">
+<pre>
+select a,b from R where c &lt; 0;
+</pre>
+</p></li>
+</p></li>
+<li class="subq"> <p class="qtext">
+<pre>
+select a,d from R join S on (b = e) where c &lt; 0;
+</pre>
+</p></li>
+<li class="subq"> <p class="qtext">
+<pre>
+select b,c,e,f from R natural join T natural join S;
+</pre>
+</p></li>
+</ol>
+<p><b>Instructions:</b></p>
+<ul>
+<li> Type your answers to this question into a file called <tt>q11.txt</tt>
+<li> Submit via: &nbsp; <b><tt>give cs3311 exam_q11 q11.txt</tt></b> &nbsp;or&nbsp; Webcms3
+</ul>
+
+</div>
+<center><i>End of Question</i></center>
+</body>
+</html>

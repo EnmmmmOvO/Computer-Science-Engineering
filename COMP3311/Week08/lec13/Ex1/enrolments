@@ -1,0 +1,10 @@
+
+Enrolments(zid, name, code, term, title, mark, grade)
+
+zid -> name
+
+code -> title
+
+zid,code,term -> mark,grade
+
+mark -> grade ?

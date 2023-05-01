@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+# COMP3311 20T2 Final Exam
+# Q6: print match reports for a specified team in a given year
+
+import sys
+import psycopg2
+
+# ... put helper functions here ...
+
+db = None
+cur = None
+
+if len(sys.argv) < 3:
+   print(f"Usage: {sys.argv[0]} TeamName Year")
+   exit(1)
+team = sys.argv[1]
+year = sys.argv[2]
+if not year.isnumeric():
+   print(f"Invalid year {year}")
+   exit(1)
+
+try:
+   db = psycopg2.connect("dbname=footy")
+   # ... your code goes here ...
+except psycopg2.Error as err:
+	print("DB error: ", err)
+finally:
+   if db:
+      db.close()
+   if cur:
+       cur.close()
+       

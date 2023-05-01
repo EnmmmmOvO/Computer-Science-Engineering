@@ -1,0 +1,407 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0072)https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week08/index.php?view=all -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>COMP3311 23T1 - Week 08</title>
+<link href="./tut06_solution_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="./tut06_solution_files/course.css">
+</head>
+<body>
+<div class="container"><script language="JavaScript">
+function changeText(el, newText) {
+  // Safari work around
+  if (el.innerText)
+    el.innerText = newText;
+  else if (el.firstChild && el.firstChild.nodeValue)
+    el.firstChild.nodeValue = newText;
+}
+function toggleVisible(elid) {
+  el1 = document.getElementById(elid);
+  el2 = document.getElementById(elid+"a");
+  if (el1.style.display == "") {
+     el1.style.display = "none";
+     changeText(el2,"show answer");
+  }
+  else {
+     el1.style.display = "";
+     changeText(el2,"hide answer");
+  }
+}
+</script>
+
+<div align="center">
+<table width="100%" border="0">
+<tbody><tr valign="top">
+<td align="left" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">COMP3311 23T1</a></span>
+</td>
+<td align="center" width="50%">
+  <span class="heading">Week 08</span><br>
+  <span class="subheading">Python/Psycopg2</span>
+</td>
+<td align="right" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">Database Systems</a></span>
+</td>
+</tr></tbody></table>
+</div>
+<ol>
+
+<br>
+<li>
+<p>
+What is the difference between a <i>connection</i> and a <i>cursor</i>
+in Psycopg2?
+How do you create each?
+</p>
+<div style="color:#000099;"><p><b>Answer:</b></p>
+<p>
+A <i>connection</i> provides authenticated access to a database.
+You create a <i>connection</i> as follows
+</p>
+<pre>connection = psycopg2.connect(<i>ConnectionParameters</i>)
+</pre>
+<p>
+Typical connection parameters are:
+<tt>dbname</tt> or <tt>database</tt> (required),
+<tt>user</tt> and <tt>password</tt> for authentication, and
+<tt>host</tt> and <tt>port</tt> to specify the "location" of the
+PostgreSQL server.
+</p>
+<p>
+Some examples:
+</p><pre>conn = psycopg2.connect("dbname=mydb")
+conn = psycopg2.connect(database="mydb")
+conn = psycopg2.connect("user=jas password=abc123 dbname=mydb")
+conn = psycopg2.connect("host=db.server.org port=5432 dbname=mydb")
+</pre>
+<p>
+A <i>cursor</i> provides a pipeline between the Python program
+and the PostgreSQL database.
+You create a <i>cursor</i> as follows:
+</p>
+<pre>cursor = connection.cursor()
+</pre>
+<p>
+Cursors can be used to send queries to the database and read
+back rsults as in:
+</p>
+<pre>cursor.execute("<i>SQL Query</i>")
+results = cursor.fetchall()
+</pre>
+<p>
+where <tt>results</tt> is a list of tuples.
+</p>
+</div>
+</li>
+
+<br>
+<li>
+<p>
+<small>[Question courtesy of Clifford Sesel]</small>
+The following Python script (in a executable file called <tt>opendb</tt>)
+aims to open a connection to a database
+whose name is specified on the command line:
+</p>
+<pre class="python" style="font-family:monospace;"><ol><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #808080; font-style: italic;">#!/usr/bin/python3</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #dc143c;">sys</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> psycopg2</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">)</span> <span style="color: #66cc66;">&lt;</span> <span style="color: #ff4500;">2</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"Usage: opendb DBname"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    exit<span style="color: black;">(</span><span style="color: #ff4500;">1</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">db <span style="color: #66cc66;">=</span> <span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">try</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    conn <span style="color: #66cc66;">=</span> psycopg2.<span style="color: black;">connect</span><span style="color: black;">(</span>f<span style="color: #483d8b;">"dbname={db}"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span>conn<span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    cur <span style="color: #66cc66;">=</span> conn.<span style="color: black;">cursor</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">except</span> psycopg2.<span style="color: black;">Error</span> <span style="color: #ff7700;font-weight:bold;">as</span> err:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"database error: "</span><span style="color: #66cc66;">,</span> err<span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">finally</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">if</span> conn <span style="color: #ff7700;font-weight:bold;">is</span> <span style="color: #ff7700;font-weight:bold;">not</span> <span style="color: #008000;">None</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">        conn.<span style="color: black;">close</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"finished with the database"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">&nbsp;</div></li></ol></pre><p>
+When invoked with an existing database, it behaves as follows
+</p>
+<pre>$ <b>./opendb beers2</b>
+&lt;connection object at 0x7fac401799f0; dsn: 'dbname=beers2', closed: 0&gt;
+finished with the database
+</pre>
+<p>
+but when invoked with a non-existent database it produces
+</p>
+<pre>$ <b>./opendb nonexistent</b>
+database error:  FATAL:  database "nonexistent" does not exist
+
+Traceback (most recent call last):
+  File "./opendb", line 16, in <module>
+    if conn :
+NameError: name 'conn' is not defined
+</module></pre>
+<p>
+rather than
+</p>
+<pre>$ <b>./opendb nonexistent</b>
+database error:  FATAL:  database "nonexistent" does not exist
+
+finished with the database
+</pre>
+<p>
+What is the problem? And how can we fix it?
+</p><div style="color:#000099;"><p><b>Answer:</b></p>
+<p>
+The scope of the <tt>conn</tt>object does not extend into the <tt>finally</tt>
+clause if <tt>conn</tt> is only initialised in the <tt>try</tt> clause.
+This is essentially what the error message is telling you:
+</p>
+<pre>NameError: name 'conn' is not defined
+</pre>
+<p>
+Ask the Python developers why variable/object scope works this way.
+</p>
+<p>
+To fix the problem, you need to initialise <tt>conn</tt> in the outer
+scope. You can't simply move the <tt>connect()</tt> call there, because
+it would then be outside the <tt>try</tt> clause and the exception would
+be handled by the standard Python exception handler rather than our
+exception handler, e.g.
+</p>
+<pre>Traceback (most recent call last):
+  File "./opendb", line 9, in <module>
+    conn = psycopg2.connect(f"dbname={db}")
+  File "/Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/site-packages/psycopg2/__init__.py", line 127, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: FATAL:  database "xyzzyyyy" does not exist
+</module></pre>
+<p>
+The solution is to initialise <tt>conn</tt> outside the <tt>try</tt>
+clause:
+</p>
+<pre>db = sys.argv[1]
+conn = None
+try:
+   ...
+</pre>
+</div>
+</li>
+
+</ol>
+
+<br>
+<p>
+The following questions make use of the <tt>uni</tt> database used
+in lectures.
+A database dump for the <tt>uni</tt> database can be found in:
+</p>
+<pre>/home/cs3311/web/23T1/lectures/week07-tuesday/exercises/uni.dump
+</pre>
+<p></p><p>
+The following gives enough of the schema to answer the questions below:
+</p>
+<pre>People(id, family, given, fullname, birthday, origin)
+
+Students(id)
+
+Subjects(id, code, name, uoc, offeredby, ...)
+Courses(id, subject, term, homepage)
+Streams(id, code, name, offeredby, stype, ...)
+Programs(id, code, name, uoc, offeredby, ...)
+
+Terms(id, year, ttype, code, name, starting, ending)
+
+Course_enrolments(student, course, mark, grade)
+Stream_enrolments(part_of_prog_enr, stream)
+Program_enrolments(id, student, term, program, ...)
+
+OrgUnits(id, utype, name, longname, unswid)
+OrgUnit_Types(id, name)
+</pre>
+
+<ol start="3">
+
+<br>
+<li>
+<p>
+Using the <tt>uni</tt> database, write a Python/Psycopg2 script
+called <tt>courses-studied</tt> that prints the subjects that
+a specified student studied in a given term.
+There is no need to check whether the student was enrolled in the given
+term; simply print that they studied no courses in that term.
+Examples of use:
+</p><pre>$ <b>./courses-studied</b>
+Usage: ./courses-studied studentID term
+
+$ <b>./courses-studied 1234567 18s1</b>
+No such student
+
+$ <b>./courses-studied 9300035 20T1</b>
+No such student
+
+$ <b>./courses-studied 5137295 17s2</b>
+COMP1521 Computer Systems Fundamentals
+COMP1531 Software Eng Fundamentals
+MATH1231 Mathematics 1B
+
+$ <b>./courses-studied 5137295 20T1</b>
+COMP3231 Operating Systems
+SENG3011 Software Eng Workshop 3
+</pre>
+<div style="color:#000099;"><p><b>Answer:</b></p>
+<p>
+Possible script for <tt>courses-studied</tt>:
+</p>
+<pre class="python" style="font-family:monospace;"><ol><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #808080; font-style: italic;">#!/usr/bin/python3</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #dc143c;">sys</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> psycopg2</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">)</span> <span style="color: #66cc66;">&lt;</span> <span style="color: #ff4500;">3</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"Usage:"</span><span style="color: #66cc66;">,</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span><span style="color: #66cc66;">,</span><span style="color: #483d8b;">"sudentID term"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    exit<span style="color: black;">(</span><span style="color: #ff4500;">1</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">student <span style="color: #66cc66;">=</span> <span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">stuName <span style="color: #66cc66;">=</span> <span style="color: #008000;">None</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">term <span style="color: #66cc66;">=</span> <span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">2</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">conn <span style="color: #66cc66;">=</span> <span style="color: #008000;">None</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">stuqry <span style="color: #66cc66;">=</span> <span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">select p.fullname</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">from   People p join Students s on p.id=s.id</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">where  p.id = %s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">query <span style="color: #66cc66;">=</span> <span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">select s.code, s.name</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">from   Subjects s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Courses c on (c.subject=s.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Terms t on (c.term=t.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Course_enrolments e on (e.course=c.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join People p on (e.student=p.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">where  p.id = %s and t.code = %s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">order  by s.code</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">try</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   conn <span style="color: #66cc66;">=</span> psycopg2.<span style="color: black;">connect</span><span style="color: black;">(</span><span style="color: #483d8b;">"dbname=uni"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur <span style="color: #66cc66;">=</span> conn.<span style="color: black;">cursor</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur.<span style="color: black;">execute</span><span style="color: black;">(</span>stuqry<span style="color: #66cc66;">,</span><span style="color: black;">[</span>student<span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   stuName <span style="color: #66cc66;">=</span> cur.<span style="color: black;">fetchone</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #ff7700;font-weight:bold;">not</span> stuName:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"No such student"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      exit<span style="color: black;">(</span><span style="color: #ff4500;">0</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur.<span style="color: black;">execute</span><span style="color: black;">(</span>query<span style="color: #66cc66;">,</span> <span style="color: black;">[</span>student<span style="color: #66cc66;">,</span>term<span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   courses <span style="color: #66cc66;">=</span> cur.<span style="color: black;">fetchall</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span>courses<span style="color: black;">)</span> <span style="color: #66cc66;">==</span> <span style="color: #ff4500;">0</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"No courses"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      exit<span style="color: black;">(</span><span style="color: #ff4500;">0</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">for</span> subj <span style="color: #ff7700;font-weight:bold;">in</span> courses:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span>subj<span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span><span style="color: #66cc66;">,</span>subj<span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">except</span> psycopg2.<span style="color: black;">Error</span> <span style="color: #ff7700;font-weight:bold;">as</span> err:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"database error: "</span><span style="color: #66cc66;">,</span> err<span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">finally</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> conn :</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      conn.<span style="color: black;">close</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">&nbsp;</div></li></ol></pre></div>
+</li>
+
+<br>
+<li>
+<p>
+Using the <tt>uni</tt> database, write a Python/Psycopg2 script
+called <tt>course-roll</tt> that takes
+two command-line arguments (subject code and term code) and
+produces a list of students enrolled in that course.
+Each line should contain: studentID, name.
+The name should appear as "familyName, givenNames" and the
+list should be ordered by familyName then by givenName. e.g.
+</p>
+<p>
+Some examples of use:
+</p>
+<pre>$ <b>./course-roll COMP1521</b>
+Usage: course-roll subject term
+
+$ <b>./course-roll COMP1511 16s1</b>
+COMP1511 16s1
+No students
+
+$ <b>./course-roll COMP1151 16s1</b>
+COMP1151 17s1
+No students
+
+$ <b>./course-roll PSYC1022 19T0</b>
+PSYC1022 19T0
+5154325 Georgas, Jose
+5141408 Hordern, Priyanshi
+5134420 Hulst, Stan
+5159982 Madanimelak, Siavash
+5163692 Watson, Carine
+
+$ <b>./course-roll COMP3211 20T1</b>
+COMP3211 20T1
+5167571 Ahmad Bakir, Nabilah
+5160470 Bashir, Zeeshan
+5132438 Bown, Yelgun
+5147435 Chen, Manjiang
+5137415 Hang, Zheren
+5134504 Hiwilla, Libin
+5182987 Krueger, Isabel
+5149728 Lim, Sang
+5160734 Maslin, Jocelyn
+5160049 McTigue, Courtney
+5159809 Murdani, Elsan
+5171168 Nadol, Rowan
+5169891 Niu, Zihui
+5166832 Pong, Chi-Kuang
+5161703 Schachat, Kalie
+5215073 Shang, Chan
+5173714 Strickland, Vanya
+5129717 Styer, Sharon
+5208366 Suo, Junjian
+5178112 Tandan, Ray
+5164849 Thattai, Kajalben
+5168959 Virdi, Jawad
+</pre>
+<div style="color:#000099;"><p><b>Answer:</b></p>
+<p>
+Possible script for <tt>course-roll</tt>:
+</p>
+<pre class="python" style="font-family:monospace;"><ol><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #808080; font-style: italic;">#!/usr/bin/python3</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #dc143c;">sys</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> psycopg2</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">)</span> <span style="color: #66cc66;">&lt;</span> <span style="color: #ff4500;">3</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"Usage:"</span><span style="color: #66cc66;">,</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span><span style="color: #66cc66;">,</span><span style="color: #483d8b;">"subject term"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    exit<span style="color: black;">(</span><span style="color: #ff4500;">1</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">subject <span style="color: #66cc66;">=</span> <span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">term <span style="color: #66cc66;">=</span> <span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">2</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">conn <span style="color: #66cc66;">=</span> <span style="color: #008000;">None</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">query <span style="color: #66cc66;">=</span> <span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">select p.id, p.family, p.given</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">from   Subjects s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Courses c on (c.subject=s.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Terms t on (c.term=t.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Course_enrolments e on (e.course=c.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join People p on (e.student=p.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">where  s.code = %s and t.code = %s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">order  by p.family, p.given</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">try</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   conn <span style="color: #66cc66;">=</span> psycopg2.<span style="color: black;">connect</span><span style="color: black;">(</span><span style="color: #483d8b;">"dbname=uni"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur <span style="color: #66cc66;">=</span> conn.<span style="color: black;">cursor</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur.<span style="color: black;">execute</span><span style="color: black;">(</span>query<span style="color: #66cc66;">,</span> <span style="color: black;">[</span>subject<span style="color: #66cc66;">,</span>term<span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   students <span style="color: #66cc66;">=</span> cur.<span style="color: black;">fetchall</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span>subject<span style="color: #66cc66;">,</span>term<span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span>students<span style="color: black;">)</span> <span style="color: #66cc66;">==</span> <span style="color: #ff4500;">0</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"No students"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      exit<span style="color: black;">(</span><span style="color: #ff4500;">0</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">for</span> stu <span style="color: #ff7700;font-weight:bold;">in</span> students:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span>stu<span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span><span style="color: #66cc66;">,</span>stu<span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span>+<span style="color: #483d8b;">","</span><span style="color: #66cc66;">,</span>stu<span style="color: black;">[</span><span style="color: #ff4500;">2</span><span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">except</span> psycopg2.<span style="color: black;">Error</span> <span style="color: #ff7700;font-weight:bold;">as</span> err:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"database error: "</span><span style="color: #66cc66;">,</span> err<span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">finally</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> conn :</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      conn.<span style="color: black;">close</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">&nbsp;</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">&nbsp;</div></li></ol></pre></div>
+<p>
+</p></li>
+
+<br>
+<li>
+<p>
+The script in the previous question was a little bit sloppy in its
+error detection, and the messages did not distinguish between a
+real course with no students and a bad value for either the subject
+code or the term code, or a valid pair of codes for which there was
+no course offering.
+The script should also now print the long name of the subject.
+Improve the script so it behaves as follows:
+</p>
+<pre>$ <b>./course-roll1 COMP1151 18s1</b>
+Invalid subject COMP1151
+
+$ <b>./course-roll1 COMP1511 88xx</b>
+Invalid term 88xx
+
+$ <b>./course-roll1 COMP3211 20T2</b>
+No offering: COMP3211 20T2
+
+$ <b>./course-roll1 MATH2601 20T2</b>
+MATH2601 20T2 Higher Linear Algebra
+5194739 Boddam-Whetham, Billi
+5160543 Chao, Sixiang
+5188339 Ghebrial, Christina
+5220431 Lopez Castro, Feyza
+5196254 McWilliam, Lianne
+
+$ <b>./course-roll1 COMP3821 17s1</b>
+COMP3821 17s1 Extended Algorithms and Programming Techniques
+5143563 Aurik, Rumana
+5128387 Barsoum, Rona
+5128243 Bartlett, Gregg
+5133001 Black, Samim
+5126171 Demiri, Florida
+5128296 Donney, Lisita
+5133189 Essam, Swisszanah
+5135130 Ghislain, Thien-Ngan
+5143373 Howard, Alanna
+5141297 MAI, Tiancong
+5132763 MAI, Xueqi
+5143439 Manolios Reichert, Janette
+5141860 Matsuo, Ryann
+5125264 Mock, Na-Ima
+5128275 Mohd Hassan, Xiao
+5147571 Morsalin, Amir
+5129681 Neo, Fenzhi
+5128164 Park, Toshiki
+5142705 Rabelo Castello, Tamara
+5142618 Saldanha, Sai
+5143532 Sethuramasamy, Tanvi
+5141585 Twine, Hughie
+5142688 Wenzel, Sohaib
+5145043 Wijeratne, Joyce
+5127997 Zhen, Kaijian
+</pre>
+<div style="color:#000099;"><p><b>Answer:</b></p>
+<p>
+Possible script for <tt>course-roll1</tt>:
+</p>
+Can't find code file code/class-roll1
+</div>
+</li>
+
+<br>
+<li>
+<p>
+Using the <tt>uni</tt> database, write a Python/Psycopg2 script
+called <tt>nsubjects</tt> that takes the name (or part of the name)
+of a School and prints the number of subjects offered by that school.
+Use the command-line argument as a pattern, and do case-insensitive
+matching.
+If more than one school matches the pattern, indicate that multiple
+schools match.
+</p>
+<p>
+Examples of usage:
+</p>
+<pre>$ <b>python3 nsubjects 'Computer Science'</b>
+School of Computer Science and Engineering teaches 138 subjects
+
+$ <b>python3 nsubjects 'Chem'</b>
+Multiple schools match:
+School of Chemical Engineering
+School of Chemistry
+
+$ <b>python3 nsubjects 'Chemistry'</b>
+School of Chemistry teaches 11 subjects
+
+$ <b>python3 nsubjects 'Math'</b>
+School of Mathematics &amp; Statistics teaches 85 subjects
+</pre>
+<p>
+</p><div style="color:#000099;"><p><b>Answer:</b></p>
+<p>
+Possible script for <tt>nsubjects</tt>:
+</p>
+<pre class="python" style="font-family:monospace;"><ol><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #808080; font-style: italic;">#!/usr/bin/python3</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> <span style="color: #dc143c;">sys</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">import</span> psycopg2</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">)</span> <span style="color: #66cc66;">&lt;</span> <span style="color: #ff4500;">2</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"Usage:"</span><span style="color: #66cc66;">,</span><span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span><span style="color: #66cc66;">,</span><span style="color: #483d8b;">"SchoolName"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">    exit<span style="color: black;">(</span><span style="color: #ff4500;">1</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">schoolName <span style="color: #66cc66;">=</span> <span style="color: #dc143c;">sys</span>.<span style="color: black;">argv</span><span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">conn <span style="color: #66cc66;">=</span> <span style="color: #008000;">None</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">schoolq <span style="color: #66cc66;">=</span> <span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">select id,longname from Orgunits where longname ~* %s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">ncoursesq <span style="color: #66cc66;">=</span> <span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">select count(distinct s.code)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">from   Subjects s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Courses c on (c.subject = s.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">       join Orgunits u on (s.offeredby = u.id)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">where  u.id = %s</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #483d8b;">"""</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">try</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   conn <span style="color: #66cc66;">=</span> psycopg2.<span style="color: black;">connect</span><span style="color: black;">(</span><span style="color: #483d8b;">"dbname=uni"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur <span style="color: #66cc66;">=</span> conn.<span style="color: black;">cursor</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   cur.<span style="color: black;">execute</span><span style="color: black;">(</span>schoolq<span style="color: #66cc66;">,</span> <span style="color: black;">[</span>schoolName<span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   schools <span style="color: #66cc66;">=</span> cur.<span style="color: black;">fetchall</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> <span style="color: #008000;">len</span><span style="color: black;">(</span>schools<span style="color: black;">)</span> <span style="color: #66cc66;">==</span> <span style="color: #ff4500;">0</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"No such school"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">elif</span> <span style="color: #008000;">len</span><span style="color: black;">(</span>schools<span style="color: black;">)</span> <span style="color: #66cc66;">&gt;</span> <span style="color: #ff4500;">1</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"Multiple schools match:"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">for</span> school <span style="color: #ff7700;font-weight:bold;">in</span> schools:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">         <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span>school<span style="color: black;">[</span><span style="color: #ff4500;">1</span><span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">else</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      school <span style="color: #66cc66;">=</span> schools<span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      cur.<span style="color: black;">execute</span><span style="color: black;">(</span>ncoursesq<span style="color: #66cc66;">,</span> <span style="color: black;">[</span>school<span style="color: black;">[</span><span style="color: #ff4500;">0</span><span style="color: black;">]</span><span style="color: black;">]</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      nc <span style="color: #66cc66;">=</span> cur.<span style="color: black;">fetchone</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span>f<span style="color: #483d8b;">"{school[1]} teaches {nc[0]} subjects"</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">except</span> psycopg2.<span style="color: black;">Error</span> <span style="color: #ff7700;font-weight:bold;">as</span> err:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">print</span><span style="color: black;">(</span><span style="color: #483d8b;">"database error: "</span><span style="color: #66cc66;">,</span> err<span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;"><span style="color: #ff7700;font-weight:bold;">finally</span>:</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">   <span style="color: #ff7700;font-weight:bold;">if</span> conn :</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">&nbsp;</div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">      conn.<span style="color: black;">close</span><span style="color: black;">(</span><span style="color: black;">)</span></div></li><li style="font-weight: normal; vertical-align:top;"><div style="font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;">&nbsp;</div></li></ol></pre></div>
+</li>
+
+</ol>
+
+
+
+</div></body></html>

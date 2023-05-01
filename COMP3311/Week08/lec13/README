@@ -1,0 +1,8 @@
+Ex1
+- determining FDs on an enrolments table
+Ex2
+- determining FDs on an abstract table
+Ex3
+- determining keys using FDs and attribute closure
+Decomp
+- an example of decomposing a schema and how FDs might be lost

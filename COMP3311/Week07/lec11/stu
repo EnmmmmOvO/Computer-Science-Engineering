@@ -1,0 +1,44 @@
+#!/usr/bin/python3
+
+import sys
+import psycopg2
+
+# define any local helper functions here
+
+### set up some globals
+
+usage = f"Usage: {sys.argv[0]} PartialName"
+db = None
+
+### process command-line args
+
+argc = len(sys.argv)
+if argc < 2:
+  print(usage)
+  exit(1)
+name = sys.argv[1]
+qry = '''
+select p.id, p.fullname
+from People p
+     join Students s on s.id = p.id
+where p.fullname ~* %s
+order by p.family
+'''
+
+# manipulate database
+
+try:
+  db = psycopg2.connect("dbname=uni")
+
+  cur = db.cursor()
+  cur.execute(qry, [name])
+  for t in cur.fetchall():
+    zid,sname = t
+    print(f"{zid} {sname}")
+
+except Exception as err:
+  print("DB error: ", err)
+finally:
+  if db:
+    db.close()
+

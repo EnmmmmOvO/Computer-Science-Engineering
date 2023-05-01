@@ -1,0 +1,811 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- saved from url=(0071)https://cgi.cse.unsw.edu.au/~cs3311/23T1/tutes/week04/index.php?view=qo -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>COMP3311 23T1 - Week 04</title>
+<link href="./tut03_files/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="./tut03_files/course.css">
+</head>
+<body>
+<div class="container"><script language="JavaScript">
+function changeText(el, newText) {
+  // Safari work around
+  if (el.innerText)
+    el.innerText = newText;
+  else if (el.firstChild && el.firstChild.nodeValue)
+    el.firstChild.nodeValue = newText;
+}
+function toggleVisible(elid) {
+  el1 = document.getElementById(elid);
+  el2 = document.getElementById(elid+"a");
+  if (el1.style.display == "") {
+     el1.style.display = "none";
+     changeText(el2,"show answer");
+  }
+  else {
+     el1.style.display = "";
+     changeText(el2,"hide answer");
+  }
+}
+</script>
+
+<div align="center">
+<table width="100%" border="0">
+<tbody><tr valign="top">
+<td align="left" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">COMP3311 23T1</a></span>
+</td>
+<td align="center" width="50%">
+  <span class="heading">Week 04</span><br>
+  <span class="subheading">SQL Constraints, Updates and Queries</span>
+</td>
+<td align="right" width="25%">
+  <span class="tiny"><a href="https://www.cse.unsw.edu.au/~cs3311/23T1/">Database Systems</a></span>
+</td>
+</tr></tbody></table>
+</div>
+<p>
+Consider the following data model for a
+a business organisation and its employees:
+</p><p>
+</p><center><img src="./tut03_files/schema.png"></center>
+<p></p>
+<p>
+Employees are uniquely indentified by an id (<tt>eid</tt>), and other
+obvious information (name,age,...) is recorded about each employee.
+An employee may work in several departments, with the percentage of
+time spent in each department being recorded in the <tt>WorksIn</tt>
+relation (as a number in the range 0.0-1.0, with 1.0 representing
+100%).
+The percentages for a given employee may not sum to one if the employee
+only works part-time in the organisation.
+Departments are also uniquely identified by an id (<tt>did</tt>),
+along with other relevant information, including the id of the
+employee who manages the department.
+</p><p>
+Based on the ER design and the above considerations, here is a
+relational schema to represent this scenario:
+</p><pre>create table Employees (
+      eid     integer,
+      ename   text,
+      age     integer,
+      salary  real,
+      primary key (eid)
+);
+create table Departments (
+      did     integer,
+      dname   text,
+      budget  real,
+      manager integer references Employees(eid),
+      primary key (did)
+);
+create table WorksIn (
+      eid     integer references Employees(eid),
+      did     integer references Departments(did),
+      percent real,
+      primary key (eid,did)
+);
+</pre>
+<p>
+Answer each of the following questions for this schema ...
+</p>
+
+<ol>
+
+<li>
+<p>
+Does the order of table declarations above matter?
+</p>
+<!--
+<p>
+Yes. The order matters. We can not insert a Department tuple until there is an Employee tuple available to be the manager of the department.
+We cannot also insert any WorksIn tuple until you have both the Employee tuple and the Department tuple where the employee works.
+</p>
+
+-->
+
+</li><li>
+<p>
+A new government initiative to get more young people into work
+cuts the salary levels of all workers under 25 by 20%.
+Write an SQL statement to implement this policy change.
+</p>
+<!--
+<p>
+SQL statement to reduce pay for people under 25 by 20%:
+</p>
+<pre>
+update Employees
+set    salary = salary * 0.8
+where  age &lt; 25;
+</pre>
+<p>
+A straightforward applicatiom of the SQL <tt>UPDATE</tt> statement.
+</p>
+
+-->
+
+</li><li>
+<p>
+The company has several years of growth and high profits, and
+considers that the Sales department is primarily responsible for this.
+Write an SQL statement to give all employees in the Sales department
+a 10% pay rise.
+</p>
+<!--
+<p>
+SQL statement to give Sales employees a 10% pay rise:
+</p>
+<pre>
+update Employees e
+set    e.salary = e.salary * 1.10
+where  eid in
+           (select eid
+            from   Departments d, WorksIn w
+            where  d.dname = 'Sales' and d.did = w.did
+           );
+</pre>
+<p>
+This query requires that we know which department an employee works
+for before updating their pay. The only information we have in the
+<tt>Employees</tt> relation to help with this is the employee id.
+Thus the subquery gives a list of ids for all employees working
+in the Sales department.
+</p>
+
+-->
+
+</li><li>
+<p>
+Add a constraint to the <tt>CREATE TABLE</tt> statements above
+to ensure that every department must have a manager.
+</p>
+<!--
+<pre>
+   create table Departments (
+      did       integer,
+      dname     varchar(20),
+      budget    real,
+      manager   integer not null,
+      primary key (did),
+      foreign key (manager) references Employees(eid)
+   );
+</pre>
+<p>
+Change the definition of <tt>Departments</tt> to ensure that
+the foreign key <tt>manager</tt> is not null.
+The foreign key constraint already ensures that the value
+must be a primary key in the <tt>Employees</tt> relation
+but, without the <tt>NOT NULL</tt> declaration, a foreign
+key value is allowed to be null.
+</p>
+
+-->
+
+</li><li>
+<p>
+Add a constraint to the <tt>CREATE TABLE</tt> statements above
+to ensure that no-one is paid less than the minimum wage of $15,000.
+</p>
+<!--
+<p>
+This is a straightforward example of a single-attribute constraint.
+It is effectively a constraint on the domain of the <tt>salary</tt>
+attribute. In fact, it would been sensible to have an initial
+constraint to ensure that the <tt>salary</tt> was at least positive.
+A similar constraint should probably be applied to the <tt>percent</tt>
+attribute in the <tt>WorksIn</tt> relation.
+</p>
+<pre>
+create table Employees (
+   eid       integer,
+   ename     varchar(30),
+   age       integer,
+   salary    real check (salary >= 15000),
+   primary key (eid)
+);
+</pre>
+
+-->
+
+</li><li>
+<p>
+Add a constraint to the <tt>CREATE TABLE</tt> statements above
+to ensure that no employee can be committed for more than 100%
+of his/her time.
+Note that the SQL standard allows queries to be used in constraints,
+even though DBMSs don't implement this (for performance reasons).
+</p>
+<!--
+<p>
+We have expressed this as a tuple-level constraint, even though
+it's really a constraint on the <tt>eid</tt> attribute.
+Note the use of scoping in the sub-query: the <tt>eid</tt> refers
+to the id of the employee that is being inserted or modified,
+while <tt>w.eid</tt> is bound by the tuple variable in the subquery.
+The subquery itself computes the total <tt>percent</tt> that the
+employee <tt>eid</tt> works.
+</p>
+<p>
+This query is valid according to Ullman/Widom's description of the
+SQL2 standard.
+However, neither PostgreSQL nor Oracle supports subqueries in
+<tt>CHECK</tt> conditions.
+The condition can only be an expression involving the attributes in
+the updated row.
+</p>
+<pre>
+create table WorksIn (
+   eid         integer,
+   did         integer,
+   percent    real,
+   primary key (eid,did),
+   foreign key (eid) references Employees(eid),
+   foreign key (did) references Departments(did)
+   constraint  MaxFullTimeCheck
+               check (1.00 >= (select sum(w.percent)
+                               from   WorksIn w
+                               where  w.eid = eid)
+                      )
+);
+</pre>
+<p>
+In most relational database management systems, the constraint
+checking required here would need to be implemented via a trigger.
+</p>
+
+-->
+
+</li><li>
+<p>
+Add a constraint to the <tt>CREATE TABLE</tt> statements above
+to ensure that a manager works 100% of the time in the department
+that he/she manages.
+Note that the SQL standard allows queries to be used in constraints,
+even though DBMSs don't implement this (for performance reasons).
+</p>
+<!--
+<p>
+We have expressed this as a tuple-level constraint, even though
+it's really a constraint on the <tt>manager</tt> attribute.
+</p>
+<pre>
+create table Departments (
+   did         integer,
+   dname       varchar(20),
+   budget      real,
+   manager     integer,
+   primary key (did),
+   foreign key (manager) references Employees(eid)
+   constraint  FullTimeManager
+               check (1.0 = (select w.percent
+                             from   WorksIn w
+                             where  w.eid = manager)
+                     )
+);
+</pre>
+<p>
+As in the previous question, this kind of constraint is allowed by
+the SQL standard, but DBMSs typically don't implement cross-table
+constraints like this; a trigger is required and the check has to
+be programmed in the trigger.
+</p>
+
+-->
+
+</li><li>
+<p>
+When an employee is removed from the database, it makes sense to also
+delete all of the records that show which departments he/she works for.
+Modify the <tt>CREATE TABLE</tt> statements above to ensure that this occurs.
+</p>
+<!--
+<p>
+The <tt>ON DELETE CASCADE</tt> clause ensures that
+when the <tt>Employees</tt> record for <tt>eid</tt> is removed,
+then any <tt>WorksIn</tt> tuples that refer to <tt>eid</tt> are also removed.
+</p>
+<pre>
+create table WorksIn (
+   eid         integer,
+   did         integer,
+   percent    real,
+   primary key (eid,did),
+   foreign key (eid) references Employees(eid) on delete cascade,
+   foreign key (did) references Departments(did)
+);
+</pre>
+<p>
+Of course, this immediately reaises the issue of references to the
+<tt>Departments</tt> relation; this is considered in the next question.
+</p>
+
+-->
+
+</li><li>
+<p>
+When a manager leaves the company, there may be a period
+before a new manager is appointed for a department.
+Modify the <tt>CREATE TABLE</tt> statements above to allow for this.
+</p>
+<!--
+<p>
+If the department has no manager, we indicate this by putting
+a value of <tt>NULL</tt> for the <tt>manager</tt> field.
+However, in one of the questions above, we added a NOT NULL
+contraint to ensure that every department <em>does</em> have a manager.
+To solve this question, we need to remove that constraint.
+</p>
+<p>
+An alternative would be to always appoint a temporary manager,
+which could be accomplished via an <tt>UPDATE</tt> statement, e.g.
+</p>
+<pre>
+update department set manager = <i>SomeEID</i> where did = <i>OurDeptID</i>;
+</pre>
+
+-->
+
+</li><li>
+<p>
+Consider the deletion of a department from a database based on this schema.
+What are the options for dealing with referential integrity
+between <tt>Departments</tt> and <tt>WorksIn</tt>? For each option,
+describe the required behaviour in SQL.
+</p>
+<!--
+Three possible approaches to referential integrity between 
+between <tt>Departments</tt> and <tt>WorksIn</tt>:
+<ol type=a>
+<p><li>
+Disallow the deletion of a <tt>Departments</tt> tuple if any
+<tt>Works</tt> tuple refers to it.
+This is the default behaviour, which would result from
+the <tt>CREATE TABLE</tt> definition in the previous question.
+<p><li>
+When a <tt>Departments</tt> tuple is deleted, also delete all
+<tt>WorksIn</tt> tuples that refer to it.
+This requires adding an <tt>ON DELETE CASCADE</tt> clause to
+the definition of <tt>WorksIn</tt>.
+<pre>
+create table WorksIn (
+   eid     integer,
+   did     integer,
+   percent real,
+   primary key (eid,did),
+   foreign key (eid) references Employees(eid) on delete cascade,
+   foreign key (did) references Departments(did) on delete cascade
+);
+</pre>
+In this solution, we've added the same functionality to the <tt>eid</tt>
+field as well (see previous question).
+</p>
+<p><li>
+For every <tt>WorksIn</tt> tuple that refers to the deleted department,
+set the <tt>did</tt> field to the department id of some existing
+'default' department.
+Unfortunately, Oracle doesn't appear to implement this functionality.
+If it did, the definition of <tt>WorksIn</tt> would change to:
+<pre>
+create table WorksIn (
+   eid     integer,
+   did     integer default 1,
+   percent real,
+   primary key (eid,did),
+   foreign key (eid) references Employees(eid) on delete cascade,
+   foreign key (did) references Departments(did) on delete set default
+);
+</pre>
+</ol>
+</p>
+
+-->
+
+</li><li>
+<p>
+For each of the possible cases in the previous question, show how deletion
+of the Engineering department would affect the following database:
+</p>
+<pre>  EID ENAME             AGE     SALARY
+----- --------------- ----- ----------
+    1 John Smith         26      25000
+    2 Jane Doe           40      55000
+    3 Jack Jones         55      35000
+    4 Superman           35      90000
+    5 Jim James          20      20000
+
+  DID DNAME               BUDGET  MANAGER
+----- --------------- ---------- --------
+    1 Sales               500000        2
+    2 Engineering        1000000        4
+    3 Service             200000        4
+
+  EID   DID  PCT_TIME
+----- ----- ---------
+    1     2      1.00
+    2     1      1.00
+    3     1      0.50
+    3     3      0.50
+    4     2      0.50
+    4     3      0.50
+    5     2      0.75
+
+</pre>
+<!--
+<ol type='a'>
+<li>
+<p>
+Disallow ...
+The database would not change. The DBMS would print an error message
+about referential integrity constraint violation.
+</p>
+<li>
+<p>
+<tt>ON DELETE CASCADE</tt> ...
+All of the tuples in the <tt>WorksIn</tt> relation that have
+<tt>did = 2</tt> are removed, giving:
+</p>
+<pre>
+  DID DNAME               BUDGET  MANAGER
+----- --------------- ---------- --------
+    1 Sales               500000        2
+    3 Service             200000        4
+
+  EID   DID  PCT_TIME
+----- ----- ---------
+    2     1      1.00
+    3     1      0.50
+    3     3      0.50
+    4     3      0.50
+</pre>
+<li>
+<p>
+<tt>ON DELETE SET NULL</tt> ...
+All of the tuples in the <tt>WorksIn</tt> relation that have
+<tt>did = 2</tt> have that attribute modified to <tt>NULL</tt>, giving:
+</p>
+<pre>
+  DID DNAME               BUDGET  MANAGER
+----- --------------- ---------- --------
+    1 Sales               500000        2
+    3 Service             200000        4
+
+  EID   DID  PCT_TIME
+----- ----- ---------
+    1  NULL      1.00
+    2     1      1.00
+    3     1      0.50
+    3     3      0.50
+    4  NULL      0.50
+    4     3      0.50
+    5  NULL      0.75
+</pre>
+<li>
+<p>
+<tt>ON DELETE SET DEFAULT</tt> ...
+All of the tuples in the <tt>WorksIn</tt> relation that have
+<tt>did = 2</tt> have that attribute modified to the default
+department (<tt>1</tt>), giving:
+</p>
+<pre>
+  DID DNAME               BUDGET  MANAGER
+----- --------------- ---------- --------
+    1 Sales               500000        2
+    3 Service             200000        4
+
+  EID   DID  PCT_TIME
+----- ----- ---------
+    1     1      1.00
+    2     1      1.00
+    3     1      0.50
+    3     3      0.50
+    4     1      0.50
+    4     3      0.50
+    5     1      0.75
+</pre>
+</ol>
+
+-->
+
+</li></ol>
+
+<p>
+Consider the following data model for a
+a business that supplies various parts:
+</p><p>
+</p><center><img src="./tut03_files/spc-schema.png"></center>
+<p></p>
+<p>
+Based on the ER design and the above considerations, here is a
+relational schema to represent this scenario:
+</p>
+<pre>create table Suppliers (
+      sid     integer primary key,
+      sname   text,
+      address text
+);
+create table Parts (
+      pid     integer primary key,
+      pname   text,
+      colour  text
+);
+create table Catalog (
+      sid     integer references Suppliers(sid),
+      pid     integer references Parts(pid),
+      cost    real,
+      primary key (sid,pid)
+);
+</pre>
+<p>
+Write SQL statements to answer each of the following queries ...
+</p>
+
+<div class="note">
+<b>Note1:</b> all of these solutions have alternative
+formulations. If you think you have a better solution
+than the one(s) presented here, let me know.
+<br>
+<b>Note2:</b> a useful strategy, when developing an SQL solution
+to an information request, is to express intermediate results as
+views; this has been done in a few solutions here, but you might
+like to consider reformulating more of them with views, for clarity.
+</div>
+
+<ol start="12">
+
+<li><p>
+Find the <i>names</i> of suppliers who supply some red part.
+</p>
+<!--
+<pre>
+select S.sname
+from   Suppliers S, Parts P, Catalog C
+where  P.colour='red' and C.pid=P.pid and C.sid=S.sid
+</pre>
+or
+<pre>
+select sname
+from   Suppliers natural join Catalog natural join Parts
+where  P.colour='red'
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply some red or green part.
+</p>
+<!--
+<pre>
+select C.sid
+from   Parts P, Catalog C
+where  (P.colour='red' or P.colour='green') and C.pid=P.pid
+</pre>
+or
+<pre>
+select sid
+from   Catalog C natural join Parts P
+where  (P.colour='red' or P.colour='green')
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply some red part or
+whose address is 221 Packer Street.
+</p>
+<!--
+<pre>
+select S.sid
+from   Suppliers S
+where  S.address='221 Packer Street'
+       or S.sid in (select C.sid
+                    from   Parts P, Catalog C
+                    where  P.color='red' and P.pid=C.pid
+                   )
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply some red part and some green part.
+</p>
+<!--
+<pre>
+select C.sid
+from   Parts P, Catalog C
+where  P.color='red' and P.pid=C.pid
+       and exists (select P2.pid
+                   from   Parts P2, Catalog C2
+                   where  P2.color='green' and C2.sid=C.sid and P2.pid=C2.pid
+                  )
+</pre>
+or
+<pre>
+(select C.sid
+ from Parts P, Catalog C
+ where P.color='red' and P.pid=C.pid
+)
+intersect
+(select C.sid
+ from Parts P, Catalog C
+ where P.color='green' and P.pid=C.pid
+)
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply every part.
+</p>
+<!--
+<pre>
+select S.sid
+from   Suppliers S
+where  not exists((select P.pid from Parts P)
+                  except
+                  (select C.pid from Catalog C where C.sid=S.sid)
+                 )
+</pre>
+or
+<pre>
+select C.sid
+from   Catalog C
+where  not exists(select P.pid
+                  from   Part P
+                  where  not exists(select C1.sid
+                                    from   Catalog C1
+                                    where  C1.sid=C.sid and C1.pid=P.pid
+                                   )
+                 )
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply every red part.
+</p>
+<!--
+<pre>
+select S.sid
+from   Suppliers S
+where  not exists((select P.pid from Parts P where P.color='red')
+                  except
+                  (select C.pid from Catalog C where C.sid=S.sid)
+                 )
+</pre>
+or
+<pre>
+select C.sid
+from   Catalog C
+where  not exists(select P.pid
+                  from   Part P
+                  where  P.colour='red' and
+                         not exists(select C1.sid
+                                    from   Catalog C1
+                                    where  C1.sid=C.sid and C1.pid=P.pid
+                                   )
+                 )
+</pre>
+
+-->
+
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply every red or green part.
+</p>
+<!--
+<pre>
+select S.sid
+from   Suppliers S
+where  not exists((select P.pid from Parts P
+                   where P.color='red' or P.color='green')
+                  except
+                  (select C.pid from Catalog C where C.sid=S.sid)
+                 )
+</pre>
+or
+<pre>
+select C.sid
+from   Catalog C
+where  not exists(select P.pid
+                  from   Part P
+                  where  (P.colour='red' or P.colour='green') and
+                         not exists(select C1.sid
+                                    from   Catalog C1
+                                    where  C1.sid=C.sid and C1.pid=P.pid
+                                   )
+                 )
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>sids</i> of suppliers who supply every red part or supply every green part.
+</p>
+<!--
+<pre>
+(select S.sid
+ from   Suppliers S
+ where  not exists((select P.pid from Parts P where P.color='red')
+                   except
+                   (select C.pid from Catalog C where C.sid=S.sid)
+                  )
+)
+union
+(select S.sid
+ from   Suppliers S
+ where  not exists((select P.pid from Parts P where P.color='green')
+                   except
+                   (select C.pid from Catalog C where C.sid=S.sid)
+                  )
+)
+</pre>
+
+-->
+
+</li><li><p>
+Find pairs of <i>sids</i> such that the supplier with the first <i>sid</i>
+charges more for some part than the supplier with the second <i>sid</i>.
+</p>
+<!--
+<pre>
+select C1.sid, C2.sid
+from   Catalog C1, Catalog C2
+where  C1.pid = C2.pid and C1.sid != C2.sid and C1.cost > C2.cost
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>pids</i> of parts that are supplied by at least two
+different suppliers.
+</p>
+<!--
+<pre>
+select C.pid
+from   Catalog C
+where  exists(select C1.sid
+              from   Catalog C1
+              where  C1.pid = C.pid and C1.sid != C.sid
+             )
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>pids</i> of the most expensive part(s) supplied by suppliers
+named "Yosemite Sham".
+</p>
+<!--
+<pre>
+select C.pid
+from   Catalog C, Suppliers S
+where  S.sname='Yosemite Sham' and C.sid=S.sid and
+       C.cost >= all(select C2.cost
+                     from   Catalog C2, Suppliers S2
+                     where  S2.sname='Yosemite Sham' and C2.sid=S2.sid
+                    )
+</pre>
+
+-->
+
+</li><li><p>
+Find the <i>pids</i> of parts supplied by every supplier at a price less
+than 200 dollars (if any supplier either does not supply the part or charges
+more than 200 dollars for it, the part should not be selected).
+</p>
+<!--
+<pre>
+select C.pid
+from   Catalog C
+where  C.price < 200.00
+group by C.pid
+having count(*) = (select count(*) from Suppliers);
+</pre>
+
+-->
+
+</li></ol>
+
+</div>
+
+</body></html>

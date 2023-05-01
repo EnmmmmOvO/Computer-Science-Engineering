@@ -1,0 +1,38 @@
+Produce a BCNF decomposition of R(A,B,C,D,E,F,G,H) 
+---------
+
+R = ABCDEFGH
+fds = { ABH->C, A->DE, BGH->F, F->ADH, BH->GE }
+key = BH 
+
+problem: A->DE, does not have the whole key on the LHS
+fix: decomposition to R01 = ABCFGH and  R02 = ADE
+
+
+R02 = ADE
+fds = { A->DE }
+key = A
+
+no problem: R02 is in BCNF
+
+
+R01 = ABCFGH
+fds = { ABH->C, BGH->F, F->AH, BH->G }
+key = BH
+
+problem: F->AH , does not have the whole key on the LHS
+fix: decompose to  R03 = BCFG  and  R04 = AFH
+
+
+R03 = BCFG
+fds = { }
+
+no problem: there are no relevant FDs, so it's in BCNF
+
+
+R04 = AFH
+fds = { F->AH }
+key = F
+
+no problem: R04 is in BCNF
+

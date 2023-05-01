@@ -1,0 +1,17 @@
+# mapping weak entities
+
+create table Employees (
+	ssn         integer,
+	ename       PersonName not null,
+	salary      float not null,
+	primary key (ssn)
+);
+
+create table Contacts (
+	name        PersonName,
+	emp_ssn     integer,
+	phone       text not null,
+	primary key (name,emp_ssn),
+	foreign key (emp_ssn)
+	        references Employees(ssn)
+);

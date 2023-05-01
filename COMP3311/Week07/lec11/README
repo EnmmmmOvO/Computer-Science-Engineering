@@ -1,0 +1,26 @@
+Python/Psycopg2 scripts
+
+args
+- processing command line arguments in Python
+- much like the shell "echo" command
+
+subj
+subj2
+subj3
+subj4
+- lists of all subjects, various approachces
+
+enrs
+- list all courses in a given term, along with enrolments
+
+subjs
+- given partial subject code, list all subjects matrching that code
+
+stu
+- given a partial student name, all students that match
+
+info
+- given a subject code, information about that subject
+
+uni.dump
+- database used by the above scripts

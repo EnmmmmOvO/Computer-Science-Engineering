@@ -1,0 +1,567 @@
+<html>
+<head>
+<title>COMP3311 Week 7 Tuesday Lecture</title>
+<link href='lib/slides.css' rel='stylesheet' type='text/css'>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML" async></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
+<link href='lib/prism.css' rel='stylesheet'>
+<script src='lib/sg.js'></script>
+</head>
+<body>
+ <DIV class='slideCl1' id="s0"  >
+<div class='navCl1'><a href="#s1"><span class='nextArrowCl'>>></span></a> </div> <div class='heading'>COMP3311 Week 7 Tuesday Lecture</div><p><ul class='indexUl'  style='font-size: 0.7em;'><li class="i"> <a href="#s1">Week 07 Tuesday</heading></a>
+<li class="i"> <a href="#s2">Atlassian Datathon</a>
+<li class="i"> <a href="#s3">Exercise: Queries on the Uni database</a>
+<li class="i"> <a href="#s4">Exercise: Queries on the Movie database</a>
+<li class="i"> <a href="#s5">Relational Design Theory</a>
+<li class="i"> <a href="#s7">Relational Design and Redundancy</a>
+<li class="i"> <a href="#s11">Database Design (revisited)</a>
+<li class="i"> <a href="#s13">Notation/Terminology</a>
+<li class="i"> <a href="#s14">Functional Dependency</a>
+<li class="i"> <a href="#s18">Exercise: Functional Dependencies (1)</a>
+<li class="i"> <a href="#s20">Exercise: Functional Dependencies (2)</a>
+<li class="i"> <a href="#s21">Exercise: Functional Dependencies (2)</a>
+<li class="i"> <a href="#s22">Functional Dependency</a>
+</ul></DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [0/22]</div> <DIV class='slideCl1    ' id="s1"  >
+<div class='navCl1'> <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s2"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Week 07 Tuesday</heading></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+<h4>In today's lecture ...</h4>
+<ul>
+<li> Python/psycopg2, &nbsp; Relational Design Theory
+</ul>
+<h4>Things to do ...</h4>
+<ul>
+<li> Quiz 4 due by 23:59 Friday 28 October
+<li> Assignment 2 due by 21:00 Friday 11 November &nbsp;<small>(Week 9)</small>
+<li> Play with the &nbsp;<large><code>ass2</code></large>&nbsp; database and Python/psycopg2
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [1/22]</div> <DIV class='slideCl1    ' id="s2"  >
+<div class='navCl1'><a href="#s1"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s3"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Atlassian Datathon</div></td><td align='right'></td></tr></table>
+<p>
+<p>
+<p><div align='center'>
+<img alt="[Diagram:Pics/misc/Datathon.jpg]" src="Pics/misc/Datathon.jpg">
+</div><p>
+<p>
+<div align="center">
+For more information and registration: https://fb.me/e/35gIF5YXQ 
+</div>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [2/22]</div> <DIV class='slideCl1    ' id="s3"  >
+<div class='navCl1'><a href="#s2"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s4"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Queries on the Uni database</div></td><td align='right'></td></tr></table>
+<p>
+Write Python/psycopg2 scripts on the Uni database to ...
+<ol>
+<li> <s>get a list of subject codes+names <br><br>
+<li> get a list of subjects whose codes match a pattern</s> <br><br>
+<li> get a list of courses and #enrolments for a given term <br><br>
+<li> <s>display info about a subject given by a code <br><br>
+<li> get a list of students whose name matches a pattern</s> <br><br>
+<li> display a transcript for a student, given a zID
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [3/22]</div> <DIV class='slideCl1    ' id="s4"  >
+<div class='navCl1'><a href="#s3"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s5"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Queries on the Movie database</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Write Python/psycopg2 scripts on the Movie database to ...
+<ol>
+<li> get a list of movies made in Australia <br><br>
+<li> get a list of movies made in a given country <br><br>
+<li> find the name of the director for a given movie <br><br>
+<li> get the name of the top star (actor,actress) in a given movie
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [4/22]</div> <DIV class='slideCl1    ' id="s5"  >
+<div class='navCl1'><a href="#s4"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s6"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Design Theory</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+We know how to express ER data models and SQL schemas
+<p>
+But how do we know that our models/schemas are "good"?
+<p>
+Properties of "good" models/schemas
+<ul>
+<li> <font color='#0000BB'>accurate</font> ... represent scenario faithfully
+<li> <font color='#0000BB'>complete</font> ... represent all aspects of a scenario
+<li> <font color='#0000BB'>minimal</font> ... minimse stored data; no repetition
+</ul>
+Relational design theory addresses the last issue
+<p>
+Relies on the notion of <font color='#0000BB'>functional dependency</font>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [5/22]</div> <DIV class='slideCl1    ' id="s6"  >
+<div class='navCl1'><a href="#s5"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s7"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Design Theory <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Functional dependencies
+<ul>
+<li> describe relationships between attributes within a relation
+<li> have implications for "good" relational schema design
+</ul>
+What we study here:
+<ul>
+<li> basic theory and definition of <font color='#0000BB'>functional dependencies</font>
+<li> methodology for improving schema designs (<font color='#0000BB'>normalisation</font>)
+</ul>
+The aim of studying this:
+<ul>
+<li> improve understanding of relationships among data
+<li> gain enough formalism to assist practical database design
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [6/22]</div> <DIV class='slideCl1    ' id="s7"  >
+<div class='navCl1'><a href="#s6"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s8"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Design and Redundancy</div></td><td align='right'></td></tr></table>
+<p>
+<br>
+In database design, <font color='#0000BB'>redundancy</font> is generally a "bad thing":
+<ul>
+<li> causes problems maintaining consistency after updates
+</ul>
+Our goal is to reduce redundancy in stored data
+<ul>
+<li> by ensuring that the schema is structured <i>appropriately</i>
+</ul>
+<br>
+But ... redundancy may give performance improvements
+<ul>
+<li> e.g. avoid a join to collect bits of data together
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [7/22]</div> <DIV class='slideCl1    ' id="s8"  >
+<div class='navCl1'><a href="#s7"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s9"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Design and Redundancy <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Consider the following relation defining bank accounts/branches:
+<p>
+<p><table border='1' cellpadding='2'>
+<tr align=center>
+  <td><b>accountNo</b></td>
+  <td><b>balance</b></td>
+  <td><b>customer</b></td>
+  <td><b>branch</b></td>
+  <td><b>address</b></td>
+  <td><b>assets</b></td>
+</tr>
+<tr align=center>
+  <td>A-101</td>
+  <td>500</td>
+  <td>1313131</td>
+  <td>Downtown</td>
+  <td>Brooklyn</td>
+  <td>9000000</td>
+</tr>
+<tr align=center>
+  <td>A-102</td>
+  <td>400</td>
+  <td>1313131</td>
+  <td>Perryridge</td>
+  <td>Horseneck</td>
+  <td>1700000</td>
+</tr>
+<tr align=center>
+  <td>A-113</td>
+  <td>600</td>
+  <td>9876543</td>
+  <td><font color="#996600">Round Hill</font></td>
+  <td><font color="#996600">Horseneck</font></td>
+  <td><font color="#996600">8000000</font></td>
+</tr>
+<tr align=center>
+  <td>A-201</td>
+  <td>900</td>
+  <td>9876543</td>
+  <td>Brighton</td>
+  <td>Brooklyn</td>
+  <td>7100000</td>
+</tr>
+<tr align=center>
+  <td>A-215</td>
+  <td>700</td>
+  <td>1111111</td>
+  <td>Mianus</td>
+  <td>Horseneck</td>
+  <td>400000</td>
+</tr>
+<tr align=center>
+  <td>A-222</td>
+  <td>700</td>
+  <td>1111111</td>
+  <td>Redwood</td>
+  <td>Palo Alto</td>
+  <td>2100000</td>
+</tr>
+<tr align=center>
+  <td>A-305</td>
+  <td>350</td>
+  <td>1234567</td>
+  <td><font color="#996600">Round Hill</font></td>
+  <td><font color="#996600">Horseneck</font></td>
+  <td><font color="#996600">8000000</font></td>
+</tr>
+</table><p>
+<p>
+<small>
+Careless updating of this data may introduce inconsistencies.
+</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [8/22]</div> <DIV class='slideCl1    ' id="s9"  >
+<div class='navCl1'><a href="#s8"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s10"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Design and Redundancy <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Insertion anomaly:
+<ul>
+<li> when we insert a new record, we need to check that branch data is consistent with existing tuples
+</ul>
+Update anomaly:
+<ul>
+<li> if a branch changes address, we need to update all tuples referring to that branch
+</ul>
+Deletion anomaly:
+<ul>
+<li> if we remove information about the last account at a branch, all of the branch information disappears
+</ul>
+<br>
+Insertion/update anomalies are avoidable, but need extra DBMS work
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [9/22]</div> <DIV class='slideCl1    ' id="s10"  >
+<div class='navCl1'><a href="#s9"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s11"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Relational Design and Redundancy <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Redundancy in stored data can lead to update anomalies
+<p>
+Functional dependencies allow us to
+<ul>
+<li> reason about relationships between attributes
+<li> identify redundancies (at schema level)
+</ul>
+Normalization methods allow us to
+<ul>
+<li> transform a schema to remove redundancy
+</ul>
+Note: many algorithms for normalization are non-deterministic
+<ul>
+<li> multiple different correct solutions are possible
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [10/22]</div> <DIV class='slideCl1    ' id="s11"  >
+<div class='navCl1'><a href="#s10"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s12"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Database Design (revisited)</div></td><td align='right'></td></tr></table>
+<p>
+To avoid these kinds of update problems:
+<ul>
+<li> need a schema with "minimal overlap" between tables
+<li> each table contains a "coherent" collection of data values
+</ul>
+One way to acheive this <small>(automatically?)</small>:
+<ul>
+<li> start with a "universal relation" <i>U</i> &nbsp; <small>(all relevant attrs)</small>
+<li> <font color='#0000BB'>decompose</font> relation <i>U</i> into several smaller relations <i>R<sub>i</sub></i>
+<li> where each <i>R<sub>i</sub></i> has "minimal overlap" with other <i>R<sub>j</sub></i>
+<li> but with sufficient overlap to reconstruct original relation
+</ul>
+<small>
+Typically, each <i>R<sub>i</sub></i> contains info about one entity (e.g. branch, customer, ...)</small>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [11/22]</div> <DIV class='slideCl1    ' id="s12"  >
+<div class='navCl1'><a href="#s11"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s13"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Database Design (revisited) <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+But we already have a design procedure <small>(ER-then-relational)</small>
+<ul>
+<li> and it appears to produce schemas without redundancy
+</ul>
+Why do we need another design procedure?
+<ol>
+<li> ER design does not guarantee minimal redundancy
+<small>
+<ul>
+<li> dependency theory allows us to check designs for residual problems
+</ul>
+</small>
+<li> the new procedure gives (semi)automated design
+<small>
+<ul>
+<li> determine all of the attributes in the problem domain
+<li> collect them all together in a "universal relation"
+<li> provide information about how attributes are related
+<li> apply <font color='#0000BB'>normalisation</font> to decompose into non-redundant relations
+</ul>
+</small>
+</ol>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [12/22]</div> <DIV class='slideCl1    ' id="s13"  >
+<div class='navCl1'><a href="#s12"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s14"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Notation/Terminology</div></td><td align='right'></td></tr></table>
+<p>
+Most texts adopt the following terminology:
+<p>
+<p><table border='0' cellpadding='6'>
+<tr valign=top>
+  <td><nobr>Relation schemas</td>
+  <td></td><td>
+  upper-case letters, denoting set of all attributes
+  (e.g. <i>R</i>, <i>S</i>, <i>P</i>, <i>Q</i> )
+  </td>
+</tr>
+<tr valign=top>
+  <td><nobr>Relation instances</td>
+  <td></td><td>
+  lower-case letter corresponding to schema
+  (e.g. <i>r(R)</i>, <i>s(S)</i>, <i>p(P)</i>, <i>q(Q)</i> )
+  </td>
+</tr>
+<tr valign=top>
+  <td><nobr>Tuples</td>
+  <td></td><td>
+  lower-case letters &nbsp; (e.g. <i>t</i>, <i>t'</i>, <i>t<sub>1</sub></i>, <i>u</i>, <i>v</i> )
+  </td>
+</tr>
+<tr valign=top>
+  <td><nobr>Attributes</td>
+  <td></td><td>
+  upper-case letters from start of alphabet
+  (e.g. <i>A</i>, <i>B</i>, <i>C</i>, <i>D</i> )
+  </td>
+</tr>
+<tr valign=top>
+  <td><nobr>Sets of attributes</td>
+  <td></td><td>
+  simple concatenation of attribute names
+  (e.g. <i>X=ABCD</i>, <i>Y=EFG</i> )
+  </td>
+</tr>
+<tr valign=top>
+  <td><nobr>Attributes in tuples</td>
+  <td></td><td>
+  tuple[attrSet] (e.g. <i>t[ABCD]</i>, <i>t[X]</i>)
+  </td>
+</tr>
+</table><p>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [13/22]</div> <DIV class='slideCl1    ' id="s14"  >
+<div class='navCl1'><a href="#s13"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s15"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Functional Dependency</div></td><td align='right'></td></tr></table>
+<p>
+A relation instance <i>r(R)</i> satisfies a dependency <i>X &rarr; Y</i> if
+<ul>
+<li> for any <i>t, u &isin; r</i>, &nbsp; <i>t[X] = u[X] &nbsp; &rArr; &nbsp; t[Y] = u[Y]</i>
+</ul>
+In other words, if two tuples in <i>R</i> agree in their values for the
+set of attributes <i>X</i>, then they must also agree in their values for
+the set of attributes <i>Y</i>.
+<p>
+We say that "<i>Y</i> is <font color='#0000BB'>functionally dependent</font> on <i>X</i>".
+<p>
+Attribute sets <i>X</i> and <i>Y</i> may overlap;
+trivially true that <i>X &rarr; X</i>.
+<p>
+Notes:
+<ul>
+<li> <i>X &rarr; Y</i> can also be read as "<i>X</i> determines <i>Y</i>"
+<li> the single arrow <i>&rarr;</i> denotes <font color='#0000BB'>functional dependency</font>
+<li> the double arrow <i>&rArr;</i> denotes logical implication
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [14/22]</div> <DIV class='slideCl1    ' id="s15"  >
+<div class='navCl1'><a href="#s14"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s16"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Functional Dependency <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Consider an instance <i>r(R)</i> of the relation schema <i>R(ABCDE)</i>:
+<p>
+<p><table border='1' cellpadding='2'>
+<tr align=center>
+  <td><b><i>A</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  <td><b><i>B</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  <td><b><i>C</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  <td><b><i>D</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+  <td><b><i>E</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+</tr>
+<tr align=center>
+  <td><i>a<sub>1</sub></i></td>
+  <td><i>b<sub>1</sub></i></td>
+  <td><i>c<sub>1</sub></i></td>
+  <td><i>d<sub>1</sub></i></td>
+  <td><i>e<sub>1</sub></i></td>
+</tr>
+<tr align=center>
+  <td><i>a<sub>2</sub></i></td>
+  <td><i>b<sub>1</sub></i></td>
+  <td><i>c<sub>2</sub></i></td>
+  <td><i>d<sub>2</sub></i></td>
+  <td><i>e<sub>1</sub></i></td>
+</tr>
+<tr align=center>
+  <td><i>a<sub>3</sub></i></td>
+  <td><i>b<sub>2</sub></i></td>
+  <td><i>c<sub>1</sub></i></td>
+  <td><i>d<sub>1</sub></i></td>
+  <td><i>e<sub>1</sub></i></td>
+</tr>
+<tr align=center>
+  <td><i>a<sub>4</sub></i></td>
+  <td><i>b<sub>2</sub></i></td>
+  <td><i>c<sub>2</sub></i></td>
+  <td><i>d<sub>2</sub></i></td>
+  <td><i>e<sub>1</sub></i></td>
+</tr>
+<tr align=center>
+  <td><i>a<sub>5</sub></i></td>
+  <td><i>b<sub>3</sub></i></td>
+  <td><i>c<sub>3</sub></i></td>
+  <td><i>d<sub>1</sub></i></td>
+  <td><i>e<sub>1</sub></i></td>
+</tr>
+</table><p>
+<p>
+What dependencies can we observe among its attributes?
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [15/22]</div> <DIV class='slideCl1    ' id="s16"  >
+<div class='navCl1'><a href="#s15"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s17"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Functional Dependency <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Since <i>A</i> values are unique, the definition of <i>fd</i> gives:
+<ul>
+<li> <i>A &rarr; B, &nbsp;&nbsp; A &rarr; C, &nbsp;&nbsp; A &rarr; D, &nbsp;&nbsp; A &rarr; E</i>
+<li> <i>A &rarr; BC, &nbsp;&nbsp; A &rarr; CD, &nbsp; ... &nbsp; A &rarr; BCDE</i>
+<li> can be summarised as &nbsp; <i>A &rarr; BCDE</i> 
+</ul>
+Since all <i>E</i> values are the same, it follows that:
+<ul>
+<li> <i>A &rarr; E, &nbsp;&nbsp; B &rarr; E, &nbsp;&nbsp; C &rarr; E, &nbsp;&nbsp; D &rarr; E</i>
+<li> in general, <font color='#0000BB'>cannot</font> be summarised as &nbsp; <i>ABCD &rarr; E</i> <br>
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [16/22]</div> <DIV class='slideCl1    ' id="s17"  >
+<div class='navCl1'><a href="#s16"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s18"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Functional Dependency <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+<br>
+Other observations:
+<ul>
+<li> combinations of <i>BC</i> are unique, therefore &nbsp; <i>BC &rarr; ADE</i>
+<li> combinations of <i>BD</i> are unique, therefore &nbsp; <i>BD &rarr; ACE</i>
+<li> if <i>C</i> values match, so do <i>D</i> values, therefore &nbsp; <i>C &rarr; D</i>
+<li> however, <i>D</i> values don't determine <i>C</i> values, so &nbsp; <i>!(D &rarr; C)</i>
+</ul>
+We could derive many other dependencies, e.g. &nbsp; <i>AE &rarr; BC</i>, ...
+<p>
+In practice, choose a minimal set of <i>fd</i>s (<font color='#0000BB'>basis</font>)
+<ul>
+<li> from which all other <i>fd</i>s can be derived
+<li> which captures useful problem-domain information
+</ul>
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [17/22]</div> <DIV class='slideCl1    ' id="s18"  >
+<div class='navCl1'><a href="#s17"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s19"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Functional Dependencies (1)</div></td><td align='right'></td></tr></table>
+<p>
+Real estate agents conduct visits to rental properties
+<ul>
+<li> need to record which property, who went, when, results
+<li> each property is assigned a unique code (P#, e.g. P4)
+<li> each staff member has a staff number (S#, e.g. S43)
+<li> staff members use company cars to conduct visits
+<li> a visit occurs at a specific time on a given day
+<li> notes are made on the state of the property after each visit
+</ul>
+The company stores all of the associated data in a spreadsheet.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [18/22]</div> <DIV class='slideCl1    ' id="s19"  >
+<div class='navCl1'><a href="#s18"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s20"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Functional Dependencies (1) <span style="font-size:67%">(cont)</span></div></td><td align='right'></td></tr></table>
+<p>
+Describe any functional dependencies that exist in this data:
+<p><pre><small>
+<b>P</b># | <b>W</b>hen        | <b>A</b>ddress    | <b>N</b>otes         | <b>S</b>#  | Na<b>m</b>e  | <b>C</b>arReg
+----+-------------+------------+---------------+------+-------+-------
+P4 | 03/06 15:15 | 55 High St | Bathroom leak | S44 | Rob   | ABK754
+P1 | 04/06 11:10 | 47 High St | All ok        | S44 | Rob   | ABK754
+P4 | 03/07 12:30 | 55 High St | All ok        | S43 | Dave  | ATS123
+P1 | 05/07 15:00 | 47 High St | Broken window | S44 | Rob   | ABK754
+P1 | 05/07 15:00 | 47 High St | Leaking tap   | S44 | Rob   | ABK754
+P2 | 13/07 12:00 | 12 High St | All ok        | S42 | Peter | ATS123
+P1 | 10/08 09:00 | 47 High St | Window fixed  | S42 | Peter | ATS123
+P3 | 11/08 14:00 | 99 High St | All ok        | S41 | John  | AAA001
+P4 | 13/08 10:00 | 55 High St | All ok        | S44 | Rob   | ABK754
+P3 | 05/09 11:15 | 99 High St | Bathroom leak | S42 | Peter | ATS123
+</small></pre><p>
+State assumptions used in determining the <i>fd</i>s.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [19/22]</div> <DIV class='slideCl1    ' id="s20"  >
+<div class='navCl1'><a href="#s19"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s21"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Functional Dependencies (2)</div></td><td align='right'></td></tr></table>
+<p>
+Consider this data (possibly from a spreadsheet):
+<p><pre style="font-size:80%">
+   id   |     name        |   subj   | term |      title      | mark | grade 
+--------+-----------------+----------+------+-----------------+------+-------
+5123485 | Lillian Seng... | COMP9020 | 17s1 | Foundations ... |      | AF
+5123485 | Lillian Seng... | COMP9021 | 17s2 | Principles o... |   46 | FL
+5123485 | Lillian Seng... | COMP9020 | 18s1 | Foundations ... |   44 | FL
+5123485 | Lillian Seng... | COMP9021 | 18s2 | Principles o... |   46 | FL
+5123504 | Yap Huawen      | MATH5960 | 17s1 | Bayesian Inf... |   56 | PS
+5123504 | Yap Huawen      | COMP9318 | 17s1 | Data Warehou... |   76 | DN
+5123504 | Yap Huawen      | COMP9444 | 17s2 | Neural Netwo... |   53 | PS
+5123504 | Yap Huawen      | COMP9814 | 18s1 | Ext Artifici... |      | NF
+5123504 | Yap Huawen      | COMP6714 | 18s2 | Info Retriev... |   86 | HD
+5123523 | Cindy Nava G... | COMP9313 | 17s1 | Big Data Man... |   55 | PS
+5123523 | Cindy Nava G... | COMP9444 | 17s2 | Neural Netwo... |   63 | PS
+5123523 | Cindy Nava G... | COMP9417 | 18s1 | Machine Lear... |      | AW
+5123523 | Cindy Nava G... | COMP9318 | 19T1 | Data Warehou... |   43 | FL
+5123523 | Cindy Nava G... | COMP6714 | 19T3 | Info Retriev... |      | AW
+5123523 | Cindy Nava G... | COMP9321 | 20T1 | Data Service... |      | SY
+</pre><p>
+Identify functional dependencies
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [20/22]</div> <DIV class='slideCl1    ' id="s21"  >
+<div class='navCl1'><a href="#s20"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>  <a href="#s22"><span class='nextArrowCl'> >> </span></a> </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Exercise: Functional Dependencies (2)</div></td><td align='right'></td></tr></table>
+<p>
+What functional dependencies exist in the following table:
+<p><pre><small>
+  A  |  B  |  C  |  D
+-----+-----+-----+-----
+  1  |  a  |  6  |  x
+  2  |  b  |  7  |  y
+  3  |  c  |  7  |  z
+  4  |  d  |  6  |  x
+  5  |  a  |  6  |  y
+  6  |  b  |  7  |  z
+  7  |  c  |  7  |  x
+  8  |  d  |  6  |  y
+</small></pre><p>
+How is this case different to the previous ones?
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [21/22]</div> <DIV class='slideCl1    ' id="s22"  >
+<div class='navCl1'><a href="#s21"><span class='prevArrowCl'> << </span></a>  <a href="#s0"><span class='upArrowCl'>&and;</span></a>   </div> <table width='100%' cellpadding='0'>
+<tr valign='top'><td align='left'><div class='heading'>&#10070; Functional Dependency</div></td><td align='right'></td></tr></table>
+<p>
+Above, we considered dependency within a relation instance <i>r(R)</i>.
+<p>
+More important for design is dependency across all possible
+instances of the relation (i.e. a schema-based dependency).
+<p>
+This is a simple generalisation of the previous definition:
+<ul>
+<li> for any <i>t, u &isin; </i><font color="#CC0000">any</font><i> r(R)</i>, &nbsp; <i>t[X] = u[X] &nbsp; &rArr; &nbsp; t[Y] = u[Y]</i>
+</ul>
+Such dependencies capture semantics of problem domain.
+</DIV>
+<div class='slideNumCl2'>COMP3311 22T3 &#9826; Week 7 Tuesday Lecture &#9826; [22/22]</div><p><hr><p>
+<span style='font-size:11px;color: grey;'>Produced: 25 Oct 2022</span>
+ <script src='lib/prism.js'></script>   
+ <script src='lib/sg.js'></script>   
+</body>
+</html>

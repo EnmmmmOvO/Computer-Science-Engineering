@@ -1,0 +1,4 @@
+# COMP3311 21T3 Final Exam Q6
+# SQL schema from ER design
+
+

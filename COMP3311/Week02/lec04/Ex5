@@ -1,0 +1,12 @@
+create domain PosInt as integer check (value > 0);
+
+create table Points (
+	x PosInt default 1,
+	y posint
+);
+
+insert into Points values (3,4);    -- ok
+insert into Points values (3,null); -- ok
+insert into Points values (-3,4);   -- NOT ok
+insert into Points(y) values (5);   -- inserts (1,5)
+insert into Points values (default,5);   -- inserts (1,5)
