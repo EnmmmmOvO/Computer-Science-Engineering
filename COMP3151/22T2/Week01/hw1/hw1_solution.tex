@@ -1,0 +1,262 @@
+\documentclass{article}
+
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+
+\newcommand{\set}[1]{\{#1\}}
+\DeclareMathOperator{\nat}{\mathbb{N}}
+
+\begin{document}
+\title{Homework 1 Sample Answers \\ COMP3151 T2 2022}
+\author{Vincent Jackson \\ Raphael Douglas Giles \\ Johannes {\AA}man Pohjola}
+\maketitle
+
+\section{Question 1: Circularity}
+
+Leslie Lamport's Pants.
+
+\section {Question 2: Dining Cryptographers}
+
+\paragraph{Functional correctness}
+If the NSA paid, the new protocol behaves exactly as the original.
+
+If the NSA did not pay, suppose without loss of generality that
+cryptographer $1$ paid, and let $k_i$ be a boolean which is true
+if the coin flipped by cryptographer $i$ is heads.
+
+In the old protocol, the parity of all the announcements
+is given by the following expression:
+\[
+\neg(k_1 \oplus k_3) \oplus (k_1 \oplus k_2) \oplus (k_2 \oplus k_3) 
+\]
+\noindent In the new protocol, it's instead given by:
+\[
+(k_1 \oplus k_3) \oplus (\neg k_1 \oplus k_2) \oplus (k_2 \oplus k_3)
+\]
+These are equivalent, because $\neg(p \oplus q) = \neg p \oplus q$.
+
+\paragraph{Confidentiality}
+Confidentiality is preserved.
+
+Suppose that someone paid, and let's consider the
+situation from the perspective of cryptographer 2, who is not paying.
+Let the bit $a_i$ denote the equals/different announcement by
+cryptographer $i$.
+We thus have the following givens: $a_1,a_2,a_3$ and $k_2$ (our own coin toss).
+From these we can infer the value $k_3$.\footnote{Since cryptographers do not lie
+in their public announcemements, $a_3 = k_2 \oplus k_3$ must hold.}
+
+The only information we're missing is $k_1$ (because we don't know whether
+cryptographer 1 lied about their coin toss result or not).
+By flipping this bit, we can change from scenarios where cryptographer 1
+paid to scenarios where cryptographer 3 paid, without changing any of
+the givens.
+Hence, the observations made by cryptographer 2 are consistent with either
+1 or 3 being the payer.
+
+\section{Question 3}
+
+\subsection{Limit closures}
+
+There are many possible answers. Here's two:
+
+\paragraph{Basic answer}
+Let $t$ be some state such that $s \neq t$.
+We can then define
+
+\[A = \{\sigma : \exists n\in\mathbb{N}.\;\sigma = s^nt^\omega\}\]
+
+In words: $\sigma \in A$ holds iff $\sigma$ comprises
+finitely many copies of $s$, followed by infinite repetition of $t$.
+
+\paragraph{Cheeky answer}
+We could also go with this:
+
+\[A = \Sigma^\omega - \{s^\omega\}\]
+
+\subsection{Alpern and Schneider's Theorem}
+
+\begin{enumerate}
+  \item {
+    For this question, you were expected to use Alpern and Schneider's
+    separation theorem to determine the safety and liveness components of the property
+    $$P = \{ \sigma \mid \sigma\ \text{contains one `b'} \}.$$
+
+    Recall that the AS separation theorem gives us the following result:
+    For every property $P$,
+      $$P = \bar{P} \cap (\Sigma^\omega \setminus (\bar{P} \setminus P)),$$
+    $\bar{P}$ is a safety property, and
+    $\Sigma^\omega \setminus (\bar{P} \setminus P)$ is a liveness property,
+    where $\bar{P}$ is the limit closure of $P$.
+
+    \paragraph{Safety} The safety property is
+    $$\bar{P} = \{ \sigma \mid \sigma\ \text{contains one `b'} \} \cup \{ a^\omega \},$$
+    that is, the set of behaviours that contain at most one `b'.
+
+    This is because the sequence of words
+    \begin{gather*}
+      baaaa\dots\\
+      abaaa\dots\\
+      aabaa\dots\\
+      aaaba\dots\\
+      \vdots
+    \end{gather*}
+    all occur in $P$, and converge to $a^\omega$,
+    and that is the only such convergent behaviour not already in $P$.
+
+    \paragraph{Liveness} The liveness property is
+    \begin{align*}
+      &\Sigma^\omega \setminus (\bar{P} \setminus P)) \\
+      &= \\
+      &\Sigma^\omega \setminus ((\{ \sigma \mid \sigma\ \text{contains one `b'} \}
+        \cup \{ a^\omega \}) \setminus \{ \sigma \mid \sigma\ \text{contains one `b'} \})) \\
+      &= \\
+      &\Sigma^\omega \setminus \{ a^\omega \},
+    \end{align*}
+    that is, the set of all behaviours which contain at least one `b'.
+
+    N.B. For those students familiar with regular expressions, the above can
+    all be rendered much more succinctly by
+    $P = a^* b a^\omega$,
+    $P_S = a^* b a^\omega + a^\omega$,
+    and $P_L = \Sigma^* b \Sigma^\omega$.
+  }
+  \item {
+    \begin{align*}
+      &\Sigma^\omega \setminus (\bar{P} \setminus P) \\
+      &= (\text{$P$ is safety, thus $\bar{P} = P$}) \\
+      &\Sigma^\omega \setminus (P \setminus P)) \\
+      &=\\
+      &\Sigma^\omega \setminus \emptyset \\
+      &=\\
+      &\Sigma^\omega.
+    \end{align*}
+  }
+  \item {
+    The closure of the empty property $\bar{\emptyset} = \emptyset$ and is not
+    $\Sigma^\omega$ (we assume here there is at least one state).
+    Thus $\emptyset$ is a safety property, the property that bans anything from
+    happening at all, trivially violated by any run whatsoever. Moreover, it is
+    not a liveness property since is not dense.
+  }
+\end{enumerate}
+
+\subsection{Bonus Question}
+
+The answer can be found in the original paper of Alpern and Schneider,
+\url{https://doi.org/10.1016/0020-0190(85)90056-0}.
+
+If your UNSW Elsevier access is a bit dodgy like mine is, here's another way to do it:
+
+The significance of the existence of at least $2$ distinct states is this implies there are closed sets which are not dense, making this problem non-trivial. Given this, consider the set of behaviours which eventually repeat phrases, i.e. words $\sigma$ such that there exists an $i \geq 0$ and a word $\alpha$ such that $\sigma|_i = \alpha^{\omega}$. We'll give these the suggestive name "rational behaviours" or $Q$. Similarly we'll call the compliment of this set, i.e. words which never end up just repeating forever, the "irrational behaviours" or $I$. Now, clearly these two sets are dense since they can both contain arbitrary finite prefixes, and by definition they must be disjoint. Now consider, for some behaviour $P$, and noting that the union of a dense set with any set is dense,
+\[
+\begin{split}
+(Q \cup P) \cap (I \cup P) &= (Q \cap I) \cup (Q \cap P) \cup (P \cap I) \cup (P \cap P),\\
+&= \varnothing \cup P \cup P,\\
+&= P.\\
+\end{split}
+\]
+Hence, any property must be the intersection of two liveness properties. Another way to do this is to take $2$ distinct elements $a$ and $b$, which we can do by assumption, and define $Q$ and $I$ like this: $Q = \{xa^{\omega} | x \in \Sigma^{\ast}\}$ and $I = \{xb^{\omega} | x \in \Sigma^{\ast}\}$ and use the same argument as above.
+
+\section{Temporal Logic}
+
+\subsection{Examples}
+
+As this question asked you to interpret English, there were various sensible
+`correct' answers. Here are ours.
+
+Let $d$ denote the dragon being alive, and $h$ the princess being happy.
+\begin{enumerate}
+  \item {
+    ``Once the dragon was slain, the princess lived happily ever after.''
+    $$\square(\neg d \Rightarrow \square h)$$
+  }
+  \item {
+    ``The dragon was never slain, but the princess lived happily until she didn't.''
+    $$\square d \wedge (h \mathrel{\mathcal{U}} \neg h)$$
+  }
+  \item {
+    ``The dragon was slain at least twice.''
+
+    $$\lozenge(\neg d \wedge \lozenge(d \wedge \lozenge\neg d))$$
+
+    The $d$ is there to ensure the dragon comes back to life between being dead,
+    so it isn't just slain once and dead for a long time.
+  }
+  \item {
+    ``The dragon was slain at most once.''
+
+    The easiest solution was just take the negation of the previous problem.
+    \begin{align*}
+      &\neg \lozenge(\neg d \wedge \lozenge(d \wedge \lozenge\neg d)) \\
+      &= \\
+      &\square \neg (\neg d \wedge \lozenge(d \wedge \lozenge\neg d)) \\
+      &= \\
+      &\square (\neg\neg d \vee \neg\lozenge(d \wedge \lozenge\neg d)) \\
+      &= \\
+      &\square (d \vee \square\neg(d \wedge \lozenge\neg d)) \\
+      &= \\
+      &\square (d \vee \square(\neg d \vee \neg\lozenge\neg d)) \\
+      &= \\
+      &\square (d \vee \square(\neg d \vee \square d))
+    \end{align*}
+  }
+  \item {
+    ``Whenever the dragon was slain, the princess did not live happily.''
+
+    $$\square(\neg d \Rightarrow \neg h)$$
+  }
+\end{enumerate}
+
+\subsection{Proof}
+
+\begin{enumerate}
+  \item {
+    \begin{align*}
+    &\quad  \sigma \vDash \square\square\varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\square$)} \\
+    &\quad  \forall i.\ \sigma|_i \vDash \square\varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\square$)} \\
+    &\quad  \forall i.\ \forall j.\ (\sigma|_i)|_j \vDash \varphi \\
+    &\text{iff}\quad \text{(slicing a slice adds the indicies)} \\
+    &\quad  \forall i.\ \forall j.\ \sigma|_{i+j} \vDash \varphi \\
+    &\text{iff} \quad \text{(reparametrising by $k=i+j$)} \\
+    &\quad  \forall k.\ \sigma|_k \vDash \varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\square$)} \\
+    &\quad  \sigma \vDash \square\varphi
+    \end{align*}
+  }
+  \item {
+    \begin{align*}
+    &\quad  \sigma \vDash \lozenge\bigcirc\varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\lozenge$)} \\
+      &\quad  \exists i.\ \sigma|_i \vDash \bigcirc\varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\bigcirc$)} \\
+    &\quad  \exists i.\ (\sigma|_i)|_1 \vDash \varphi \\
+    &\text{iff}\quad \text{(slicing commutes: $\sigma|_i|_j = \sigma|_j|_i$)} \\
+    &\quad  \exists i.\ (\sigma|_1)|_i \vDash \varphi \\
+    &\text{iff} \quad \text{(by the semantics of $\lozenge$)} \\
+    &\quad  \sigma|_1 \vDash \lozenge\varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\bigcirc$)} \\
+    &\quad  \sigma \vDash \bigcirc\lozenge\varphi
+    \end{align*}
+  }
+  \item {
+    \begin{align*}
+    &\quad  \sigma \vDash \square\varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\square$)} \\
+    &\quad \forall i.\ \sigma|_i \vDash \varphi \\
+    &\text{then}\quad \text{(first order logic)} \\
+    &\quad  \exists i.\ \sigma|_i \vDash \varphi \\
+    &\text{iff}\quad \text{(by the semantics of $\lozenge$)} \\
+    &\quad  \sigma \vDash \lozenge\varphi
+    \end{align*}
+  }
+\end{enumerate}
+
+
+\end{document}

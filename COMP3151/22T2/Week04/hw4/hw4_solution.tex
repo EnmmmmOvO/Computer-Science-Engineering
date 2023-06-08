@@ -1,0 +1,236 @@
+\documentclass{article}
+
+\usepackage{hyperref}
+
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+\usepackage{listings}
+
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+
+\DeclareUnicodeCharacter{2227}{$\wedge$}
+\DeclareUnicodeCharacter{2228}{$\vee$}
+
+\usepackage{multicol}
+
+\newcommand{\set}[1]{\{#1\}}
+\DeclareMathOperator{\nat}{\mathbb{N}}
+
+\begin{document}
+\title{Homework 4 Commentary \\ COMP3151 T2 2021}
+\author{Vincent Jackson}
+\maketitle
+
+\section{Smoker's Protocol}
+
+In the smoker's protocol, we asked you to complete
+a six agent resource distribution problem using semaphores.
+
+The Smoker's protocol has two correctness conditions which you needed to meet.
+The first correctness condition was that the protocol doesn't deadlock.
+
+The second correctness condition is induced by the description of the problem:
+each smoker requires resources they must procure from an agent,
+which provides these resources.
+Thus, the protocol must not produce resources out of thin air.
+
+Another resource condition we might wish to have, but is less about correctness,
+is that we don't waste resources;
+e.g. that we don't pull three matches from the agents
+for every one match that actually gets to a smoker.
+
+I have attached a promela file which models the protocol, which you can use
+to show deadlock freedom, and which also contains an LTL formula which ensures
+that all resources come from somewhere, and a formula which ensures resources
+aren't stockpiled without being used.
+
+\section{Semaphores}
+
+\subsection{Busy-wait Semaphore}
+
+To begin, there was a good deal of confusion about \texttt{Thread.yield()}.
+In Java, \texttt{Thread.yield()} is a hint to the scheduler that this
+thread wants to yield. Importantly, Java \emph{can just ignore the hint}.
+Thus, a good rule of thumb for using \texttt{Thread.yield()} is that your algorithm
+must continue to work even if you replaced the yield with a no-op.
+
+A second rule of thumb is that you should not loop inside a synchronised block
+when the action that would end the loop is synchronised on the same lock.
+The code in \autoref{deadlock_yield} deadlocks, because once \texttt{V} starts to loop, \texttt{P}
+can never run and end the loop.
+
+\begin{figure}
+\begin{lstlisting}[language=java,basicstyle=\small\ttfamily]
+  void synchronized P() {
+    while (permits <= 0) {
+      // Doesn't release the lock. As I said earlier,
+      // replace Thread.yield with a no-op,
+      // and the protocol still needs to work.
+      Thread.yield();
+    }
+    permits--;
+  }
+  
+  void synchronized V() {
+    permits++;
+  }
+\end{lstlisting}
+\caption{Deadlock due to Yield not Releasing the Lock}
+\label{deadlock_yield}
+\end{figure}
+
+Here are two correct solutions. The first \autoref{vw_correct_1} puts all
+the logic into \texttt{P} and \texttt{V}.
+Another good solution \autoref{vw_correct_2} extracts the decrement logic into
+a synchronised method.
+
+\begin{figure}
+\begin{lstlisting}[language=java,basicstyle=\small\ttfamily]
+void P() {
+  while (true) {
+    // for better performance, check before actually trying
+    while (permits <= 0) {
+      Thread.yield();
+    }
+    synchronized(this) {
+      if (permits > 0) {
+        permits--;
+        break;
+      }
+    }
+  }
+}
+
+void synchronized V() {
+  // synchronized because ++ is not necessarily atomic.
+  permits++;
+}
+\end{lstlisting}
+\caption{Very-Weak Semaphore Solution \#1}
+\label{vw_correct_1}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}[language=java,basicstyle=\small\ttfamily]
+  bool synchronized testAndDecr() {
+    if permits > 0 {
+      permits--;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void P() {
+    while (!testAndDecr()) {
+      Thread.yield()
+    }
+  }
+  
+  void synchronized V() {
+    permits++;
+  }
+\end{lstlisting}
+\caption{Very-Weak Semaphore Solution \#2}
+\label{vw_correct_2}
+\end{figure}
+
+
+\subsection{Weak Semaphore}
+
+This was well done by most students. As wait \emph{does} release the lock
+when called, we can safely use a loop inside the synchronised block.
+
+An important point to make is that Java monitors behave slightly differently
+to what you might expect. With a classic monitor \cite{HoareMonitors},
+notifying a waiting process will immediately wake up that process.
+Thus the solution in \autoref{w_classical} works.
+However, this is not the case in Java.
+
+In Java, processes waiting on a monitor are not prioritised over
+other threads. Thus after waking up,
+the process \emph{must} check the guard again, as in \autoref{w_correct}.
+
+\begin{figure}
+  \begin{lstlisting}[language=java,basicstyle=\small\ttfamily]
+    void synchronized P() {
+      if (permits < 0) {
+        wait();
+      }
+      permits--;
+    }
+
+    void synchronized V() {
+      permits++;
+      notify();
+    }
+  \end{lstlisting}
+  \caption{Classical Weak Semaphore Solution (Doesn't work in Java)}
+  \label{w_classical}
+\end{figure}
+
+\begin{figure}
+  \begin{lstlisting}[language=java,basicstyle=\small\ttfamily]
+    void synchronized P() {
+      while (permits < 0) {
+        wait();
+      }
+      permits--;
+    }
+
+    void synchronized V() {
+      permits++;
+      notify();
+    }
+  \end{lstlisting}
+  \caption{Weak Semaphore Solution}
+  \label{w_correct}
+\end{figure}
+
+\subsection{Strong Semaphore}
+
+Strong semaphores require processes which call \texttt{P}
+are released in the order in which they called \texttt{P}.
+
+Because Java doesn't prioritise processes that have been signalled to
+end their \texttt{wait}, we can't assume the processes in the queue are
+prioritised over those which have just called \texttt{P}.
+Thus in this solution, every process must be entered into the queue,
+regardless of whether \texttt{permits > 0}.
+
+\begin{figure}
+  \begin{lstlisting}[language=java,basicstyle=\small\ttfamily]
+    // Use whichever Java queue implementation you want
+    Queue<long> queue = ...;
+
+    void synchronized P() {
+      queue.add(this.getId());
+      while (permits < 0 || queue.peek() != this.getId()) {
+        wait();
+      }
+      queue.poll();
+      permits--;
+    }
+
+    void synchronized V() {
+      permits++;
+      notifyAll();
+    }
+  \end{lstlisting}
+  \caption{Strong Semaphore Solution}
+  \label{s_correct}
+\end{figure}
+
+\begin{thebibliography}{9}
+
+\bibitem{HoareMonitors}
+C. A. R. Hoare. 1974.
+Monitors: an operating system structuring concept.
+Commun. ACM 17, 10 (Oct. 1974), 549–557.
+DOI:\url{https://doi.org/10.1145/355620.361161}
+\end{thebibliography}
+
+\end{document}
