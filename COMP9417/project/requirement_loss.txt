@@ -1,0 +1,4 @@
+# output example of loss
+# step or ep  train_loss  test_loss
+# 100  23.000  10
+# 200  20.000  6.023231

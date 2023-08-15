@@ -1,0 +1,9 @@
+torch~=2.0.1
+matplotlib~=3.7.2
+torch
+torchvision~=0.15.2
+datasets~=2.13.1
+Pillow~=10.0.0
+transformers~=4.31.0
+tqdm~=4.65.0
+more-itertools~=8.10.0
