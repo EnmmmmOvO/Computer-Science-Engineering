@@ -1,0 +1,216 @@
+#!/bin/dash
+
+cp=$(mktemp)
+index=$(mktemp)
+tree=$(mktemp)
+tmp=$(mktemp)
+tmp2=$(mktemp)
+
+trap 'rm "$cp" "$tmp" "$tmp2" "$index" "$tree"' EXIT
+
+# Pre-check for the existence of the `.pig` folder
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+fi
+
+c2_tree=""
+
+# Check if commit or the branch exists
+if [ -z "$(find ".pig/commits" -type f)" ]; then
+	echo "$(basename "$0"): error: this command can not be run until after the first commit" 1>&2
+	exit 1
+elif { [ "$#" = 1 ] && echo "$1" | grep -qE '^[^-].*$'; } || { [ "$#" = 3 ] && echo "$1" | grep -qE '^[^-].*$' && [ "$2" = "-m" ]; }; then 
+  c2_commit="${1}"
+else
+  echo "usage: $(basename "$0") <branch|commit> -m message" 1>&2
+  exit 1
+fi
+
+if test -e ".pig/heads/${1}"; then
+	c2_commit=$(cat ".pig/heads/${1}")
+elif test ! -e ".pig/commits/${1}"; then
+  if [ "$#" != 3 ]; then
+    echo "$(basename "$0"): error: empty commit message" 1>&2
+    exit 1
+  else
+    echo "$(basename "$0"): error: unknown branch '${1}'" 1>&2
+    exit 1
+  fi
+fi
+
+# Set the tree file location of the current and specified branch
+temp=$(grep -E "^-tree" ".pig/commits/${c2_commit}" | cut -d ' ' -f 2)
+c2_tree=".pig/objects/$(echo "$temp" | cut -c 1-2)/$(echo "$temp" | cut -c 3-)"
+
+c1_commit=$(cat ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")")
+temp=$(grep -E "^-tree" ".pig/commits/${c1_commit}" | cut -d ' ' -f 2)
+c1_tree=".pig/objects/$(echo "$temp" | cut -c 1-2)/$(echo "$temp" | cut -c 3-)"
+
+# Flag two mark to check the merge is fast forward or not
+c1_diff=0
+c2_diff=0
+
+# Calculate the common ancestor commit between two branches
+if [ "$c1_commit" != "$c2_commit" ]; then
+	a1="$c1_commit"
+  a2="$c2_commit"
+  while [ "$a1" != "$a2" ]; do
+    if [ "$a1" -gt "$a2" ]; then
+      mid="$a1"
+      a1="$a2"
+      a2="$mid"
+    fi
+
+    if [ "$a2" != 0 ]; then
+      a2=$(grep -E '^-parent' ".pig/commits/${a2}" | cut -d ' ' -f 2 | head -1 )
+    fi
+  done
+
+  temp=$(grep -E '^-tree' ".pig/commits/${a2}" | head -1 | cut -d ' ' -f 2)
+  parent=".pig/objects/$(echo "$temp" | cut -c 1-2)/$(echo "$temp" | cut -c 3-)"
+fi
+
+# List all files in the current directory, in the index, and in the trees of both commits
+{
+  find "." -maxdepth 1 -type f | cut -d '/' -f 2
+  cut -d ' ' -f 2 ".pig/index"
+  cut -d ' ' -f 2 "$c1_tree"
+  cut -d ' ' -f 2 "$c2_tree"
+} > "$tmp"
+
+# Flag the error
+err=0
+
+for file in $(sort "$tmp"| uniq); do
+  # If the file exists in the working directory, calculate the hash value
+	if test -e "$file"; then
+    f=$(sha1sum "$file" | cut -d ' ' -f 1)
+  else 
+    f=""
+  fi
+	
+  # Extract the hash value of the file in the index and in the current and specified branch
+  i=$(grep -E "$file$" ".pig/index" | cut -d ' ' -f 1)
+  c1=$(grep -E "$file$" "$c1_tree" | cut -d ' ' -f 1)
+  c2=$(grep -E "$file$" "$c2_tree" | cut -d ' ' -f 1)
+
+  # If the file is not present in the specified branch
+	if [ -z "$c2" ]; then
+    # If the file is present in the current branch, add it to the new tree
+		if [ -n "$c1" ]; then
+			echo "${c1} ${file}" >> "$tree"
+		fi
+
+    # If the file is present in the index, means the file may changed, add it to the new index
+		if [ -n "$i" ]; then
+			echo "${i} ${file}" >> "$index"
+		fi
+	else
+    # If the file is not present in the current branch
+		if [ -z "$c1" ]; then
+      # If the file is present in the index or the working directory, and commit1 is the 
+      # common ancestor, mark the file as unmergeable
+			if [ -n "$i" ] || [ -n "$f" ] && [ "$c1_commit" = "$parent" ]; then
+				err=1
+				echo "$file" >> "$tmp2"
+      # Otherwise, add the file from the specified branch to the new tree and index, and 
+      # record the file for copying, increase the flag of changing of specified branch
+			else 
+        c2_diff=$((c2_diff + 1))
+				echo ".pig/objects/$(echo "$c2" | cut -c 1-2)/$(echo "$c2" | cut -c 3-) ${file}" >> "$cp"
+				echo "${c2} ${file}" >> "$tree"
+				echo "${c2} ${file}" >> "$index"
+			fi
+    # If the file is same in both branch
+		elif [ "$c1" = "$c2" ]; then
+			echo "${c1} ${file}" >> "$index"
+      
+      # If the file is also present in the index, add it to the new tree
+			if [ -n "$i" ]; then
+				echo "${i} ${file}" >> "$tree"
+			fi
+    # If the file in the working directory and the index is the same as in the current branch
+		else
+      if [ "$f" = "$i" ] && [ "$i" = "$c1" ]; then
+        p="$(grep -E "$file$" "$parent" | cut -d ' ' -f 1)"
+        # If the files of a branch are the same as their common ancestor, it can be merged
+        if [ "$c1" = "$p" ]; then
+          c2_diff=$((c2_diff + 1))
+          echo ".pig/objects/$(echo "$c2" | cut -c 1-2)/$(echo "$c2" | cut -c 3-) ${file}" >> "$cp"
+          echo "${c2} ${file}" >> "$tree"
+          echo "${c2} ${file}" >> "$index"
+        elif [ "$c2" = "$p" ]; then
+          c1_diff=$((c1_diff + 1))
+          echo ".pig/objects/$(echo "$c1" | cut -c 1-2)/$(echo "$c1" | cut -c 3-) ${file}" >> "$cp"
+          echo "${c1} ${file}" >> "$tree"
+          echo "${i} ${file}" >> "$index"
+        else
+          err=1
+          echo "$file" >> "$tmp2" 
+        fi
+      else
+        err=1
+        echo "$file" >> "$tmp2" 
+      fi
+		fi
+	fi
+done
+
+# If only one of the current or specified branches has made some changes, then fast forward is satisfied.
+if [ "$err" = 0 ] && [ "$c2_diff" = 0 ];then
+  echo "Already up to date"
+	exit 0
+elif [ "$err" = 0 ] && [ "$c1_diff" = 0 ]; then
+  cp "$index" ".pig/index"
+
+  while read -r file; do
+    cp "$(echo "$file" | cut -d ' ' -f 1)" "$(echo "$file" | cut -d ' ' -f 2)"
+  done < "$cp"
+
+  echo "$c2_commit" > ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")"
+	echo "Fast-forward: no commit created"
+	exit 0
+fi
+
+# If it is not satisfied, check if there is a message, otherwise an error is reported
+if [ "$#" != 3 ] && [ "$2" != '-m' ] ; then
+	echo "$(basename "$0"): error: empty commit message" 1>&2
+  exit 1
+fi
+
+# If there is an error, end merge and print err file
+if [ "$err" = 1 ]; then
+  echo "$(basename "$0"): error: These files can not be merged:" 1>&2
+  sort "$tmp2" 1>&2
+  exit 1
+fi
+
+# Update the index and copy the different files
+sort -k 2 -t ' ' "$index" > ".pig/index"
+
+# Copy files scheduled for copying
+while read -r file; do
+  cp "$(echo "$file" | cut -d ' ' -f 1)" "$(echo "$file" | cut -d ' ' -f 2)"
+done < "$cp"
+
+# Calculate the hash of the new tree, and create file
+sha=$(sha1sum "$tree" | cut -d ' ' -f 1)
+dict=".pig/objects/$(echo "$sha" | cut -c 1-2)"
+if test ! -e "$dict"; then
+	mkdir "$dict"
+fi
+sort -k 2 -t ' ' "$tree" > "${dict}/$(echo "$sha" | cut -c 3-)"
+
+# Look for the next number in the sequence in the folder to record this commit
+commit=0
+while test -e ".pig/commits/${commit}"; do
+  commit=$((commit + 1))
+done
+
+# Write the new commit to a file in the objects directory
+echo "-tree ${sha}\n-parent ${c1_commit}\n-parent ${c2_commit}\n\n${3}" > ".pig/commits/${commit}"
+# Update the current branch to point to the new commit
+echo "$commit" > ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")"
+echo "Committed as commit ${commit}"
+

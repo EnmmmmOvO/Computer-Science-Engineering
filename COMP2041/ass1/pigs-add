@@ -1,0 +1,56 @@
+#!/bin/dash
+
+tmp=$(mktemp)
+trap 'rm "$tmp"' EXIT
+
+# Pre-Check if ".pig" directory exists and any arguments are provided.. If not, print an error message and exit the script.
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+elif [ "$#" = 0 ]; then
+  echo "usage: $(basename "$0") <filenames>" 1>&2
+  exit 1
+fi
+
+for file in "$@"; do
+  if test ! -e "$file" && ! grep -E " $file$" ".pig/index" > /dev/null; then
+    # If file is not present in ".pig/index", exit
+    echo "$(basename "$0"): error: can not open '${file}'" 1>&2
+    exit 1
+  fi
+done
+
+for file in "$@"; do
+  # If file is present in ".pig/index", delete the corresponding line and continue to next .
+  if test ! -e "$file" && grep "$file" ".pig/index" > /dev/null; then
+    sed -i "/$file$/d" ".pig/index"
+    continue
+  fi
+
+  # Get the file hash value
+  sha=$(sha1sum "$file" | cut -d ' ' -f 1)
+
+  # Check if the file change or not
+  if [ "$sha" = "$(grep " $file$" .pig/index | cut -d ' ' -f 1)" ]; then
+    continue
+  fi
+
+  # Use the first two bits of the file's hash value as the folder name and the subsequent parts as 
+  # the file name, if the folder does not exist, create the folder
+  dict=".pig/objects/$(echo "$sha" | cut -c 1-2)"
+  if test ! -e "$dict"; then
+    mkdir "$dict"
+  fi
+  cp "$file" "${dict}/$(echo "$sha" | cut -c 3-)"
+
+  # Check if the information is already present in ".pig/index". If yes, replace the new hash number; If not, append.
+  if grep " $file$" .pig/index > /dev/null; then
+    sed -E -i "s/^.+ $file$/$sha $file/" .pig/index
+  else
+    echo "$sha $file" >> .pig/index
+  fi
+done
+
+# Sort "index" by file name
+tmp_index=$(sort -k 2 -t ' ' ".pig/index")
+echo "$tmp_index" > ".pig/index"

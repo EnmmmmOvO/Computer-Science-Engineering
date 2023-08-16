@@ -1,0 +1,105 @@
+#!/bin/dash
+
+rm=$(mktemp)
+cp=$(mktemp)
+index=$(mktemp)
+file_list=$(mktemp)
+err_file=$(mktemp)
+trap 'rm "$rm" "$cp" "$index" "$file_list" "$err_file"' EXIT
+
+# Pre-check Check if the .pig directory exists and the specified branch exists
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+elif [ -z "$(find ".pig/commits" -type f)" ]; then
+  echo "$(basename "$0"): error: this command can not be run until after the first commit" 1>&2
+  exit 1
+elif [ "$#" != 1 ]; then
+  echo "usage: $(basename "$0") <branch>" 1>&2
+  exit 1
+# If have no argument, list all branches and exit
+elif test ! -e ".pig/heads/${1}"; then
+  echo "$(basename "$0"): error: unknown branch '${1}'" 1>&2
+  exit 1 
+fi
+
+# Get the commit tree of the current branch and the specified branch 
+c1_tree=$(grep -E "^-tree" ".pig/commits/$(cat ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")")" | cut -d ' ' -f 2)
+c2_tree=$(grep -E "^-tree" ".pig/commits/$(cat ".pig/heads/${1}")" | cut -d ' ' -f 2)
+
+# Initialize an error flag
+err=0
+
+# Copy the commit tree of the specified branch to a temporary file
+cp ".pig/objects/$(echo "$c2_tree" | cut -c 1-2)/$(echo "$c2_tree" | cut -c 3-)" "$index"
+# Add all files in working dictionary, index, current branch and the specified branch
+{
+  find "." -maxdepth 1 -type f | cut -d '/' -f 2
+  cut -d ' ' -f 2 ".pig/index"
+  cut -d ' ' -f 2 ".pig/objects/$(echo "$c1_tree" | cut -c 1-2)/$(echo "$c1_tree" | cut -c 3-)"
+  cut -d ' ' -f 2 ".pig/objects/$(echo "$c2_tree" | cut -c 1-2)/$(echo "$c2_tree" | cut -c 3-)"
+} | sort | uniq > "$file_list"
+
+while read -r file; do
+  # Calculate the hash number of the file in working dictionary, index, the current and specified branch
+  if test -e "$file"; then
+    f=$(sha1sum "$file" | cut -d ' ' -f 1)
+  else 
+    f=""
+  fi
+  i=$(grep -E "$file$" ".pig/index" | cut -d ' ' -f 1)
+  c1=$(grep -E "$file$" ".pig/objects/$(echo "$c1_tree" | cut -c 1-2)/$(echo "$c1_tree" | cut -c 3-)" | cut -d ' ' -f 1)
+  c2=$(grep -E "$file$" ".pig/objects/$(echo "$c2_tree" | cut -c 1-2)/$(echo "$c2_tree" | cut -c 3-)" | cut -d ' ' -f 1)
+
+  # Skip if file is unchanged across all stages
+  if [ "$f" = "$i" ] && [ "$i" = "$c1" ] && [ "$c2" = "$c1" ]; then 
+    continue
+  # File is unchanged in current branch, but may have changed inspecified branch
+  elif [ "$f" = "$i" ] && [ "$i" = "$c1" ]; then 
+    # If file exists in current branch, schedule it for removal
+    if [ -n "$f" ]; then
+      echo "$file" >> "$rm"
+    fi
+
+    # If file exists in target branch, schedule it for copying
+    if [ -n "$c2" ]; then
+      echo ".pig/objects/$(echo "$c2" | cut -c 1-2)/$(echo "$c2" | cut -c 3-) ${file}" >> "$cp"
+    fi
+  # File is unchanged between branches, but may have local changes
+  elif [ "$c1" = "$c2" ]; then
+    # If file only exists in the index, add it to the index file
+    if [ -z "$c2" ] && [ -n "$i" ]; then
+      echo "${i} ${file}" >> "$index"
+    # If file exists in index, replace its hash in the index file
+    elif [ -n "$i" ]; then
+      sed -i "s/${c2}/${i}/" "$index" 
+    fi
+  else
+    # File has changes in both the index/current branch and the target branch
+    echo "$file" >> "$err_file"
+    err=1
+  fi
+done < "$file_list"
+
+# If there are conflicting changes, report error and exit
+if [ "$err" = 1 ]; then
+  echo "$(basename "$0"): error: Your changes to the following files would be overwritten by checkout:" 1>&2
+  cat "$err_file" 1>&2
+  exit 1
+fi
+
+# Delete files scheduled for removal
+while read -r file; do
+  rm "$file"
+done < "$rm"
+
+# Copy files scheduled for copying
+while read -r file; do
+  cp "$(echo "$file" | cut -d ' ' -f 1)" "$(echo "$file" | cut -d ' ' -f 2)"
+done < "$cp"
+
+# Replace index file and update the HEAD file
+sort -k 2 -t ' ' "$index" > ".pig/index"
+echo "ref: heads/${1}" > ".pig/HEAD"
+
+echo "Switched to branch '${1}'"

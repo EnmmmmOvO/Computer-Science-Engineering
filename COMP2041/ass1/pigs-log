@@ -1,0 +1,60 @@
+#!/bin/dash
+
+# Since two parents may exist in a commit, use recursion to get all the branches
+commit_print () {
+  local first
+  first=$(grep -E '^-parent' ".pig/commits/${1}" | cut -d ' ' -f 2 | head -1)
+  local second
+  second=$(grep -E '^-parent' ".pig/commits/${1}" | cut -d ' ' -f 2 | tail -1)
+  if [ "$first" = "$second" ]; then
+    if ! grep -E "^${first}$" "$tmp" > /dev/null; then
+      echo "${first} $(tail -1 ".pig/commits/${first}")"
+      echo "$first" >> "$tmp"
+      if [ "$first" != 0 ]; then
+        commit_print "$first"
+      fi
+    fi
+  else
+    check_f=$(! grep -E "^${first}$" "$tmp")
+    if [ -z "$check_f" ]; then
+      echo "${first} $(tail -1 ".pig/commits/${first}")"
+      echo "$first" >> "$tmp"
+    fi
+
+    check_s=$(! grep -E "^${second}$" "$tmp")
+    if [ -z "$check_s" ]; then
+      echo "${second} $(tail -1 ".pig/commits/${second}")"
+      echo "$second" >> "$tmp"
+    fi
+
+    if [ -z "$check_f" ] && [ "$first" != 0 ]; then
+      commit_print "$first"
+    fi
+    
+    if [ -z "$check_s" ] && [ "$second" != 0 ]; then
+      commit_print "$second"
+    fi
+  fi
+}
+
+tmp=$(mktemp)
+trap 'rm "$tmp"' EXIT
+
+# Check if the ".pig" directory exists and the ".pig/commits" directory is empty.
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+elif [ "$#" != 0 ]; then
+  echo "usage: $(basename "$0")" 1>&2
+  exit 1
+elif [ -z "$(find ".pig/commits" -type f)" ]; then
+  exit 0
+fi
+
+commit=$(cat ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")")
+echo "${commit} $(tail -1 ".pig/commits/${commit}")"
+    
+if [ "$commit" != 0 ]; then
+  commit_print "$commit"
+fi
+

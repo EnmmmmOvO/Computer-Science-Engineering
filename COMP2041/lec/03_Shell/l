@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# l [file|directories...] - list files
+#
+# written by andrewt@unsw.edu.au as a COMP(2041|9044) example
+#
+# Short shell scripts can be used for convenience.
+#
+# It is common to put these scripts in a directory
+# such as /home/z1234567/scripts
+# then add this directory to PATH e.g in .bash_login
+# PATH=$PATH:/home/z1234567/scripts
+#
+# Note: "$@" like $* expands to the arguments to the script,
+# but preserves whitespace in arguments.
+
+ls -las "$@"

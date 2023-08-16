@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>
+        COMP(2041|9044) 23T2 —
+        Software Construction
+    </title><link rel="canonical" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/~cs2041/23T2/flask.cgi/static/course.css?209281684952201.0="/>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"
+            integrity="sha256-/ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha256-OFRAJNoaD8L3Br5lglV7VyLRf0itmoBzWUoM+Sji4/8=" crossorigin="anonymous"></script>
+
+    <script src="/~cs2041/23T2/flask.cgi/static/course.js?101671684952201.0="></script>
+
+    <link rel="icon" type="image/png" href="/~cs2041/23T2/flask.cgi/static/favicon.ico?21571684952201.0=">
+
+    <!-- <script async src="https://static.codepen.io/assets/embed/ei.js"></script> -->
+
+    <!-- MathJax. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/latest.js?config=TeX-MML-AM_CHTML"
+            async="yes"></script>
+
+    
+    
+
+    
+</head>
+<body class="d-flex flex-column" style="min-height: 100vh;">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light no-print" id="header-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/">
+            COMP(2041|9044) - 23T2
+        </a>
+        <button class="navbar-toggler navbar-toggler-right"
+                type="button" data-toggle="collapse" data-target="#navmenu"
+                aria-controls="navmenu" aria-label="Toggle navigation" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navmenu">
+            <ul class="navbar-nav mr-auto">
+                
+                    
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/outline/">
+                                Course Outline
+                            </a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/timetable/">
+                                Course Timetable
+                            </a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/forum/">
+                                Course Forum
+                            </a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <a class="nav-link" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/assignments/ass1/index.html">
+                                Assignment 1
+                            </a>
+                        </li>
+                    
+                    
+                    
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+<main class="container" aria-label="Content" style="flex: 1; padding-top: 4rem;">
+    
+
+        <header>
+            
+                <h1 class="text-center">Software Construction</h1>
+            
+        </header>
+
+        
+
+
+
+
+
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/echo.0.py">echo.0.py</a>
+        </div>
+    <a name="echo.0.py">
+    <div class="header_comment">
+        
+<br>Python implementation of /bin/echo
+<br>
+using indexing &amp; while, not pythonesque
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/echo.1.py">echo.1.py</a>
+        </div>
+    <a name="echo.1.py">
+    <div class="header_comment">
+        
+<br>Python implementation of /bin/echo
+<br>
+using indexing &amp; range, not pythonesque
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/echo.2.py">echo.2.py</a>
+        </div>
+    <a name="echo.2.py">
+    <div class="header_comment">
+        
+<br>Python implementation of /bin/echo
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/echo.3.py">echo.3.py</a>
+        </div>
+    <a name="echo.3.py">
+    <div class="header_comment">
+        
+<br>Python implementation of /bin/echo
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/echo.4.py">echo.4.py</a>
+        </div>
+    <a name="echo.4.py">
+    <div class="header_comment">
+        
+<br>Python implementation of /bin/echo
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/sum_arguments.0.py">sum_arguments.0.py</a>
+        </div>
+    <a name="sum_arguments.0.py">
+    <div class="header_comment">
+        
+<br>
+sum integers supplied as command line arguments
+no check that arguments are integers
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="n">total</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sum of the numbers is&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/sum_arguments.1.py">sum_arguments.1.py</a>
+        </div>
+    <a name="sum_arguments.1.py">
+    <div class="header_comment">
+        
+<br>
+sum integers supplied as command line arguments
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;error: &#39;</span><span class="si">{</span><span class="n">arg</span><span class="si">}</span><span class="s2">&#39; is not an integer&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sum of the numbers is&quot;</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/line_count.0.py">line_count.0.py</a>
+        </div>
+    <a name="line_count.0.py">
+    <div class="header_comment">
+        
+<br>
+<br>Count the number of lines on standard input.
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">line_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+    <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;lines&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/line_count.1.py">line_count.1.py</a>
+        </div>
+    <a name="line_count.1.py">
+    <div class="header_comment">
+        
+<br>
+<br>Count the number of lines on standard input.
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">lines</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+<span class="n">line_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;lines&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/line_count.2.py">line_count.2.py</a>
+        </div>
+    <a name="line_count.2.py">
+    <div class="header_comment">
+        
+<br>
+<br>Count the number of lines on standard input.
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">lines</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">)</span>
+<span class="n">line_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">line_count</span><span class="p">,</span> <span class="s2">&quot;lines&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/cp.0.py">cp.0.py</a>
+        </div>
+    <a name="cp.0.py">
+    <div class="header_comment">
+        
+<br>
+<br>Simple cp implementation for text files using line-based I/O
+explicit close is used below, a with statement would be better
+no error handling
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&lt;infile&gt; &lt;outfile&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">infile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">outfile</span><span class="p">)</span>
+<span class="n">infile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/cp.1.py">cp.1.py</a>
+        </div>
+    <a name="cp.1.py">
+    <div class="header_comment">
+        
+<br>
+<br>Simple cp implementation for text files using line-based I/O
+and with statement, but no error handling
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&lt;infile&gt; &lt;outfile&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/cp.2.py">cp.2.py</a>
+        </div>
+    <a name="cp.2.py">
+    <div class="header_comment">
+        
+<br>
+<br>Simple cp implementation for text files using line-based I/O
+and with statement and error handling
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&lt;infile&gt; &lt;outfile&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+                <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;error:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/cp.3.py">cp.3.py</a>
+        </div>
+    <a name="cp.3.py">
+    <div class="header_comment">
+        
+<br>
+<br>Simple cp implementation for text files using line-based I/O
+reading all lines into array (not advisable for large files)
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&lt;infile&gt; &lt;outfile&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">infile</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;error:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/cp.4.py">cp.4.py</a>
+        </div>
+    <a name="cp.4.py">
+    <div class="header_comment">
+        
+<br>
+<br>Simple cp implementation using shutil.copyfile
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">shutil</span> <span class="kn">import</span> <span class="n">copyfile</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&lt;infile&gt; &lt;outfile&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">copyfile</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;error:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/cp.5.py">cp.5.py</a>
+        </div>
+    <a name="cp.5.py">
+    <div class="header_comment">
+        
+<br>
+<br>Simple cp implementation by running /bin/cp
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage:&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;&lt;infile&gt; &lt;outfile&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;cp&#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">returncode</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/snap_memory.0.py">snap_memory.0.py</a>
+        </div>
+    <a name="snap_memory.0.py">
+    <div class="header_comment">
+        
+<br>
+<br>Check if we&#x27;ve seen a line read from stdin,
+using a dict.
+<br>Print snap! if a line has been seen previously
+<br>Exit if an empty line is entered
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="n">line_count</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter line: &quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">if</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">line_count</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Snap!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">line_count</span><span class="p">[</span><span class="n">line</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/snap_memory.1.py">snap_memory.1.py</a>
+        </div>
+    <a name="snap_memory.1.py">
+    <div class="header_comment">
+        
+<br>
+<br>Check if we&#x27;ve seen lines read from stdin,
+using a set.
+<br>Print snap! if a line has been seen previously.
+<br>Exit if an empty line is entered
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="n">lines_seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter line: &quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">EOFError</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">if</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_seen</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Snap!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lines_seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/snap_memory.2.py">snap_memory.2.py</a>
+        </div>
+    <a name="snap_memory.2.py">
+    <div class="header_comment">
+        
+<br>
+<br>Check if we&#x27;ve seen lines read from stdin,
+using a set.
+<br>Print snap! if a line has been seen previously.
+<br>Exit if an empty line is entered
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="n">lines_seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter line: &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="k">if</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines_seen</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Snap!&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lines_seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/parse_date.py">parse_date.py</a>
+        </div>
+    <a name="parse_date.py">
+    <div class="header_comment">
+        
+<br>
+<br>This would be better done using the standard date module
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;date&quot;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">weekday</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">timezone</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/watch_website.sh">watch_website.sh</a>
+        </div>
+    <a name="watch_website.sh">
+    <div class="header_comment">
+        
+<br>Repeatedly download a specified web page
+until a specified regexp matches its source
+then notify the specified email address.
+<br><br>For example:
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="nv">repeat_seconds</span><span class="o">=</span><span class="m">300</span>  <span class="c1">#check every 5 minutes</span>
+
+<span class="k">if</span> <span class="nb">test</span> <span class="nv">$#</span> <span class="o">=</span> <span class="m">3</span>
+<span class="k">then</span>
+    <span class="nv">url</span><span class="o">=</span><span class="nv">$1</span>
+    <span class="nv">regexp</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="nv">email_address</span><span class="o">=</span><span class="nv">$3</span>
+<span class="k">else</span>
+    <span class="nb">echo</span> <span class="s2">&quot;Usage: </span><span class="nv">$0</span><span class="s2"> &lt;url&gt; &lt;regex&gt; &lt;email-address&gt;&quot;</span> <span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">2</span>
+    <span class="nb">exit</span> <span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="k">while</span> <span class="nb">true</span>
+<span class="k">do</span>
+    <span class="k">if</span> curl --silent <span class="s2">&quot;</span><span class="nv">$url</span><span class="s2">&quot;</span><span class="p">|</span>grep -E <span class="s2">&quot;</span><span class="nv">$regexp</span><span class="s2">&quot;</span> &gt;/dev/null
+    <span class="k">then</span>
+        <span class="c1"># the 2nd echo is for testing, remove to really send email</span>
+        <span class="nb">echo</span> <span class="s2">&quot;Generated by </span><span class="nv">$0</span><span class="s2">&quot;</span> <span class="p">|</span>
+        <span class="nb">echo</span> mail -s <span class="s2">&quot;website &#39;</span><span class="nv">$url</span><span class="s2">&#39; now matches regex &#39;</span><span class="nv">$regexp</span><span class="s2">&#39;&quot;</span> <span class="s2">&quot;</span><span class="nv">$email_address</span><span class="s2">&quot;</span>
+        <span class="nb">exit</span> <span class="m">0</span>
+    <span class="k">fi</span>
+    sleep <span class="nv">$repeat_seconds</span>
+<span class="k">done</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/watch_website.0.py">watch_website.0.py</a>
+        </div>
+    <a name="watch_website.0.py">
+    <div class="header_comment">
+        
+<br>
+<br>Repeatedly download a specified web page
+until a specified regexp matches its source
+then notify the specified email address.
+<br>
+implemented using subprocess
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">REPEAT_SECONDS</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># check every 5 minutes</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">regexp</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">email_address</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usage: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> &lt;url&gt; &lt;regex&gt; &lt;email-address&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="p">[</span><span class="s2">&quot;curl&quot;</span><span class="p">,</span> <span class="s2">&quot;--silent&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">],</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span>
+    <span class="p">)</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regexp</span><span class="p">,</span> <span class="n">webpage</span><span class="p">):</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">REPEAT_SECONDS</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="n">mail_body</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Generated by </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;website &#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; now matches regex &#39;</span><span class="si">{</span><span class="n">regexp</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+    <span class="c1"># the echo is for testing, remove to really send email</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;echo&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="p">],</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">mail_body</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/watch_website.1.py">watch_website.1.py</a>
+        </div>
+    <a name="watch_website.1.py">
+    <div class="header_comment">
+        
+<br>
+<br>Repeatedly download a specified web page
+until a specified regexp matches its source
+then notify the specified email address.
+<br>
+implemented using urllib.request
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+<span class="n">REPEAT_SECONDS</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># check every 5 minutes</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">regexp</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">email_address</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Usage: </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> &lt;url&gt; &lt;regex&gt; &lt;email-address&gt;&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">regexp</span><span class="p">,</span> <span class="n">webpage</span><span class="p">):</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">REPEAT_SECONDS</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="n">mail_body</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Generated by </span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;website &#39;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&#39; now matches regex &#39;</span><span class="si">{</span><span class="n">regexp</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+    <span class="c1"># the echo is for testing, remove to really send email</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;echo&quot;</span><span class="p">,</span> <span class="s2">&quot;mail&quot;</span><span class="p">,</span> <span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="n">subject</span><span class="p">],</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">mail_body</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+    
+    <div class="code_example">
+        <div class="example_link">
+            <a target="source" href="https://cgi.cse.unsw.edu.au/~cs2041/23T2/topic/python_more/code/fetch_website_text.py">fetch_website_text.py</a>
+        </div>
+    <a name="fetch_website_text.py">
+    <div class="header_comment">
+        
+<br>
+fetch and print the text of a web page
+using HTML parser BeautifulSoup
+<br>
+
+    </div>
+
+    
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+<span class="kn">import</span> <span class="nn">bs4</span> <span class="k">as</span> <span class="nn">BeautifulSoup</span>
+
+<span class="n">IGNORE_WEBPAGE_ELEMENTS</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="s2">&quot;[document] head meta style script title&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="o">.</span><span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">webpage</span><span class="p">,</span> <span class="s2">&quot;lxml&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">soup</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">IGNORE_WEBPAGE_ELEMENTS</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">getText</span><span class="p">()</span>
+        <span class="c1"># remove empty lines and leading whitespace</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">text</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+
+
+    
+
+    </div>
+
+
+
+    
+</main>
+<footer class="mt-3 pt-3 bg-dark text-center no-print">
+    <p class="text-muted">
+        <strong>COMP(2041|9044) 23T2: Software Construction</strong>
+        is brought to you by <br/>
+        the <a href="https://www.cse.unsw.edu.au/">School of Computer Science and Engineering</a><br/>
+        at the <a href="https://www.unsw.edu.au/">University of New South Wales</a>, Sydney.<br/>
+        For all enquiries, please email the class account at
+        <a href="mailto:@cse.unsw.edu.au">cs2041@cse.unsw.edu.au</a><br/>
+
+        <small>CRICOS Provider 00098G</small>
+    </p>
+
+    
+</footer>
+
+</body>
+</html>

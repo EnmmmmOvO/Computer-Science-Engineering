@@ -1,0 +1,118 @@
+#!/bin/dash
+
+# Recursive function to print commit history
+commit_print () {
+  local commit
+  grep -E '^-parent' ".pig/commits/${1}" | cut -d ' ' -f 2 | while read -r commit; do
+    if grep -E "^${commit} " "$tmp" > /dev/null; then
+      break
+    fi
+    echo "${commit}" >> "$tmp"
+    if [ "$commit" = 0 ]; then
+      break
+    fi
+    commit_print "$commit"
+  done
+}
+
+tmp=$(mktemp)
+tmp1=$(mktemp)
+trap 'rm "$tmp" "$tmp1"' EXIT
+
+# Check if the .pig directory exists
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+# Check if there are any commits
+elif [ -z "$(find ".pig/commits" -type f)" ]; then
+  echo "$(basename "$0"): error: this command can not be run until after the first commit" 1>&2
+  exit 1
+# If have no argument, list all branches and exit
+elif [ "$#" = 0 ]; then
+  find ".pig/heads/" -type f | cut -d '/' -f 3 | sort
+  exit 0
+# If more than 2 arguments are provided, print error
+elif [ "$#" -ge 3 ]; then
+  echo "usage: $(basename "$0") [-d] <branch>" 1>&2
+  exit 1
+# If only -d is provided, print error
+elif [ "$#" = 1 ] && [ "$1" = "-d" ]; then
+  echo "$(basename "$0"): error: branch name required" 1>&2
+  exit 1
+fi
+
+# If a branch name is provided, create a new branch
+if [ "$#" = 1 ] && echo "$1" | grep -qE '^[^-].*$' > /dev/null; then
+  # Check if the branch already exists
+  if test -e ".pig/heads/${1}"; then
+    echo "$(basename "$0"): error: branch '${1}' already exists" 1>&2
+    exit 1
+  fi
+
+  # Create the new branch
+  cp ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")" ".pig/heads/${1}"
+  exit 0
+fi
+
+# If the first argument is not -d, print usage and exit
+if [ "$1" != "-d" ]; then
+  echo "usage: $(basename "$0") [-d] <branch>" 1>&2
+  exit 1
+fi
+
+# If the branch to delete doesn't exist, print error and exit
+if test ! -e ".pig/heads/${2}"; then
+  echo "$(basename "$0"): error: branch '${2}' doesn't exist" 1>&2
+  exit 1
+# If the branch to delete is the current branch, print error and exit
+elif [ "$2" = "master" ]; then
+  echo "$(basename "$0"): error: can not delete branch '${2}': default branch" 1>&2
+  exit 1
+elif [ "$2" = "$(cut -d '/' -f 2 ".pig/HEAD")" ]; then
+  echo "$(basename "$0"): error: can not delete branch '${2}': current branch" 1>&2
+  exit 1
+fi
+
+# Get all the branches, check if the deleted branches are merged or not
+find ".pig/heads/" -type f | cut -d '/' -f 3 > "$tmp1"
+delete_commit=$(cat ".pig/heads/${2}")
+check=0
+
+while read -r ref; do
+  # Skip the branch to delete
+  if [ "${2}" = "$ref" ]; then
+    continue
+  fi
+
+  # Extract the commit hash of the branch
+  commit=$(cat ".pig/heads/${ref}")
+  if [ "$commit" -lt "$delete_commit" ]; then
+    continue
+  elif [ "$commit" = "$delete_commit" ]; then
+    check=1
+    break
+  fi
+
+  echo "${commit} $(tail -1 ".pig/commits/${commit}")" >> "$tmp"
+      
+  # If the commit is not the the first commits, recursive to get all parent commits
+  if [ "$commit" != 0 ]; then
+    commit_print "$commit"
+  fi
+
+  # If the branch contains the commit of the branch to delete, mark it and break the loop
+  if grep -E "^${commit}$" > /dev/null; then
+    check=1
+    break
+  fi
+done < "$tmp1"
+
+# If no branch contains the commit of the branch to delete, print error and exit
+if [ "$check" = 0 ]; then
+  echo "$(basename "$0"): error: branch '${2}' has unmerged changes" 1>&2
+  exit 1
+fi
+
+# Delete the branch
+rm ".pig/heads/${2}"
+echo "Deleted branch '${2}'"

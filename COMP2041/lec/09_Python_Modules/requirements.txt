@@ -1,0 +1,75 @@
+# A list of commonly used python packages.
+
+# Misc
+tabulate        # Print tables easily 
+python-dateutil # Powerful date processing
+natsort         # Sorting mixed numeric and text data
+Faker           # Generate fake data
+xeger           # Generate data that matches a regex
+progress        # Print progress bars
+ipython         # Better python REPL
+z3-solver       # Satisfiability solver
+psutil          # utilities for working with processes
+more-itertools  # more itertools
+frozendict      # Immutable dictionary
+click           # Better argument parsing
+
+# Image processing
+Pillow
+
+# for when you need nuclear reactor
+regex   # more powerful than PCRE
+wcmatch # bash style globs
+
+# code formatting
+black
+autopep8
+yapf
+
+# static type checking and linting
+mypy
+pytype
+pyre-check
+pyright
+pyanalyze
+pyflakes
+pylint
+prospector
+
+# runtime type checking
+typeguard
+beartype
+
+# testing
+pytest
+
+# networking
+requests
+beautifulsoup4
+html5lib
+urllib3
+selenium
+
+# data analysis
+numpy
+scipy
+sympy
+pandas
+
+# visualization
+matplotlib
+seaborn
+
+# data formats
+json5
+toml
+ruamel.yaml
+strictyaml
+PyYAML
+omegaconf 
+
+# coloured output
+termcolor
+colorama
+blessings
+rich

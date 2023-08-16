@@ -1,0 +1,75 @@
+#!/bin/dash
+
+tmp=$(mktemp)
+trap 'rm "$tmp"' EXIT
+
+# Pre-Check if the `.pig` directory exists. If the `.pig/commits` directory is empty, print all 
+# the files in the current directory as untracked.
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+elif [ "$#" != 0 ]; then
+  echo "usage: $(basename "$0")" 1>&2
+  exit 1
+elif [ -z "$(find ".pig/commits" -type f)" ]; then
+  find "." -maxdepth 1 -type f | sed -E -e 's/^.\/(.*)$/\1 - untracked/' | sort
+  exit 0
+fi
+
+# Retrieve the tree hash from the latest commit
+tree=$(grep -E "^-tree" ".pig/commits/$(cat ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")")" | cut -d ' ' -f 2)
+
+# Get a list of all files in the current directory, the "index", and the "latest commit".
+{
+  find "." -maxdepth 1 -type f | cut -d '/' -f 2
+  cut -d ' ' -f 2 ".pig/index"
+  cut -d ' ' -f 2 ".pig/objects/$(echo "$tree" | cut -c 1-2)/$(echo "$tree" | cut -c 3-)"
+} | sort | uniq | while read -r file; do
+  # Get the file hash value in "index" and the "latest commit" 
+  index_sha=$(grep -E "$file$" ".pig/index" | cut -d ' ' -f 1)
+  blob_sha=$(grep -E "$file$" ".pig/objects/$(echo "$tree" | cut -c 1-2)/$(echo "$tree" | cut -c 3-)" | cut -d ' ' -f 1)
+
+  # Check the status of the file
+  if test ! -e "$file"; then
+    if [ -z "$index_sha" ]; then
+      echo "${file} - file deleted, deleted from index"
+    elif [ -z "$blob_sha" ]; then
+      echo "${file} - added to index, file deleted"
+    else
+      echo "${file} - file deleted"
+    fi
+    continue
+  else
+    if [ -z "$index_sha" ]; then
+      if [ -z "$blob_sha" ]; then
+        echo "${file} - untracked"
+        continue
+      else 
+        echo "${file} - deleted from index"
+        continue
+      fi
+    fi
+  fi  
+
+  # Get the file hash value of the file
+  file_sha=$(sha1sum "$file" | cut -d ' ' -f 1)
+
+  # Check the status of the file
+  if [ "$file_sha" != "$index_sha" ]; then
+    if [ -z "$blob_sha" ]; then
+      echo "${file} - added to index, file changed"
+    elif [ "$blob_sha" = "$index_sha" ]; then
+      echo "${file} - file changed, changes not staged for commit"
+    else
+      echo "${file} - file changed, different changes staged for commit"
+    fi
+  else
+    if [ -z "$blob_sha" ]; then
+      echo "${file} - added to index"
+    elif [ "$blob_sha" = "$index_sha" ]; then
+      echo "${file} - same as repo"
+    else
+      echo "${file} - file changed, changes staged for commit"
+    fi
+  fi
+done

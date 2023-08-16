@@ -1,0 +1,107 @@
+#!/bin/dash
+
+rm=$(mktemp)
+tmp=$(mktemp)
+trap 'rm "$tmp" "$rm"' EXIT
+
+# Check if the `.pig` directory exists. 
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+fi
+
+type=-1
+if [ "$#" = 1 ] && echo "$1" | grep -qE '^[^-].*$'; then
+  type=0
+elif [ "$#" = 2 ] && echo "$2" | grep -qE '^[^-].*$'; then
+  if [ "$1" = "--cached" ]; then
+    type=1
+  elif [ "$1" = "--force" ]; then
+    type=2
+  elif echo "$1" |grep -qE '^[^-].*$'; then
+    type=1
+  fi
+elif [ "$#" -gt 2 ]; then
+  if echo "$1" | grep -qE '^[^-].*$'; then
+    type=0
+  elif [ "$1" = "--force" ]; then
+    if [ "$2" = "--cached" ] && echo "$3" | grep -qE '^[^-].*$'; then
+      type=3
+    elif echo "$2" | grep -qE '^[^-].*$'; then
+      type=2
+    fi
+  elif [ "$1" = "--cached" ]; then
+    if [ "$2" = "--force" ] && echo "$3" | grep -qE '^[^-].*$'; then
+      type=3
+    elif echo "$2" | grep -qE '^[^-].*$'; then
+      type=1
+    fi
+  fi
+fi
+  
+if [ "$type" = -1 ]; then
+  echo "usage: $(basename "$0") [--force] [--cached] <filenames>" 1>&2
+  exit 1
+fi
+
+# Make a copy of the current index
+cp ".pig/index" "$tmp"
+
+# Iterate over each command line argument
+for file in "$@"; do
+  # Set the type of pigs rm
+  case "$file" in 
+  "--cached")
+    continue
+    ;;
+  "--force") 
+    continue
+    ;;
+  esac
+  
+  # Retrieve the blob hash of the file from the index
+  index_blob=$(grep -E "$file$" ".pig/index" | cut -d ' ' -f 1)
+
+  # If the file is not in the "index", print an error message and exit the script
+  if [ -z "$index_blob" ]; then
+    echo "$(basename "$0"): error: '${file}' is not in the pigs repository" 1>&2
+    exit 1
+  fi
+
+  # Check the status of the file and print an error message accordingly, if not using the "--force" option
+  if [ "$type" -lt 2 ]; then
+    # Retrieve the tree hash from the latest commit and the file's blob hash
+    tree=$(grep -E "^-tree" ".pig/commits/$(cat ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")")" | cut -d ' ' -f 2)
+    file_blob=$(grep -E "$file$" ".pig/objects/$(echo "$tree" | cut -c 1-2)/$(echo "$tree" | cut -c 3-)" | cut -d ' ' -f 1)
+    # Get the hash value of the file in working directory
+    wf_sha=$(sha1sum "$file" | cut -d ' ' -f 1)
+
+    # Check the status of the file and print an error message accordingly
+    if [ "$index_blob" != "$file_blob" ] && [ "$index_blob" != "$wf_sha" ]; then
+      echo "$(basename "$0"): error: '${file}' in index is different to both the working file and the repository" 1>&2
+      exit 1
+    elif [ "$type" = 0 ] && [ "$index_blob" != "$file_blob" ] && [ "$index_blob" = "$wf_sha" ]; then
+      echo "$(basename "$0"): error: '${file}' has staged changes in the index" 1>&2
+      exit 1
+    elif [ "$type" = 0 ] && [ "$index_blob" != "$wf_sha" ]; then
+      echo "$(basename "$0"): error: '${file}' in the repository is different to the working file" 1>&2
+      exit 1
+    fi
+  fi
+  
+  # If the "--force" option is used or no option is specified, add the file to the rm file
+  if [ "$type" = 0 ] || [ "$type" = 2 ]; then 
+    echo "$file" >> "$rm"
+  fi
+
+  # Remove the file from the index
+  sed -i "/$file$/d" "$tmp"
+done
+
+# Replace the current index with the updated index
+sort -k 2 -t ' ' "$tmp" > ".pig/index"
+
+# Delete the file according to the list from the working directory
+while read -r file; do
+  rm "$file"
+done < "$rm"

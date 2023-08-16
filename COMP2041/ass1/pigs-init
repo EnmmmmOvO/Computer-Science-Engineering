@@ -1,0 +1,38 @@
+#!/bin/dash
+
+dict=".pig"
+
+# Pre-Check if ".pig" directory not exist.
+if test -e "$dict"; then
+  echo "$(basename "$0"): error: ${dict} already exists" 1>&2
+  exit 1
+elif [ "$#" != 0 ]; then
+  echo "usage: $(basename "$0")" 1>&2
+  exit 1
+fi
+
+# .pig folder structure
+# -----------------------------------------------------------------------
+#    .pig/
+#    ├── commits (Include all commit info: tree, parent, commit content)
+#    │   ├── 0
+#    │   └── ...
+#    ├── HEAD (Record the current branch, default is "master")
+#    ├── heads (Include all branch info: commit number)
+#    │   ├── master
+#    │   └── ...
+#    ├── index (Track the status of all files: "<hash> <filename>")
+#    └── objects (Include all file and tree info)
+#        └── ...
+#            └── ........
+# -----------------------------------------------------------------------
+
+mkdir "$dict"
+touch "${dict}/index"
+mkdir "${dict}/objects"
+mkdir "${dict}/commits"
+mkdir "${dict}/heads"
+echo "ref: heads/master" > "${dict}/HEAD"
+touch "${dict}/heads/master"
+
+echo "Initialized empty pigs repository in ${dict}"

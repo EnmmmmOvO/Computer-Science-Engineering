@@ -1,0 +1,60 @@
+#!/bin/dash
+
+# Add the current directory to PATH to allow running scripts from here.
+PATH=$PATH:.
+
+# Pre-Check if ".pig" directory exists and the arugment matches "pigs-commit [-a] -m commit-message"
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+elif [ "$#" = 2 ] && [ "$1" = "-m" ]; then
+  content=$2 
+elif [ "$#" = 3 ] && [ "$1" = "-a" ] && [ "$2" = "-m" ]; then
+  content=$3
+  # Check all files in the .pig/index is changed or not.
+  cut -d ' ' -f 2 ".pig/index" | while read -r file; do
+    pigs-add "$file"
+  done
+else
+  echo "usage: $(basename "$0") [-a] -m commit-message" 1>&2
+  exit 1
+fi
+
+# Get the HEAD branch number.
+ref_location=".pig/$(cut -d ' ' -f 2 ".pig/HEAD")"
+
+# Look for the next number in the sequence in the folder to record this commit
+commit=0
+while test -e ".pig/commits/${commit}"; do
+  commit=$((commit + 1))
+done
+
+# Get the hash number of the "index" file
+tree_sha=$(sha1sum ".pig/index" | cut -d ' ' -f 1)
+
+# If there's nothing to commit or if the "index" is not change
+if { [ "$commit" = 0 ] && [ -z "$(cat .pig/index)" ]; } || { [ "$commit" != 0 ] && [ "$tree_sha" = "$(grep -E '^-tree ' ".pig/commits/$(cat "$ref_location")" | cut -d ' ' -f 2)" ]; } ; then
+  echo "nothing to commit"
+  exit 0
+fi
+
+
+if [ "$commit" = 0 ]; then
+  c_content="-tree ${tree_sha}\n\n${content}"
+else
+  c_content="-tree ${tree_sha}\n-parent $(cat "$ref_location")\n\n${content}" > ".pig/commits/${commit}"
+fi
+
+# Use the first two bits of the tree_file's hash value as the folder name and the subsequent parts as 
+# the file name, if the folder does not exist, create the folder
+dict=".pig/objects/$(echo "$tree_sha" | cut -c 1-2)"
+if test ! -e "$dict"; then
+  mkdir "$dict"
+fi
+cp ".pig/index" "${dict}/$(echo "$tree_sha" | cut -c 3-)"
+
+# Write the commit content to the commit file and Update the commit number in the HEAD file.
+echo "$c_content" > ".pig/commits/${commit}"
+echo "$commit" > "$ref_location"
+
+echo "Committed as commit ${commit}"

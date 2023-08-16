@@ -1,0 +1,45 @@
+#!/bin/dash
+
+# Pre-check for the existence of the `.pig` folder
+if test ! -e ".pig"; then
+  echo "$(basename "$0"): error: pigs repository directory .pig not found" 1>&2
+  exit 1
+elif [ "$#" != 1 ] || { ! echo "$1" | grep -E '^.*:.+$' > /dev/null; }; then
+  echo "usage: $(basename "$0") <commit>:<filename>" 1>&2
+  exit 1
+fi
+
+# Split the input argument into 'commit' and 'file' variables
+commit=$(echo "$1"| cut -d ':' -f 1)
+file=$(echo "$1"| cut -d ':' -f 2)
+
+# If no commit is specified, use the current commit (HEAD)
+if [ -z "$commit" ]; then
+  commit=$(cat ".pig/$(cut -d ' ' -f 2 ".pig/HEAD")")
+  
+  # Get the blob hash of the file from the index
+  blob=$(grep -E " $file$" ".pig/index" | cut -d ' ' -f 1)
+
+  # Check if the file is not found in the index
+  if [ -z "$blob" ]; then
+    echo "$(basename "$0"): error: '${file}' not found in index" 1>&2
+    exit 1
+  fi
+else
+  # If a commit is specified, check if the commit exists
+  if test ! -e ".pig/commits/${commit}"; then
+    echo "$(basename "$0"): error: unknown commit '${commit}'" 1>&2
+    exit 1
+  fi
+
+  tree=$(grep '^-tree ' ".pig/commits/${commit}" | cut -d ' ' -f 2)
+  blob=$(grep -E " $file$" ".pig/objects/$(echo "$tree" | cut -c 1-2)/$(echo "$tree" | cut -c 3-)" | cut -d ' ' -f 1)
+
+  # If the file is not found in the commit, report an error
+  if [ -z "$blob" ]; then
+    echo "$(basename "$0"): error: '${file}' not found in commit ${commit}" 1>&2
+    exit 1
+  fi
+fi
+
+cat ".pig/objects/$(echo "$blob" | cut -c 1-2)/$(echo "$blob" | cut -c 3-)"
