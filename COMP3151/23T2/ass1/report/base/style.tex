@@ -1,0 +1,41 @@
+% style sheet for the thesis
+% Chapter and section title format
+\titleformat{\section}[block]{\normalfont\huge\bfseries}{\thesection.}{.5em}{\Huge}[{}]
+% \titlespacing*{\chapter}{0pt}{-19pt}{25pt}
+% \titleformat{\section}[block]{\normalfont\Large\bfseries}{\thesection.}{.5em}{\Large}
+
+
+
+% code formatting with listing
+\lstset{
+  basicstyle=\ttfamily,
+  breaklines=true,
+}
+
+% Margins
+\geometry{
+    a4paper,
+    margin=2.75cm
+}
+
+% Index depth limit
+\setcounter{tocdepth}{2}
+
+% Paragraph Indentation
+\setlength{\parindent}{1cm}
+
+\renewcommand{\lstlistingname}{Code extraction}
+\renewcommand*{\lstlistlistingname}{Code Excerpts Index}
+
+\definecolor{US_red}{cmyk}{0, 1, 0.65, 0.34}
+\definecolor{US_yellow}{cmyk}{0, 0.3, 0.94, 0}
+\newcommand{\absfont}{\normalfont\sffamily\bfseries\linespread{1}\selectfont}
+\newcommand{\absheadfont}{\color{color3}\normalfont\sffamily\selectfont}
+\mdfdefinestyle{US_style}{backgroundcolor=US_yellow!20, font=\bfseries, hidealllines=true}
+
+
+\titleformat{\section}{\normalfont\huge\bfseries\absfont}{\Large\thesection}{0.5em}{\Large}[]
+
+\setlength{\parskip}{10pt}
+
+

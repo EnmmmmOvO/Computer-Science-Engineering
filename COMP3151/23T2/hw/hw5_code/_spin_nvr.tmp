@@ -1,0 +1,11 @@
+never wait2 {    /* !([] ((! ((Y@waity))) || (<> ((Y@csy))))) */
+T0_init:
+	do
+	:: (! ((! ((Y@waity)))) && ! (((Y@csy)))) -> goto accept_S4
+	:: (1) -> goto T0_init
+	od;
+accept_S4:
+	do
+	:: (! (((Y@csy)))) -> goto accept_S4
+	od;
+}

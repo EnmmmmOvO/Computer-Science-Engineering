@@ -1,0 +1,64 @@
+%%
+%% Created by Addi Ait-Mlouk, School of informatics, University of Skövde
+%% addi.ait-mlouk@his.se
+%% aitmlouk@gmail.com
+%%
+%% 
+%% This project is a part of the project templates for the Data Science - Master's programme at the University of Skövde provided initially to help students follow certain guidelines. Text and logos belong to the Data Science - Master's program, University of Skövde
+%% https://www.his.se/en/research/doktorandhandbok/regulations-forms-and-templates/
+%%
+%%
+%% ---------------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% 
+%% Template report for a mini project - Data Science - Master's Programme
+%% with numbered style bibliographic references
+%% the template can be downloaded separately
+%%
+%% 
+%% ---------------------------------------------
+
+
+\documentclass[12pt]{article}
+% LaTeX packages and global styles
+
+\input{base/packages}
+\input{base/style}
+
+% Beginning of the document
+\begin{document}
+    % Title page and unnumbered sections
+    \input{sections/00_front_page}
+%    \input{sections/00_abstract}
+    
+    % Index of the document and figures
+    \begingroup
+        % Links are normally blue, but indexes are set to black
+        % so that everything does not appear blue
+        \hypersetup{linkcolor=black}
+        \tableofcontents
+        %\listoffigures % uncomment to display list of code 
+        %\lstlistoflistings % uncomment to display list of code 
+    \endgroup
+    
+    % Change page number style to normal
+    \clearpage\pagenumbering{arabic}
+    
+    % Sections and chapters
+    \input{sections/content}
+%    \appendix
+%    \input{sections/appendix}
+    
+%    % Bibliography
+%    \bibliographystyle{plainnat}
+%    \bibliography{bibliography.bib}
+
+% End of the document
+\end{document}

@@ -1,0 +1,136 @@
+\section{Appendices}
+\label{chap:appendices}
+
+If your paper includes appendices, they are to be placed at the very end of your paper. If you have conducted a survey or interviews, the questionnaire and interview guide are to be included as appendices. If you have made some ML implementation, attach the code. If you are unsure about what to include as an appendix, consult with your lecturer or supervisor. Make sure to name the appendices correctly, like A, B and C.
+
+\subsection{LaTeX usage examples}
+
+\todo[inline]{This chapter is included solely as a help and reference for using \LaTeX. It should not appear in the final document.}
+
+\subsection{Introduction}
+This chapter shows examples of using \LaTeX for common operations. 
+
+\subsection{Styles}
+\label{sec:styles}
+Styles such as \textbf{bold}, \textit{italic}, and \underline{underline} can be applied to text. You can also use \textcolor{red}{} \textcolor{blue}{apply} \textcolor{green}{colors}, and \underline{\textit{combine}} \textbf{\textcolor{red}{styles}}. It is recommended to use only bold to emphasize, and not abuse this resource.
+
+\subsection{Listings}
+With itemize you can create unnumbered lists:
+
+\begin{itemize}
+     \item strawberries
+     \item Peaches
+     \item Pineapples
+     \item Nectarines
+\end{itemize}
+
+Similarly, enumerate allows you to create numbered lists:
+
+\begin{enumerate}
+     \item Prepare the memory of the TFG
+     \item Prepare the presentation
+     \item Present the TFG
+     \item Apply for the Bachelor's degree
+\end{enumerate}
+
+\subsection{Subsections}
+Subsections can be defined with the subsection command:
+
+\subsubsection{First subsection}\label{sec:subsection}
+This is a subsection
+
+\subsubsection{Second subsection}
+This is another subsection.
+
+\subsection{Images and figures}
+All images and figures in the document will be placed in the ``fig'' folder. They can be included as follows:
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/skovde.jpg}
+    \caption{An example of image}
+    \label{fig:example}
+\end{figure}
+
+Note that the figures are automatically numbered according to the chapter and the number of figures that have previously appeared in that chapter. There are many ways to define the size of a figure, but it is advisable to use the one shown in this example: the width of the figure is defined as a percentage of the total width of the page, and the height is automatically scaled. In this way, the maximum width of a figure would be 1.0 * textwidth, which would ensure that it is displayed at the maximum possible size without exceeding the margins of the document.
+
+Note that LaTeX tries to include figures in the same place where they are declared, but sometimes this is not possible due to space constraints. In those cases, LaTeX will place the figure as close to its declaration as possible, perhaps on a different page. This is normal behavior and should not be avoided.
+
+\subsection{References}
+Notice how the ``label'' command has been used several times in the source code for this section. This command allows you to mark an element, be it a chapter, section, figure, etc. to make a numeric reference to it. To reference a ``label'', use the ``ref'' command including the name of the reference:
+
+This is the chapter \ref{chap:background}.
+
+Examples of styles are shown in the \ref{sec:styles} section.
+
+The subsection \ref{sec:subsection} explains...
+
+In Figure \ref{fig:example} we see that...
+
+This saves us from having to directly write the indexes of the sections and figures we want to mention, since LaTeX does it for us and also takes care of keeping them updated in case they change (try moving this chapter to the end of the document and see how all referenced indices are updated automatically). Also, ``ref'' references act as hyperlinks within the document that take you to the referenced element when you click on them.
+
+It is usual to name ``label'' with a prefix indicating the type of element to find it later more easily, but it is not mandatory.
+
+\subsection{Code snippets}
+
+Code snippets can be included via listing:
+
+\begin{lstlisting}[language=Python, caption={Python code}, label={cod:python}, captionpos=b]
+num = float(input("Enter a number: "))
+if num > 0:
+   print("Positive number")
+elif num == 0:
+   print("Zero")
+else:
+   print("Negative number")
+\end{lstlisting}
+
+A wide variety of languages are supported:
+
+\begin{lstlisting}[language=Java, caption={Java coode}, label={cod:java}, captionpos=b]
+public class Test {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+\end{lstlisting}
+
+Code snippets can also be referenced via label/ref: Code snippets \ref{cod:python} and \ref{cod:java}.
+
+\subsection{Links}
+You can link to an external website using the url command: \url{https://www.example.com}. A link can also be linked to text using the href command: \href{https://www.example.com}{example domain}.
+
+\subsection{Citations and bibliography}
+In LaTeX, bibliography items are stored in a bibliographic file in a format called BibTeX, in the case of this project they are in ``bibliography.bib''. To cite an element, use the ``cite'' command. You can cite both scientific papers \cite{berners1994} or books \cite{swales1994} as well as web links \cite{webETSII}. Citations are automatically numbered and included in the bibliography section of the document.
+
+Note how bibliographic items stored in ``bibliography.bib'' have an associated tag, which is the one included when citing them using cite. Adding a reference to the bibliographic file does not make it automatically appear in the bibliography section of the work, it is necessary to cite it somewhere in it.
+
+\subsection{Equations}
+LaTeX has a powerful engine for displaying mathematical equations and an extensive catalog of mathematical symbols. The math environment can be activated in many ways. To include simple equations in a text, they can be surrounded by dollar signs: $1 + 2 = 3$, $\sqrt{81} = 3^2 = 9$, $\forall x \in y~\exists~z : S_z < $4.
+
+More complex equations can be expressed separately and are numbered: equation \ref{eq:equation}.
+
+\begin{equation}\label{eq:equation}
+\lim_{x\to 0}{\frac{e^x-1}{2x}}
+ \overset{\left[\frac{0}{0}\right]}{\underset{\mathrm{H}}{=}}
+ \lim_{x\to 0}{\frac{e^x}{2}}={\frac{1}{2}}
+ +7 \int_0^2
+  \left(
+    -\frac{1}{4}\left(e^{-4t_1}+e^{4t_1-8}\right)
+  \right)\,dt_1
+\end{equation}
+
+There is \href{http://www.yann-ollivier.org/latex/texsymbols.pdf}{here} an extensive list of symbols that can be used in math mode.
+
+\subsection{Special characters and symbols}
+Some characters and symbols must be escaped in order to be rendered in the document, as they have a special meaning in LaTeX. Some of them are:
+
+\begin{itemize}
+     \item The dollar sign \$ is used for equations.
+     \item The percentage \% is used for comments in the source code.
+     \item The euro symbol \euro{} often causes problems if typed directly.
+     \item The underscore \_ is used for subscripts in math mode.
+     \item Quotes must be expressed `like this' for single quotes and ``like this'' for double quotes. Spanish quotation marks can be expressed \textquote{like this}.
+     \item The backslash \textbackslash{} is used for LaTeX commands.
+     \item Other symbols that must be escaped include the braces \{ \}, the ampersand \&, the hash \#, and the greater-than \textgreater{} and less-than \textless{} symbols.
+\end{itemize}

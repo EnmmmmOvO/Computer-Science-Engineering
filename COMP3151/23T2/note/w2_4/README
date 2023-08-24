@@ -1,0 +1,3 @@
+The examples in this folder should be run with Spin's "weak fairness" flag on.
+
+See the example weak_fairness.pml for a clarification of the semantics of this flag. 

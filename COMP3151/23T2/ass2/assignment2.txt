@@ -1,0 +1,7 @@
+Video URL:
+https://youtu.be/pEkQOzhP_D4
+
+Reference:
+
+Ichiro Suzuki and Tadao Kasami. 1985. A distributed mutual exclusion algorithm. ACM Trans. Comput. Syst. 3, 4
+(Nov. 1985), 344–349. https://doi.org/10.1145/6110.214406

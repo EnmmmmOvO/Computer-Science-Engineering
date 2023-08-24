@@ -1,0 +1,62 @@
+\section{Introduction}
+\label{chap:introduction}
+
+This project mainly utilizes read-and-write locks as the main body to ensure that only one process is allowed to run
+if and when the data needs to be modified, and multiple processes can read the data if there are no writes.
+In addition, signalling is used to ensure the integrity of the data structure.
+
+\section{Solution}
+\label{sec:solution}
+First, a separate read/write lock is given to each piece of data, allowing members and printers to read the data
+freely and ensuring that, at the exact moment, no two processes are allowed to modify the data simultaneously. \\
+Second, the number of signals is set equal to the maximum capacity of the data structure so that when the maximum
+capacity is reached, the insertion process is blocked to know that data has been deleted. It guarantees the data
+structure's integrity and ensures that the program it wants to insert will not be terminated directly.
+
+
+\section{Background}
+\label{chap:background}
+How do you plan to address the problem and answer your hypotheses? Review and describe the related literature. It is encouraged to make use of the seminar papers already provided, if applicable. What are the previous researches’ questions, results, and solutions and how do they relate to your problem? For example, if your project is about analyzing predictions of the effects of global warming, how have others addressed this problem? Which analysis techniques have they used for their particular data and why? That is, can the related research found help you in your work on your data, analysis, visualization, and evaluation?
+
+
+\section{Data}
+\label{chap:data}
+Briefly describe the dataset and the parameters that will be important for you in order to answer your questions/hypotheses. Indicate the source. If available online, providing a URL link helps the readers.
+
+\subsection{Data preparation}
+\label{sec:data}
+Describe what you did in order to use the data for analysis.
+
+\section{Approach}
+\label{chap:approach}
+Describe the techniques that you will use for managing and analyzing your data and the tool(s) that you will use for data management/data analysis and evaluation. Motivate why you have chosen a certain method over others and describe how you plan to evaluate your solution. This section should give a detailed account of what you did in order to answer your questions.
+
+\section{Results}
+\label{chap:results}
+Describe your final data analysis results and everything that you discovered on the way the put you forward and you think is worth describing here. Elaborate on the significance of your findings/results and convey your thoughts. 
+
+\section{Discussion}
+\label{chap:discussion}
+What do the results mean (their significance and to whom) and how do they answer your research questions/hypotheses? From the evaluation and validation of the tool, what can you conclude? 
+
+\subsection{Limitations and Challenges}
+\label{sec:limitation}
+What could have been investigated if given more time? What have been difficult when solving the problem and getting answers for your research questions/hypotheses?
+
+\section{Conclusion}
+\label{chap:conclusion}
+Write the conclusion. What did you gain from the project assignment? Briefly explain your questions/hypotheses, findings, and meaningful discussion points in relation to the data collection, data management, data analysis, visualization and interaction concepts, and evaluation of your tool.
+What additional investigations need to be performed (or what is the limitation) in order to say that your solution is a good one for the problem? 
+
+\section{Reflections on own work}
+\label{chap:reflection}
+\begin{itemize}
+    \item Describe how you decided to scope (and/or re-scope) your problem formulation during the work, and given the data you had access to.
+    \item Describe how you searched for knowledge on how to scope the DS question you wanted to answer 
+    \item understand how to implement, test, and validate your results. 
+    \item Which sources helped you to get progress and how?
+    \item What would you have done differently if you were to start over again, for understanding the problem faster and for understanding what could be done with the data you had access to?
+    \item What else is there that you would have changed about this assignment?
+\end{itemize}
+
+\newpage
