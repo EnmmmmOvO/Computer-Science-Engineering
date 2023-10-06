@@ -29,7 +29,7 @@ pylint==2.6.0
 pylint-venv==2.1.1
 pyparsing==2.4.7
 pytest==6.2.2
-requests==2.25.1
+requests==2.31.0
 six==1.15.0
 sortedcontainers==2.3.0
 toml==0.10.2
