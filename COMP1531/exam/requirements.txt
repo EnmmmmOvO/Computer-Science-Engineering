@@ -7,7 +7,7 @@ requests==2.31.0
 virtualenv==20.0.31
 pylint-venv==2.1.1
 mypy==0.782
-PyJWT==1.7.1
+PyJWT==2.4.0
 attrs==20.2.0
 email-validator==1.1.1
 flask-cors==3.0.9
