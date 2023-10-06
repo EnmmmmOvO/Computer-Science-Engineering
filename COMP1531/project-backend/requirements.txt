@@ -9,7 +9,7 @@ coverage==5.4
 distlib==0.3.1
 email-validator==1.1.2
 filelock==3.0.12
-Flask==1.1.2
+Flask==2.2.5
 Flask-Cors==3.0.10
 hypothesis==6.1.1
 idna==2.10
