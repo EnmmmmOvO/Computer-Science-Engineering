@@ -3,7 +3,7 @@ coverage==5.2.1
 pylint==2.5.3
 Flask==1.1.2
 hypothesis==5.24.3
-requests==2.24.0
+requests==2.31.0
 virtualenv==20.0.31
 pylint-venv==2.1.1
 mypy==0.782
