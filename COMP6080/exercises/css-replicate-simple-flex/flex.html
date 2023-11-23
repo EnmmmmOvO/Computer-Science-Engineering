@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Box</title>
+	<style>
+		.Box-1 {
+			width: 1000px;
+			height: 500px;
+			display: flex;
+			/*transform: rotate(180deg);*/
+		}
+		.Box-2 {
+			display: flex;
+			flex: 3;
+			flex-direction: column;
+		}
+		.Box-3 {
+			display: flex;
+			flex: 2;
+		}
+	</style>
+</head>
+<body>
+	<div class="Box-1">
+		<div class="Box-2">
+			<div style="background-color: rgb(149,205,172); flex: 1; margin: 2px;"></div>
+			<div class="Box-3">
+				<div style="background-color: rgb(239,196,107); flex: 2; margin: 2px"></div>
+				<div style="background-color: rgb(149,205,172); flex: 1; margin: 2px"></div>
+			</div>
+		</div>
+		<div style="background-color: rgb(230,116,108); flex: 1; margin: 2px"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Bank Safely</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                width: 1896px;
+                height: 870px;
+                margin: 0;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                height: 100%;
+            }
+            .second-container {
+                display: flex;
+                justify-content: space-between;
+                margin: 40px 300px auto 300px;
+                align-items: flex-end;
+            }
+            .third-container {
+                position: relative;
+                height: 70%;
+                width: 37%;
+                left: 300px;
+                top: 50px;
+                display: flex;
+                flex-direction: column;
+            }
+            .third-container > h1 {
+                margin: 0;
+                color: white;
+                font-size: 85px;
+            }
+            .explore-button {
+                background-color: #f1cc0f;
+                width: 300px;
+                text-align: center;
+                padding: 15px;
+                margin-top: 60px;
+                margin-bottom: 40px;
+                font-size: 30px;
+                border-radius: 30px;
+            }
+            .picture-part {
+                width: 100%;
+                height: 80%;
+                background-image: url("assets/exercise_2_landing_page.jpg");
+                background-size: cover;
+            }
+            .info-part {
+                background-color: #f1cc0f;
+                width: 100%;
+                height: 20%;
+            }
+            .fee-word {
+                font-weight: bolder;
+                font-size: 70px;
+            }
+            .info-word {
+                font-size: 33px;
+                position: relative;
+                bottom: 15px
+            }
+            img {
+                height: 30px;
+                margin-right: 5px;
+            }
+            .comment {
+                display: flex;
+                align-items: flex-start;
+                color: white;
+                font-size: 25px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="picture-part">
+                <div class="third-container">
+                    <h1>Bank safely online from anywhere</h1>
+                    <div class="explore-button">Explore products</div>
+                    <div class="comment">
+                        <img src="assets/exercise_2_fraud_icon.svg" alt="protect" />
+                        We've got your back. <u>See what we're doing about fraud.</u>
+                    </div>
+                </div>
+            </div>
+            <div class="info-part">
+                <div class="second-container">
+                    <div class="fee-word">$0 fee.</div>
+                    <div class="info-word">Open an everyday transaction account with us and keep the change.</div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

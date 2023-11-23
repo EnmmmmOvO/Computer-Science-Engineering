@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>My Page</title>
+		<style>
+			body {
+				font-size: 20pt;
+				line-height: 1.5em;
+			}
+			.popup, .about-info, .news-info, .articles-info {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<header class='header' id="header">
+			<a id='home' href="#">Home</a> |
+			<a id='about' href="#">About</a> |
+			<a id='news' href="#">News</a> |
+			<a id='articles' href="#">Articles</a>
+		</header>
+
+		<div class='info' id="info">
+			<div id='home-info' class='home-info'>This is the homepage</div>
+			<div id='about-info' class='about-info'>This is the about page</div>
+			<div id='news-info' class='news-info'>This is the news page</div>
+			<div id='articles-info' class='articles-info'>This is the articles page</div>
+		</div>
+
+		<form class='popup' id='popup'>
+			Email:<input type="text" name="email"/><br />
+			Name:<input type="text" name="name"/><br />
+			<button id="close">Close</button>
+			<button id="submit">Submit</button>
+		</form>
+
+		<footer id="footer" class="footer"><a id="contact" href="#">Contact Us</a></footer>
+
+		<script>
+			const list = ['home', 'about', 'news', 'articles']
+			const header = document.getElementById('header');
+			const info = document.getElementById('info');
+			const popup = document.getElementById('popup');
+			const footer = document.getElementById('footer');
+			const submit = document.getElementById('submit');
+
+			list.map(str => {
+				document.getElementById(str).addEventListener('click', e => {
+					e.preventDefault();
+					list.forEach(str2 => {
+						if (str2 !== str) document.getElementById(`${str2}-info`).style.display = 'none';
+						else document.getElementById(`${str2}-info`).style.display = 'block'
+					})
+				})
+			})
+
+			document.getElementById('close').addEventListener('click', e => {
+				e.preventDefault();
+				header.style.display = 'block';
+				info.style.display = 'block';
+				popup.style.display = 'none';
+				footer.style.display = 'block';
+			});
+
+			submit.addEventListener('click', e => {
+				e.preventDefault();
+				const form = new FormData(popup).entries();
+
+				let message = '';
+				for (let i of form) message += `${i[0]}: ${i[1]} `;
+				fetch(`https://api.day.app/xxxxxxxxxx/${message}`)
+
+				header.style.display = 'block';
+				info.style.display = 'block';
+				popup.style.display = 'none';
+				footer.style.display = 'block';
+			});
+
+			footer.addEventListener('click', e => {
+				e.preventDefault();
+				header.style.display = 'none';
+				info.style.display = 'none';
+				popup.style.display = 'block';
+				footer.style.display = 'none';
+			});
+		</script>
+	</body>
+</html>

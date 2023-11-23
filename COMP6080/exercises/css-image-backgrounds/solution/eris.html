@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title>Eris</title>
+	<style type="text/css">
+		.erisBox {
+			width: 1500px;
+			height: 800px;
+			border: 1px solid #333;
+			background-color: #cccccc;
+
+			/* Uses the url function to get the eris image and sets it as the background iamge */
+			background-image: url('/eris.jpg');
+			/* Sets so the image doesn't fill the div by repeating */
+			background-repeat: no-repeat;
+			/* The length and height dimension is set to be half of the outer element */
+			background-size: 50% 50%;
+			/* Positions the image at the center */
+			background-position: center;
+
+			/*
+			Background shorthand method:
+			Color, url, repeat, position and size. The / is required to put in those two values
+
+			background: #cccccc url('/eris.jpg') no-repeat center /50% 50%;
+			*/
+		}
+	</style>
+</head>
+<body>
+	<div class="erisBox">
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+    }
+
+    @media (max-width: 400px) {
+      .devtools-button {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .devtools-button {
+        transform: scale(0.75);
+      }
+    }
+
+    html,
+    body,
+    .container {
+      height: 100%;
+    }
+
+    .container {
+      display: grid;
+      place-items: center;
+    }
+
+    .original-button {
+      padding: 1rem 2rem;
+      background: #881337;
+      border: none;
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: transform 150ms;
+    }
+
+    .original-button:hover {
+      transform: scale(1.05);
+    }
+
+    .devtools-button {
+      padding: 0.5rem 4rem;
+      font-size: 1.5rem;
+      transition: transform 500ms;
+      color: #a21caf;
+      border: 4px solid currentColor;
+      background: #f5d0fe;
+      border-radius: 9999px;
+      font-weight: 900;
+    }
+
+    .devtools-button:hover {
+      transform: scale(0.75);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <button class="original-button">original button</button>
+  <button class="devtools-button">devtools button</button>
+</div>
+</body>
+</html>

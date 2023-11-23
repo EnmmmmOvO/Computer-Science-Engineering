@@ -1,0 +1,48 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.Logo-Container {
+  flex: 15%;
+}
+
+.App-logo {
+  width: 80%;
+  height: auto;
+}
+
+.bar {
+  margin: 20px 20px 0 20px ;
+  display: flex;
+}
+
+.navbar {
+  flex: 85%;
+  display: flex;
+  justify-content: flex-end;
+  font-family: Arial, sans-serif;
+  font-size: 30px;
+  align-items: end;
+  margin-bottom: 30px;
+}
+
+.nav {
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.Dynamic-Part {
+  flex-grow: 1;
+  margin: 30px 30px 40px 30px;
+  border: 1px solid black;
+}
+
+.Text-page {
+  margin: 50px;
+  font-family: Arial, sans-serif;
+  font-size: 30px;
+  font-weight: bolder;
+}

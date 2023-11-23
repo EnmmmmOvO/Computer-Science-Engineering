@@ -1,0 +1,128 @@
+<html>
+	<head>
+		<title>Invite Friends | CSE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style type="text/css">
+      #email-form-template {
+        display: none;
+      }
+      .hide {
+        display: none;
+      }
+    </style>
+	</head>
+  <body>
+    
+    <div>
+      <span id="page-swap-invite">Invite</span>
+      |
+      <span id="page-swap-history">History</span>
+    </div>
+    <hr />
+
+    <div id="page-history" class="page hide">
+      <h1>History</h1>
+    </div>
+
+    <div id="page-invite" class="page">
+      <h1>Please invite your friends to join CSE</h1>
+      
+      <div id="page-invite-email-input">
+        <h5>Welcome Message</h5>
+        <div class="input-group mb-3">
+          <textarea id="welcome-msg" class="form-control"></textarea>
+        </div>
+
+        <div class="input-group" id="email-form-template">
+          <span class="input-group-text"></span>
+          <input type="text" class="form-control" placeholder="Email" />
+        </div>
+
+        <div id="emails"></div>
+
+        <button class="btn btn-primary" id="add-more">Add more</button>
+
+        <button class="btn btn-primary" id="email-invite-submit">Submit</button>
+      </div>
+      <div id="page-invite-confirmation" class="hide">
+        Confirm!!!
+
+        <button id="confirmation-cancel">Cancel</button>
+      </div>
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+      function createEmailInput(number) {
+
+        const element = document.getElementById('email-form-template').cloneNode(true);
+        element.removeAttribute('id');
+        element.querySelector('.input-group-text').innerText = `Email ${number}: `;
+        element.querySelector('input').classList.add('email-invite');
+
+        return element;
+      } 
+
+      let emailCounter = 0;
+      addEmailInput();
+      addEmailInput();
+
+      function addEmailInput() {
+        const newInput = createEmailInput(++emailCounter);
+        document.getElementById('emails').appendChild(newInput)
+      }
+
+      document.getElementById('add-more').addEventListener('click', () => {
+          addEmailInput();
+          addEmailInput();
+          if (emailCounter >= 10) {
+            document.getElementById('add-more').style.display = 'none';
+          }
+
+      });
+
+      const welcomeMsg = document.getElementById('welcome-msg');
+      welcomeMsg.addEventListener('focus', () => {
+        welcomeMsg.style.background = 'none';
+      });
+      welcomeMsg.addEventListener('blur', () => {
+        if (welcomeMsg.value === '') {
+          welcomeMsg.style.backgroundColor = 'red';
+        }
+      });
+
+      document.getElementById('page-swap-invite').addEventListener('click', () => {
+        document.getElementById('page-invite').classList.remove('hide');
+        document.getElementById('page-history').classList.add('hide');
+      });
+
+      document.getElementById('page-swap-history').addEventListener('click', () => {
+        document.getElementById('page-invite').classList.add('hide');
+        document.getElementById('page-history').classList.remove('hide');
+      });
+
+      document.getElementById('email-invite-submit').addEventListener('click', () => {
+        for (invite of document.querySelectorAll('.email-invite')) {
+          console.log(invite.value);
+        }
+        document.getElementById('page-invite-email-input').classList.add('hide');
+        document.getElementById('page-invite-confirmation').classList.remove('hide');
+      });
+
+      document.getElementById('confirmation-cancel').addEventListener('click', () => {
+        document.getElementById('page-invite-confirmation').classList.add('hide');
+        document.getElementById('page-invite-email-input').classList.remove('hide');
+      });
+
+    </script>
+  </body>
+</html>
+
+<!--
+* Has a submit button that when clicked, provides a summary screen, before allowing the user to cancel or continue.
+* (Optional) Contains a second "tab" on the page that shows previously sent email messages (using local storage)
+* (Optional) Constructs most elements via JS DOM API rather than via HTML
+-->

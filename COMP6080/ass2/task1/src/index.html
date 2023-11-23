@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Funform</title>
+  </head>
+  <body>
+    <form>
+      <table border="1"> 
+        <tr>
+          <td>Street Name</td>
+          <td><input type="text" id="street-name" name="street-name"></td>
+        </tr>
+        <tr>
+          <td>Suburb</td>
+          <td><input type="text" id="suburb" name="suburb"></td>
+        </tr>
+        <tr>
+          <td>Postcode</td>
+          <td><input type="text" id="postcode" name="postcode"></td>
+        </tr>
+        <tr>
+          <td>Date of birth</td>
+          <td><input type="text" id="dob" name="dob"></td>
+        </tr>
+        <tr>
+          <td>Building Type</td>
+          <td>
+            <select id="building-type" name="building-type">
+              <option value="apartment">Apartment</option>
+              <option value="house">House</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Features</td>
+          <td>
+            <input type="checkbox" id="features-heating" name="features" value="Heating">
+            <label for="heating">Heating</label><br />
+            <input type="checkbox" id="features-airconditioning" name="features" value="AirConditioning">
+            <label for="airconditioning">AirConditioning</label><br />
+            <input type="checkbox" id="features-pool" name="features" value="Pool">
+            <label for="pool">Pool</label><br />
+            <input type="checkbox" id="features-sandpit" name="features" value="Sandpit">
+            <label for="sandpit">Sandpit</label><br />
+            <input type="button" id="select-all-btn" value="Select All">
+          </td>
+        </tr>
+      </table>
+      <br />
+      <button type="button" id="reset-form">Reset</button><br />
+      <br />
+      <textarea style="width: 250px; height: 150px;" id="form-result"></textarea>
+    </form>
+    <script src="./script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Form</title>
+        <style>
+            body {
+                line-height: 2.5em;
+            }
+        </style>
+    </head>
+    <body>
+        <form action="" method="get">
+            First Name: <label><input name="name" id="name" type="text"></label><br />
+            Email: <label><input name="email" id="email" type="text"></label><br />
+            <button disabled type="submit" id="submit">Submit</button>
+        </form>
+        <script type="text/javascript">
+            let check_name = false;
+            let check_email = false;
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+
+            const check_submit = () => {
+                if (check_email && check_name) document.getElementById('submit').disabled = false;
+            }
+
+            name.addEventListener('keyup', e => {
+                check_name = name.value.length >= 2 && name.value.length <= 20 && name.value.match(/^[A-Za-z]+$/);
+                check_submit();
+            });
+            email.addEventListener('keyup', e => {
+                check_email = email.value.match(/.+@.+\..+/) !== null;
+                check_submit();
+            });
+
+            name.addEventListener('blur', e => name.style.backgroundColor = check_name ? 'white' : 'red');
+            email.addEventListener('blur', e => email.style.backgroundColor = check_email ? 'white' : 'red');
+            name.addEventListener('focus', e => name.style.backgroundColor = 'white');
+
+
+
+        </script>
+    </body>
+</html>

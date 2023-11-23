@@ -1,0 +1,67 @@
+body {
+  font-family: sans-serif;
+}
+
+.row {
+  width: 1200px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Change the class of the column divs from .row to .percentage-row */
+.percentage-row {
+  width: 90%;
+  margin: 0 5%;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.fixed-column {
+  width: 250px;
+  margin: 0 25px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  float: left;
+  box-sizing: border-box;
+}
+
+/* Change the class of the column divs from .fixed-column to .percentage-column */
+.percentage-column {
+  width: 22%;
+  margin: 20px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.column-header {
+  font-size: 1.5rem;
+  margin: 20px 20px 10px;
+}
+
+.column-pricing {
+  font-size: 1.1rem;
+  margin: 10px 20px;
+}
+
+.column-description {
+  font-size: 1rem;
+  margin: 10px 20px;
+}
+
+.column-button {
+  font-size: 0.8rem;
+  margin: 10px 20px 20px;
+}
+
+@media screen and (max-width: 900px) {
+  .percentage-column {
+    width: 48%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .percentage-column {
+    width: 100%;
+  }
+}

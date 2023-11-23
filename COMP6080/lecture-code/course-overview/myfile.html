@@ -1,0 +1,56 @@
+<style>
+#mitchell {
+  color: red;
+  font-size: 2em;
+}
+#rhythm {
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  border-radius: 20px;
+}
+#page {
+  font-family: Arial;  
+}
+#cactus {
+  border-radius: 5px;
+  background: rgb(220,220,255);
+  padding: 5px;
+}
+</style>
+
+
+Hello
+<div id="page">
+  <h3>Hello</h3>
+  <div id="rhythm">
+    <img src="https://www.gstatic.com/youtube/img/creator/yt_studio_logo_white.svg" />
+  </div>
+  <button id="cactus">Show me the studio!</button>
+  <i>Weee</i>
+  <p id="mitchell">Hello there how are you?</p>
+  <marquee><blink>💩💩💩💩💩💩💩💩💩💩💩💩</blink></marquee>
+  <table border="1">
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+  </table>
+</div>
+
+<script>
+
+function fn() {
+  document.getElementById('rhythm').style.background = 'black';
+}
+
+document.getElementById('cactus').addEventListener('click', fn);
+
+</script>

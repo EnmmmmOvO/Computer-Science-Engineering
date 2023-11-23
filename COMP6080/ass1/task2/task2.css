@@ -1,0 +1,185 @@
+body {
+    width: 786px;
+    height: 1120px;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.arrow-box-part {
+    margin-left: 30px;
+    flex: 3;
+}
+
+
+.body-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.book-parking-word {
+    padding: 25px 50px 20px;
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.booking-part {
+    background-color: #f4f4f5;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.calendar-icon {
+    align-items: end;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.car-icon {
+    flex: 1;
+    font-size: 30px;
+}
+
+.car-input {
+    flex: 9;
+    border: none;
+    background-color: #f4f4f4;
+    font-size: 30px;
+}
+
+.date-box {
+    width: 50%;
+    margin: 10px 10px 0 10px;
+    display: flex;
+    background-color: #ebeaea;
+    padding: 30px 20px;
+    border-radius: 2px;
+}
+
+.date-box-blank {
+    background-color: #f4f4f5;
+    margin-bottom: 10px;
+}
+
+.date-input {
+    border: none;
+    background-color: #ebeaea;
+    font-size: 30px;
+    width: 250px
+}
+
+.date-table {
+    display: flex;
+    flex-direction: row;
+}
+
+.info-part {
+    background-image: url("assets/background.png");
+    height: 87%;
+    background-size: cover;
+    background-position: center;
+}
+
+.left-date-box {
+    margin-right: 0;
+}
+
+.orange-box {
+    display: flex;
+    justify-content: center;
+    margin-right: 0;
+    background-color: #c34a13;
+    margin-bottom: 10px;
+    font-size: 23px;
+    color: white;
+    align-items: center;
+}
+
+.right-arrow-1 {
+    font-size: 30px;
+    padding-left: 20px;
+}
+
+.right-arrow-2 {
+    font-size: 30px;
+    padding-left: 10px;
+    color: #8c3389;
+}
+
+.right-arrow-box {
+    font-size: 35px;
+    padding: 30px 40px;
+    background-color: #8f3389;
+    color: white;
+}
+
+.search-bar {
+    margin: 20px 30px;
+    padding: 30px 30px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #f4f4f4;
+    border-radius: 2px;
+}
+
+.save-book {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.search-icon {
+    flex: 1;
+    font-size: 30px;
+    text-align: right;
+}
+
+.search-part {
+    height: 13%;
+}
+
+.shop-part {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin-top: 70px;
+    bottom: 0;
+}
+
+.welcome-word {
+    color: white;
+    font-weight: bolder;
+    font-size: 43px;
+    line-height: 1.5em;
+    padding: 50px 50px 70px 50px;
+}
+
+.word-1 {
+    display: flex;
+    font-size: 55px;
+    font-weight: bolder;
+    color: white;
+    justify-content: end;
+    margin-bottom: 10px;
+    flex: 3;
+}
+
+.word-2 {
+    display: flex;
+    color: white;
+    font-size: 21px;
+    font-weight: bolder;
+    justify-content: end;
+    flex: 1;
+}
+
+.word-container {
+    flex: 7;
+    display: flex;
+    flex-direction: column;
+}

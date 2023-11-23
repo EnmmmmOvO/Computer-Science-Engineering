@@ -1,0 +1,36 @@
+.App {
+  text-align: center;
+  background-color: black;
+  color: white;
+  height: 100vh;
+}
+
+.Title {
+  padding-top: 200px;
+  margin-bottom: 60px;
+  font-size: 60px;
+  font-weight: bolder;
+}
+
+.Second-Title {
+  font-size: 10px;
+}
+
+.Normal-Part {
+  font-size: 35px;
+  width: 590px;
+  text-align: left;
+  margin: 0 auto 35px auto;
+}
+
+.List {
+  width: 560px;
+  text-align: left;
+  margin: 25px auto;
+  font-size: 34px;
+
+}
+
+.a {
+  color: #61dafb;
+}

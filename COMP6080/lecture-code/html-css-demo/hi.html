@@ -1,0 +1,76 @@
+<style type="text/css">
+  .rounded-button {
+    display: block;
+    margin: 15px 0px;
+    padding: 9px;
+    width: 150px;
+    border-radius: 13px;
+    border: 0;
+    font-weight: bold;
+  }
+  .quick-links > .rounded-button {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .rounded-button:hover {
+    filter: brightness(80%);
+  }
+  .html-btn-green {
+    background: rgba(4,170,109,1);
+    color: #FFF; 
+  }
+  .html-btn-yellow {
+    background: #FFF4A3; 
+  }
+  .html-btn-black {
+    background: #282A35;
+    color: #FFF; 
+  }
+  .html-btn-pink {
+    background: #FFC0C7; 
+  }
+  body {
+    font-family: 'Source Sans Pro', Arial;
+    background-color: rgb(240,255,240);
+  }
+  h1 {
+    font-size: 4em;
+    margin-bottom: 8px;
+  }
+</style>
+
+<body style="margin: 0;">
+  <div style="display: flex;">
+    <div style="flex: 1; text-align: center;">
+      <h1>HTML</h1>
+      <h4>The language for building web pages</h4>
+      <div class="quick-links">
+        <button class="rounded-button html-btn-green">Learn HTML</button>
+        <button class="rounded-button html-btn-yellow">Video Tutorial</button>
+        <button class="rounded-button html-btn-black">HTML Reference</button>
+        <button class="rounded-button html-btn-pink">Get Certified</button>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div style="background: #ddd; margin: 0 10px;">
+        <h3 style="margin-left: 10px; padding-top: 10px;">HTML Example:</h3>
+        <div style="background: white; margin-left: 10px; border-left: 3px solid green; padding: 5px;">
+          <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;HTML Tutorial&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;h1&gt;This is a heading&lt;/h1&gt;
+&lt;p&gt;This is a paragraph.&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+          </pre>
+        </div>
+        <button style="margin: 20px;" class="rounded-button html-btn-green">Try it Yourself!</button>
+      </div>
+    </div>
+  </div>
+</body>

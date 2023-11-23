@@ -1,0 +1,30 @@
+body{
+    width: 721px;
+    height: 720px;
+    font-family: Arial;
+    margin: 22px;
+    border: 11px solid #bbada0;
+    padding: 0px;
+    border-radius: 15px;
+    font-weight: bold;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.column{
+    display: flex;
+    flex-direction: column;
+}
+.box{
+    width:160px;
+    height:160px;
+    background-color: #cdc1b4;
+    margin:0px;
+    padding:0px;
+    border: 11px solid #bbada0;
+    font-size: 90px;
+    text-align: center;
+    line-height: 180px;
+    color: #776e65;
+}

@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.AddTodoContainer {
+  margin: 30px;
+  width: auto;
+  display: flex;
+}
+
+.textField {
+  flex: 95;
+}
+
+.button {
+  flex: 5;
+}
+
+.FromContainer {
+  margin: 30px 50px;
+}

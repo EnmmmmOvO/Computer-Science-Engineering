@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Page</title>
+  </head>
+  <body id="body">
+    <!-- Do not write HTML here -->
+    <script type="text/javascript">
+      const PEOPLE = [
+        {
+          name: 'Sarah',
+          age: '22',
+          height: 188,
+        },
+        {
+          name: 'Lin',
+          age: '42',
+          height: 134,
+        },
+        {
+          name: 'Samir',
+          age: '21',
+          height: 155,
+        },
+        {
+          name: 'Wayne',
+          age: '29',
+          height: 162,
+        },
+        {
+          name: 'Eckhart',
+          age: '112',
+          height: 144,
+        },
+      ];
+
+      const body = document.getElementById('body');
+
+      const div = document.createElement('div');
+      div.style.background = '#cccccc';
+
+      const table = document.createElement('table');
+
+      const createTh = (text) => {
+        const th = document.createElement('th');
+        th.appendChild(document.createTextNode(text));
+        return th;
+      }
+
+      const createRow = (person) => {
+        const firstRow = document.createElement('tr');
+        for (const key in person) {
+          firstRow.appendChild(createTh(person[key]))
+        }
+        table.appendChild(firstRow);
+      };
+
+      createRow({
+        name: 'Name',
+        age: 'Age',
+        height: 'Height'
+      });
+      PEOPLE.forEach(createRow);
+
+      div.appendChild(table)
+      body.appendChild(div);
+    </script>
+  </body>
+</html>

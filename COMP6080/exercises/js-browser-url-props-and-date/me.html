@@ -1,0 +1,8 @@
+<script type="text/javascript">
+
+const url = window.location.href;
+const name = url.match(/name=([a-zA-Z0-9]+)/)[1]
+const age = url.match(/age=([a-zA-Z0-9]+)/)[1]
+
+console.log(`My name is ${name} and my age is ${age}`)
+</script>

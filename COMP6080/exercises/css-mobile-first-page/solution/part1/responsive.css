@@ -1,0 +1,28 @@
+.row {
+  width: 100%;
+  display: flex;
+}
+
+.fixed-col-3 {
+  width: 465px;
+}
+
+.fixed-col-4 {
+  width: 620px;
+}
+
+.fixed-col-6 {
+  width: 930px;
+}
+
+.percentage-col-3 {
+  width: 25%;
+}
+
+.percentage-col-4 {
+  width: 33%;
+}
+
+.percentage-col-6 {
+  width: 50%;
+}

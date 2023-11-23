@@ -1,0 +1,60 @@
+body {
+  height: 95vh;
+  width: 95vw;
+  margin: 0;
+}
+
+div {
+  border: 2px solid black;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.left-column {
+  min-width: 100px;
+  width: 15%;
+  height: 100%;
+}
+
+.right-column {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  height: 100px;
+  width: 100%;
+}
+
+.main-container {
+  flex: 1;
+  width: 100%;
+  display: flex;
+}
+
+.mc-right-column {
+  height: 100%;
+  width: 30%;
+}
+
+.body-container {
+  height: 100%;
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.body-box {
+  min-width: 200px;
+  max-width: 300px;
+  flex: 1;
+  margin: 5px;
+  height: 100px;
+}

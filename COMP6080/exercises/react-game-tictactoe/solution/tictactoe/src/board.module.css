@@ -1,0 +1,27 @@
+.basicBoard {
+    width: 300px;
+    height: 300px;
+    display: flex; 
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width   : 100px;
+    height  : 100px;
+    border  : 1px solid black;
+    color       : black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.winningCell {
+    composes: cell;
+    background-color: limegreen;
+}

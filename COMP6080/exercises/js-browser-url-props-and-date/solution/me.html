@@ -1,0 +1,40 @@
+<script type="text/javascript">
+
+const url = window.location.href;
+
+const queryString = url.split('?')[1];
+const pairs = queryString.split('&');
+const urlData = {};
+pairs.forEach(function (pairs) {
+  const s = pairs.split('=');
+  urlData[s[0]] = s[1];
+});
+
+const { name, age } = urlData; // Destructuring
+
+console.log(`My name is ${name} and my age is ${age}`);
+
+/*
+(Optional) Try to not only print the age, but dynamically print what year they were born assuming their birthday was on January 1st. Hint: Use the javascript built-in "Date" object.
+
+const url = window.location.href;
+
+const queryString = url.split('?')[1];
+const pairs = queryString.split('&');
+const urlData = {};
+pairs.forEach(function (pairs) {
+  const s = pairs.split('=');
+  urlData[s[0]] = s[1];
+});
+
+const { name, age } = urlData; // Destructuring
+
+console.log(`My name is ${name} and my age is ${age}`);
+
+const age = 77;
+const year = new Date().getYear() + 1900; // We have to add 1900
+//  because getYear returns the number of years since 1900
+console.log(`I was born January 1st ${year - age}`);
+*/
+
+</script>

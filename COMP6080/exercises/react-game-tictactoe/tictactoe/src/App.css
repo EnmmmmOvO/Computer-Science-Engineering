@@ -1,0 +1,45 @@
+.App {
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.result {
+  font-size: 30px;
+  margin-top: 70px;
+  height: 30px
+}
+
+.Container {
+  width: 600px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  margin: 100px auto;
+}
+
+.Row-Container {
+  flex: 1;
+  display: flex;
+}
+
+.Box {
+  flex: 1;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.Correct {
+  background-color: limegreen;
+}
+
+.Reset-button {
+  font-size: 25px;
+  background-color: #61dafb;
+  padding: 20px 50px;
+  border-radius: 5px;
+}
+

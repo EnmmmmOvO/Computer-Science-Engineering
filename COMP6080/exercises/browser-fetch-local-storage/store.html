@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Browser Fetch Local Storage</title>
+        <style>
+            .container {
+                width: 200px;
+                display: flex;
+                flex-direction: column;
+                margin: 20px;
+            }
+
+            .line {
+                display: flex;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            .box {
+                width: 50%;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="load">Loading, please wait</div>
+        <script>
+            const list = ['name', 'reindeers', 'primary'];
+            list.forEach(key => localStorage.setItem(key, list[key]));
+            const body = document.body;
+            const div = document.createElement('div');
+            div.className = 'container'
+
+            const setContent = (l) => {
+                document.getElementById('load').style.display = 'none';
+
+                list.forEach(key => {
+                    const temp = document.createElement('div');
+                    temp.className = 'line'
+
+                    const temp1 = document.createElement('div');
+                    temp1.textContent = key;
+                    temp1.className = 'box';
+                    temp.appendChild(temp1);
+
+                    const temp2 = document.createElement('div');
+                    temp2.textContent = l[key];
+                    temp2.className = 'box';
+                    temp.appendChild(temp2);
+
+                    div.appendChild(temp);
+                    localStorage.setItem(key, l[key]);
+                });
+
+                body.appendChild(div);
+            }
+
+            fetch('http://www.cse.unsw.edu.au/~cs6080/raw/data/package.json')
+                .then(respond => respond.json())
+                .then(l => {
+                    localStorage.setItem('6080', JSON.stringify(l));
+                    setContent(l);
+                })
+                .catch(err => {
+                    const l = localStorage.getItem('6080');
+                    if (!l) {
+                        console.error('No Cache! Website cannot visit');
+                        return
+                    }
+                    setContent(JSON.parse(l));
+                    const p = document.createElement('p');
+                    p.textContent = 'Web cannot visit';
+                    body.appendChild(p);
+                });
+        </script>
+    </body>
+</html>

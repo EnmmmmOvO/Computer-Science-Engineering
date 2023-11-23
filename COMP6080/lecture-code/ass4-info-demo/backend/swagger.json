@@ -1,0 +1,964 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "AirBrB CRUD Server",
+    "description": "Server that powers the AirBrB frontend"
+  },
+  "tags": [
+    {
+      "name": "User Auth",
+      "description": "Managing user authentication and authorisation"
+    },
+    {
+      "name": "Listing Management",
+      "description": "Managing listings"
+    },
+    {
+      "name": "Booking Management",
+      "description": "Managing bookings"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "AuthToken": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Authorization Bearer Token"
+          }
+        }
+      }
+    },
+    "fields": {
+      "Email": {
+        "type": "string",
+        "example": "christian@unsw.edu.au",
+        "description": "Email address of the user attempting to login"
+      },
+      "Password": {
+        "type": "string",
+        "description": "Password of the user attempting to login",
+        "example": "adummypassword"
+      },
+      "Admin": {
+        "type": "string",
+        "description": "Name (single or full name) of the user registering",
+        "example": "Christian Yu"
+      },
+      "ListingId": {
+        "type": "number",
+        "description": "ID of the listing",
+        "example": 56513315
+      },
+      "ListingTitle": {
+        "type": "string",
+        "description": "Title of the listing",
+        "example": "Oceanside Villa"
+      },
+      "ListingOwner": {
+        "type": "string",
+        "example": "alina@unsw.edu.au",
+        "description": "Email address of the owner of the listing"
+      },
+      "ListingAddress": {
+        "type": "object",
+        "description": "Address of the listing"
+      },
+      "ListingPrice": {
+        "type": "number",
+        "description": "Price of the listing per night",
+        "example": 350
+      },
+      "ListingThumbnail": {
+        "type": "string",
+        "description": "Thumbnail image of the listing - stored as base64. You will get out what you put in.",
+        "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+      },
+      "ListingMetadata": {
+        "type": "object",
+        "description": "All other listing details as set by you"
+      },
+      "ListingReviews": {
+        "type": "array",
+        "description": "All of the user reviews related to a listing",
+        "items": {
+          "type": "object"
+        }
+      },
+      "ListingAvailability": {
+        "type": "array",
+        "description": "Date ranges between which a listing is available for bookings",
+        "items": {
+          "type": "object"
+        }
+      },
+      "ListingPublished": {
+        "type": "boolean",
+        "description": "True if the listing has been published, false otherwise",
+        "example": true
+      },
+      "ListingPostedOn": {
+        "type": "string",
+        "description": "Javascript ISO string of when listing was posted",
+        "example": "2020-10-31T14:45:21.077Z"
+      },
+      "BookingId": {
+        "type": "number",
+        "description": "ID of the booking",
+        "example": 78204786
+      },
+      "BookingOwner": {
+        "type": "string",
+        "example": "lily@unsw.edu.au",
+        "description": "Email address of the user who made the booking"
+      },
+      "BookingDateRange": {
+        "type": "object",
+        "description": "The dates for which the booking was made - schema defined by the client"
+      },
+      "BookingTotalPrice": {
+        "type": "number",
+        "example": 800,
+        "description": "Total price of the booking"
+      },
+      "BookingStatus": {
+        "type": "string",
+        "example": "accepted",
+        "description": "When the booking is first made, the value is `pending`. Then `accepted` if accepted and `declined` if declined"
+      }
+    },
+    "parameters": {
+      "AuthRegisterBody": {
+        "name": "Register info",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "$ref": "#/components/fields/Email"
+            },
+            "password": {
+              "$ref": "#/components/fields/Password"
+            },
+            "name": {
+              "$ref": "#/components/fields/Admin"
+            }
+          }
+        }
+      },
+      "AuthLoginBody": {
+        "name": "Login info",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "$ref": "#/components/fields/Email"
+            },
+            "password": {
+              "$ref": "#/components/fields/Password"
+            }
+          }
+        }
+      },
+      "Authorization": {
+        "name": "Authorization",
+        "in": "header",
+        "schema": {
+          "type": "string",
+          "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+        },
+        "required": true,
+        "description": "Bearer [token]"
+      },
+      "ListingsGetAll": {
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "ListingsIdQuery": {
+        "in": "path",
+        "name": "listingid",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1
+        },
+        "example": 312894,
+        "description": "ID of the listing"
+      },
+      "ListingsNew": {
+        "name": "New listing body",
+        "description": "Listing details required to make a new listing - the address and metadata schemas are defined by the client",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "$ref": "#/components/fields/ListingTitle"
+            },
+            "address": {
+              "$ref": "#/components/fields/ListingAddress"
+            },
+            "price": {
+              "$ref": "#/components/fields/ListingPrice"
+            },
+            "thumbnail": {
+              "$ref": "#/components/fields/ListingThumbnail"
+            },
+            "metadata": {
+              "$ref": "#/components/fields/ListingMetadata"
+            }
+          }
+        }
+      },
+      "ListingsPut": {
+        "name": "Listing details",
+        "description": "A list of listing details to be updated - the address and metadata schemas are defined by the client",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "$ref": "#/components/fields/ListingTitle"
+            },
+            "address": {
+              "$ref": "#/components/fields/ListingAddress"
+            },
+            "thumbnail": {
+              "$ref": "#/components/fields/ListingThumbnail"
+            },
+            "price": {
+              "$ref": "#/components/fields/ListingPrice"
+            },
+            "metadata": {
+              "$ref": "#/components/fields/ListingMetadata"
+            }
+          }
+        }
+      },
+      "PublishListingBody": {
+        "name": "Availability object",
+        "description": "List of date ranges when listing is available for bookings - ranges schemas are defined by the client",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "availability": {
+              "$ref": "#/components/fields/ListingAvailability"
+            }
+          }
+        }
+      },
+      "PostReviewBody": {
+        "name": "Review object",
+        "description": "A single listing review that will be added to the listing's review array - schema of the review defined by the client",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "review": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "BookingIdQuery": {
+        "in": "path",
+        "name": "bookingid",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1
+        },
+        "example": 312894,
+        "description": "ID of the booking"
+      },
+      "BookingsNew": {
+        "name": "Booking details",
+        "description": "Booking details required to make a new booking - schema for the booking date range is defined by the client",
+        "in": "body",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "dateRange": {
+              "$ref": "#/components/fields/BookingDateRange"
+            },
+            "totalPrice": {
+              "$ref": "#/components/fields/BookingTotalPrice"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "Token": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "description": "JWT Token to provide authorisation",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhheWRlbkB1bnN3LmVkdS5hdSIsImlhdCI6MTYwMzk0MzIzMH0.b37PfwlcH_cue6yhgvDt2IiNvhRACf79hTNtacYB94Q"
+              }
+            }
+          }
+        },
+        "Empty": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {}
+          }
+        },
+        "ListingsGetAll": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "listings": {
+                "type": "array",
+                "description": "List of all quizzes",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "$ref": "#/components/fields/ListingId"
+                    },
+                    "title": {
+                      "$ref": "#/components/fields/ListingTitle"
+                    },
+                    "owner": {
+                      "$ref": "#/components/fields/ListingOwner"
+                    },
+                    "address": {
+                      "$ref": "#/components/fields/ListingAddress"
+                    },
+                    "thumbnail": {
+                      "$ref": "#/components/fields/ListingThumbnail"
+                    },
+                    "price": {
+                      "$ref": "#/components/fields/ListingPrice"
+                    },
+                    "reviews": {
+                      "$ref": "#/components/fields/ListingReviews"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ListingsGet": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "$ref": "#/components/fields/ListingTitle"
+              },
+              "owner": {
+                "$ref": "#/components/fields/ListingOwner"
+              },
+              "address": {
+                "$ref": "#/components/fields/ListingAddress"
+              },
+              "price": {
+                "$ref": "#/components/fields/ListingPrice"
+              },
+              "thumbnail": {
+                "$ref": "#/components/fields/ListingThumbnail"
+              },
+              "metadata": {
+                "$ref": "#/components/fields/ListingMetadata"
+              },
+              "reviews": {
+                "$ref": "#/components/fields/ListingReviews"
+              },
+              "availability": {
+                "$ref": "#/components/fields/ListingAvailability"
+              },
+              "published": {
+                "$ref": "#/components/fields/ListingPublished"
+              },
+              "postedOn": {
+                "$ref": "#/components/fields/ListingPostedOn"
+              }
+            }
+          }
+        },
+        "ListingsNew": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "listingId": {
+                "$ref": "#/components/fields/ListingId"
+              }
+            }
+          }
+        },
+        "BookingsGetAll": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "bookings": {
+                "type": "array",
+                "description": "List of all bookings",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "$ref": "#/components/fields/BookingId"
+                    },
+                    "owner": {
+                      "$ref": "#/components/fields/BookingOwner"
+                    },
+                    "dateRange": {
+                      "$ref": "#/components/fields/BookingDateRange"
+                    },
+                    "totalPrice": {
+                      "$ref": "#/components/fields/BookingTotalPrice"
+                    },
+                    "listingId": {
+                      "$ref": "#/components/fields/ListingId"
+                    },
+                    "status": {
+                      "$ref": "#/components/fields/BookingStatus"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "BookingsNew": {
+          "description": "OK",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "bookingId": {
+                "$ref": "#/components/fields/BookingId"
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Input",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "description": "Error message returned from server",
+              "example": "Invalid input"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string",
+              "description": "Error message returned from server",
+              "example": "Invalid Token"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/user/auth/register": {
+      "post": {
+        "summary": "Send registration request for a new user to join AirBrB",
+        "tags": [
+          "User Auth"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AuthRegisterBody"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Token"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
+    "/user/auth/login": {
+      "post": {
+        "summary": "Given correct user credentials, return an authorised access token to make subsequent user calls",
+        "tags": [
+          "User Auth"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AuthLoginBody"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Token"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
+    "/user/auth/logout": {
+      "post": {
+        "summary": "Invalidate a particular authorised token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "User Auth"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/listings": {
+      "get": {
+        "summary": "Get a list of the meta-data for all AirBrB listings",
+        "tags": [
+          "Listing Management"
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/ListingsGetAll"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/listings/new": {
+      "post": {
+        "summary": "Create a new AirBrB listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsNew"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/ListingsNew"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/listings/{listingid}": {
+      "get": {
+        "summary": "Collect all of the data pertaining to a particular AirBrB listing",
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/ListingsGet"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update the details of a particular AirBrB listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsPut"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a particular AirBrB listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/listings/publish/{listingid}": {
+      "put": {
+        "summary": "Publish a particular AirBrB listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          },
+          {
+            "$ref": "#/components/parameters/PublishListingBody"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/listings/unpublish/{listingid}": {
+      "put": {
+        "summary": "Unpublish a particular AirBrB listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/listings/{listingid}/review/{bookingid}": {
+      "put": {
+        "summary": "Post a new listing review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Listing Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          },
+          {
+            "$ref": "#/components/parameters/BookingIdQuery"
+          },
+          {
+            "$ref": "#/components/parameters/PostReviewBody"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/bookings": {
+      "get": {
+        "summary": "Get a list of the meta-data for all AirBrB bookings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Booking Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/BookingsGetAll"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/bookings/new/{listingid}": {
+      "post": {
+        "summary": "Create a new AirBrB booking for a particular listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Booking Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/ListingsIdQuery"
+          },
+          {
+            "$ref": "#/components/parameters/BookingsNew"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/BookingsNew"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/bookings/accept/{bookingid}": {
+      "put": {
+        "summary": "Accept an AirBrB booking for your listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Booking Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/BookingIdQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/bookings/decline/{bookingid}": {
+      "put": {
+        "summary": "Decline an AirBrB booking for your listing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Booking Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/BookingIdQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/bookings/{bookingid}": {
+      "delete": {
+        "summary": "Delete a particular AirBnb booking",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": [
+          "Booking Management"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Authorization"
+          },
+          {
+            "$ref": "#/components/parameters/BookingIdQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/200/Empty"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "users": {
+    "a": {
+      "name": "c",
+      "password": "b",
+      "sessionActive": true
+    },
+    "b": {
+      "name": "c",
+      "password": "b",
+      "sessionActive": true
+    },
+    "c": {
+      "name": "c",
+      "password": "c",
+      "sessionActive": true
+    },
+    "d": {
+      "name": "d",
+      "password": "d",
+      "sessionActive": true
+    },
+    "e": {
+      "name": "e",
+      "password": "e",
+      "sessionActive": true
+    },
+    "f": {
+      "name": "f",
+      "password": "f",
+      "sessionActive": true
+    }
+  },
+  "listings": {},
+  "bookings": {}
+}
