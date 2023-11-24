@@ -7,8 +7,8 @@
 - [ass4](https://github.com/EnmmmmOvO/Airbnb)
 
 ## Exam
-- [sample-exam]()
-- [exam]()
+- [sample-exam](./exam-sample/)
+- [exam](./exam/)
 
 ## Tutorial
 - [exercise](./exercises/)
